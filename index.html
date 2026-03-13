@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stavehjælpen 🦊</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0f1117; --card: #1a1d2e; --card2: #222540;
+    --accent: #f5a623; --accent2: #7c3aed;
+    --green: #22d3a0; --red: #f43f5e; --blue: #0ea5e9;
+    --text: #e8eaf6; --muted: #8892b0; --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    padding: 24px 16px 60px;
+    background-image: radial-gradient(ellipse at 20% 20%, #1e1060 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 80%, #0d2a1a 0%, transparent 50%);
+  }
+  header { text-align: center; margin-bottom: 32px; }
+  header .logo {
+    font-family: 'Fredoka One', cursive; font-size: 2.8rem;
+    background: linear-gradient(135deg, var(--accent), #f97316, var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1;
+  }
+  header p { color: var(--muted); font-size: 1rem; margin-top: 6px; }
+  .card {
+    background: var(--card); border-radius: var(--radius); border: 1px solid #2d3158;
+    padding: 28px; width: 100%; max-width: 640px; margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .phase-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  h2 { font-family: 'Fredoka One', cursive; font-size: 1.6rem; margin-bottom: 14px; color: var(--text); }
+
+  .pattern-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
+    color: #c4b5fd; border-radius: 99px; padding: 4px 12px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px;
+  }
+  .session-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(34,211,160,0.15); border: 1px solid rgba(34,211,160,0.3);
+    color: var(--green); border-radius: 99px; padding: 4px 12px; font-size: 0.78rem; font-weight: 700; margin-bottom: 14px;
+  }
+
+  .listen-box {
+    text-align: center; background: var(--card2); border-radius: 14px;
+    padding: 24px 20px 20px; margin: 16px 0; border: 2px dashed #3d4270;
+  }
+  .word-flash {
+    font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--accent);
+    letter-spacing: 4px; min-height: 3.5rem; margin-bottom: 8px; transition: opacity 0.5s ease;
+  }
+  .countdown-bar-wrap {
+    background: #2d3158; border-radius: 99px; height: 6px;
+    margin: 8px auto 12px; max-width: 200px; overflow: hidden; display: none;
+  }
+  .countdown-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--red)); width: 100%; transition: width 3s linear; }
+  .btn-listen {
+    background: linear-gradient(135deg, #0ea5e9, #6366f1); color: white;
+    box-shadow: 0 4px 18px rgba(14,165,233,0.35); font-size: 1rem; padding: 11px 22px; border-radius: 99px; margin-top: 4px;
+    font-family: 'Nunito', sans-serif; font-weight: 800; border: none; cursor: pointer; transition: transform 0.15s;
+  }
+  .btn-listen.speaking { background: linear-gradient(135deg, #f59e0b, #ef4444); animation: speaking-pulse 0.8s infinite alternate; }
+  @keyframes speaking-pulse { from { box-shadow: 0 4px 14px rgba(245,158,11,0.3); } to { box-shadow: 0 6px 24px rgba(245,158,11,0.7); } }
+
+  .hint-text { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 16px; }
+
+  input[type="text"] {
+    width: 100%; background: var(--card2); border: 2px solid #3d4270; border-radius: 10px; color: var(--text);
+    font-family: 'Nunito', sans-serif; font-size: 1.3rem; font-weight: 700;
+    padding: 14px 18px; outline: none; transition: border-color 0.2s; text-align: center; letter-spacing: 2px;
+  }
+  input[type="text"]:focus { border-color: var(--accent2); }
+  input[type="text"]::placeholder { color: #555; font-weight: 400; letter-spacing: 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: 'Nunito', sans-serif; font-size: 1.05rem; font-weight: 800;
+    border: none; border-radius: 10px; padding: 13px 26px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent2), #5b21b6); color: white; box-shadow: 0 4px 15px rgba(124,58,237,0.4); }
+  .btn-accent  { background: linear-gradient(135deg, var(--accent), #f97316); color: #1a1000; box-shadow: 0 4px 15px rgba(245,166,35,0.4); }
+  .btn-green   { background: linear-gradient(135deg, var(--green), #059669); color: #001a10; box-shadow: 0 4px 15px rgba(34,211,160,0.3); }
+  .btn-blue    { background: linear-gradient(135deg, var(--blue), #6366f1); color: white; box-shadow: 0 4px 15px rgba(14,165,233,0.3); }
+  .btn-full { width: 100%; margin-top: 12px; }
+
+  .feedback-correct { background: rgba(34,211,160,0.1); border: 2px solid var(--green); border-radius: 10px; padding: 14px; text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--green); margin-top: 12px; }
+  .feedback-wrong { background: rgba(244,63,94,0.1); border: 2px solid var(--red); border-radius: 10px; padding: 14px; text-align: center; font-size: 1.05rem; font-weight: 700; color: var(--red); margin-top: 12px; }
+
+  .pattern-explain {
+    background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.3);
+    border-radius: 10px; padding: 12px 16px; margin-top: 10px;
+    font-size: 0.9rem; color: #bae6fd; line-height: 1.6;
+  }
+  .pattern-explain strong { color: var(--blue); }
+
+  .progress-bar-wrap { background: #2d3158; border-radius: 99px; height: 10px; margin-bottom: 18px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent2), var(--accent)); transition: width 0.5s ease; }
+
+  .score-row { display: flex; gap: 12px; margin-bottom: 16px; }
+  .score-box { flex: 1; background: var(--card2); border-radius: 10px; padding: 12px; text-align: center; }
+  .score-box .num { font-family: 'Fredoka One', cursive; font-size: 2rem; }
+  .score-box .lbl { font-size: 0.75rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .num-green { color: var(--green); } .num-red { color: var(--red); } .num-yellow { color: var(--accent); }
+
+  .exercise-block { background: var(--card2); border-radius: 12px; padding: 18px; margin-bottom: 14px; border-left: 4px solid var(--accent2); }
+  .exercise-block h3 { font-family: 'Fredoka One', cursive; font-size: 1.15rem; margin-bottom: 6px; color: var(--accent); }
+  .why-box { background: rgba(14,165,233,0.08); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; font-size: 0.85rem; color: #93c5fd; border-left: 3px solid var(--blue); }
+  .exercise-block p { color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+  .word-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .word-pill {
+    background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.35);
+    border-radius: 99px; padding: 4px 12px; font-size: 0.9rem; font-weight: 700; color: #c4b5fd;
+    cursor: pointer; transition: background 0.15s; font-family: 'Nunito', sans-serif; border: none;
+  }
+  .word-pill:hover { background: rgba(124,58,237,0.4); }
+
+  .tomorrow-box {
+    background: linear-gradient(135deg, rgba(34,211,160,0.08), rgba(124,58,237,0.08));
+    border: 1px solid rgba(34,211,160,0.3); border-radius: 12px; padding: 18px; margin-bottom: 16px;
+  }
+  .tomorrow-box h3 { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--green); margin-bottom: 8px; }
+  .tomorrow-box p { font-size: 0.9rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .retry-words { display: flex; flex-wrap: wrap; gap: 6px; }
+  .retry-word { background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); border-radius: 99px; padding: 3px 10px; font-size: 0.85rem; font-weight: 700; color: #fca5a5; }
+
+  .ai-bubble { background: linear-gradient(135deg, #1e1060, #0d1b4b); border: 1px solid #3d4270; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; position: relative; }
+  .ai-bubble::before { content: '🦊'; position: absolute; top: -14px; left: 16px; font-size: 1.6rem; }
+  .ai-bubble p { font-size: 0.95rem; line-height: 1.65; color: var(--text); margin-top: 6px; }
+
+  .spinner { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--muted); font-size: 0.95rem; padding: 20px 0; }
+  .spinner-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: bounce 1s infinite; }
+  .spinner-dot:nth-child(2) { animation-delay: 0.15s; background: var(--accent2); }
+  .spinner-dot:nth-child(3) { animation-delay: 0.3s; background: var(--green); }
+  @keyframes bounce { 0%,80%,100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+
+  .tag { display: inline-block; background: rgba(124,58,237,0.2); color: #a78bfa; border-radius: 99px; padding: 3px 10px; font-size: 0.75rem; font-weight: 700; margin: 3px 2px; }
+  .hidden { display: none !important; }
+  .word-attempt { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #2d3158; font-size: 0.92rem; }
+  .word-attempt:last-child { border-bottom: none; }
+  .correct-mark { color: var(--green); } .wrong-mark { color: var(--red); }
+  .divider { border: none; border-top: 1px solid #2d3158; margin: 18px 0; }
+
+  .voice-btn {
+    background: var(--card); border: 1px solid #3d4270; border-radius: 8px;
+    color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 700;
+    padding: 7px 10px; cursor: pointer; transition: all 0.15s; text-align: center;
+  }
+  .voice-btn:hover { border-color: var(--accent2); color: var(--text); }
+  .voice-btn.active { background: rgba(124,58,237,0.25); border-color: var(--accent2); color: #c4b5fd; }
+
+  .pattern-list { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+  .pattern-item { display: flex; align-items: center; gap: 10px; background: var(--card2); border-radius: 10px; padding: 10px 14px; font-size: 0.9rem; }
+  .pattern-item .pi-icon { font-size: 1.4rem; }
+  .pattern-item .pi-text strong { display: block; color: var(--text); font-size: 0.95rem; }
+  .pattern-item .pi-text span { color: var(--muted); font-size: 0.82rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🦊 Stavehjælpen</div>
+  <p>Evidensbaseret stavetræning med AI</p>
+</header>
+
+<!-- WELCOME -->
+<div id="phase-welcome" class="card">
+  <div style="text-align:center; margin-bottom:16px">
+    <div style="font-size:3.5rem; margin-bottom:10px">📝</div>
+    <h2>Klar til at træne?</h2>
+    <p style="color:var(--muted); line-height:1.6; margin-bottom:18px">
+      Du får <strong style="color:var(--accent)">10 ord</strong> fordelt på 4 danske stavemønstre.<br>
+      Hvert ord vises i 3 sekunder og læses op — husk det og stav det!
+    </p>
+  </div>
+  <div class="pattern-list">
+    <div class="pattern-item"><div class="pi-icon">🔇</div><div class="pi-text"><strong>Stumme bogstaver</strong><span>Bogstaver der skrives men ikke udtales</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">✌️</div><div class="pi-text"><strong>Dobbeltkonsonant</strong><span>Hvornår skriver man to ens bogstaver?</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">🧩</div><div class="pi-text"><strong>For- og efterstavelser</strong><span>be-, for-, -hed, -else, -ing</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">🔗</div><div class="pi-text"><strong>Sammensatte ord</strong><span>Del ordet op — så er det lettere!</span></div></div>
+  </div>
+  <div id="apiKeySection" style="margin-top:16px">
+    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:1.2rem">🎙️</span>
+        <strong style="font-size:0.9rem">Google Cloud TTS API-nøgle</strong>
+        <span style="font-size:0.75rem;color:var(--muted)">(valgfri — for naturlig dansk stemme)</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <input type="password" id="apiKeyInput" placeholder="Indsæt din Google Cloud API-nøgle her..."
+          style="flex:1;background:#1a1d2e;border:1px solid #3d4270;border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;padding:8px 12px;outline:none"
+          oninput="saveApiKey(this.value)" />
+      </div>
+      <div style="margin-top:10px">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">🗣️ Vælg stemme</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <button onclick="setVoice('da-DK-Neural2-D')" class="voice-btn" id="vbtn-D2">👨 Neural Mand</button>
+          <button onclick="setVoice('da-DK-Neural2-A')" class="voice-btn" id="vbtn-A2">👩 Neural Kvinde</button>
+          <button onclick="setVoice('da-DK-Wavenet-C')" class="voice-btn" id="vbtn-C2">👨 WaveNet Mand</button>
+          <button onclick="setVoice('da-DK-Wavenet-A')" class="voice-btn" id="vbtn-WA2">👩 WaveNet Kvinde</button>
+        </div>
+      </div>
+      <p id="apiKeyStatus" style="font-size:0.78rem;color:var(--muted);margin-top:6px">
+        Opret gratis på <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> → aktiver Text-to-Speech API → Credentials → API Key.
+      </p>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:1.2rem">🤖</span>
+        <strong style="font-size:0.9rem">Anthropic API-nøgle</strong>
+        <span style="font-size:0.75rem;color:var(--muted)">(til AI-analyse af fejl)</span>
+      </div>
+      <input type="password" id="anthropicKeyInput" placeholder="Indsæt din Anthropic API-nøgle her..."
+        style="width:100%;background:#1a1d2e;border:1px solid #3d4270;border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;padding:8px 12px;outline:none"
+        oninput="saveAnthropicKey(this.value)" />
+      <p id="anthropicKeyStatus" style="font-size:0.78rem;color:var(--muted);margin-top:6px">
+        Hent nøgle på <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a> → API Keys. Uden nøgle vises en simpel opsummering.
+      </p>
+    </div>
+  </div>
+
+  <button class="btn btn-accent btn-full" onclick="startTest(false)" style="margin-top:14px">🚀 Start stavetest!</button>
+  <button class="btn btn-blue btn-full hidden" id="retryBtn" onclick="startTest(true)">🔁 Øv fejlord fra sidst</button>
+</div>
+
+<!-- TEST -->
+<div id="phase-test" class="card hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+    <div class="phase-label" style="margin-bottom:0">📋 Stavetest</div>
+    <button onclick="toggleApiPanel()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted)" title="API-indstillinger">⚙️</button>
+  </div>
+  <div id="apiPanel" style="display:none;background:var(--card2);border-radius:10px;padding:12px 14px;margin-bottom:14px;border:1px solid #3d4270">
+    <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">🎙️ Google Cloud TTS API-nøgle</div>
+    <input type="password" id="apiKeyInput2" placeholder="Indsæt din Google Cloud API-nøgle..."
+      style="width:100%;background:#1a1d2e;border:1px solid #3d4270;border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;padding:8px 12px;outline:none"
+      oninput="saveApiKey(this.value);syncApiInputs()" />
+    <p id="apiKeyStatus2" style="font-size:0.75rem;color:var(--muted);margin-top:5px"></p>
+    <div style="margin-top:10px">
+      <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">🗣️ Vælg stemme</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="voiceSelector2">
+        <button onclick="setVoice('da-DK-Neural2-D')" class="voice-btn" id="vbtn-D">👨 Neural Mand</button>
+        <button onclick="setVoice('da-DK-Neural2-A')" class="voice-btn" id="vbtn-A">👩 Neural Kvinde</button>
+        <button onclick="setVoice('da-DK-Wavenet-C')" class="voice-btn" id="vbtn-C">👨 WaveNet Mand</button>
+        <button onclick="setVoice('da-DK-Wavenet-A')" class="voice-btn" id="vbtn-WA">👩 WaveNet Kvinde</button>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="wordNum">1</div><div class="lbl">Ord nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="scoreCorrect">0</div><div class="lbl">Rigtige ✓</div></div>
+    <div class="score-box"><div class="num num-red" id="scoreWrong">0</div><div class="lbl">Fejl ✗</div></div>
+  </div>
+  <div class="pattern-badge" id="patternBadge">🔠 Mønster</div>
+  <div class="listen-box">
+    <div class="word-flash" id="wordFlash"></div>
+    <div class="countdown-bar-wrap" id="countdownWrap"><div class="countdown-bar" id="countdownBar"></div></div>
+    <p class="hint-text" id="wordHint" style="margin-bottom:8px">Husk ordet og stav det!</p>
+    <p id="wordSentence" style="font-size:0.88rem;color:var(--muted);font-style:italic;margin-bottom:12px;min-height:1.2em;line-height:1.5;padding:0 8px"></p>
+    <button class="btn-listen" id="listenBtn" onclick="speakCurrentWord()">🔈 Hør ordet igen</button>
+  </div>
+  <input type="text" id="spellingInput" placeholder="Skriv ordet her..." autocomplete="off" autocorrect="off" spellcheck="false" />
+  <div id="feedbackBox" style="display:none; margin-top:12px;"></div>
+  <button class="btn btn-primary btn-full" id="checkBtn" onclick="checkSpelling()" style="margin-top:14px">✏️ Tjek stavning</button>
+  <button class="btn btn-green btn-full hidden" id="nextBtn" onclick="nextWord()">➡️ Næste ord</button>
+</div>
+
+<!-- ANALYZING -->
+<div id="phase-analyzing" class="card hidden">
+  <div class="phase-label">🤖 AI analyserer</div>
+  <h2>Et øjeblik...</h2>
+  <div class="ai-bubble">
+    <p>Jeg finder mønstre i fejlene og laver forklaringer og øvelser der rammer præcis det du har brug for!</p>
+  </div>
+  <div class="spinner">
+    <div class="spinner-dot"></div><div class="spinner-dot"></div><div class="spinner-dot"></div>
+    <span>Analyserer mønstre...</span>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="phase-results" class="card hidden">
+  <div class="phase-label">🎯 Din træningsplan</div>
+  <div id="resultsContent"></div>
+</div>
+
+<script>
+// ── Word bank grouped by pattern ──────────────────────────────────────────
+const WORD_BANK = {
+  "Stumme bogstaver": [
+    { word: "chokolade",    hint: "Sød og brun godbid",             patternHint: "stumt 'h' i 'ch'",   sentence: "Jeg fik en stor chokolade i fødselsdagsgave." },
+    { word: "egentlig",     hint: "Faktisk / i grunden",            patternHint: "stumt 'g'",           sentence: "Jeg ville egentlig gerne blive hjemme i dag." },
+    { word: "hjælper",      hint: "En der giver en hånd",           patternHint: "stumt 'h' i 'hj'",   sentence: "Min storebror hjælper mig altid med lektierne." },
+    { word: "hvisker",      hint: "Taler meget stille",             patternHint: "stumt 'h' i 'hv'",   sentence: "Hun hvisker noget i øret på sin veninde." },
+    { word: "halvanden",    hint: "1,5 — midt imellem 1 og 2",      patternHint: "stumt 'v' i 'lv'",   sentence: "Jeg har ventet i halvanden time nu." },
+    { word: "tvivler",      hint: "Er ikke sikker / i tvivl",       patternHint: "stumt 'v' i 'vl'",   sentence: "Han tvivler på om han kan nå bussen." },
+  ],
+  "Dobbeltkonsonant": [
+    { word: "interessant",  hint: "Noget der er spændende",         patternHint: "dobbelt-r, dobbelt-s", sentence: "Det var en virkelig interessant film vi så." },
+    { word: "tilladelse",   hint: "Lov til at gøre noget",          patternHint: "dobbelt-l",            sentence: "Du skal have tilladelse fra dine forældre." },
+    { word: "forskellig",   hint: "Ikke ens, varieret",             patternHint: "dobbelt-l",            sentence: "Vi er alle meget forskellige fra hinanden." },
+    { word: "meddeler",     hint: "Fortæller noget officielt",      patternHint: "dobbelt-d",            sentence: "Læreren meddeler at turen er aflyst." },
+    { word: "kommando",     hint: "En ordre eller befaling",        patternHint: "dobbelt-m",            sentence: "Hunden adlyder hver eneste kommando." },
+    { word: "mulighed",     hint: "En chance for noget",            patternHint: "enkelt-l (lang vokal)", sentence: "Det er en god mulighed for at lære noget nyt." },
+  ],
+  "For- og efterstavelser": [
+    { word: "bekymret",     hint: "Urolig, nervøs for noget",       patternHint: "forstavelse 'be-'",    sentence: "Mor er bekymret fordi jeg kom sent hjem." },
+    { word: "forklaring",   hint: "Når man forklarer noget",        patternHint: "'for-' + '-ing'",      sentence: "Læreren gav en god forklaring på opgaven." },
+    { word: "kærlighed",    hint: "En varm følelse for nogen",      patternHint: "efterstavelse '-hed'", sentence: "Kærlighed til dyr er noget man kan mærke." },
+    { word: "vanskelighed", hint: "Noget der er svært",             patternHint: "efterstavelse '-hed'", sentence: "Den største vanskelighed var at holde balancen." },
+    { word: "forberedelse", hint: "Det man gør inden man starter",  patternHint: "'for-' + '-else'",     sentence: "God forberedelse er halv sejr, siger de." },
+    { word: "beskyttelse",  hint: "Det at holde nogen sikker",      patternHint: "'be-' + '-else'",      sentence: "Hjelmen giver beskyttelse når du cykler." },
+  ],
+  "Sammensatte ord": [
+    { word: "selvfølgelig", hint: "Ja, naturligvis",                patternHint: "selv + følge + lig",  sentence: "Selvfølgelig kan du låne min cykel!" },
+    { word: "øjeblikket",   hint: "Lige nu, i dette moment",        patternHint: "øje + blik + -ket",   sentence: "Vent et øjeblikket, jeg er straks færdig." },
+    { word: "skolearbejde", hint: "Lektier og opgaver",             patternHint: "skole + arbejde",     sentence: "Jeg skal lave skolearbejde hele eftermiddagen." },
+    { word: "hjemmeopgave", hint: "Opgave man laver derhjemme",     patternHint: "hjemme + opgave",     sentence: "Har du lavet din hjemmeopgave til i morgen?" },
+    { word: "verdensrekord",hint: "Det bedste nogensinde på Jorden",patternHint: "verden + rekord",     sentence: "Han satte verdensrekord i de olympiske lege." },
+    { word: "biblioteket",  hint: "Stedet med alle bøgerne",        patternHint: "bibliotek + -et",     sentence: "Jeg hentede tre bøger på biblioteket i går." },
+  ],
+};
+
+const PATTERN_RULES = {
+  "Stumme bogstaver":     "I dansk er nogle bogstaver 'stumme' — de skrives men udtales ikke. Typiske eksempler: 'hj-' (hjælp), 'hv-' (hvid), og 'v' foran konsonant (halvt, tvivl, selv).",
+  "Dobbeltkonsonant":     "Vi fordobler konsonanten når vokalen foran er kort og trykstærk. Prøv at sige ordet langsomt — lyder vokalen kort? Så er der sandsynligvis dobbeltkonsonant.",
+  "For- og efterstavelser":"Mange ord er bygget med faste dele: 'be-', 'for-', 'ud-' foran og '-hed', '-else', '-ing' bagpå. Kender du delene, kan du stave mange ord korrekt!",
+  "Sammensatte ord":      "Dansk sætter tit to ord sammen. Del ordet i stykker: 'skole' + 'arbejde'. Kan du stave hvert stykke? Så kan du stave hele ordet!",
+};
+
+const ALL_PATTERNS = Object.keys(WORD_BANK);
+
+let currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
+
+// ── Storage ────────────────────────────────────────────────────────────────
+function saveWrongWords(words) {
+  try { localStorage.setItem('stavning_retry', JSON.stringify({ ts: Date.now(), words })); } catch(e){}
+}
+function loadWrongWords() {
+  try {
+    const raw = localStorage.getItem('stavning_retry');
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    if (Date.now() - d.ts > 3 * 86400000) { localStorage.removeItem('stavning_retry'); return null; }
+    return d.words;
+  } catch(e) { return null; }
+}
+
+function setVoice(voiceId) {
+  try { localStorage.setItem('tts_voice', voiceId); } catch(e) {}
+  audioCache = {};
+  // Update all voice buttons
+  const allBtns = document.querySelectorAll('.voice-btn');
+  allBtns.forEach(b => b.classList.remove('active'));
+  // Map voiceId to button suffix
+  const map = { 'da-DK-Neural2-D': ['vbtn-D','vbtn-D2'], 'da-DK-Neural2-A': ['vbtn-A','vbtn-A2'], 'da-DK-Wavenet-C': ['vbtn-C','vbtn-C2'], 'da-DK-Wavenet-A': ['vbtn-WA','vbtn-WA2'] };
+  (map[voiceId] || []).forEach(id => { const b = document.getElementById(id); if(b) b.classList.add('active'); });
+}
+
+function loadVoice() {
+  try { return localStorage.getItem('tts_voice') || 'da-DK-Neural2-D'; } catch(e) { return 'da-DK-Neural2-D'; }
+}
+
+function toggleApiPanel() {
+  const p = document.getElementById('apiPanel');
+  if (!p) return;
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  if (p.style.display === 'block') {
+    const k = loadApiKey();
+    const inp = document.getElementById('apiKeyInput2');
+    if (inp) { inp.value = k; updateApiStatus2(k); }
+  }
+}
+
+function syncApiInputs() {
+  const k = loadApiKey();
+  const i1 = document.getElementById('apiKeyInput');
+  const i2 = document.getElementById('apiKeyInput2');
+  if (i1 && i1.value !== k) i1.value = k;
+  if (i2 && i2.value !== k) i2.value = k;
+  updateApiStatus(k);
+  updateApiStatus2(k);
+}
+
+function updateApiStatus2(key) {
+  const el = document.getElementById('apiKeyStatus2');
+  if (!el) return;
+  el.innerHTML = key
+    ? '<span style="color:var(--green)">✓ Aktiveret</span>'
+    : 'Ingen nøgle — bruger browser-stemme';
+}
+
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+
+window.addEventListener('load', () => {
+  window.speechSynthesis.getVoices();
+  // Restore saved API key
+  const savedKey = loadApiKey();
+  const keyInput = document.getElementById('apiKeyInput');
+  if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }
+  updateApiStatus2(savedKey);
+  // Restore saved Anthropic key
+  const savedAnthropicKey = loadAnthropicKey();
+  const anthropicInput = document.getElementById('anthropicKeyInput');
+  if (anthropicInput && savedAnthropicKey) { anthropicInput.value = savedAnthropicKey; updateAnthropicStatus(savedAnthropicKey); }
+  setVoice(loadVoice());
+  const retry = loadWrongWords();
+  if (retry?.length > 0) {
+    const btn = document.getElementById('retryBtn');
+    btn.textContent = `🔁 Øv ${retry.length} ord du fejlede sidst`;
+    show('retryBtn');
+  }
+});
+
+// ── Build word list ────────────────────────────────────────────────────────
+function buildWordList(isRetry) {
+  if (isRetry) {
+    const saved = loadWrongWords();
+    if (!saved?.length) return buildNewList(10, []);
+    let list = [...saved];
+    if (list.length < 10) list = list.concat(buildNewList(10 - list.length, list.map(w => w.word)));
+    return list.slice(0, 10);
+  }
+  return buildNewList(10, []);
+}
+function buildNewList(count, exclude) {
+  const perPat = Math.ceil(count / ALL_PATTERNS.length);
+  let list = [];
+  for (const pat of ALL_PATTERNS) {
+    const pool = WORD_BANK[pat].filter(w => !exclude.includes(w.word)).sort(() => Math.random() - 0.5);
+    list = list.concat(pool.slice(0, perPat).map(w => ({ ...w, category: pat })));
+  }
+  return list.sort(() => Math.random() - 0.5).slice(0, count);
+}
+
+// ── Start / restart ────────────────────────────────────────────────────────
+function startTest(isRetry) {
+  currentWords = buildWordList(isRetry);
+  currentIndex = 0; results = [];
+  document.getElementById('scoreCorrect').textContent = '0';
+  document.getElementById('scoreWrong').textContent = '0';
+  // Remove old session badge
+  document.querySelectorAll('.session-badge').forEach(el => el.remove());
+  hide('phase-welcome');
+  const testCard = document.getElementById('phase-test');
+  show('phase-test');
+  if (isRetry) {
+    const b = document.createElement('div');
+    b.className = 'session-badge';
+    b.innerHTML = '🔁 Gentagelsesrunde — ord du fejlede sidst';
+    testCard.insertBefore(b, testCard.firstChild);
+  }
+  renderWord();
+}
+
+// ── API key storage (Google Cloud TTS) ──────────────────────────────────────
+function saveApiKey(val) {
+  try { localStorage.setItem('gcloud_tts_key', val.trim()); } catch(e){}
+  updateApiStatus(val.trim());
+  updateApiStatus2(val.trim());
+}
+function loadApiKey() {
+  try { return localStorage.getItem('gcloud_tts_key') || ''; } catch(e) { return ''; }
+}
+function updateApiStatus(key) {
+  const el = document.getElementById('apiKeyStatus');
+  if (!el) return;
+  el.innerHTML = key
+    ? '<span style="color:var(--green)">✓ Google TTS aktiveret — naturlig dansk stemme</span>'
+    : 'Opret gratis på <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> → aktiver Text-to-Speech API → Credentials → API Key.';
+}
+
+// ── Anthropic API key storage ───────────────────────────────────────────────
+function saveAnthropicKey(val) {
+  try { localStorage.setItem('anthropic_api_key', val.trim()); } catch(e){}
+  updateAnthropicStatus(val.trim());
+}
+function loadAnthropicKey() {
+  try { return localStorage.getItem('anthropic_api_key') || ''; } catch(e) { return ''; }
+}
+function updateAnthropicStatus(key) {
+  const el = document.getElementById('anthropicKeyStatus');
+  if (!el) return;
+  el.innerHTML = key
+    ? '<span style="color:var(--green)">✓ Anthropic API aktiveret — AI-analyse klar</span>'
+    : 'Hent nøgle på <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a> → API Keys. Uden nøgle vises en simpel opsummering.';
+}
+
+// ── TTS — Google Cloud with browser fallback ───────────────────────────────
+let audioCache = {};
+
+async function speakWord(word, sentence = null) {
+  const btn = document.getElementById('listenBtn');
+  if (btn) { btn.classList.add('speaking'); btn.textContent = '🔉 Læser op...'; }
+
+  const apiKey = loadApiKey();
+  const texts = sentence ? [word, sentence] : [word];
+
+  if (apiKey) {
+    try {
+      const cacheKey = texts.join('|');
+      if (audioCache[cacheKey]) { playAudioBase64(audioCache[cacheKey], btn); return; }
+
+      const audioParts = [];
+      for (const text of texts) {
+        const res = await fetch(
+          `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              input: { text },
+              voice: { languageCode: 'da-DK', name: loadVoice() },
+              audioConfig: {
+                audioEncoding: 'MP3',
+                speakingRate: text === word ? 0.8 : 0.95
+              }
+            })
+          }
+        );
+        if (!res.ok) throw new Error('Google TTS fejl: ' + res.status);
+        const data = await res.json();
+        audioParts.push(data.audioContent);
+      }
+      audioCache[cacheKey] = audioParts;
+      playAudioBase64(audioParts, btn);
+      return;
+    } catch(err) {
+      console.warn('Google TTS fejlede, bruger browser-stemme:', err);
+    }
+  }
+
+  // Browser TTS fallback
+  window.speechSynthesis.cancel();
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(v => v.lang.startsWith('da')) || voices.find(v => v.lang.startsWith('nb'));
+  const wordUtter = new SpeechSynthesisUtterance(word);
+  wordUtter.lang = 'da-DK'; wordUtter.rate = 0.75; wordUtter.pitch = 1;
+  if (v) wordUtter.voice = v;
+  if (sentence) {
+    wordUtter.onend = () => setTimeout(() => {
+      const sentUtter = new SpeechSynthesisUtterance(sentence);
+      sentUtter.lang = 'da-DK'; sentUtter.rate = 0.9; sentUtter.pitch = 1;
+      if (v) sentUtter.voice = v;
+      sentUtter.onend = sentUtter.onerror = () => {
+        if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen'; }
+      };
+      window.speechSynthesis.speak(sentUtter);
+    }, 600);
+  } else {
+    wordUtter.onend = wordUtter.onerror = () => {
+      if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen'; }
+    };
+  }
+  window.speechSynthesis.speak(wordUtter);
+}
+
+function playAudioBase64(parts, btn, index = 0) {
+  if (index >= parts.length) {
+    if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen'; }
+    return;
+  }
+  const audio = new Audio('data:audio/mp3;base64,' + parts[index]);
+  audio.onended = () => setTimeout(() => playAudioBase64(parts, btn, index + 1), index === 0 && parts.length > 1 ? 600 : 0);
+  audio.onerror = () => { if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen'; } };
+  audio.play();
+}
+
+function speakCurrentWord() {
+  const w = currentWords[currentIndex];
+  speakWord(w.word, w.sentence || null);
+}
+
+// ── Render word ────────────────────────────────────────────────────────────
+function renderWord() {
+  const w = currentWords[currentIndex];
+  document.getElementById('wordNum').textContent = currentIndex + 1;
+  document.getElementById('progressBar').style.width = ((currentIndex / currentWords.length) * 100) + '%';
+  document.getElementById('wordHint').textContent = '💡 ' + w.hint;
+  const sentEl = document.getElementById('wordSentence');
+  if (sentEl) sentEl.textContent = '';
+  document.getElementById('patternBadge').textContent = '🔠 ' + w.category;
+  document.getElementById('spellingInput').value = '';
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('checkBtn').classList.remove('hidden');
+  document.getElementById('nextBtn').classList.add('hidden');
+  const btn = document.getElementById('listenBtn');
+  btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen';
+  feedbackShown = false;
+
+  const flashEl = document.getElementById('wordFlash');
+  const wrap = document.getElementById('countdownWrap');
+  const bar = document.getElementById('countdownBar');
+  flashEl.textContent = w.word; flashEl.style.opacity = '1';
+  wrap.style.display = 'block';
+  bar.style.transition = 'none'; bar.style.width = '100%';
+  setTimeout(() => { bar.style.transition = 'width 3s linear'; bar.style.width = '0%'; }, 50);
+  setTimeout(() => {
+    flashEl.style.opacity = '0';
+    setTimeout(() => {
+      flashEl.textContent = ''; wrap.style.display = 'none';
+    }, 500);
+  }, 3000);
+  setTimeout(() => speakWord(w.word, w.sentence || null), 200);
+  setTimeout(() => document.getElementById('spellingInput').focus(), 3600);
+}
+
+document.getElementById('spellingInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { if (feedbackShown) nextWord(); else checkSpelling(); }
+});
+
+// ── Diff highlight ─────────────────────────────────────────────────────────
+function diffHighlight(correct, attempt) {
+  let out = '';
+  for (let i = 0; i < correct.length; i++) {
+    const c = correct[i], a = (attempt[i] || '').toLowerCase();
+    if (c.toLowerCase() === a) out += `<span style="color:var(--green)">${c}</span>`;
+    else out += `<span style="color:var(--red);text-decoration:underline">${c}</span>`;
+  }
+  return out;
+}
+
+// ── Check spelling ─────────────────────────────────────────────────────────
+function checkSpelling() {
+  const w = currentWords[currentIndex];
+  const ans = document.getElementById('spellingInput').value.trim().toLowerCase();
+  if (!ans) return;
+  const ok = ans === w.word.toLowerCase();
+  results.push({ word: w.word, correct: ok, userAnswer: ans, category: w.category, patternHint: w.patternHint || '' });
+
+  const box = document.getElementById('feedbackBox');
+  box.style.display = 'block';
+  if (ok) {
+    box.innerHTML = `<div class="feedback-correct">✅ Rigtigt! Flot klaret! 🎉</div>`;
+  } else {
+    const rule = PATTERN_RULES[w.category] || '';
+    box.innerHTML = `
+      <div class="feedback-wrong">❌ Du skrev: <strong>${ans}</strong><br>
+      Rigtigt: <span style="color:var(--green)">${diffHighlight(w.word, ans)}</span></div>
+      ${rule ? `<div class="pattern-explain"><strong>📖 ${w.category}:</strong><br>${rule}${w.patternHint ? `<br><em>I dette ord: ${w.patternHint}</em>` : ''}</div>` : ''}`;
+  }
+  document.getElementById('scoreCorrect').textContent = results.filter(r => r.correct).length;
+  document.getElementById('scoreWrong').textContent = results.filter(r => !r.correct).length;
+  document.getElementById('checkBtn').classList.add('hidden');
+  document.getElementById('nextBtn').classList.remove('hidden');
+  feedbackShown = true;
+}
+
+function nextWord() {
+  currentIndex++;
+  if (currentIndex >= currentWords.length) finishTest(); else renderWord();
+}
+
+function finishTest() {
+  const wrongWords = results.filter(r => !r.correct).map(r => ({
+    word: r.word, hint: currentWords.find(w => w.word === r.word)?.hint || '',
+    category: r.category, patternHint: r.patternHint,
+  }));
+  if (wrongWords.length > 0) saveWrongWords(wrongWords);
+  hide('phase-test'); show('phase-analyzing'); analyzeWithAI();
+}
+
+// ── AI analysis ────────────────────────────────────────────────────────────
+async function analyzeWithAI() {
+  const correct = results.filter(r => r.correct).length;
+  const wrong = results.filter(r => !r.correct);
+  const cats = [...new Set(wrong.map(r => r.category))];
+
+  const prompt = `Du er en dansk stavningstutor for en 12-årig.
+
+Testresultater:
+${results.map(r => `- "${r.word}" (mønster: ${r.category}): ${r.correct ? 'RIGTIGT' : `FORKERT — eleven skrev "${r.userAnswer}"`}`).join('\n')}
+
+Rigtige: ${correct}/${results.length}. Fejlkategorier: ${cats.join(', ') || 'ingen'}.
+
+Forskning viser at effektiv stavetræning: (1) forklarer det sproglige MØNSTER bag fejlen, (2) giver øvelsesord der deler SAMME mønster, (3) bruger spaced repetition — korte sessioner over flere dage.
+
+Svar KUN som JSON (ingen markdown):
+{
+  "encouragement": "Varm, motiverende sætning (max 2 sætninger)",
+  "summary": "Analyse af mønstrene bag fejlene — forklar HVORFOR disse ord er svære på dansk, brug begreber som 'stum konsonant', 'morfem', 'forstavelse' men forklar dem enkelt (2-3 sætninger)",
+  "patterns": ["1-3 stavemønstre eleven bør fokusere på"],
+  "exercises": [
+    {
+      "title": "Øvelsens navn",
+      "type": "Øvelsestype",
+      "why": "Én sætning: hvorfor netop denne øvelse hjælper — ref. sprogvidenskab eller hukommelsesforskning",
+      "description": "Konkret beskrivelse af hvad eleven skal gøre — gerne legende og varieret",
+      "words": ["ord1","ord2","ord3","ord4","ord5"],
+      "pattern_rule": "Den korte regel eller det mønster der binder ordene i øvelsen sammen"
+    }
+  ],
+  "daily_tip": "Ét konkret tip til hvad eleven kan gøre i morgen i 5 minutter (spaced repetition-princippet)"
+}
+Lav 2-3 øvelser. Ordene skal dele mønster med fejlene. 12-årig niveau.`;
+
+  const anthropicKey = loadAnthropicKey();
+  if (!anthropicKey) { renderFallbackResults(); return; }
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": anthropicKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1500, messages: [{ role: "user", content: prompt }] })
+    });
+    if (!res.ok) { console.error('API error:', res.status, await res.text()); renderFallbackResults(); return; }
+    const data = await res.json();
+    const text = data.content.map(i => i.text || '').join('');
+    renderResults(JSON.parse(text.replace(/```json|```/g, '').trim()));
+  } catch(err) {
+    console.error(err); renderFallbackResults();
+  }
+}
+
+// ── Render results ─────────────────────────────────────────────────────────
+function renderResults(data) {
+  hide('phase-analyzing'); show('phase-results');
+  const correct = results.filter(r => r.correct).length;
+  const wrong = results.filter(r => !r.correct);
+
+  let html = `
+    <div class="ai-bubble">
+      <p><strong>${data.encouragement}</strong></p>
+      <p style="margin-top:8px">${data.summary}</p>
+    </div>
+    <div class="score-row">
+      <div class="score-box"><div class="num num-green">${correct}</div><div class="lbl">Rigtige ✓</div></div>
+      <div class="score-box"><div class="num num-red">${wrong.length}</div><div class="lbl">Fejl ✗</div></div>
+      <div class="score-box"><div class="num num-yellow">${Math.round(correct/results.length*100)}%</div><div class="lbl">Score</div></div>
+    </div>`;
+
+  if (data.patterns?.length) {
+    html += `<p style="margin-bottom:8px;font-size:0.85rem;color:var(--muted)">Fokusér på disse mønstre:</p><div style="margin-bottom:16px">`;
+    data.patterns.forEach(p => { html += `<span class="tag">🎯 ${p}</span>`; });
+    html += `</div>`;
+  }
+
+  html += `<div style="margin-bottom:18px">`;
+  results.forEach(r => {
+    html += `<div class="word-attempt">
+      <span><strong>${r.word}</strong> <span style="font-size:0.72rem;color:var(--muted)">${r.category}</span></span>
+      <span>${r.correct ? `<span class="correct-mark">✓ rigtigt</span>` : `<span class="wrong-mark">✗ ${r.userAnswer}</span>`}</span>
+    </div>`;
+  });
+  html += `</div>`;
+
+  if (wrong.length > 0 && data.daily_tip) {
+    html += `<div class="tomorrow-box">
+      <h3>🗓️ Kom igen i morgen!</h3>
+      <p>${data.daily_tip}</p>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px">Disse ord er gemt til næste gang:</p>
+      <div class="retry-words">`;
+    wrong.forEach(r => { html += `<span class="retry-word">${r.word}</span>`; });
+    html += `</div></div>`;
+  }
+
+  html += `<h2 style="margin-bottom:14px">🏋️ Dine øvelser</h2>`;
+  const icons = ['📚','✍️','🎲','🃏','🔤'];
+  data.exercises?.forEach((ex, i) => {
+    html += `<div class="exercise-block">
+      <h3>${icons[i%icons.length]} ${ex.title} <span style="font-size:0.75rem;color:var(--muted);font-weight:400">(${ex.type})</span></h3>`;
+    if (ex.why) html += `<div class="why-box">🧠 ${ex.why}</div>`;
+    html += `<p>${ex.description}</p>`;
+    if (ex.pattern_rule) html += `<p style="margin-top:8px;font-size:0.85rem;color:#a78bfa">📌 Regel: <em>${ex.pattern_rule}</em></p>`;
+    if (ex.words?.length) {
+      html += `<div class="word-pills">`;
+      ex.words.forEach(w => { html += `<button class="word-pill" onclick="speakWord('${w}')">${w} 🔈</button>`; });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  });
+
+  html += `<hr class="divider">
+    <button class="btn btn-accent btn-full" onclick="restartApp(false)">🔄 Ny runde med nye ord</button>`;
+  if (wrong.length > 0) html += `<button class="btn btn-blue btn-full" onclick="restartApp(true)">🔁 Øv fejlordene igen nu</button>`;
+
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+function renderFallbackResults() {
+  hide('phase-analyzing'); show('phase-results');
+  const correct = results.filter(r => r.correct).length;
+  const wrong = results.filter(r => !r.correct);
+  const cats = [...new Set(wrong.map(r => r.category))];
+
+  const encouragements = [
+    'Godt gået! Øvelse gør mester 💪',
+    'Flot indsats! Du er på rette vej 🌟',
+    'Stærkt arbejde! Bliv ved med at øve ⭐'
+  ];
+  const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+
+  let html = `
+    <div class="ai-bubble">
+      <p><strong>${encouragement}</strong></p>
+      <p style="margin-top:8px">Du fik ${correct} ud af ${results.length} rigtige.${wrong.length > 0 ? ` Fokusér på: ${cats.join(', ')}.` : ' Perfekt score!'}</p>
+    </div>
+    <div class="score-row">
+      <div class="score-box"><div class="num num-green">${correct}</div><div class="lbl">Rigtige ✓</div></div>
+      <div class="score-box"><div class="num num-red">${wrong.length}</div><div class="lbl">Fejl ✗</div></div>
+      <div class="score-box"><div class="num num-yellow">${Math.round(correct/results.length*100)}%</div><div class="lbl">Score</div></div>
+    </div>`;
+
+  if (cats.length) {
+    html += `<p style="margin-bottom:8px;font-size:0.85rem;color:var(--muted)">Fokusér på disse mønstre:</p><div style="margin-bottom:16px">`;
+    cats.forEach(p => { html += `<span class="tag">🎯 ${p}</span>`; });
+    html += `</div>`;
+  }
+
+  html += `<div style="margin-bottom:18px">`;
+  results.forEach(r => {
+    html += `<div class="word-attempt">
+      <span><strong>${r.word}</strong> <span style="font-size:0.72rem;color:var(--muted)">${r.category}</span></span>
+      <span>${r.correct ? `<span class="correct-mark">✓ rigtigt</span>` : `<span class="wrong-mark">✗ ${r.userAnswer}</span>`}</span>
+    </div>`;
+  });
+  html += `</div>`;
+
+  if (wrong.length > 0) {
+    html += `<h2 style="margin-bottom:14px">📖 Regler for dine fejlord</h2>`;
+    cats.forEach(cat => {
+      const catWrong = wrong.filter(r => r.category === cat);
+      const rule = PATTERN_RULES[cat] || '';
+      html += `<div class="exercise-block">
+        <h3>🔠 ${cat}</h3>
+        ${rule ? `<div class="why-box">📌 ${rule}</div>` : ''}
+        <div class="word-pills">`;
+      catWrong.forEach(r => {
+        html += `<button class="word-pill" onclick="speakWord('${r.word}')">${r.word} 🔈</button>`;
+      });
+      // Add related words from WORD_BANK for extra practice
+      const extra = WORD_BANK[cat]?.filter(w => !catWrong.find(cw => cw.word === w.word)).slice(0, 3) || [];
+      extra.forEach(w => {
+        html += `<button class="word-pill" onclick="speakWord('${w.word}')">${w.word} 🔈</button>`;
+      });
+      html += `</div></div>`;
+    });
+
+    html += `<div class="tomorrow-box">
+      <h3>🗓️ Kom igen i morgen!</h3>
+      <p>Skriv hvert fejlord 3 gange og sig det højt mens du skriver. Forskning viser at korte daglige sessioner virker bedre end én lang session.</p>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px">Disse ord er gemt til næste gang:</p>
+      <div class="retry-words">`;
+    wrong.forEach(r => { html += `<span class="retry-word">${r.word}</span>`; });
+    html += `</div></div>`;
+  }
+
+  html += `<hr class="divider">
+    <button class="btn btn-accent btn-full" onclick="restartApp(false)">🔄 Ny runde med nye ord</button>`;
+  if (wrong.length > 0) html += `<button class="btn btn-blue btn-full" onclick="restartApp(true)">🔁 Øv fejlordene igen nu</button>`;
+
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+function restartApp(isRetry) {
+  document.querySelectorAll('.session-badge').forEach(el => el.remove());
+  hide('phase-results'); hide('phase-analyzing'); show('phase-welcome');
+  const retry = loadWrongWords();
+  const btn = document.getElementById('retryBtn');
+  if (retry?.length > 0) { btn.textContent = `🔁 Øv ${retry.length} ord du fejlede sidst`; show('retryBtn'); }
+  else hide('retryBtn');
+  if (isRetry) setTimeout(() => startTest(true), 100);
+}
+</script>
+</body>
+</html>

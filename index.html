@@ -531,13 +531,12 @@ function updateApiStatus(key) {
 }
 
 // ── Anthropic API key (kun i hukommelsen — gemmes ikke) ─────────────────────
-let _anthropicKey = '';
 function saveAnthropicKey(val) {
-  _anthropicKey = val.trim();
-  updateAnthropicStatus(_anthropicKey);
+  try { localStorage.setItem('anthropic_api_key', val.trim()); } catch(e){}
+  updateAnthropicStatus(val.trim());
 }
 function loadAnthropicKey() {
-  return _anthropicKey;
+  try { return localStorage.getItem('anthropic_api_key') || ''; } catch(e) { return ''; }
 }
 function updateAnthropicStatus(key) {
   const el = document.getElementById('anthropicKeyStatus');
@@ -1332,6 +1331,10 @@ window.addEventListener('load', function() {
   const keyInput = document.getElementById('apiKeyInput');
   if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }
   updateApiStatus2(savedKey);
+  // Restore saved Anthropic key
+  const savedAnthropicKey = loadAnthropicKey();
+  const anthropicInput = document.getElementById('anthropicKeyInput');
+  if (anthropicInput && savedAnthropicKey) { anthropicInput.value = savedAnthropicKey; updateAnthropicStatus(savedAnthropicKey); }
   setVoice(loadVoice());
   refreshWelcomeButtons();
 });

@@ -408,10 +408,6 @@ window.addEventListener('load', () => {
   const keyInput = document.getElementById('apiKeyInput');
   if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }
   updateApiStatus2(savedKey);
-  // Restore saved Anthropic key
-  const savedAnthropicKey = loadAnthropicKey();
-  const anthropicInput = document.getElementById('anthropicKeyInput');
-  if (anthropicInput && savedAnthropicKey) { anthropicInput.value = savedAnthropicKey; updateAnthropicStatus(savedAnthropicKey); }
   setVoice(loadVoice());
   const retry = loadWrongWords();
   if (retry?.length > 0) {
@@ -479,13 +475,14 @@ function updateApiStatus(key) {
     : 'Opret gratis på <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> → aktiver Text-to-Speech API → Credentials → API Key.';
 }
 
-// ── Anthropic API key storage ───────────────────────────────────────────────
+// ── Anthropic API key (kun i hukommelsen — gemmes ikke) ─────────────────────
+let _anthropicKey = '';
 function saveAnthropicKey(val) {
-  try { localStorage.setItem('anthropic_api_key', val.trim()); } catch(e){}
-  updateAnthropicStatus(val.trim());
+  _anthropicKey = val.trim();
+  updateAnthropicStatus(_anthropicKey);
 }
 function loadAnthropicKey() {
-  try { return localStorage.getItem('anthropic_api_key') || ''; } catch(e) { return ''; }
+  return _anthropicKey;
 }
 function updateAnthropicStatus(key) {
   const el = document.getElementById('anthropicKeyStatus');

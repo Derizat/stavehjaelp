@@ -176,7 +176,7 @@
 <body>
 
 <header>
-  <div class="logo">🦊 Stavehjælpen</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">🦊 Stavehjælpen</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -407,6 +407,11 @@ let diagnosticWordsList = []; // track which words were used in diagnostic
 // ── Utility ───────────────────────────────────────────────────────────────
 function show(id) { document.getElementById(id).classList.remove('hidden'); }
 function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function goHome() {
+  ['phase-test','phase-analyzing','phase-profile','phase-results'].forEach(id => hide(id));
+  show('phase-welcome');
+  refreshWelcomeButtons();
+}
 function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
 // ── Storage: Spaced Repetition ────────────────────────────────────────────

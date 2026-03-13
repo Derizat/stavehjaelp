@@ -34,7 +34,6 @@
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   }
   .phase-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-  h2 { font-family: 'Fredoka One', cursive; font-size: 1.6rem; margin-bottom: 14px; color: var(--text); }
 
   .pattern-badge {
     display: inline-flex; align-items: center; gap: 6px;
@@ -160,6 +159,18 @@
   .pattern-item .pi-icon { font-size: 1.4rem; }
   .pattern-item .pi-text strong { display: block; color: var(--text); font-size: 0.95rem; }
   .pattern-item .pi-text span { color: var(--muted); font-size: 0.82rem; }
+
+  .cat-score { display: flex; align-items: center; gap: 10px; background: var(--card2); border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; }
+  .cat-score .cat-icon { font-size: 1.2rem; }
+  .cat-score .cat-name { flex: 1; font-weight: 700; font-size: 0.9rem; }
+  .cat-score .cat-result { font-family: 'Fredoka One', cursive; font-size: 1rem; }
+  .cat-score .cat-bar { flex: 0 0 60px; height: 6px; background: #2d3158; border-radius: 99px; overflow: hidden; }
+  .cat-score .cat-bar-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+
+  .difficulty-label {
+    text-align: center; font-size: 0.85rem; font-weight: 700; padding: 6px 14px;
+    border-radius: 99px; margin-bottom: 12px; display: inline-block;
+  }
 </style>
 </head>
 <body>
@@ -175,15 +186,17 @@
     <div style="font-size:3.5rem; margin-bottom:10px">📝</div>
     <h2>Klar til at træne?</h2>
     <p style="color:var(--muted); line-height:1.6; margin-bottom:18px">
-      Du får <strong style="color:var(--accent)">10 ord</strong> fordelt på 4 danske stavemønstre.<br>
-      Hvert ord vises i 3 sekunder og læses op — husk det og stav det!
+      Test din stavning med en <strong style="color:var(--accent)">diagnostisk test</strong> på 18 ord fordelt på 6 kategorier.<br>
+      Find dine svage sider og træn målrettet!
     </p>
   </div>
   <div class="pattern-list">
     <div class="pattern-item"><div class="pi-icon">🔇</div><div class="pi-text"><strong>Stumme bogstaver</strong><span>Bogstaver der skrives men ikke udtales</span></div></div>
     <div class="pattern-item"><div class="pi-icon">✌️</div><div class="pi-text"><strong>Dobbeltkonsonant</strong><span>Hvornår skriver man to ens bogstaver?</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">🧩</div><div class="pi-text"><strong>For- og efterstavelser</strong><span>be-, for-, -hed, -else, -ing</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">🧩</div><div class="pi-text"><strong>For- og efterstavelser</strong><span>be-, for-, -hed, -else, -ing, -lig, -som</span></div></div>
     <div class="pattern-item"><div class="pi-icon">🔗</div><div class="pi-text"><strong>Sammensatte ord</strong><span>Del ordet op — så er det lettere!</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">✏️</div><div class="pi-text"><strong>Verbernes bøjning</strong><span>Datid og tillægsform: -ede/-te, -et/-t</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">📝</div><div class="pi-text"><strong>Navneordsendelser</strong><span>Flertal, bestemt form, uregelmæssige</span></div></div>
   </div>
   <div id="apiKeySection" style="margin-top:16px">
     <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270">
@@ -227,16 +240,19 @@
     </div>
   </div>
 
-  <button class="btn btn-accent btn-full" onclick="startTest(false)" style="margin-top:14px">🚀 Start stavetest!</button>
-  <button class="btn btn-blue btn-full hidden" id="retryBtn" onclick="startTest(true)">🔁 Øv fejlord fra sidst</button>
+  <button class="btn btn-accent btn-full" onclick="startDiagnostic()" style="margin-top:14px" id="startDiagBtn">🚀 Start diagnostisk test</button>
+  <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">🎯 Fortsæt træning</button>
+  <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>
+  <button class="btn btn-primary btn-full hidden" id="reviewBtn" onclick="startReview()">📖 0 ord klar til gennemgang</button>
 </div>
 
-<!-- TEST -->
+<!-- TEST (shared for diagnostic, training, review) -->
 <div id="phase-test" class="card hidden">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <div class="phase-label" style="margin-bottom:0">📋 Stavetest</div>
+    <div class="phase-label" style="margin-bottom:0" id="testPhaseLabel">📋 Diagnostisk test</div>
     <button onclick="toggleApiPanel()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted)" title="API-indstillinger">⚙️</button>
   </div>
+  <div id="difficultyLabel" style="text-align:center;margin-bottom:10px"></div>
   <div id="apiPanel" style="display:none;background:var(--card2);border-radius:10px;padding:12px 14px;margin-bottom:14px;border:1px solid #3d4270">
     <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">🎙️ Google Cloud TTS API-nøgle</div>
     <input type="password" id="apiKeyInput2" placeholder="Indsæt din Google Cloud API-nøgle..."
@@ -286,81 +302,180 @@
   </div>
 </div>
 
-<!-- RESULTS -->
+<!-- PROFILE (after diagnostic) -->
+<div id="phase-profile" class="card hidden">
+  <div class="phase-label">📊 Din profil</div>
+  <div id="profileContent"></div>
+</div>
+
+<!-- RESULTS (after training/review) -->
 <div id="phase-results" class="card hidden">
-  <div class="phase-label">🎯 Din træningsplan</div>
+  <div class="phase-label">🎯 Resultater</div>
   <div id="resultsContent"></div>
 </div>
 
 <script>
-// ── Word bank grouped by pattern ──────────────────────────────────────────
+// ── Word bank grouped by category ──────────────────────────────────────────
 const WORD_BANK = {
   "Stumme bogstaver": [
-    { word: "chokolade",    hint: "Sød og brun godbid",             patternHint: "stumt 'h' i 'ch'",   sentence: "Jeg fik en stor chokolade i fødselsdagsgave." },
-    { word: "egentlig",     hint: "Faktisk / i grunden",            patternHint: "stumt 'g'",           sentence: "Jeg ville egentlig gerne blive hjemme i dag." },
-    { word: "hjælper",      hint: "En der giver en hånd",           patternHint: "stumt 'h' i 'hj'",   sentence: "Min storebror hjælper mig altid med lektierne." },
-    { word: "hvisker",      hint: "Taler meget stille",             patternHint: "stumt 'h' i 'hv'",   sentence: "Hun hvisker noget i øret på sin veninde." },
-    { word: "halvanden",    hint: "1,5 — midt imellem 1 og 2",      patternHint: "stumt 'v' i 'lv'",   sentence: "Jeg har ventet i halvanden time nu." },
-    { word: "tvivler",      hint: "Er ikke sikker / i tvivl",       patternHint: "stumt 'v' i 'vl'",   sentence: "Han tvivler på om han kan nå bussen." },
+    { word: "hjælpe", hint: "Give en hånd med noget", patternHint: "stumt 'h' i 'hj'", sentence: "Kan du hjælpe mig med denne opgave?", difficulty: 1 },
+    { word: "hvem", hint: "Spørger om en person", patternHint: "stumt 'h' i 'hv'", sentence: "Hvem har du inviteret til festen?", difficulty: 1 },
+    { word: "hjerte", hint: "Pumper blodet rundt i kroppen", patternHint: "stumt 'h' i 'hj'", sentence: "Hjertet slår hurtigere når man løber.", difficulty: 1 },
+    { word: "hvisker", hint: "Taler meget stille", patternHint: "stumt 'h' i 'hv'", sentence: "Hun hvisker en hemmelighed til sin veninde.", difficulty: 2 },
+    { word: "halvanden", hint: "Tallet 1,5", patternHint: "stumt 'v' i 'halv'", sentence: "Vi ventede i halvanden time på bussen.", difficulty: 2 },
+    { word: "tvivler", hint: "Er usikker på noget", patternHint: "stumt 'v' foran 'l'", sentence: "Han tvivler på om det kan passe.", difficulty: 2 },
+    { word: "egentlig", hint: "Faktisk, i virkeligheden", patternHint: "stumt 'g'", sentence: "Hvad vil du egentlig lave når du bliver stor?", difficulty: 3 },
+    { word: "selvfølgelig", hint: "Ja da, naturligvis", patternHint: "'selv'+'følge'+'lig'", sentence: "Du må selvfølgelig gerne komme med os.", difficulty: 3 },
   ],
   "Dobbeltkonsonant": [
-    { word: "interessant",  hint: "Noget der er spændende",         patternHint: "dobbelt-r, dobbelt-s", sentence: "Det var en virkelig interessant film vi så." },
-    { word: "tilladelse",   hint: "Lov til at gøre noget",          patternHint: "dobbelt-l",            sentence: "Du skal have tilladelse fra dine forældre." },
-    { word: "forskellig",   hint: "Ikke ens, varieret",             patternHint: "dobbelt-l",            sentence: "Vi er alle meget forskellige fra hinanden." },
-    { word: "meddeler",     hint: "Fortæller noget officielt",      patternHint: "dobbelt-d",            sentence: "Læreren meddeler at turen er aflyst." },
-    { word: "kommando",     hint: "En ordre eller befaling",        patternHint: "dobbelt-m",            sentence: "Hunden adlyder hver eneste kommando." },
-    { word: "mulighed",     hint: "En chance for noget",            patternHint: "enkelt-l (lang vokal)", sentence: "Det er en god mulighed for at lære noget nyt." },
+    { word: "kaffe", hint: "Varm brun drik", patternHint: "dobbelt-f efter kort 'a'", sentence: "De voksne drikker kaffe hver morgen.", difficulty: 1 },
+    { word: "klasse", hint: "En gruppe elever", patternHint: "dobbelt-s efter kort 'a'", sentence: "Der er 24 elever i vores klasse.", difficulty: 1 },
+    { word: "hoppe", hint: "Springe op og ned", patternHint: "dobbelt-p efter kort 'o'", sentence: "Kaninerne elsker at hoppe rundt i haven.", difficulty: 1 },
+    { word: "tilladelse", hint: "Lov til noget", patternHint: "dobbelt-l efter kort 'i'", sentence: "Man skal have tilladelse til at fiske her.", difficulty: 2 },
+    { word: "briller", hint: "Sættes på næsen for at se", patternHint: "dobbelt-l efter kort 'i'", sentence: "Bedstefar kan ikke læse uden sine briller.", difficulty: 2 },
+    { word: "kommando", hint: "En ordre eller befaling", patternHint: "dobbelt-m efter kort 'o'", sentence: "Hunden forstår hver eneste kommando.", difficulty: 2 },
+    { word: "interessant", hint: "Spændende at høre om", patternHint: "dobbelt-r og dobbelt-s", sentence: "Bogen var utroligt interessant.", difficulty: 3 },
+    { word: "forskellig", hint: "Ikke ens", patternHint: "dobbelt-l efter kort 'e'", sentence: "Tvillingerne er faktisk meget forskellige.", difficulty: 3 },
   ],
   "For- og efterstavelser": [
-    { word: "bekymret",     hint: "Urolig, nervøs for noget",       patternHint: "forstavelse 'be-'",    sentence: "Mor er bekymret fordi jeg kom sent hjem." },
-    { word: "forklaring",   hint: "Når man forklarer noget",        patternHint: "'for-' + '-ing'",      sentence: "Læreren gav en god forklaring på opgaven." },
-    { word: "kærlighed",    hint: "En varm følelse for nogen",      patternHint: "efterstavelse '-hed'", sentence: "Kærlighed til dyr er noget man kan mærke." },
-    { word: "vanskelighed", hint: "Noget der er svært",             patternHint: "efterstavelse '-hed'", sentence: "Den største vanskelighed var at holde balancen." },
-    { word: "forberedelse", hint: "Det man gør inden man starter",  patternHint: "'for-' + '-else'",     sentence: "God forberedelse er halv sejr, siger de." },
-    { word: "beskyttelse",  hint: "Det at holde nogen sikker",      patternHint: "'be-' + '-else'",      sentence: "Hjelmen giver beskyttelse når du cykler." },
+    { word: "begynde", hint: "Starte på noget", patternHint: "forstavelse 'be-'", sentence: "Skal vi begynde med den første opgave?", difficulty: 1 },
+    { word: "venlig", hint: "Rar og imødekommende", patternHint: "efterstavelse '-lig'", sentence: "Den nye nabo er meget venlig.", difficulty: 1 },
+    { word: "langsom", hint: "Ikke hurtig", patternHint: "efterstavelse '-som'", sentence: "Bussen var meget langsom i dag.", difficulty: 1 },
+    { word: "bekymret", hint: "Urolig for noget", patternHint: "forstavelse 'be-'", sentence: "Læreren er bekymret for den nye elev.", difficulty: 2 },
+    { word: "forklaring", hint: "Når noget bliver forklaret", patternHint: "'for-' + '-ing'", sentence: "Kan du give en forklaring på hvad der skete?", difficulty: 2 },
+    { word: "kærlighed", hint: "Dyb følelse for nogen", patternHint: "efterstavelse '-hed'", sentence: "Forældrenes kærlighed er ubetinget.", difficulty: 2 },
+    { word: "forberedelse", hint: "Gøre sig klar til noget", patternHint: "'for-' + 'bered' + '-else'", sentence: "Forberedelse til eksamen tager lang tid.", difficulty: 3 },
+    { word: "vanskelighed", hint: "Noget der er svært", patternHint: "'vanskel' + '-ig' + '-hed'", sentence: "Den største vanskelighed var de mange regler.", difficulty: 3 },
   ],
   "Sammensatte ord": [
-    { word: "selvfølgelig", hint: "Ja, naturligvis",                patternHint: "selv + følge + lig",  sentence: "Selvfølgelig kan du låne min cykel!" },
-    { word: "øjeblikket",   hint: "Lige nu, i dette moment",        patternHint: "øje + blik + -ket",   sentence: "Vent et øjeblikket, jeg er straks færdig." },
-    { word: "skolearbejde", hint: "Lektier og opgaver",             patternHint: "skole + arbejde",     sentence: "Jeg skal lave skolearbejde hele eftermiddagen." },
-    { word: "hjemmeopgave", hint: "Opgave man laver derhjemme",     patternHint: "hjemme + opgave",     sentence: "Har du lavet din hjemmeopgave til i morgen?" },
-    { word: "verdensrekord",hint: "Det bedste nogensinde på Jorden",patternHint: "verden + rekord",     sentence: "Han satte verdensrekord i de olympiske lege." },
-    { word: "biblioteket",  hint: "Stedet med alle bøgerne",        patternHint: "bibliotek + -et",     sentence: "Jeg hentede tre bøger på biblioteket i går." },
+    { word: "fodbold", hint: "En populær sport med bold", patternHint: "'fod' + 'bold'", sentence: "Vi spiller fodbold hver dag i frikvarteret.", difficulty: 1 },
+    { word: "madpakke", hint: "Medbragt frokost", patternHint: "'mad' + 'pakke'", sentence: "Min madpakke ligger i skoletasken.", difficulty: 1 },
+    { word: "skoletaske", hint: "Bærer bøger og penalhus", patternHint: "'skole' + 'taske'", sentence: "Min skoletaske vejer næsten ti kilo.", difficulty: 1 },
+    { word: "skolearbejde", hint: "Lektier og opgaver", patternHint: "'skole' + 'arbejde'", sentence: "Vi har meget skolearbejde for i dag.", difficulty: 2 },
+    { word: "hjemmeopgave", hint: "Lektie til derhjemme", patternHint: "'hjemme' + 'opgave'", sentence: "Husk at lave din hjemmeopgave inden i morgen.", difficulty: 2 },
+    { word: "verdensrekord", hint: "Bedst i hele verden", patternHint: "'verden' + 's' + 'rekord' (fuge-s)", sentence: "Hun satte verdensrekord i svømning.", difficulty: 2 },
+    { word: "ungdomsuddannelse", hint: "Uddannelse efter folkeskolen", patternHint: "'ungdom' + 's' + 'uddannelse' (fuge-s)", sentence: "Hun starter på en ungdomsuddannelse til sommer.", difficulty: 3 },
+    { word: "biblioteket", hint: "Bygning med mange bøger", patternHint: "'bibliotek' + '-et'", sentence: "Vi besøger biblioteket hver tirsdag.", difficulty: 3 },
+  ],
+  "Verbernes bøjning": [
+    { word: "spiste", hint: "Datid af 'spise'", patternHint: "datid: '-te' (kort stamme)", sentence: "Vi spiste morgenmad sammen i dag.", difficulty: 1 },
+    { word: "legede", hint: "Datid af 'lege'", patternHint: "datid: '-ede' (lang stamme)", sentence: "Børnene legede ude i haven hele dagen.", difficulty: 1 },
+    { word: "cyklede", hint: "Datid af 'cykle'", patternHint: "datid: '-ede'", sentence: "Jeg cyklede til skole trods regnen.", difficulty: 1 },
+    { word: "bestemte", hint: "Datid af 'bestemme'", patternHint: "datid: '-te' (mm→m+te)", sentence: "Hun bestemte sig for at tage en pause.", difficulty: 2 },
+    { word: "begyndte", hint: "Datid af 'begynde'", patternHint: "datid: '-te' (d falder bort)", sentence: "Koncerten begyndte præcis klokken otte.", difficulty: 2 },
+    { word: "opdagede", hint: "Datid af 'opdage'", patternHint: "datid: '-ede'", sentence: "Forskeren opdagede en helt ny dyreart.", difficulty: 2 },
+    { word: "udviklet", hint: "Kort tillægsform af 'udvikle'", patternHint: "tillægsform: '-et'", sentence: "Holdet har udviklet en ny strategi.", difficulty: 3 },
+    { word: "overrasket", hint: "Kort tillægsform af 'overraske'", patternHint: "tillægsform: '-et'", sentence: "Vi blev fuldstændig overrasket over resultatet.", difficulty: 3 },
+  ],
+  "Navneordsendelser": [
+    { word: "hunde", hint: "Flertal af 'hund'", patternHint: "flertal: '-e'", sentence: "Der løber tre hunde rundt i parken.", difficulty: 1 },
+    { word: "lamper", hint: "Flertal af 'lampe'", patternHint: "flertal: '-er'", sentence: "Alle lamper i stuen var tændt.", difficulty: 1 },
+    { word: "huset", hint: "Bestemt form af 'hus'", patternHint: "bestemt intetkøn: '-et'", sentence: "Huset på hjørnet er blevet malet rødt.", difficulty: 1 },
+    { word: "bøger", hint: "Flertal af 'bog'", patternHint: "uregelmæssigt: 'o'→'ø' + '-er'", sentence: "Jeg har læst fire bøger i sommerferien.", difficulty: 2 },
+    { word: "mænd", hint: "Flertal af 'mand'", patternHint: "uregelmæssigt: 'a'→'æ'", sentence: "De to mænd ventede ved indgangen.", difficulty: 2 },
+    { word: "børnene", hint: "Bestemt flertal af 'barn'", patternHint: "uregelmæssigt + '-ene'", sentence: "Børnene fik is efter aftensmaden.", difficulty: 2 },
+    { word: "princippet", hint: "Bestemt form af 'princip'", patternHint: "dobbelt-p + '-et'", sentence: "Princippet bag forsøget er faktisk simpelt.", difficulty: 3 },
+    { word: "gymnasiet", hint: "Bestemt form af 'gymnasium'", patternHint: "'-ium' → '-iet'", sentence: "Min storesøster går på gymnasiet i Odense.", difficulty: 3 },
   ],
 };
 
 const PATTERN_RULES = {
-  "Stumme bogstaver":     "I dansk er nogle bogstaver 'stumme' — de skrives men udtales ikke. Typiske eksempler: 'hj-' (hjælp), 'hv-' (hvid), og 'v' foran konsonant (halvt, tvivl, selv).",
-  "Dobbeltkonsonant":     "Vi fordobler konsonanten når vokalen foran er kort og trykstærk. Prøv at sige ordet langsomt — lyder vokalen kort? Så er der sandsynligvis dobbeltkonsonant.",
-  "For- og efterstavelser":"Mange ord er bygget med faste dele: 'be-', 'for-', 'ud-' foran og '-hed', '-else', '-ing' bagpå. Kender du delene, kan du stave mange ord korrekt!",
-  "Sammensatte ord":      "Dansk sætter tit to ord sammen. Del ordet i stykker: 'skole' + 'arbejde'. Kan du stave hvert stykke? Så kan du stave hele ordet!",
+  "Stumme bogstaver": "I dansk er nogle bogstaver 'stumme' — de skrives men udtales ikke. Typiske eksempler: 'hj-' (hjælp), 'hv-' (hvid), stumt 'v' (halvt, selv), og stumt 'g' (egentlig). Tip: Hvis du kender ordets oprindelse eller familie, kan du ofte huske det stumme bogstav.",
+  "Dobbeltkonsonant": "Vi fordobler konsonanten når vokalen foran er kort og trykstærk. Sig ordet langsomt — lyder vokalen kort (som i 'hoppe')? Så dobbeltkonsonant. Lyder den lang (som i 'bade')? Så enkelt konsonant. Kort vokal = dobbelt konsonant er hovedreglen!",
+  "For- og efterstavelser": "Mange danske ord er bygget af faste dele: forstavelser ('be-', 'for-', 'u-') og efterstavelser ('-hed', '-else', '-ing', '-lig', '-som'). Disse dele staves altid ens! Kan du genkende delene, kan du stave mange ord korrekt. Del ordet op: 'for-bered-else' = tre dele du kender.",
+  "Sammensatte ord": "Dansk sætter tit ord sammen til nye ord. Hemmeligheden: del ordet i stykker! 'skole+arbejde', 'mad+pakke'. Pas på fuge-s: 'verden-s-rekord'. Kan du stave hvert stykke for sig, kan du stave hele ordet!",
+  "Verbernes bøjning": "Datid: De fleste verber får '-ede' (legede, cyklede), men korte stammer får '-te' (spiste, bestemte). Tillægsform (kort): '-et' (udviklet) eller '-t' (bestemt). Tip: Sig grundformen højt — er stammen kort? Så bruges '-te'/'-t'.",
+  "Navneordsendelser": "Flertal: De fleste navneord får '-e' eller '-er' (hunde, lamper). Bestemt form: fælleskøn får '-en' (stolen), intetkøn '-et' (huset). Pas på uregelmæssige former: bog→bøger, mand→mænd, barn→børn. Disse må man lære udenad!",
 };
 
-const ALL_PATTERNS = Object.keys(WORD_BANK);
+const CATEGORY_ICONS = {
+  "Stumme bogstaver": "🔇",
+  "Dobbeltkonsonant": "✌️",
+  "For- og efterstavelser": "🧩",
+  "Sammensatte ord": "🔗",
+  "Verbernes bøjning": "✏️",
+  "Navneordsendelser": "📝",
+};
 
+const ALL_CATEGORIES = Object.keys(WORD_BANK);
+
+// ── State ─────────────────────────────────────────────────────────────────
 let currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
+let gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
+let diagnosticWordsList = []; // track which words were used in diagnostic
 
-// ── Storage ────────────────────────────────────────────────────────────────
-function saveWrongWords(words) {
-  try { localStorage.setItem('stavning_retry', JSON.stringify({ ts: Date.now(), words })); } catch(e){}
-}
-function loadWrongWords() {
+// ── Utility ───────────────────────────────────────────────────────────────
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+// ── Storage: Spaced Repetition ────────────────────────────────────────────
+const SR_INTERVALS = [0, 86400000, 3*86400000, 7*86400000, 14*86400000]; // ms
+
+function loadSRData() {
   try {
-    const raw = localStorage.getItem('stavning_retry');
-    if (!raw) return null;
-    const d = JSON.parse(raw);
-    if (Date.now() - d.ts > 3 * 86400000) { localStorage.removeItem('stavning_retry'); return null; }
-    return d.words;
+    const raw = localStorage.getItem('sr_data');
+    return raw ? JSON.parse(raw) : { words: {} };
+  } catch(e) { return { words: {} }; }
+}
+
+function saveSRData(data) {
+  try { localStorage.setItem('sr_data', JSON.stringify(data)); } catch(e) {}
+}
+
+function updateSRWord(word, correct, category) {
+  const sr = loadSRData();
+  if (!sr.words[word]) {
+    sr.words[word] = { level: 0, nextReview: Date.now(), category };
+  }
+  if (correct) {
+    sr.words[word].level = Math.min(sr.words[word].level + 1, 4);
+  } else {
+    sr.words[word].level = 0;
+  }
+  const interval = SR_INTERVALS[sr.words[word].level] || 0;
+  sr.words[word].nextReview = Date.now() + interval;
+  sr.words[word].category = category;
+  saveSRData(sr);
+}
+
+function getDueWords() {
+  const sr = loadSRData();
+  const now = Date.now();
+  const due = [];
+  for (const [word, data] of Object.entries(sr.words)) {
+    if (now >= data.nextReview) {
+      // Find the full word object
+      for (const cat of ALL_CATEGORIES) {
+        const found = WORD_BANK[cat].find(w => w.word === word);
+        if (found) {
+          due.push({ ...found, category: cat });
+          break;
+        }
+      }
+    }
+  }
+  return due;
+}
+
+// ── Storage: Profile ──────────────────────────────────────────────────────
+function loadProfile() {
+  try {
+    const raw = localStorage.getItem('profile_data');
+    return raw ? JSON.parse(raw) : null;
   } catch(e) { return null; }
 }
 
+function saveProfile(data) {
+  try { localStorage.setItem('profile_data', JSON.stringify(data)); } catch(e) {}
+}
+
+// ── Voice / TTS ───────────────────────────────────────────────────────────
 function setVoice(voiceId) {
   try { localStorage.setItem('tts_voice', voiceId); } catch(e) {}
   audioCache = {};
-  // Update all voice buttons
   const allBtns = document.querySelectorAll('.voice-btn');
   allBtns.forEach(b => b.classList.remove('active'));
-  // Map voiceId to button suffix
   const map = { 'da-DK-Neural2-D': ['vbtn-D','vbtn-D2'], 'da-DK-Neural2-A': ['vbtn-A','vbtn-A2'], 'da-DK-Wavenet-C': ['vbtn-C','vbtn-C2'], 'da-DK-Wavenet-A': ['vbtn-WA','vbtn-WA2'] };
   (map[voiceId] || []).forEach(id => { const b = document.getElementById(id); if(b) b.classList.add('active'); });
 }
@@ -396,66 +511,6 @@ function updateApiStatus2(key) {
   el.innerHTML = key
     ? '<span style="color:var(--green)">✓ Aktiveret</span>'
     : 'Ingen nøgle — bruger browser-stemme';
-}
-
-function show(id) { document.getElementById(id).classList.remove('hidden'); }
-function hide(id) { document.getElementById(id).classList.add('hidden'); }
-
-window.addEventListener('load', () => {
-  window.speechSynthesis.getVoices();
-  // Restore saved API key
-  const savedKey = loadApiKey();
-  const keyInput = document.getElementById('apiKeyInput');
-  if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }
-  updateApiStatus2(savedKey);
-  setVoice(loadVoice());
-  const retry = loadWrongWords();
-  if (retry?.length > 0) {
-    const btn = document.getElementById('retryBtn');
-    btn.textContent = `🔁 Øv ${retry.length} ord du fejlede sidst`;
-    show('retryBtn');
-  }
-});
-
-// ── Build word list ────────────────────────────────────────────────────────
-function buildWordList(isRetry) {
-  if (isRetry) {
-    const saved = loadWrongWords();
-    if (!saved?.length) return buildNewList(10, []);
-    let list = [...saved];
-    if (list.length < 10) list = list.concat(buildNewList(10 - list.length, list.map(w => w.word)));
-    return list.slice(0, 10);
-  }
-  return buildNewList(10, []);
-}
-function buildNewList(count, exclude) {
-  const perPat = Math.ceil(count / ALL_PATTERNS.length);
-  let list = [];
-  for (const pat of ALL_PATTERNS) {
-    const pool = WORD_BANK[pat].filter(w => !exclude.includes(w.word)).sort(() => Math.random() - 0.5);
-    list = list.concat(pool.slice(0, perPat).map(w => ({ ...w, category: pat })));
-  }
-  return list.sort(() => Math.random() - 0.5).slice(0, count);
-}
-
-// ── Start / restart ────────────────────────────────────────────────────────
-function startTest(isRetry) {
-  currentWords = buildWordList(isRetry);
-  currentIndex = 0; results = [];
-  document.getElementById('scoreCorrect').textContent = '0';
-  document.getElementById('scoreWrong').textContent = '0';
-  // Remove old session badge
-  document.querySelectorAll('.session-badge').forEach(el => el.remove());
-  hide('phase-welcome');
-  const testCard = document.getElementById('phase-test');
-  show('phase-test');
-  if (isRetry) {
-    const b = document.createElement('div');
-    b.className = 'session-badge';
-    b.innerHTML = '🔁 Gentagelsesrunde — ord du fejlede sidst';
-    testCard.insertBefore(b, testCard.firstChild);
-  }
-  renderWord();
 }
 
 // ── API key storage (Google Cloud TTS) ──────────────────────────────────────
@@ -577,15 +632,121 @@ function speakCurrentWord() {
   speakWord(w.word, w.sentence || null);
 }
 
+// ── Build word lists ──────────────────────────────────────────────────────
+function buildDiagnosticList() {
+  // 1 word per category per difficulty = 18 words
+  // Order: all 6 easy (shuffled), then 6 medium (shuffled), then 6 hard (shuffled)
+  const easy = [], medium = [], hard = [];
+  for (const cat of ALL_CATEGORIES) {
+    const words = WORD_BANK[cat];
+    const easyPool = shuffle(words.filter(w => w.difficulty === 1));
+    const medPool = shuffle(words.filter(w => w.difficulty === 2));
+    const hardPool = shuffle(words.filter(w => w.difficulty === 3));
+    if (easyPool.length > 0) easy.push({ ...easyPool[0], category: cat });
+    if (medPool.length > 0) medium.push({ ...medPool[0], category: cat });
+    if (hardPool.length > 0) hard.push({ ...hardPool[0], category: cat });
+  }
+  return [...shuffle(easy), ...shuffle(medium), ...shuffle(hard)];
+}
+
+function buildTrainingList(weakCategories, diagnosticWords) {
+  // Pick 6-8 words from weak categories, NOT used in diagnostic
+  const excludeWords = new Set(diagnosticWords.map(w => w.word));
+  let pool = [];
+  for (const cat of weakCategories) {
+    const available = WORD_BANK[cat]
+      .filter(w => !excludeWords.has(w.word))
+      .map(w => ({ ...w, category: cat }));
+    pool = pool.concat(available);
+  }
+  pool = shuffle(pool);
+  // Take 6-8 words, aim for even distribution across weak categories
+  const target = Math.min(8, Math.max(6, pool.length));
+  return pool.slice(0, target);
+}
+
+function buildReviewList() {
+  return shuffle(getDueWords());
+}
+
+// ── Start Diagnostic ──────────────────────────────────────────────────────
+function startDiagnostic() {
+  gameMode = 'diagnostic';
+  currentWords = buildDiagnosticList();
+  diagnosticWordsList = [...currentWords];
+  currentIndex = 0; results = [];
+  document.getElementById('scoreCorrect').textContent = '0';
+  document.getElementById('scoreWrong').textContent = '0';
+  document.getElementById('testPhaseLabel').textContent = '📋 Diagnostisk test';
+  document.querySelectorAll('.session-badge').forEach(el => el.remove());
+  hide('phase-welcome');
+  show('phase-test');
+  renderWord();
+}
+
+// ── Start Training ────────────────────────────────────────────────────────
+function startTrainingFromProfile() {
+  const profile = loadProfile();
+  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
+    startDiagnostic();
+    return;
+  }
+  gameMode = 'training';
+  currentWords = buildTrainingList(profile.weakCategories, profile.diagnosticResults || []);
+  if (currentWords.length === 0) {
+    // If no training words available (all used in diagnostic), just use weak category words
+    let pool = [];
+    for (const cat of profile.weakCategories) {
+      pool = pool.concat(WORD_BANK[cat].map(w => ({ ...w, category: cat })));
+    }
+    currentWords = shuffle(pool).slice(0, 8);
+  }
+  currentIndex = 0; results = [];
+  document.getElementById('scoreCorrect').textContent = '0';
+  document.getElementById('scoreWrong').textContent = '0';
+  document.getElementById('testPhaseLabel').textContent = '🎯 Træning';
+  document.getElementById('difficultyLabel').innerHTML = '';
+  document.querySelectorAll('.session-badge').forEach(el => el.remove());
+  hide('phase-welcome');
+  hide('phase-profile');
+  show('phase-test');
+  const b = document.createElement('div');
+  b.className = 'session-badge';
+  b.innerHTML = '🎯 Træningsmodus — fokus på dine svage kategorier';
+  document.getElementById('phase-test').insertBefore(b, document.getElementById('phase-test').firstChild);
+  renderWord();
+}
+
+// ── Start Review ──────────────────────────────────────────────────────────
+function startReview() {
+  gameMode = 'review';
+  currentWords = buildReviewList();
+  if (currentWords.length === 0) {
+    alert('Ingen ord klar til gennemgang lige nu.');
+    return;
+  }
+  currentIndex = 0; results = [];
+  document.getElementById('scoreCorrect').textContent = '0';
+  document.getElementById('scoreWrong').textContent = '0';
+  document.getElementById('testPhaseLabel').textContent = '📖 Gennemgang';
+  document.getElementById('difficultyLabel').innerHTML = '';
+  document.querySelectorAll('.session-badge').forEach(el => el.remove());
+  hide('phase-welcome');
+  show('phase-test');
+  const b = document.createElement('div');
+  b.className = 'session-badge';
+  b.innerHTML = '📖 Gennemgang — spaced repetition';
+  document.getElementById('phase-test').insertBefore(b, document.getElementById('phase-test').firstChild);
+  renderWord();
+}
+
 // ── Render word ────────────────────────────────────────────────────────────
 function renderWord() {
   const w = currentWords[currentIndex];
+  const total = currentWords.length;
   document.getElementById('wordNum').textContent = currentIndex + 1;
-  document.getElementById('progressBar').style.width = ((currentIndex / currentWords.length) * 100) + '%';
-  document.getElementById('wordHint').textContent = '💡 ' + w.hint;
-  const sentEl = document.getElementById('wordSentence');
-  if (sentEl) sentEl.textContent = '';
-  document.getElementById('patternBadge').textContent = '🔠 ' + w.category;
+  document.getElementById('progressBar').style.width = ((currentIndex / total) * 100) + '%';
+  document.getElementById('patternBadge').textContent = (CATEGORY_ICONS[w.category] || '🔠') + ' ' + w.category;
   document.getElementById('spellingInput').value = '';
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('checkBtn').classList.remove('hidden');
@@ -597,20 +758,74 @@ function renderWord() {
   const flashEl = document.getElementById('wordFlash');
   const wrap = document.getElementById('countdownWrap');
   const bar = document.getElementById('countdownBar');
-  flashEl.textContent = w.word; flashEl.style.opacity = '1';
-  wrap.style.display = 'block';
-  bar.style.transition = 'none'; bar.style.width = '100%';
-  setTimeout(() => { bar.style.transition = 'width 3s linear'; bar.style.width = '0%'; }, 50);
-  setTimeout(() => {
+  const hintEl = document.getElementById('wordHint');
+  const sentEl = document.getElementById('wordSentence');
+  const diffLabel = document.getElementById('difficultyLabel');
+
+  // Difficulty label for diagnostic mode
+  if (gameMode === 'diagnostic') {
+    const idx = currentIndex + 1;
+    if (idx <= 6) {
+      diffLabel.innerHTML = '<span class="difficulty-label" style="background:rgba(34,211,160,0.15);color:var(--green)">🟢 Lette ord (' + idx + '/6)</span>';
+    } else if (idx <= 12) {
+      diffLabel.innerHTML = '<span class="difficulty-label" style="background:rgba(245,166,35,0.15);color:var(--accent)">🟡 Mellem ord (' + (idx - 6) + '/6)</span>';
+    } else {
+      diffLabel.innerHTML = '<span class="difficulty-label" style="background:rgba(244,63,94,0.15);color:var(--red)">🔴 Svære ord (' + (idx - 12) + '/6)</span>';
+    }
+  } else {
+    diffLabel.innerHTML = '';
+  }
+
+  // Hint always shown
+  hintEl.textContent = '💡 ' + w.hint;
+  if (sentEl) sentEl.textContent = '';
+
+  if (gameMode === 'diagnostic') {
+    // DIAGNOSTIC: No word flash, audio only + hint
+    flashEl.textContent = '';
     flashEl.style.opacity = '0';
+    wrap.style.display = 'none';
+    // Show instruction instead
+    flashEl.textContent = '🔊';
+    flashEl.style.opacity = '1';
+    flashEl.style.fontSize = '2.5rem';
+    // Play audio
+    setTimeout(() => speakWord(w.word, w.sentence || null), 200);
+    setTimeout(() => document.getElementById('spellingInput').focus(), 500);
+  } else if (gameMode === 'training') {
+    // TRAINING: Show word for 3 seconds
+    flashEl.style.fontSize = '2.8rem';
+    flashEl.textContent = w.word; flashEl.style.opacity = '1';
+    wrap.style.display = 'block';
+    bar.style.transition = 'none'; bar.style.width = '100%';
+    setTimeout(() => { bar.style.transition = 'width 3s linear'; bar.style.width = '0%'; }, 50);
     setTimeout(() => {
-      flashEl.textContent = ''; wrap.style.display = 'none';
-    }, 500);
-  }, 3000);
-  setTimeout(() => speakWord(w.word, w.sentence || null), 200);
-  setTimeout(() => document.getElementById('spellingInput').focus(), 3600);
+      flashEl.style.opacity = '0';
+      setTimeout(() => {
+        flashEl.textContent = ''; wrap.style.display = 'none';
+      }, 500);
+    }, 3000);
+    setTimeout(() => speakWord(w.word, w.sentence || null), 200);
+    setTimeout(() => document.getElementById('spellingInput').focus(), 3600);
+  } else if (gameMode === 'review') {
+    // REVIEW: Show word for 2 seconds
+    flashEl.style.fontSize = '2.8rem';
+    flashEl.textContent = w.word; flashEl.style.opacity = '1';
+    wrap.style.display = 'block';
+    bar.style.transition = 'none'; bar.style.width = '100%';
+    setTimeout(() => { bar.style.transition = 'width 2s linear'; bar.style.width = '0%'; }, 50);
+    setTimeout(() => {
+      flashEl.style.opacity = '0';
+      setTimeout(() => {
+        flashEl.textContent = ''; wrap.style.display = 'none';
+      }, 500);
+    }, 2000);
+    setTimeout(() => speakWord(w.word, w.sentence || null), 200);
+    setTimeout(() => document.getElementById('spellingInput').focus(), 2600);
+  }
 }
 
+// ── Enter key handler ─────────────────────────────────────────────────────
 document.getElementById('spellingInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') { if (feedbackShown) nextWord(); else checkSpelling(); }
 });
@@ -618,10 +833,12 @@ document.getElementById('spellingInput').addEventListener('keydown', e => {
 // ── Diff highlight ─────────────────────────────────────────────────────────
 function diffHighlight(correct, attempt) {
   let out = '';
+  const maxLen = Math.max(correct.length, attempt.length);
   for (let i = 0; i < correct.length; i++) {
-    const c = correct[i], a = (attempt[i] || '').toLowerCase();
-    if (c.toLowerCase() === a) out += `<span style="color:var(--green)">${c}</span>`;
-    else out += `<span style="color:var(--red);text-decoration:underline">${c}</span>`;
+    const c = correct[i];
+    const a = i < attempt.length ? attempt[i].toLowerCase() : '';
+    if (c.toLowerCase() === a) out += '<span style="color:var(--green)">' + c + '</span>';
+    else out += '<span style="color:var(--red);text-decoration:underline">' + c + '</span>';
   }
   return out;
 }
@@ -632,54 +849,120 @@ function checkSpelling() {
   const ans = document.getElementById('spellingInput').value.trim().toLowerCase();
   if (!ans) return;
   const ok = ans === w.word.toLowerCase();
-  results.push({ word: w.word, correct: ok, userAnswer: ans, category: w.category, patternHint: w.patternHint || '' });
+  results.push({ word: w.word, correct: ok, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', difficulty: w.difficulty || 1 });
+
+  // Update SR for training and review modes
+  if (gameMode === 'training' || gameMode === 'review') {
+    updateSRWord(w.word, ok, w.category);
+  }
 
   const box = document.getElementById('feedbackBox');
   box.style.display = 'block';
+
   if (ok) {
-    box.innerHTML = `<div class="feedback-correct">✅ Rigtigt! Flot klaret! 🎉</div>`;
+    box.innerHTML = '<div class="feedback-correct">✅ Rigtigt! Flot klaret! 🎉</div>';
   } else {
     const rule = PATTERN_RULES[w.category] || '';
-    box.innerHTML = `
-      <div class="feedback-wrong">❌ Du skrev: <strong>${ans}</strong><br>
-      Rigtigt: <span style="color:var(--green)">${diffHighlight(w.word, ans)}</span></div>
-      ${rule ? `<div class="pattern-explain"><strong>📖 ${w.category}:</strong><br>${rule}${w.patternHint ? `<br><em>I dette ord: ${w.patternHint}</em>` : ''}</div>` : ''}`;
+    let feedbackHTML = '<div class="feedback-wrong">❌ Du skrev: <strong>' + ans + '</strong><br>' +
+      'Rigtigt: <span style="color:var(--green)">' + diffHighlight(w.word, ans) + '</span></div>';
+
+    // In training and review: always show detailed feedback
+    if (gameMode === 'training' || gameMode === 'review') {
+      feedbackHTML += '<div class="pattern-explain"><strong>📖 ' + w.category + ':</strong><br>' + rule;
+      if (w.patternHint) feedbackHTML += '<br><em>I dette ord: ' + w.patternHint + '</em>';
+      feedbackHTML += '</div>';
+    } else {
+      // Diagnostic: show brief pattern hint
+      if (rule) {
+        feedbackHTML += '<div class="pattern-explain"><strong>📖 ' + w.category + ':</strong><br>' + rule;
+        if (w.patternHint) feedbackHTML += '<br><em>I dette ord: ' + w.patternHint + '</em>';
+        feedbackHTML += '</div>';
+      }
+    }
+    box.innerHTML = feedbackHTML;
   }
+
   document.getElementById('scoreCorrect').textContent = results.filter(r => r.correct).length;
   document.getElementById('scoreWrong').textContent = results.filter(r => !r.correct).length;
   document.getElementById('checkBtn').classList.add('hidden');
   document.getElementById('nextBtn').classList.remove('hidden');
   feedbackShown = true;
+  document.getElementById('nextBtn').focus();
 }
 
 function nextWord() {
   currentIndex++;
-  if (currentIndex >= currentWords.length) finishTest(); else renderWord();
+  if (currentIndex >= currentWords.length) {
+    finishTest();
+  } else {
+    renderWord();
+  }
 }
 
+// ── Finish test ───────────────────────────────────────────────────────────
 function finishTest() {
-  const wrongWords = results.filter(r => !r.correct).map(r => ({
-    word: r.word, hint: currentWords.find(w => w.word === r.word)?.hint || '',
-    category: r.category, patternHint: r.patternHint,
-  }));
-  if (wrongWords.length > 0) saveWrongWords(wrongWords);
-  hide('phase-test'); show('phase-analyzing'); analyzeWithAI();
+  hide('phase-test');
+
+  if (gameMode === 'diagnostic') {
+    // Save diagnostic results to profile, then analyze
+    const categoryScores = {};
+    for (const cat of ALL_CATEGORIES) {
+      categoryScores[cat] = { easy: 0, medium: 0, hard: 0, total: 0, max: 3 };
+    }
+    for (const r of results) {
+      if (r.correct) {
+        const diff = r.difficulty || 1;
+        if (diff === 1) categoryScores[r.category].easy++;
+        else if (diff === 2) categoryScores[r.category].medium++;
+        else if (diff === 3) categoryScores[r.category].hard++;
+        categoryScores[r.category].total++;
+      }
+    }
+    const weakCategories = ALL_CATEGORIES.filter(cat => categoryScores[cat].total < 3);
+
+    // Update SR for diagnostic words that were wrong
+    for (const r of results) {
+      if (!r.correct) {
+        updateSRWord(r.word, false, r.category);
+      }
+    }
+
+    const profile = {
+      lastDiagnostic: Date.now(),
+      categoryScores,
+      weakCategories,
+      diagnosticResults: results.map(r => ({ word: r.word, correct: r.correct, userAnswer: r.userAnswer, category: r.category, difficulty: r.difficulty })),
+    };
+    saveProfile(profile);
+
+    show('phase-analyzing');
+    analyzeWithAI(profile);
+  } else if (gameMode === 'training') {
+    renderTrainingResults();
+  } else if (gameMode === 'review') {
+    renderReviewResults();
+  }
 }
 
-// ── AI analysis ────────────────────────────────────────────────────────────
-async function analyzeWithAI() {
+// ── AI Analysis ───────────────────────────────────────────────────────────
+async function analyzeWithAI(profile) {
   const correct = results.filter(r => r.correct).length;
   const wrong = results.filter(r => !r.correct);
   const cats = [...new Set(wrong.map(r => r.category))];
 
   const prompt = `Du er en dansk stavningstutor for en 12-årig.
 
+Diagnostisk test — 18 ord, 6 kategorier (Stumme bogstaver, Dobbeltkonsonant, For- og efterstavelser, Sammensatte ord, Verbernes bøjning, Navneordsendelser), 3 sværhedsgrader per kategori.
+
 Testresultater:
-${results.map(r => `- "${r.word}" (mønster: ${r.category}): ${r.correct ? 'RIGTIGT' : `FORKERT — eleven skrev "${r.userAnswer}"`}`).join('\n')}
+${results.map(r => '- "' + r.word + '" (kategori: ' + r.category + ', sværhed: ' + r.difficulty + '): ' + (r.correct ? 'RIGTIGT' : 'FORKERT — eleven skrev "' + r.userAnswer + '"')).join('\n')}
 
 Rigtige: ${correct}/${results.length}. Fejlkategorier: ${cats.join(', ') || 'ingen'}.
 
-Forskning viser at effektiv stavetræning: (1) forklarer det sproglige MØNSTER bag fejlen, (2) giver øvelsesord der deler SAMME mønster, (3) bruger spaced repetition — korte sessioner over flere dage.
+Kategori-scores:
+${ALL_CATEGORIES.map(c => '- ' + c + ': ' + (profile.categoryScores[c]?.total || 0) + '/3').join('\n')}
+
+Svage kategorier: ${profile.weakCategories.join(', ') || 'ingen'}
 
 Svar KUN som JSON (ingen markdown):
 {
@@ -690,18 +973,18 @@ Svar KUN som JSON (ingen markdown):
     {
       "title": "Øvelsens navn",
       "type": "Øvelsestype",
-      "why": "Én sætning: hvorfor netop denne øvelse hjælper — ref. sprogvidenskab eller hukommelsesforskning",
-      "description": "Konkret beskrivelse af hvad eleven skal gøre — gerne legende og varieret",
+      "why": "Én sætning: hvorfor netop denne øvelse hjælper",
+      "description": "Konkret beskrivelse af hvad eleven skal gøre",
       "words": ["ord1","ord2","ord3","ord4","ord5"],
-      "pattern_rule": "Den korte regel eller det mønster der binder ordene i øvelsen sammen"
+      "pattern_rule": "Den korte regel eller det mønster der binder ordene sammen"
     }
   ],
-  "daily_tip": "Ét konkret tip til hvad eleven kan gøre i morgen i 5 minutter (spaced repetition-princippet)"
+  "daily_tip": "Ét konkret tip til hvad eleven kan gøre i morgen i 5 minutter"
 }
 Lav 2-3 øvelser. Ordene skal dele mønster med fejlene. 12-årig niveau.`;
 
   const anthropicKey = loadAnthropicKey();
-  if (!anthropicKey) { renderFallbackResults(); return; }
+  if (!anthropicKey) { renderProfileFallback(profile); return; }
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -714,85 +997,114 @@ Lav 2-3 øvelser. Ordene skal dele mønster med fejlene. 12-årig niveau.`;
       },
       body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1500, messages: [{ role: "user", content: prompt }] })
     });
-    if (!res.ok) { console.error('API error:', res.status, await res.text()); renderFallbackResults(); return; }
+    if (!res.ok) { console.error('API error:', res.status, await res.text()); renderProfileFallback(profile); return; }
     const data = await res.json();
     const text = data.content.map(i => i.text || '').join('');
-    renderResults(JSON.parse(text.replace(/```json|```/g, '').trim()));
+    renderProfile(profile, JSON.parse(text.replace(/```json|```/g, '').trim()));
   } catch(err) {
-    console.error(err); renderFallbackResults();
+    console.error(err); renderProfileFallback(profile);
   }
 }
 
-// ── Render results ─────────────────────────────────────────────────────────
-function renderResults(data) {
-  hide('phase-analyzing'); show('phase-results');
+// ── Render Profile (after diagnostic) ─────────────────────────────────────
+function renderProfile(profile, aiData) {
+  hide('phase-analyzing'); show('phase-profile');
   const correct = results.filter(r => r.correct).length;
   const wrong = results.filter(r => !r.correct);
 
-  let html = `
-    <div class="ai-bubble">
-      <p><strong>${data.encouragement}</strong></p>
-      <p style="margin-top:8px">${data.summary}</p>
-    </div>
-    <div class="score-row">
-      <div class="score-box"><div class="num num-green">${correct}</div><div class="lbl">Rigtige ✓</div></div>
-      <div class="score-box"><div class="num num-red">${wrong.length}</div><div class="lbl">Fejl ✗</div></div>
-      <div class="score-box"><div class="num num-yellow">${Math.round(correct/results.length*100)}%</div><div class="lbl">Score</div></div>
-    </div>`;
+  let html = '';
 
-  if (data.patterns?.length) {
-    html += `<p style="margin-bottom:8px;font-size:0.85rem;color:var(--muted)">Fokusér på disse mønstre:</p><div style="margin-bottom:16px">`;
-    data.patterns.forEach(p => { html += `<span class="tag">🎯 ${p}</span>`; });
-    html += `</div>`;
+  // AI feedback
+  if (aiData) {
+    html += '<div class="ai-bubble"><p><strong>' + aiData.encouragement + '</strong></p>';
+    html += '<p style="margin-top:8px">' + aiData.summary + '</p></div>';
   }
 
-  html += `<div style="margin-bottom:18px">`;
-  results.forEach(r => {
-    html += `<div class="word-attempt">
-      <span><strong>${r.word}</strong> <span style="font-size:0.72rem;color:var(--muted)">${r.category}</span></span>
-      <span>${r.correct ? `<span class="correct-mark">✓ rigtigt</span>` : `<span class="wrong-mark">✗ ${r.userAnswer}</span>`}</span>
-    </div>`;
-  });
-  html += `</div>`;
+  // Overall score
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige ✓</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl ✗</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
 
-  if (wrong.length > 0 && data.daily_tip) {
-    html += `<div class="tomorrow-box">
-      <h3>🗓️ Kom igen i morgen!</h3>
-      <p>${data.daily_tip}</p>
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px">Disse ord er gemt til næste gang:</p>
-      <div class="retry-words">`;
-    wrong.forEach(r => { html += `<span class="retry-word">${r.word}</span>`; });
-    html += `</div></div>`;
+  // Per-category breakdown
+  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
+  for (const cat of ALL_CATEGORIES) {
+    const cs = profile.categoryScores[cat];
+    const score = cs.total;
+    const max = cs.max;
+    const pct = Math.round((score / max) * 100);
+    let color = 'var(--green)';
+    if (score === 0) color = 'var(--red)';
+    else if (score < max) color = 'var(--accent)';
+    html += '<div class="cat-score">';
+    html += '<div class="cat-icon">' + (CATEGORY_ICONS[cat] || '🔠') + '</div>';
+    html += '<div class="cat-name">' + cat + '</div>';
+    html += '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>';
+    html += '<div class="cat-result" style="color:' + color + '">' + score + '/' + max + '</div>';
+    html += '</div>';
   }
 
-  html += `<h2 style="margin-bottom:14px">🏋️ Dine øvelser</h2>`;
-  const icons = ['📚','✍️','🎲','🃏','🔤'];
-  data.exercises?.forEach((ex, i) => {
-    html += `<div class="exercise-block">
-      <h3>${icons[i%icons.length]} ${ex.title} <span style="font-size:0.75rem;color:var(--muted);font-weight:400">(${ex.type})</span></h3>`;
-    if (ex.why) html += `<div class="why-box">🧠 ${ex.why}</div>`;
-    html += `<p>${ex.description}</p>`;
-    if (ex.pattern_rule) html += `<p style="margin-top:8px;font-size:0.85rem;color:#a78bfa">📌 Regel: <em>${ex.pattern_rule}</em></p>`;
-    if (ex.words?.length) {
-      html += `<div class="word-pills">`;
-      ex.words.forEach(w => { html += `<button class="word-pill" onclick="speakWord('${w}')">${w} 🔈</button>`; });
-      html += `</div>`;
-    }
-    html += `</div>`;
+  // Patterns to focus on
+  if (aiData && aiData.patterns && aiData.patterns.length) {
+    html += '<p style="margin:16px 0 8px;font-size:0.85rem;color:var(--muted)">Fokusér på disse mønstre:</p><div style="margin-bottom:16px">';
+    aiData.patterns.forEach(function(p) { html += '<span class="tag">🎯 ' + p + '</span>'; });
+    html += '</div>';
+  }
+
+  // Per-word results
+  html += '<div style="margin-bottom:18px">';
+  results.forEach(function(r) {
+    html += '<div class="word-attempt">';
+    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+    html += '<span>' + (r.correct ? '<span class="correct-mark">✓ rigtigt</span>' : '<span class="wrong-mark">✗ ' + r.userAnswer + '</span>') + '</span>';
+    html += '</div>';
   });
+  html += '</div>';
 
-  html += `<hr class="divider">
-    <button class="btn btn-accent btn-full" onclick="restartApp(false)">🔄 Ny runde med nye ord</button>`;
-  if (wrong.length > 0) html += `<button class="btn btn-blue btn-full" onclick="restartApp(true)">🔁 Øv fejlordene igen nu</button>`;
+  // AI exercises
+  if (aiData && aiData.exercises && aiData.exercises.length) {
+    html += '<h2 style="margin-bottom:14px">🏋️ Øvelser fra AI</h2>';
+    const icons = ['📚','✍️','🎲','🃏','🔤'];
+    aiData.exercises.forEach(function(ex, i) {
+      html += '<div class="exercise-block">';
+      html += '<h3>' + icons[i % icons.length] + ' ' + ex.title + ' <span style="font-size:0.75rem;color:var(--muted);font-weight:400">(' + ex.type + ')</span></h3>';
+      if (ex.why) html += '<div class="why-box">🧠 ' + ex.why + '</div>';
+      html += '<p>' + ex.description + '</p>';
+      if (ex.pattern_rule) html += '<p style="margin-top:8px;font-size:0.85rem;color:#a78bfa">📌 Regel: <em>' + ex.pattern_rule + '</em></p>';
+      if (ex.words && ex.words.length) {
+        html += '<div class="word-pills">';
+        ex.words.forEach(function(w) { html += '<button class="word-pill" onclick="speakWord(\'' + w.replace(/'/g, "\\'") + '\')">' + w + ' 🔈</button>'; });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+  }
 
-  document.getElementById('resultsContent').innerHTML = html;
+  // Daily tip
+  if (wrong.length > 0 && aiData && aiData.daily_tip) {
+    html += '<div class="tomorrow-box">';
+    html += '<h3>🗓️ Kom igen i morgen!</h3>';
+    html += '<p>' + aiData.daily_tip + '</p>';
+    html += '</div>';
+  }
+
+  // Action buttons
+  html += '<hr class="divider">';
+  if (profile.weakCategories.length > 0) {
+    html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">🎯 Start træning af svage kategorier</button>';
+  }
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goToWelcome()">🏠 Tilbage til start</button>';
+
+  document.getElementById('profileContent').innerHTML = html;
 }
 
-function renderFallbackResults() {
-  hide('phase-analyzing'); show('phase-results');
+function renderProfileFallback(profile) {
+  hide('phase-analyzing'); show('phase-profile');
   const correct = results.filter(r => r.correct).length;
   const wrong = results.filter(r => !r.correct);
-  const cats = [...new Set(wrong.map(r => r.category))];
+  const cats = profile.weakCategories;
 
   const encouragements = [
     'Godt gået! Øvelse gør mester 💪',
@@ -801,77 +1113,228 @@ function renderFallbackResults() {
   ];
   const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
 
-  let html = `
-    <div class="ai-bubble">
-      <p><strong>${encouragement}</strong></p>
-      <p style="margin-top:8px">Du fik ${correct} ud af ${results.length} rigtige.${wrong.length > 0 ? ` Fokusér på: ${cats.join(', ')}.` : ' Perfekt score!'}</p>
-    </div>
-    <div class="score-row">
-      <div class="score-box"><div class="num num-green">${correct}</div><div class="lbl">Rigtige ✓</div></div>
-      <div class="score-box"><div class="num num-red">${wrong.length}</div><div class="lbl">Fejl ✗</div></div>
-      <div class="score-box"><div class="num num-yellow">${Math.round(correct/results.length*100)}%</div><div class="lbl">Score</div></div>
-    </div>`;
+  let html = '';
 
-  if (cats.length) {
-    html += `<p style="margin-bottom:8px;font-size:0.85rem;color:var(--muted)">Fokusér på disse mønstre:</p><div style="margin-bottom:16px">`;
-    cats.forEach(p => { html += `<span class="tag">🎯 ${p}</span>`; });
-    html += `</div>`;
+  html += '<div class="ai-bubble"><p><strong>' + encouragement + '</strong></p>';
+  html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige.' + (wrong.length > 0 ? ' Fokusér på: ' + cats.join(', ') + '.' : ' Perfekt score!') + '</p></div>';
+
+  // Overall score
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige ✓</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl ✗</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  // Per-category breakdown
+  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
+  for (const cat of ALL_CATEGORIES) {
+    const cs = profile.categoryScores[cat];
+    const score = cs.total;
+    const max = cs.max;
+    const pct = Math.round((score / max) * 100);
+    let color = 'var(--green)';
+    if (score === 0) color = 'var(--red)';
+    else if (score < max) color = 'var(--accent)';
+    html += '<div class="cat-score">';
+    html += '<div class="cat-icon">' + (CATEGORY_ICONS[cat] || '🔠') + '</div>';
+    html += '<div class="cat-name">' + cat + '</div>';
+    html += '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>';
+    html += '<div class="cat-result" style="color:' + color + '">' + score + '/' + max + '</div>';
+    html += '</div>';
   }
 
-  html += `<div style="margin-bottom:18px">`;
-  results.forEach(r => {
-    html += `<div class="word-attempt">
-      <span><strong>${r.word}</strong> <span style="font-size:0.72rem;color:var(--muted)">${r.category}</span></span>
-      <span>${r.correct ? `<span class="correct-mark">✓ rigtigt</span>` : `<span class="wrong-mark">✗ ${r.userAnswer}</span>`}</span>
-    </div>`;
+  // Per-word results
+  html += '<div style="margin:18px 0">';
+  results.forEach(function(r) {
+    html += '<div class="word-attempt">';
+    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+    html += '<span>' + (r.correct ? '<span class="correct-mark">✓ rigtigt</span>' : '<span class="wrong-mark">✗ ' + r.userAnswer + '</span>') + '</span>';
+    html += '</div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
-  if (wrong.length > 0) {
-    html += `<h2 style="margin-bottom:14px">📖 Regler for dine fejlord</h2>`;
-    cats.forEach(cat => {
+  // Show rules for weak categories
+  if (cats.length > 0) {
+    html += '<h2 style="margin-bottom:14px">📖 Regler for dine fejlkategorier</h2>';
+    cats.forEach(function(cat) {
       const catWrong = wrong.filter(r => r.category === cat);
       const rule = PATTERN_RULES[cat] || '';
-      html += `<div class="exercise-block">
-        <h3>🔠 ${cat}</h3>
-        ${rule ? `<div class="why-box">📌 ${rule}</div>` : ''}
-        <div class="word-pills">`;
-      catWrong.forEach(r => {
-        html += `<button class="word-pill" onclick="speakWord('${r.word}')">${r.word} 🔈</button>`;
+      html += '<div class="exercise-block">';
+      html += '<h3>' + (CATEGORY_ICONS[cat] || '🔠') + ' ' + cat + '</h3>';
+      if (rule) html += '<div class="why-box">📌 ' + rule + '</div>';
+      html += '<div class="word-pills">';
+      catWrong.forEach(function(r) {
+        html += '<button class="word-pill" onclick="speakWord(\'' + r.word.replace(/'/g, "\\'") + '\')">' + r.word + ' 🔈</button>';
       });
-      // Add related words from WORD_BANK for extra practice
-      const extra = WORD_BANK[cat]?.filter(w => !catWrong.find(cw => cw.word === w.word)).slice(0, 3) || [];
-      extra.forEach(w => {
-        html += `<button class="word-pill" onclick="speakWord('${w.word}')">${w.word} 🔈</button>`;
+      // Add extra practice words from same category
+      const extra = WORD_BANK[cat].filter(function(w) { return !catWrong.find(function(cw) { return cw.word === w.word; }); }).slice(0, 3);
+      extra.forEach(function(w) {
+        html += '<button class="word-pill" onclick="speakWord(\'' + w.word.replace(/'/g, "\\'") + '\')">' + w.word + ' 🔈</button>';
       });
-      html += `</div></div>`;
+      html += '</div></div>';
     });
 
-    html += `<div class="tomorrow-box">
-      <h3>🗓️ Kom igen i morgen!</h3>
-      <p>Skriv hvert fejlord 3 gange og sig det højt mens du skriver. Forskning viser at korte daglige sessioner virker bedre end én lang session.</p>
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px">Disse ord er gemt til næste gang:</p>
-      <div class="retry-words">`;
-    wrong.forEach(r => { html += `<span class="retry-word">${r.word}</span>`; });
-    html += `</div></div>`;
+    html += '<div class="tomorrow-box">';
+    html += '<h3>🗓️ Kom igen i morgen!</h3>';
+    html += '<p>Skriv hvert fejlord 3 gange og sig det højt mens du skriver. Forskning viser at korte daglige sessioner virker bedre end én lang session.</p>';
+    html += '</div>';
   }
 
-  html += `<hr class="divider">
-    <button class="btn btn-accent btn-full" onclick="restartApp(false)">🔄 Ny runde med nye ord</button>`;
-  if (wrong.length > 0) html += `<button class="btn btn-blue btn-full" onclick="restartApp(true)">🔁 Øv fejlordene igen nu</button>`;
+  // Action buttons
+  html += '<hr class="divider">';
+  if (profile.weakCategories.length > 0) {
+    html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">🎯 Start træning af svage kategorier</button>';
+  }
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goToWelcome()">🏠 Tilbage til start</button>';
+
+  document.getElementById('profileContent').innerHTML = html;
+}
+
+// ── Render Training Results ───────────────────────────────────────────────
+function renderTrainingResults() {
+  show('phase-results');
+  const correct = results.filter(r => r.correct).length;
+  const wrong = results.filter(r => !r.correct);
+  const sr = loadSRData();
+
+  let html = '';
+
+  const encouragements = [
+    'Godt gået med træningen! 💪',
+    'Flot indsats! Du bliver bedre og bedre 🌟',
+    'Stærkt! Øvelse gør mester ⭐'
+  ];
+  html += '<div class="ai-bubble"><p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
+  html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige i træningen.</p></div>';
+
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige ✓</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl ✗</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  // Per-word results with SR level
+  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
+  html += '<div style="margin-bottom:18px">';
+  results.forEach(function(r) {
+    const srWord = sr.words[r.word];
+    const level = srWord ? srWord.level : 0;
+    const levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
+    const levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+    html += '<div class="word-attempt">';
+    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+    html += '<span>';
+    html += (r.correct ? '<span class="correct-mark">✓</span>' : '<span class="wrong-mark">✗ ' + r.userAnswer + '</span>');
+    html += ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
+    html += '</span></div>';
+  });
+  html += '</div>';
+
+  // Action buttons
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goToWelcome()">🏠 Tilbage til start</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
 
-function restartApp(isRetry) {
-  document.querySelectorAll('.session-badge').forEach(el => el.remove());
-  hide('phase-results'); hide('phase-analyzing'); show('phase-welcome');
-  const retry = loadWrongWords();
-  const btn = document.getElementById('retryBtn');
-  if (retry?.length > 0) { btn.textContent = `🔁 Øv ${retry.length} ord du fejlede sidst`; show('retryBtn'); }
-  else hide('retryBtn');
-  if (isRetry) setTimeout(() => startTest(true), 100);
+// ── Render Review Results ─────────────────────────────────────────────────
+function renderReviewResults() {
+  show('phase-results');
+  const correct = results.filter(r => r.correct).length;
+  const wrong = results.filter(r => !r.correct);
+  const sr = loadSRData();
+
+  let html = '';
+
+  html += '<div class="ai-bubble"><p><strong>Gennemgang færdig!</strong></p>';
+  html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige i gennemgangen.</p></div>';
+
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige ✓</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl ✗</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  // Per-word results with SR level
+  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">SR-opdateringer</h2>';
+  html += '<div style="margin-bottom:18px">';
+  results.forEach(function(r) {
+    const srWord = sr.words[r.word];
+    const level = srWord ? srWord.level : 0;
+    const levelNames = ['Nulstillet', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
+    const levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+    html += '<div class="word-attempt">';
+    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+    html += '<span>';
+    html += (r.correct ? '<span class="correct-mark">✓</span>' : '<span class="wrong-mark">✗ ' + r.userAnswer + '</span>');
+    html += ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
+    html += '</span></div>';
+  });
+  html += '</div>';
+
+  // Action buttons
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goToWelcome()">🏠 Tilbage til start</button>';
+
+  document.getElementById('resultsContent').innerHTML = html;
 }
+
+// ── Navigation ────────────────────────────────────────────────────────────
+function goToWelcome() {
+  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
+  hide('phase-test'); hide('phase-analyzing'); hide('phase-profile'); hide('phase-results');
+  show('phase-welcome');
+  refreshWelcomeButtons();
+}
+
+function refreshWelcomeButtons() {
+  const profile = loadProfile();
+  const dueWords = getDueWords();
+
+  const startBtn = document.getElementById('startDiagBtn');
+  const continueBtn = document.getElementById('continueTrainBtn');
+  const newDiagBtn = document.getElementById('newDiagBtn');
+  const reviewBtn = document.getElementById('reviewBtn');
+
+  if (profile) {
+    // Profile exists: show continue training + new diagnostic
+    startBtn.classList.add('hidden');
+    if (profile.weakCategories && profile.weakCategories.length > 0) {
+      continueBtn.classList.remove('hidden');
+    } else {
+      continueBtn.classList.add('hidden');
+    }
+    newDiagBtn.classList.remove('hidden');
+  } else {
+    // No profile: show start diagnostic only
+    startBtn.classList.remove('hidden');
+    continueBtn.classList.add('hidden');
+    newDiagBtn.classList.add('hidden');
+  }
+
+  // SR review button
+  if (dueWords.length > 0) {
+    reviewBtn.textContent = '📖 ' + dueWords.length + ' ord klar til gennemgang';
+    reviewBtn.classList.remove('hidden');
+  } else {
+    reviewBtn.classList.add('hidden');
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+window.addEventListener('load', function() {
+  window.speechSynthesis.getVoices();
+  // Restore saved API key
+  const savedKey = loadApiKey();
+  const keyInput = document.getElementById('apiKeyInput');
+  if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }
+  updateApiStatus2(savedKey);
+  setVoice(loadVoice());
+  refreshWelcomeButtons();
+});
 </script>
 </body>
 </html>

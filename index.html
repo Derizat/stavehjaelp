@@ -355,93 +355,8 @@
 
 <script>
 
-// Word bank with 4 levels across 6 categories
-var WORD_BANK = {
-  "Stumme bogstaver": [
-    { word: "hvid", hint: "En farve som sne", patternHint: "stumt 'h' i 'hv'", sentence: "Sneen er helt hvid i dag.", level: 1, category: "Stumme bogstaver" },
-    { word: "hjul", hint: "Rund ting på en cykel", patternHint: "stumt 'h' i 'hj'", sentence: "Cyklen har to hjul.", level: 1, category: "Stumme bogstaver" },
-    { word: "hvad", hint: "Spørger om en ting", patternHint: "stumt 'h' i 'hv'", sentence: "Hvad skal vi lege i dag?", level: 1, category: "Stumme bogstaver" },
-    { word: "hjælpe", hint: "Give en hånd", patternHint: "stumt 'h' i 'hj'", sentence: "Kan du hjælpe mig med opgaven?", level: 2, category: "Stumme bogstaver" },
-    { word: "hvem", hint: "Spørger om en person", patternHint: "stumt 'h' i 'hv'", sentence: "Hvem har du inviteret til festen?", level: 2, category: "Stumme bogstaver" },
-    { word: "hjerte", hint: "Pumper blodet rundt", patternHint: "stumt 'h' i 'hj'", sentence: "Hjertet slår hurtigere når man løber.", level: 2, category: "Stumme bogstaver" },
-    { word: "hvisker", hint: "Taler meget stille", patternHint: "stumt 'h' i 'hv'", sentence: "Hun hvisker en hemmelighed til sin veninde.", level: 3, category: "Stumme bogstaver" },
-    { word: "halvanden", hint: "Tallet 1,5", patternHint: "stumt 'v' i 'halv'", sentence: "Vi ventede i halvanden time på bussen.", level: 3, category: "Stumme bogstaver" },
-    { word: "tvivler", hint: "Er usikker på noget", patternHint: "stumt 'v' foran 'l'", sentence: "Han tvivler på om det kan passe.", level: 3, category: "Stumme bogstaver" },
-    { word: "egentlig", hint: "Faktisk, i virkeligheden", patternHint: "stumt 'g'", sentence: "Hvad vil du egentlig lave når du bliver stor?", level: 4, category: "Stumme bogstaver" },
-    { word: "selvfølgelig", hint: "Naturligvis", patternHint: "'selv'+'følge'+'lig'", sentence: "Du må selvfølgelig gerne komme med os.", level: 4, category: "Stumme bogstaver" },
-    { word: "chokolade", hint: "Sød brun godbid", patternHint: "stumt 'h' i 'ch'", sentence: "Vi fik varm chokolade efter skituren.", level: 4, category: "Stumme bogstaver" }
-  ],
-  "Dobbeltkonsonant": [
-    { word: "hoppe", hint: "Springe op og ned", patternHint: "dobbelt-p efter kort 'o'", sentence: "Kaninen kan hoppe højt.", level: 1, category: "Dobbeltkonsonant" },
-    { word: "kaffe", hint: "Varm drik til voksne", patternHint: "dobbelt-f efter kort 'a'", sentence: "Mor drikker kaffe om morgenen.", level: 1, category: "Dobbeltkonsonant" },
-    { word: "sommer", hint: "Den varme årstid", patternHint: "dobbelt-m efter kort 'o'", sentence: "Om sommeren bader vi i havet.", level: 1, category: "Dobbeltkonsonant" },
-    { word: "klasse", hint: "En gruppe elever", patternHint: "dobbelt-s efter kort 'a'", sentence: "Der er 24 elever i vores klasse.", level: 2, category: "Dobbeltkonsonant" },
-    { word: "briller", hint: "Sættes på næsen", patternHint: "dobbelt-l efter kort 'i'", sentence: "Bedstefar kan ikke læse uden sine briller.", level: 2, category: "Dobbeltkonsonant" },
-    { word: "klipper", hint: "Skærer med en saks", patternHint: "dobbelt-p efter kort 'i'", sentence: "Frisøren klipper mit hår.", level: 2, category: "Dobbeltkonsonant" },
-    { word: "tilladelse", hint: "Lov til noget", patternHint: "dobbelt-l efter kort 'i'", sentence: "Man skal have tilladelse til at fiske her.", level: 3, category: "Dobbeltkonsonant" },
-    { word: "kommando", hint: "En ordre", patternHint: "dobbelt-m efter kort 'o'", sentence: "Hunden forstår hver eneste kommando.", level: 3, category: "Dobbeltkonsonant" },
-    { word: "mulighed", hint: "En chance", patternHint: "enkelt-l (lang vokal)", sentence: "Det er en god mulighed for at lære.", level: 3, category: "Dobbeltkonsonant" },
-    { word: "interessant", hint: "Spændende at høre om", patternHint: "dobbelt-r og dobbelt-s", sentence: "Bogen var utroligt interessant.", level: 4, category: "Dobbeltkonsonant" },
-    { word: "forskellig", hint: "Ikke ens", patternHint: "dobbelt-l efter kort 'e'", sentence: "Tvillingerne er faktisk meget forskellige.", level: 4, category: "Dobbeltkonsonant" },
-    { word: "kommunikation", hint: "At udveksle information", patternHint: "dobbelt-m", sentence: "God kommunikation er vigtigt i et team.", level: 4, category: "Dobbeltkonsonant" }
-  ],
-  "For- og efterstavelser": [
-    { word: "venlig", hint: "Rar og sød", patternHint: "efterstavelse '-lig'", sentence: "Den nye dreng er meget venlig.", level: 1, category: "For- og efterstavelser" },
-    { word: "langsom", hint: "Ikke hurtig", patternHint: "efterstavelse '-som'", sentence: "Sneglen er meget langsom.", level: 1, category: "For- og efterstavelser" },
-    { word: "umulig", hint: "Kan ikke lade sig gøre", patternHint: "forstavelse 'u-'", sentence: "Det er umuligt at flyve uden vinger.", level: 1, category: "For- og efterstavelser" },
-    { word: "begynde", hint: "Starte på noget", patternHint: "forstavelse 'be-'", sentence: "Vi skal begynde med den første opgave.", level: 2, category: "For- og efterstavelser" },
-    { word: "kærlig", hint: "Fuld af kærlighed", patternHint: "efterstavelse '-lig'", sentence: "Hunden er meget kærlig mod børnene.", level: 2, category: "For- og efterstavelser" },
-    { word: "fordi", hint: "Angiver en grund", patternHint: "forstavelse 'for-'", sentence: "Vi blev inde fordi det regnede.", level: 2, category: "For- og efterstavelser" },
-    { word: "bekymret", hint: "Urolig for noget", patternHint: "forstavelse 'be-'", sentence: "Læreren er bekymret for den nye elev.", level: 3, category: "For- og efterstavelser" },
-    { word: "forklaring", hint: "Når noget bliver forklaret", patternHint: "'for-' + '-ing'", sentence: "Kan du give en forklaring på hvad der skete?", level: 3, category: "For- og efterstavelser" },
-    { word: "kærlighed", hint: "Dyb følelse for nogen", patternHint: "efterstavelse '-hed'", sentence: "Forældrenes kærlighed er ubetinget.", level: 3, category: "For- og efterstavelser" },
-    { word: "forberedelse", hint: "Gøre sig klar", patternHint: "'for-' + 'bered' + '-else'", sentence: "Forberedelse til eksamen tager lang tid.", level: 4, category: "For- og efterstavelser" },
-    { word: "vanskelighed", hint: "Noget der er svært", patternHint: "'vanskel' + '-ig' + '-hed'", sentence: "Den største vanskelighed var de mange regler.", level: 4, category: "For- og efterstavelser" },
-    { word: "beskyttelse", hint: "At holde nogen sikker", patternHint: "'be-' + 'skyt' + '-else'", sentence: "Hjelmen giver beskyttelse når du cykler.", level: 4, category: "For- og efterstavelser" }
-  ],
-  "Sammensatte ord": [
-    { word: "fodbold", hint: "Sport med en bold", patternHint: "'fod' + 'bold'", sentence: "Vi spiller fodbold i haven.", level: 1, category: "Sammensatte ord" },
-    { word: "madpakke", hint: "Frokost man tager med", patternHint: "'mad' + 'pakke'", sentence: "Min madpakke er i tasken.", level: 1, category: "Sammensatte ord" },
-    { word: "skoletaske", hint: "Taske til skolen", patternHint: "'skole' + 'taske'", sentence: "Min skoletaske er blå.", level: 1, category: "Sammensatte ord" },
-    { word: "sengetøj", hint: "Det man har i sengen", patternHint: "'senge' + 'tøj'", sentence: "Jeg fik nyt sengetøj til min fødselsdag.", level: 2, category: "Sammensatte ord" },
-    { word: "tandlæge", hint: "En der tjekker tænder", patternHint: "'tand' + 'læge'", sentence: "Jeg skal til tandlæge i morgen.", level: 2, category: "Sammensatte ord" },
-    { word: "badminton", hint: "Sport med fjerbold", patternHint: "sammensat fremmedord", sentence: "Vi spiller badminton i hallen.", level: 2, category: "Sammensatte ord" },
-    { word: "skolearbejde", hint: "Lektier og opgaver", patternHint: "'skole' + 'arbejde'", sentence: "Vi har meget skolearbejde for i dag.", level: 3, category: "Sammensatte ord" },
-    { word: "hjemmeopgave", hint: "Lektie til derhjemme", patternHint: "'hjemme' + 'opgave'", sentence: "Husk at lave din hjemmeopgave inden i morgen.", level: 3, category: "Sammensatte ord" },
-    { word: "verdensrekord", hint: "Bedst i hele verden", patternHint: "'verden' + 's' + 'rekord' (fuge-s)", sentence: "Hun satte verdensrekord i svømning.", level: 3, category: "Sammensatte ord" },
-    { word: "ungdomsuddannelse", hint: "Uddannelse efter folkeskolen", patternHint: "'ungdom' + 's' + 'uddannelse'", sentence: "Hun starter på en ungdomsuddannelse til sommer.", level: 4, category: "Sammensatte ord" },
-    { word: "biblioteket", hint: "Bygning med bøger", patternHint: "'bibliotek' + '-et'", sentence: "Vi besøger biblioteket hver tirsdag.", level: 4, category: "Sammensatte ord" },
-    { word: "arbejdsmarkedet", hint: "Hvor folk har jobs", patternHint: "'arbejd' + 's' + 'marked' + '-et'", sentence: "Det er svært at komme ind på arbejdsmarkedet.", level: 4, category: "Sammensatte ord" }
-  ],
-  "Verbernes bøjning": [
-    { word: "spiste", hint: "Datid af 'spise'", patternHint: "datid: '-te'", sentence: "Vi spiste pandekager til aftensmad.", level: 1, category: "Verbernes bøjning" },
-    { word: "legede", hint: "Datid af 'lege'", patternHint: "datid: '-ede'", sentence: "Vi legede i parken i går.", level: 1, category: "Verbernes bøjning" },
-    { word: "hoppede", hint: "Datid af 'hoppe'", patternHint: "datid: '-ede'", sentence: "Katten hoppede op på bordet.", level: 1, category: "Verbernes bøjning" },
-    { word: "cyklede", hint: "Datid af 'cykle'", patternHint: "datid: '-ede'", sentence: "Jeg cyklede til skole i dag.", level: 2, category: "Verbernes bøjning" },
-    { word: "købte", hint: "Datid af 'købe'", patternHint: "datid: '-te'", sentence: "Vi købte is nede i kiosken.", level: 2, category: "Verbernes bøjning" },
-    { word: "tænkte", hint: "Datid af 'tænke'", patternHint: "datid: '-te'", sentence: "Jeg tænkte på dig hele dagen.", level: 2, category: "Verbernes bøjning" },
-    { word: "bestemte", hint: "Datid af 'bestemme'", patternHint: "datid: '-te' (mm->m+te)", sentence: "Hun bestemte sig for at tage en pause.", level: 3, category: "Verbernes bøjning" },
-    { word: "begyndte", hint: "Datid af 'begynde'", patternHint: "datid: '-te'", sentence: "Koncerten begyndte præcis klokken otte.", level: 3, category: "Verbernes bøjning" },
-    { word: "opdagede", hint: "Datid af 'opdage'", patternHint: "datid: '-ede'", sentence: "Forskeren opdagede en helt ny dyreart.", level: 3, category: "Verbernes bøjning" },
-    { word: "udviklet", hint: "Kort tillægsform af 'udvikle'", patternHint: "tillægsform: '-et'", sentence: "Holdet har udviklet en ny strategi.", level: 4, category: "Verbernes bøjning" },
-    { word: "overrasket", hint: "Kort tillægsform af 'overraske'", patternHint: "tillægsform: '-et'", sentence: "Vi blev fuldstændig overrasket over resultatet.", level: 4, category: "Verbernes bøjning" },
-    { word: "produceret", hint: "Kort tillægsform af 'producere'", patternHint: "tillægsform: '-et'", sentence: "Filmen er produceret i Danmark.", level: 4, category: "Verbernes bøjning" }
-  ],
-  "Navneordsendelser": [
-    { word: "hunde", hint: "Flertal af 'hund'", patternHint: "flertal: '-e'", sentence: "Der er to hunde i parken.", level: 1, category: "Navneordsendelser" },
-    { word: "huset", hint: "Bestemt form af 'hus'", patternHint: "bestemt: '-et'", sentence: "Huset er rødt med hvide vinduer.", level: 1, category: "Navneordsendelser" },
-    { word: "stolen", hint: "Bestemt form af 'stol'", patternHint: "bestemt: '-en'", sentence: "Stolen står ved bordet.", level: 1, category: "Navneordsendelser" },
-    { word: "lamper", hint: "Flertal af 'lampe'", patternHint: "flertal: '-er'", sentence: "Alle lamper i stuen var tændt.", level: 2, category: "Navneordsendelser" },
-    { word: "bøger", hint: "Flertal af 'bog'", patternHint: "uregelmæssigt: 'o'->'ø'", sentence: "Jeg har læst tre bøger i ferien.", level: 2, category: "Navneordsendelser" },
-    { word: "børnene", hint: "Bestemt flertal af 'barn'", patternHint: "uregelmæssigt + '-ene'", sentence: "Børnene legede ude i solen.", level: 2, category: "Navneordsendelser" },
-    { word: "mænd", hint: "Flertal af 'mand'", patternHint: "uregelmæssigt: 'a'->'æ'", sentence: "De to mænd ventede ved indgangen.", level: 3, category: "Navneordsendelser" },
-    { word: "princippet", hint: "Bestemt form af 'princip'", patternHint: "dobbelt-p + '-et'", sentence: "Princippet bag forsøget er faktisk simpelt.", level: 3, category: "Navneordsendelser" },
-    { word: "gymnasiet", hint: "Bestemt form af 'gymnasium'", patternHint: "'-ium' -> '-iet'", sentence: "Min storesøster går på gymnasiet i Odense.", level: 3, category: "Navneordsendelser" },
-    { word: "laboratoriet", hint: "Bestemt form af 'laboratorium'", patternHint: "'-ium' -> '-iet'", sentence: "Vi lavede forsøg i laboratoriet.", level: 4, category: "Navneordsendelser" },
-    { word: "vanskelighederne", hint: "Bestemt flertal af 'vanskelighed'", patternHint: "'-hed' + '-er' + '-ne'", sentence: "Vanskelighederne blev større og større.", level: 4, category: "Navneordsendelser" },
-    { word: "seværdighederne", hint: "Bestemt flertal af 'seværdighed'", patternHint: "'se' + 'værdig' + '-hed' + '-er' + '-ne'", sentence: "Vi besøgte alle seværdighederne i byen.", level: 4, category: "Navneordsendelser" }
-  ]
-};
+// Word bank loaded from words.json
+var WORD_BANK = {};
 
 var PATTERN_RULES = {
   "Stumme bogstaver": "I dansk er nogle bogstaver 'stumme' — de skrives men udtales ikke. Typiske eksempler: 'hj-' (hjælp), 'hv-' (hvid), stumt 'v' (halvt, selv), og stumt 'g' (egentlig). Tip: Hvis du kender ordets oprindelse eller familie, kan du ofte huske det stumme bogstav.",
@@ -461,7 +376,7 @@ var CATEGORY_ICONS = {
   "Navneordsendelser": "\u{1F4DD}"
 };
 
-var ALL_CATEGORIES = Object.keys(WORD_BANK);
+var ALL_CATEGORIES = [];
 
 var LEVEL_LABELS = {
   1: { text: "\u{1F7E2} Niveau 1 (1.-2. klasse)", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
@@ -1556,6 +1471,21 @@ function refreshWelcomeButtons() {
 // Init
 window.addEventListener('load', function() {
   window.speechSynthesis.getVoices();
+  // Load word bank from JSON
+  fetch('words.json')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      WORD_BANK = data;
+      ALL_CATEGORIES = Object.keys(WORD_BANK);
+      initApp();
+    })
+    .catch(function(err) {
+      console.error('Kunne ikke hente words.json:', err);
+      document.getElementById('phase-welcome').innerHTML = '<div style="text-align:center;padding:40px"><h2 style="color:var(--red)">Fejl</h2><p style="color:var(--muted)">Kunne ikke hente ordbanken. Prøv at genindlæse siden.</p></div>';
+    });
+});
+
+function initApp() {
   var savedKey = loadApiKey();
   var keyInput = document.getElementById('apiKeyInput');
   if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }
@@ -1566,7 +1496,7 @@ window.addEventListener('load', function() {
   setVoice(loadVoice());
   restoreGradeSelection();
   refreshWelcomeButtons();
-});
+}
 
 </script>
 </body>

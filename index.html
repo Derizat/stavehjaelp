@@ -69,13 +69,17 @@
 
   .hint-text { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 16px; }
 
-  input[type="text"] {
+  input[type="text"], input[type="password"] {
     width: 100%; background: var(--card2); border: 2px solid #3d4270; border-radius: 10px; color: var(--text);
     font-family: 'Nunito', sans-serif; font-size: 1.3rem; font-weight: 700;
     padding: 14px 18px; outline: none; transition: border-color 0.2s; text-align: center; letter-spacing: 2px;
   }
-  input[type="text"]:focus { border-color: var(--accent2); }
-  input[type="text"]::placeholder { color: #555; font-weight: 400; letter-spacing: 0; }
+  input[type="text"]:focus, input[type="password"]:focus { border-color: var(--accent2); }
+  input[type="text"]::placeholder, input[type="password"]::placeholder { color: #555; font-weight: 400; letter-spacing: 0; }
+  .settings-input {
+    font-size: 0.85rem !important; font-weight: 400 !important; text-align: left !important; letter-spacing: 0 !important;
+    padding: 8px 12px !important; border-width: 1px !important;
+  }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -130,7 +134,7 @@
   .retry-word { background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); border-radius: 99px; padding: 3px 10px; font-size: 0.85rem; font-weight: 700; color: #fca5a5; }
 
   .ai-bubble { background: linear-gradient(135deg, #1e1060, #0d1b4b); border: 1px solid #3d4270; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; position: relative; }
-  .ai-bubble::before { content: '🦊'; position: absolute; top: -14px; left: 16px; font-size: 1.6rem; }
+  .ai-bubble::before { content: '\01F98A'; position: absolute; top: -14px; left: 16px; font-size: 1.6rem; }
   .ai-bubble p { font-size: 0.95rem; line-height: 1.65; color: var(--text); margin-top: 6px; }
 
   .spinner { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--muted); font-size: 0.95rem; padding: 20px 0; }
@@ -171,127 +175,162 @@
     text-align: center; font-size: 0.85rem; font-weight: 700; padding: 6px 14px;
     border-radius: 99px; margin-bottom: 12px; display: inline-block;
   }
+
+  .grade-selector { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0 16px; }
+  .grade-btn {
+    background: var(--card2); border: 2px solid #3d4270; border-radius: 10px;
+    color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
+    padding: 8px 14px; cursor: pointer; transition: all 0.15s; min-width: 52px; text-align: center;
+  }
+  .grade-btn:hover { border-color: var(--accent); color: var(--text); }
+  .grade-btn.active { background: rgba(245,166,35,0.2); border-color: var(--accent); color: var(--accent); }
+
+  .settings-toggle {
+    background: none; border: 1px solid #3d4270; border-radius: 10px;
+    color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
+    padding: 10px 18px; cursor: pointer; transition: all 0.15s; width: 100%; text-align: center; margin-top: 12px;
+  }
+  .settings-toggle:hover { border-color: var(--accent2); color: var(--text); }
+  .settings-panel { display: none; margin-top: 12px; }
+  .settings-panel.open { display: block; }
+
+  .level-meter { background: #2d3158; border-radius: 99px; height: 14px; overflow: hidden; margin: 8px 0 12px; }
+  .level-meter-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
+
+  .level-comparison {
+    text-align: center; padding: 14px; border-radius: 12px; margin: 12px 0 16px;
+    font-size: 1rem; font-weight: 700; line-height: 1.5;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">🦊 Stavehjælpen</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
 <!-- WELCOME -->
 <div id="phase-welcome" class="card">
   <div style="text-align:center; margin-bottom:16px">
-    <div style="font-size:3.5rem; margin-bottom:10px">📝</div>
-    <h2>Klar til at træne?</h2>
+    <div style="font-size:3.5rem; margin-bottom:10px">&#x1F4DD;</div>
+    <h2>Klar til at teste din stavning?</h2>
     <p style="color:var(--muted); line-height:1.6; margin-bottom:18px">
-      Test din stavning med en <strong style="color:var(--accent)">diagnostisk test</strong> på 18 ord fordelt på 6 kategorier.<br>
-      Find dine svage sider og træn målrettet!
+      Stavehjælpen finder ud af hvad du er god til,<br>
+      og hvad du skal øve dig på!
     </p>
   </div>
   <div class="pattern-list">
-    <div class="pattern-item"><div class="pi-icon">🔇</div><div class="pi-text"><strong>Stumme bogstaver</strong><span>Bogstaver der skrives men ikke udtales</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">✌️</div><div class="pi-text"><strong>Dobbeltkonsonant</strong><span>Hvornår skriver man to ens bogstaver?</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">🧩</div><div class="pi-text"><strong>For- og efterstavelser</strong><span>be-, for-, -hed, -else, -ing, -lig, -som</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">🔗</div><div class="pi-text"><strong>Sammensatte ord</strong><span>Del ordet op — så er det lettere!</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">✏️</div><div class="pi-text"><strong>Verbernes bøjning</strong><span>Datid og tillægsform: -ede/-te, -et/-t</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">📝</div><div class="pi-text"><strong>Navneordsendelser</strong><span>Flertal, bestemt form, uregelmæssige</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x1F507;</div><div class="pi-text"><strong>Stumme bogstaver</strong><span>Bogstaver der skrives men ikke udtales</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x270C;&#xFE0F;</div><div class="pi-text"><strong>Dobbeltkonsonant</strong><span>Hvornår skriver man to ens bogstaver?</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x1F9E9;</div><div class="pi-text"><strong>For- og efterstavelser</strong><span>be-, for-, -hed, -else, -ing, -lig, -som</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x1F517;</div><div class="pi-text"><strong>Sammensatte ord</strong><span>Del ordet op — så er det lettere!</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x270F;&#xFE0F;</div><div class="pi-text"><strong>Verbernes bøjning</strong><span>Datid og tillægsform: -ede/-te, -et/-t</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x1F4DD;</div><div class="pi-text"><strong>Navneordsendelser</strong><span>Flertal, bestemt form, uregelmæssige</span></div></div>
   </div>
-  <div id="apiKeySection" style="margin-top:16px">
-    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:1.2rem">🎙️</span>
-        <strong style="font-size:0.9rem">Google Cloud TTS API-nøgle</strong>
-        <span style="font-size:0.75rem;color:var(--muted)">(valgfri — for naturlig dansk stemme)</span>
-      </div>
-      <div style="display:flex;gap:8px">
-        <input type="password" id="apiKeyInput" placeholder="Indsæt din Google Cloud API-nøgle her..."
-          style="flex:1;background:#1a1d2e;border:1px solid #3d4270;border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;padding:8px 12px;outline:none"
-          oninput="saveApiKey(this.value)" />
-      </div>
-      <div style="margin-top:10px">
-        <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">🗣️ Vælg stemme</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          <button onclick="setVoice('da-DK-Neural2-D')" class="voice-btn" id="vbtn-D2">👨 Neural Mand</button>
-          <button onclick="setVoice('da-DK-Neural2-A')" class="voice-btn" id="vbtn-A2">👩 Neural Kvinde</button>
-          <button onclick="setVoice('da-DK-Wavenet-C')" class="voice-btn" id="vbtn-C2">👨 WaveNet Mand</button>
-          <button onclick="setVoice('da-DK-Wavenet-A')" class="voice-btn" id="vbtn-WA2">👩 WaveNet Kvinde</button>
-        </div>
-      </div>
-      <p id="apiKeyStatus" style="font-size:0.78rem;color:var(--muted);margin-top:6px">
-        Opret gratis på <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> → aktiver Text-to-Speech API → Credentials → API Key.
-      </p>
-    </div>
-  </div>
-  <div style="margin-top:12px">
-    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:1.2rem">🤖</span>
-        <strong style="font-size:0.9rem">Anthropic API-nøgle</strong>
-        <span style="font-size:0.75rem;color:var(--muted)">(til AI-analyse af fejl)</span>
-      </div>
-      <input type="password" id="anthropicKeyInput" placeholder="Indsæt din Anthropic API-nøgle her..."
-        style="width:100%;background:#1a1d2e;border:1px solid #3d4270;border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;padding:8px 12px;outline:none"
-        oninput="saveAnthropicKey(this.value)" />
-      <p id="anthropicKeyStatus" style="font-size:0.78rem;color:var(--muted);margin-top:6px">
-        Hent nøgle på <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a> → API Keys. Uden nøgle vises en simpel opsummering.
-      </p>
+
+  <div style="text-align:center; margin-top:16px">
+    <p style="font-weight:700; font-size:0.95rem; margin-bottom:6px">Hvilket klassetrin går du i?</p>
+    <div class="grade-selector" id="gradeSelector">
+      <button class="grade-btn" onclick="selectGrade(1)">1. kl</button>
+      <button class="grade-btn" onclick="selectGrade(2)">2. kl</button>
+      <button class="grade-btn" onclick="selectGrade(3)">3. kl</button>
+      <button class="grade-btn" onclick="selectGrade(4)">4. kl</button>
+      <button class="grade-btn" onclick="selectGrade(5)">5. kl</button>
+      <button class="grade-btn" onclick="selectGrade(6)">6. kl</button>
+      <button class="grade-btn" onclick="selectGrade(7)">7. kl</button>
+      <button class="grade-btn" onclick="selectGrade(8)">8. kl</button>
     </div>
   </div>
 
-  <button class="btn btn-accent btn-full" onclick="startDiagnostic()" style="margin-top:14px" id="startDiagBtn">🚀 Start diagnostisk test</button>
-  <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">🎯 Fortsæt træning</button>
-  <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>
-  <button class="btn btn-primary btn-full hidden" id="reviewBtn" onclick="startReview()">📖 0 ord klar til gennemgang</button>
+  <button class="btn btn-accent btn-full" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavetest!</button>
+  <button class="btn btn-primary btn-full hidden" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
+  <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
+  <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
+
+  <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
+  <div class="settings-panel" id="settingsPanel">
+    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:1.2rem">&#x1F399;&#xFE0F;</span>
+        <strong style="font-size:0.9rem">Google Cloud TTS API-nøgle</strong>
+        <span style="font-size:0.75rem;color:var(--muted)">(valgfri)</span>
+      </div>
+      <input type="password" id="apiKeyInput" class="settings-input" placeholder="Indsæt din Google Cloud API-nøgle her..."
+        oninput="saveApiKey(this.value)" />
+      <div style="margin-top:10px">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">&#x1F5E3;&#xFE0F; Vælg stemme</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <button onclick="setVoice('da-DK-Neural2-D')" class="voice-btn" id="vbtn-D2">&#x1F468; Neural Mand</button>
+          <button onclick="setVoice('da-DK-Neural2-A')" class="voice-btn" id="vbtn-A2">&#x1F469; Neural Kvinde</button>
+          <button onclick="setVoice('da-DK-Wavenet-C')" class="voice-btn" id="vbtn-C2">&#x1F468; WaveNet Mand</button>
+          <button onclick="setVoice('da-DK-Wavenet-A')" class="voice-btn" id="vbtn-WA2">&#x1F469; WaveNet Kvinde</button>
+        </div>
+      </div>
+      <p id="apiKeyStatus" style="font-size:0.78rem;color:var(--muted);margin-top:6px">
+        Opret gratis på <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> &rarr; aktiver Text-to-Speech API &rarr; Credentials &rarr; API Key.
+      </p>
+    </div>
+    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:1.2rem">&#x1F916;</span>
+        <strong style="font-size:0.9rem">Anthropic API-nøgle</strong>
+        <span style="font-size:0.75rem;color:var(--muted)">(til AI-analyse)</span>
+      </div>
+      <input type="password" id="anthropicKeyInput" class="settings-input" placeholder="Indsæt din Anthropic API-nøgle her..."
+        oninput="saveAnthropicKey(this.value)" />
+      <p id="anthropicKeyStatus" style="font-size:0.78rem;color:var(--muted);margin-top:6px">
+        Hent nøgle på <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a> &rarr; API Keys.
+      </p>
+    </div>
+  </div>
 </div>
 
 <!-- TEST (shared for diagnostic, training, review) -->
 <div id="phase-test" class="card hidden">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <div class="phase-label" style="margin-bottom:0" id="testPhaseLabel">📋 Diagnostisk test</div>
-    <button onclick="toggleApiPanel()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted)" title="API-indstillinger">⚙️</button>
+    <div class="phase-label" style="margin-bottom:0" id="testPhaseLabel">&#x1F4CB; Diagnostisk test</div>
+    <button onclick="toggleApiPanel()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted)" title="API-indstillinger">&#x2699;&#xFE0F;</button>
   </div>
   <div id="difficultyLabel" style="text-align:center;margin-bottom:10px"></div>
   <div id="apiPanel" style="display:none;background:var(--card2);border-radius:10px;padding:12px 14px;margin-bottom:14px;border:1px solid #3d4270">
-    <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">🎙️ Google Cloud TTS API-nøgle</div>
-    <input type="password" id="apiKeyInput2" placeholder="Indsæt din Google Cloud API-nøgle..."
-      style="width:100%;background:#1a1d2e;border:1px solid #3d4270;border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.85rem;padding:8px 12px;outline:none"
+    <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">&#x1F399;&#xFE0F; Google Cloud TTS API-nøgle</div>
+    <input type="password" id="apiKeyInput2" class="settings-input" placeholder="Indsæt din Google Cloud API-nøgle..."
       oninput="saveApiKey(this.value);syncApiInputs()" />
     <p id="apiKeyStatus2" style="font-size:0.75rem;color:var(--muted);margin-top:5px"></p>
     <div style="margin-top:10px">
-      <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">🗣️ Vælg stemme</div>
+      <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">&#x1F5E3;&#xFE0F; Vælg stemme</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="voiceSelector2">
-        <button onclick="setVoice('da-DK-Neural2-D')" class="voice-btn" id="vbtn-D">👨 Neural Mand</button>
-        <button onclick="setVoice('da-DK-Neural2-A')" class="voice-btn" id="vbtn-A">👩 Neural Kvinde</button>
-        <button onclick="setVoice('da-DK-Wavenet-C')" class="voice-btn" id="vbtn-C">👨 WaveNet Mand</button>
-        <button onclick="setVoice('da-DK-Wavenet-A')" class="voice-btn" id="vbtn-WA">👩 WaveNet Kvinde</button>
+        <button onclick="setVoice('da-DK-Neural2-D')" class="voice-btn" id="vbtn-D">&#x1F468; Neural Mand</button>
+        <button onclick="setVoice('da-DK-Neural2-A')" class="voice-btn" id="vbtn-A">&#x1F469; Neural Kvinde</button>
+        <button onclick="setVoice('da-DK-Wavenet-C')" class="voice-btn" id="vbtn-C">&#x1F468; WaveNet Mand</button>
+        <button onclick="setVoice('da-DK-Wavenet-A')" class="voice-btn" id="vbtn-WA">&#x1F469; WaveNet Kvinde</button>
       </div>
     </div>
   </div>
   <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
   <div class="score-row">
     <div class="score-box"><div class="num num-yellow" id="wordNum">1</div><div class="lbl">Ord nr.</div></div>
-    <div class="score-box"><div class="num num-green" id="scoreCorrect">0</div><div class="lbl">Rigtige ✓</div></div>
-    <div class="score-box"><div class="num num-red" id="scoreWrong">0</div><div class="lbl">Fejl ✗</div></div>
+    <div class="score-box"><div class="num num-green" id="scoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="scoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
   </div>
-  <div class="pattern-badge" id="patternBadge">🔠 Mønster</div>
+  <div class="pattern-badge" id="patternBadge">&#x1F520; Mønster</div>
   <div class="listen-box">
     <div class="word-flash" id="wordFlash"></div>
     <div class="countdown-bar-wrap" id="countdownWrap"><div class="countdown-bar" id="countdownBar"></div></div>
     <p class="hint-text" id="wordHint" style="margin-bottom:8px">Husk ordet og stav det!</p>
     <p id="wordSentence" style="font-size:0.88rem;color:var(--muted);font-style:italic;margin-bottom:12px;min-height:1.2em;line-height:1.5;padding:0 8px"></p>
-    <button class="btn-listen" id="listenBtn" onclick="speakCurrentWord()">🔈 Hør ordet igen</button>
+    <button class="btn-listen" id="listenBtn" onclick="speakCurrentWord()">&#x1F508; Hør ordet igen</button>
   </div>
   <input type="text" id="spellingInput" placeholder="Skriv ordet her..." autocomplete="off" autocorrect="off" spellcheck="false" />
   <div id="feedbackBox" style="display:none; margin-top:12px;"></div>
-  <button class="btn btn-primary btn-full" id="checkBtn" onclick="checkSpelling()" style="margin-top:14px">✏️ Tjek stavning</button>
-  <button class="btn btn-green btn-full hidden" id="nextBtn" onclick="nextWord()">➡️ Næste ord</button>
+  <button class="btn btn-primary btn-full" id="checkBtn" onclick="checkSpelling()" style="margin-top:14px">&#x270F;&#xFE0F; Tjek stavning</button>
+  <button class="btn btn-green btn-full hidden" id="nextBtn" onclick="nextWord()">&#x27A1;&#xFE0F; Næste ord</button>
 </div>
 
 <!-- ANALYZING -->
 <div id="phase-analyzing" class="card hidden">
-  <div class="phase-label">🤖 AI analyserer</div>
+  <div class="phase-label">&#x1F916; AI analyserer</div>
   <h2>Et øjeblik...</h2>
   <div class="ai-bubble">
     <p>Jeg finder mønstre i fejlene og laver forklaringer og øvelser der rammer præcis det du har brug for!</p>
@@ -304,124 +343,194 @@
 
 <!-- PROFILE (after diagnostic) -->
 <div id="phase-profile" class="card hidden">
-  <div class="phase-label">📊 Din profil</div>
+  <div class="phase-label">&#x1F4CA; Din profil</div>
   <div id="profileContent"></div>
 </div>
 
 <!-- RESULTS (after training/review) -->
 <div id="phase-results" class="card hidden">
-  <div class="phase-label">🎯 Resultater</div>
+  <div class="phase-label">&#x1F3AF; Resultater</div>
   <div id="resultsContent"></div>
 </div>
 
 <script>
-// ── Word bank grouped by category ──────────────────────────────────────────
-const WORD_BANK = {
+
+// Word bank with 4 levels across 6 categories
+var WORD_BANK = {
   "Stumme bogstaver": [
-    { word: "hjælpe", hint: "Give en hånd med noget", patternHint: "stumt 'h' i 'hj'", sentence: "Kan du hjælpe mig med denne opgave?", difficulty: 1 },
-    { word: "hvem", hint: "Spørger om en person", patternHint: "stumt 'h' i 'hv'", sentence: "Hvem har du inviteret til festen?", difficulty: 1 },
-    { word: "hjerte", hint: "Pumper blodet rundt i kroppen", patternHint: "stumt 'h' i 'hj'", sentence: "Hjertet slår hurtigere når man løber.", difficulty: 1 },
-    { word: "hvisker", hint: "Taler meget stille", patternHint: "stumt 'h' i 'hv'", sentence: "Hun hvisker en hemmelighed til sin veninde.", difficulty: 2 },
-    { word: "halvanden", hint: "Tallet 1,5", patternHint: "stumt 'v' i 'halv'", sentence: "Vi ventede i halvanden time på bussen.", difficulty: 2 },
-    { word: "tvivler", hint: "Er usikker på noget", patternHint: "stumt 'v' foran 'l'", sentence: "Han tvivler på om det kan passe.", difficulty: 2 },
-    { word: "egentlig", hint: "Faktisk, i virkeligheden", patternHint: "stumt 'g'", sentence: "Hvad vil du egentlig lave når du bliver stor?", difficulty: 3 },
-    { word: "selvfølgelig", hint: "Ja da, naturligvis", patternHint: "'selv'+'følge'+'lig'", sentence: "Du må selvfølgelig gerne komme med os.", difficulty: 3 },
+    { word: "hvid", hint: "En farve som sne", patternHint: "stumt 'h' i 'hv'", sentence: "Sneen er helt hvid i dag.", level: 1, category: "Stumme bogstaver" },
+    { word: "hjul", hint: "Rund ting på en cykel", patternHint: "stumt 'h' i 'hj'", sentence: "Cyklen har to hjul.", level: 1, category: "Stumme bogstaver" },
+    { word: "hvad", hint: "Spørger om en ting", patternHint: "stumt 'h' i 'hv'", sentence: "Hvad skal vi lege i dag?", level: 1, category: "Stumme bogstaver" },
+    { word: "hjælpe", hint: "Give en hånd", patternHint: "stumt 'h' i 'hj'", sentence: "Kan du hjælpe mig med opgaven?", level: 2, category: "Stumme bogstaver" },
+    { word: "hvem", hint: "Spørger om en person", patternHint: "stumt 'h' i 'hv'", sentence: "Hvem har du inviteret til festen?", level: 2, category: "Stumme bogstaver" },
+    { word: "hjerte", hint: "Pumper blodet rundt", patternHint: "stumt 'h' i 'hj'", sentence: "Hjertet slår hurtigere når man løber.", level: 2, category: "Stumme bogstaver" },
+    { word: "hvisker", hint: "Taler meget stille", patternHint: "stumt 'h' i 'hv'", sentence: "Hun hvisker en hemmelighed til sin veninde.", level: 3, category: "Stumme bogstaver" },
+    { word: "halvanden", hint: "Tallet 1,5", patternHint: "stumt 'v' i 'halv'", sentence: "Vi ventede i halvanden time på bussen.", level: 3, category: "Stumme bogstaver" },
+    { word: "tvivler", hint: "Er usikker på noget", patternHint: "stumt 'v' foran 'l'", sentence: "Han tvivler på om det kan passe.", level: 3, category: "Stumme bogstaver" },
+    { word: "egentlig", hint: "Faktisk, i virkeligheden", patternHint: "stumt 'g'", sentence: "Hvad vil du egentlig lave når du bliver stor?", level: 4, category: "Stumme bogstaver" },
+    { word: "selvfølgelig", hint: "Naturligvis", patternHint: "'selv'+'følge'+'lig'", sentence: "Du må selvfølgelig gerne komme med os.", level: 4, category: "Stumme bogstaver" },
+    { word: "chokolade", hint: "Sød brun godbid", patternHint: "stumt 'h' i 'ch'", sentence: "Vi fik varm chokolade efter skituren.", level: 4, category: "Stumme bogstaver" }
   ],
   "Dobbeltkonsonant": [
-    { word: "kaffe", hint: "Varm brun drik", patternHint: "dobbelt-f efter kort 'a'", sentence: "De voksne drikker kaffe hver morgen.", difficulty: 1 },
-    { word: "klasse", hint: "En gruppe elever", patternHint: "dobbelt-s efter kort 'a'", sentence: "Der er 24 elever i vores klasse.", difficulty: 1 },
-    { word: "hoppe", hint: "Springe op og ned", patternHint: "dobbelt-p efter kort 'o'", sentence: "Kaninerne elsker at hoppe rundt i haven.", difficulty: 1 },
-    { word: "tilladelse", hint: "Lov til noget", patternHint: "dobbelt-l efter kort 'i'", sentence: "Man skal have tilladelse til at fiske her.", difficulty: 2 },
-    { word: "briller", hint: "Sættes på næsen for at se", patternHint: "dobbelt-l efter kort 'i'", sentence: "Bedstefar kan ikke læse uden sine briller.", difficulty: 2 },
-    { word: "kommando", hint: "En ordre eller befaling", patternHint: "dobbelt-m efter kort 'o'", sentence: "Hunden forstår hver eneste kommando.", difficulty: 2 },
-    { word: "interessant", hint: "Spændende at høre om", patternHint: "dobbelt-r og dobbelt-s", sentence: "Bogen var utroligt interessant.", difficulty: 3 },
-    { word: "forskellig", hint: "Ikke ens", patternHint: "dobbelt-l efter kort 'e'", sentence: "Tvillingerne er faktisk meget forskellige.", difficulty: 3 },
+    { word: "hoppe", hint: "Springe op og ned", patternHint: "dobbelt-p efter kort 'o'", sentence: "Kaninen kan hoppe højt.", level: 1, category: "Dobbeltkonsonant" },
+    { word: "kaffe", hint: "Varm drik til voksne", patternHint: "dobbelt-f efter kort 'a'", sentence: "Mor drikker kaffe om morgenen.", level: 1, category: "Dobbeltkonsonant" },
+    { word: "sommer", hint: "Den varme årstid", patternHint: "dobbelt-m efter kort 'o'", sentence: "Om sommeren bader vi i havet.", level: 1, category: "Dobbeltkonsonant" },
+    { word: "klasse", hint: "En gruppe elever", patternHint: "dobbelt-s efter kort 'a'", sentence: "Der er 24 elever i vores klasse.", level: 2, category: "Dobbeltkonsonant" },
+    { word: "briller", hint: "Sættes på næsen", patternHint: "dobbelt-l efter kort 'i'", sentence: "Bedstefar kan ikke læse uden sine briller.", level: 2, category: "Dobbeltkonsonant" },
+    { word: "klipper", hint: "Skærer med en saks", patternHint: "dobbelt-p efter kort 'i'", sentence: "Frisøren klipper mit hår.", level: 2, category: "Dobbeltkonsonant" },
+    { word: "tilladelse", hint: "Lov til noget", patternHint: "dobbelt-l efter kort 'i'", sentence: "Man skal have tilladelse til at fiske her.", level: 3, category: "Dobbeltkonsonant" },
+    { word: "kommando", hint: "En ordre", patternHint: "dobbelt-m efter kort 'o'", sentence: "Hunden forstår hver eneste kommando.", level: 3, category: "Dobbeltkonsonant" },
+    { word: "mulighed", hint: "En chance", patternHint: "enkelt-l (lang vokal)", sentence: "Det er en god mulighed for at lære.", level: 3, category: "Dobbeltkonsonant" },
+    { word: "interessant", hint: "Spændende at høre om", patternHint: "dobbelt-r og dobbelt-s", sentence: "Bogen var utroligt interessant.", level: 4, category: "Dobbeltkonsonant" },
+    { word: "forskellig", hint: "Ikke ens", patternHint: "dobbelt-l efter kort 'e'", sentence: "Tvillingerne er faktisk meget forskellige.", level: 4, category: "Dobbeltkonsonant" },
+    { word: "kommunikation", hint: "At udveksle information", patternHint: "dobbelt-m", sentence: "God kommunikation er vigtigt i et team.", level: 4, category: "Dobbeltkonsonant" }
   ],
   "For- og efterstavelser": [
-    { word: "begynde", hint: "Starte på noget", patternHint: "forstavelse 'be-'", sentence: "Skal vi begynde med den første opgave?", difficulty: 1 },
-    { word: "venlig", hint: "Rar og imødekommende", patternHint: "efterstavelse '-lig'", sentence: "Den nye nabo er meget venlig.", difficulty: 1 },
-    { word: "langsom", hint: "Ikke hurtig", patternHint: "efterstavelse '-som'", sentence: "Bussen var meget langsom i dag.", difficulty: 1 },
-    { word: "bekymret", hint: "Urolig for noget", patternHint: "forstavelse 'be-'", sentence: "Læreren er bekymret for den nye elev.", difficulty: 2 },
-    { word: "forklaring", hint: "Når noget bliver forklaret", patternHint: "'for-' + '-ing'", sentence: "Kan du give en forklaring på hvad der skete?", difficulty: 2 },
-    { word: "kærlighed", hint: "Dyb følelse for nogen", patternHint: "efterstavelse '-hed'", sentence: "Forældrenes kærlighed er ubetinget.", difficulty: 2 },
-    { word: "forberedelse", hint: "Gøre sig klar til noget", patternHint: "'for-' + 'bered' + '-else'", sentence: "Forberedelse til eksamen tager lang tid.", difficulty: 3 },
-    { word: "vanskelighed", hint: "Noget der er svært", patternHint: "'vanskel' + '-ig' + '-hed'", sentence: "Den største vanskelighed var de mange regler.", difficulty: 3 },
+    { word: "venlig", hint: "Rar og sød", patternHint: "efterstavelse '-lig'", sentence: "Den nye dreng er meget venlig.", level: 1, category: "For- og efterstavelser" },
+    { word: "langsom", hint: "Ikke hurtig", patternHint: "efterstavelse '-som'", sentence: "Sneglen er meget langsom.", level: 1, category: "For- og efterstavelser" },
+    { word: "umulig", hint: "Kan ikke lade sig gøre", patternHint: "forstavelse 'u-'", sentence: "Det er umuligt at flyve uden vinger.", level: 1, category: "For- og efterstavelser" },
+    { word: "begynde", hint: "Starte på noget", patternHint: "forstavelse 'be-'", sentence: "Vi skal begynde med den første opgave.", level: 2, category: "For- og efterstavelser" },
+    { word: "kærlig", hint: "Fuld af kærlighed", patternHint: "efterstavelse '-lig'", sentence: "Hunden er meget kærlig mod børnene.", level: 2, category: "For- og efterstavelser" },
+    { word: "fordi", hint: "Angiver en grund", patternHint: "forstavelse 'for-'", sentence: "Vi blev inde fordi det regnede.", level: 2, category: "For- og efterstavelser" },
+    { word: "bekymret", hint: "Urolig for noget", patternHint: "forstavelse 'be-'", sentence: "Læreren er bekymret for den nye elev.", level: 3, category: "For- og efterstavelser" },
+    { word: "forklaring", hint: "Når noget bliver forklaret", patternHint: "'for-' + '-ing'", sentence: "Kan du give en forklaring på hvad der skete?", level: 3, category: "For- og efterstavelser" },
+    { word: "kærlighed", hint: "Dyb følelse for nogen", patternHint: "efterstavelse '-hed'", sentence: "Forældrenes kærlighed er ubetinget.", level: 3, category: "For- og efterstavelser" },
+    { word: "forberedelse", hint: "Gøre sig klar", patternHint: "'for-' + 'bered' + '-else'", sentence: "Forberedelse til eksamen tager lang tid.", level: 4, category: "For- og efterstavelser" },
+    { word: "vanskelighed", hint: "Noget der er svært", patternHint: "'vanskel' + '-ig' + '-hed'", sentence: "Den største vanskelighed var de mange regler.", level: 4, category: "For- og efterstavelser" },
+    { word: "beskyttelse", hint: "At holde nogen sikker", patternHint: "'be-' + 'skyt' + '-else'", sentence: "Hjelmen giver beskyttelse når du cykler.", level: 4, category: "For- og efterstavelser" }
   ],
   "Sammensatte ord": [
-    { word: "fodbold", hint: "En populær sport med bold", patternHint: "'fod' + 'bold'", sentence: "Vi spiller fodbold hver dag i frikvarteret.", difficulty: 1 },
-    { word: "madpakke", hint: "Medbragt frokost", patternHint: "'mad' + 'pakke'", sentence: "Min madpakke ligger i skoletasken.", difficulty: 1 },
-    { word: "skoletaske", hint: "Bærer bøger og penalhus", patternHint: "'skole' + 'taske'", sentence: "Min skoletaske vejer næsten ti kilo.", difficulty: 1 },
-    { word: "skolearbejde", hint: "Lektier og opgaver", patternHint: "'skole' + 'arbejde'", sentence: "Vi har meget skolearbejde for i dag.", difficulty: 2 },
-    { word: "hjemmeopgave", hint: "Lektie til derhjemme", patternHint: "'hjemme' + 'opgave'", sentence: "Husk at lave din hjemmeopgave inden i morgen.", difficulty: 2 },
-    { word: "verdensrekord", hint: "Bedst i hele verden", patternHint: "'verden' + 's' + 'rekord' (fuge-s)", sentence: "Hun satte verdensrekord i svømning.", difficulty: 2 },
-    { word: "ungdomsuddannelse", hint: "Uddannelse efter folkeskolen", patternHint: "'ungdom' + 's' + 'uddannelse' (fuge-s)", sentence: "Hun starter på en ungdomsuddannelse til sommer.", difficulty: 3 },
-    { word: "biblioteket", hint: "Bygning med mange bøger", patternHint: "'bibliotek' + '-et'", sentence: "Vi besøger biblioteket hver tirsdag.", difficulty: 3 },
+    { word: "fodbold", hint: "Sport med en bold", patternHint: "'fod' + 'bold'", sentence: "Vi spiller fodbold i haven.", level: 1, category: "Sammensatte ord" },
+    { word: "madpakke", hint: "Frokost man tager med", patternHint: "'mad' + 'pakke'", sentence: "Min madpakke er i tasken.", level: 1, category: "Sammensatte ord" },
+    { word: "skoletaske", hint: "Taske til skolen", patternHint: "'skole' + 'taske'", sentence: "Min skoletaske er blå.", level: 1, category: "Sammensatte ord" },
+    { word: "sengetøj", hint: "Det man har i sengen", patternHint: "'senge' + 'tøj'", sentence: "Jeg fik nyt sengetøj til min fødselsdag.", level: 2, category: "Sammensatte ord" },
+    { word: "tandlæge", hint: "En der tjekker tænder", patternHint: "'tand' + 'læge'", sentence: "Jeg skal til tandlæge i morgen.", level: 2, category: "Sammensatte ord" },
+    { word: "badminton", hint: "Sport med fjerbold", patternHint: "sammensat fremmedord", sentence: "Vi spiller badminton i hallen.", level: 2, category: "Sammensatte ord" },
+    { word: "skolearbejde", hint: "Lektier og opgaver", patternHint: "'skole' + 'arbejde'", sentence: "Vi har meget skolearbejde for i dag.", level: 3, category: "Sammensatte ord" },
+    { word: "hjemmeopgave", hint: "Lektie til derhjemme", patternHint: "'hjemme' + 'opgave'", sentence: "Husk at lave din hjemmeopgave inden i morgen.", level: 3, category: "Sammensatte ord" },
+    { word: "verdensrekord", hint: "Bedst i hele verden", patternHint: "'verden' + 's' + 'rekord' (fuge-s)", sentence: "Hun satte verdensrekord i svømning.", level: 3, category: "Sammensatte ord" },
+    { word: "ungdomsuddannelse", hint: "Uddannelse efter folkeskolen", patternHint: "'ungdom' + 's' + 'uddannelse'", sentence: "Hun starter på en ungdomsuddannelse til sommer.", level: 4, category: "Sammensatte ord" },
+    { word: "biblioteket", hint: "Bygning med bøger", patternHint: "'bibliotek' + '-et'", sentence: "Vi besøger biblioteket hver tirsdag.", level: 4, category: "Sammensatte ord" },
+    { word: "arbejdsmarkedet", hint: "Hvor folk har jobs", patternHint: "'arbejd' + 's' + 'marked' + '-et'", sentence: "Det er svært at komme ind på arbejdsmarkedet.", level: 4, category: "Sammensatte ord" }
   ],
   "Verbernes bøjning": [
-    { word: "spiste", hint: "Datid af 'spise'", patternHint: "datid: '-te' (kort stamme)", sentence: "Vi spiste morgenmad sammen i dag.", difficulty: 1 },
-    { word: "legede", hint: "Datid af 'lege'", patternHint: "datid: '-ede' (lang stamme)", sentence: "Børnene legede ude i haven hele dagen.", difficulty: 1 },
-    { word: "cyklede", hint: "Datid af 'cykle'", patternHint: "datid: '-ede'", sentence: "Jeg cyklede til skole trods regnen.", difficulty: 1 },
-    { word: "bestemte", hint: "Datid af 'bestemme'", patternHint: "datid: '-te' (mm→m+te)", sentence: "Hun bestemte sig for at tage en pause.", difficulty: 2 },
-    { word: "begyndte", hint: "Datid af 'begynde'", patternHint: "datid: '-te' (d falder bort)", sentence: "Koncerten begyndte præcis klokken otte.", difficulty: 2 },
-    { word: "opdagede", hint: "Datid af 'opdage'", patternHint: "datid: '-ede'", sentence: "Forskeren opdagede en helt ny dyreart.", difficulty: 2 },
-    { word: "udviklet", hint: "Kort tillægsform af 'udvikle'", patternHint: "tillægsform: '-et'", sentence: "Holdet har udviklet en ny strategi.", difficulty: 3 },
-    { word: "overrasket", hint: "Kort tillægsform af 'overraske'", patternHint: "tillægsform: '-et'", sentence: "Vi blev fuldstændig overrasket over resultatet.", difficulty: 3 },
+    { word: "spiste", hint: "Datid af 'spise'", patternHint: "datid: '-te'", sentence: "Vi spiste pandekager til aftensmad.", level: 1, category: "Verbernes bøjning" },
+    { word: "legede", hint: "Datid af 'lege'", patternHint: "datid: '-ede'", sentence: "Vi legede i parken i går.", level: 1, category: "Verbernes bøjning" },
+    { word: "hoppede", hint: "Datid af 'hoppe'", patternHint: "datid: '-ede'", sentence: "Katten hoppede op på bordet.", level: 1, category: "Verbernes bøjning" },
+    { word: "cyklede", hint: "Datid af 'cykle'", patternHint: "datid: '-ede'", sentence: "Jeg cyklede til skole i dag.", level: 2, category: "Verbernes bøjning" },
+    { word: "købte", hint: "Datid af 'købe'", patternHint: "datid: '-te'", sentence: "Vi købte is nede i kiosken.", level: 2, category: "Verbernes bøjning" },
+    { word: "tænkte", hint: "Datid af 'tænke'", patternHint: "datid: '-te'", sentence: "Jeg tænkte på dig hele dagen.", level: 2, category: "Verbernes bøjning" },
+    { word: "bestemte", hint: "Datid af 'bestemme'", patternHint: "datid: '-te' (mm->m+te)", sentence: "Hun bestemte sig for at tage en pause.", level: 3, category: "Verbernes bøjning" },
+    { word: "begyndte", hint: "Datid af 'begynde'", patternHint: "datid: '-te'", sentence: "Koncerten begyndte præcis klokken otte.", level: 3, category: "Verbernes bøjning" },
+    { word: "opdagede", hint: "Datid af 'opdage'", patternHint: "datid: '-ede'", sentence: "Forskeren opdagede en helt ny dyreart.", level: 3, category: "Verbernes bøjning" },
+    { word: "udviklet", hint: "Kort tillægsform af 'udvikle'", patternHint: "tillægsform: '-et'", sentence: "Holdet har udviklet en ny strategi.", level: 4, category: "Verbernes bøjning" },
+    { word: "overrasket", hint: "Kort tillægsform af 'overraske'", patternHint: "tillægsform: '-et'", sentence: "Vi blev fuldstændig overrasket over resultatet.", level: 4, category: "Verbernes bøjning" },
+    { word: "produceret", hint: "Kort tillægsform af 'producere'", patternHint: "tillægsform: '-et'", sentence: "Filmen er produceret i Danmark.", level: 4, category: "Verbernes bøjning" }
   ],
   "Navneordsendelser": [
-    { word: "hunde", hint: "Flertal af 'hund'", patternHint: "flertal: '-e'", sentence: "Der løber tre hunde rundt i parken.", difficulty: 1 },
-    { word: "lamper", hint: "Flertal af 'lampe'", patternHint: "flertal: '-er'", sentence: "Alle lamper i stuen var tændt.", difficulty: 1 },
-    { word: "huset", hint: "Bestemt form af 'hus'", patternHint: "bestemt intetkøn: '-et'", sentence: "Huset på hjørnet er blevet malet rødt.", difficulty: 1 },
-    { word: "bøger", hint: "Flertal af 'bog'", patternHint: "uregelmæssigt: 'o'→'ø' + '-er'", sentence: "Jeg har læst fire bøger i sommerferien.", difficulty: 2 },
-    { word: "mænd", hint: "Flertal af 'mand'", patternHint: "uregelmæssigt: 'a'→'æ'", sentence: "De to mænd ventede ved indgangen.", difficulty: 2 },
-    { word: "børnene", hint: "Bestemt flertal af 'barn'", patternHint: "uregelmæssigt + '-ene'", sentence: "Børnene fik is efter aftensmaden.", difficulty: 2 },
-    { word: "princippet", hint: "Bestemt form af 'princip'", patternHint: "dobbelt-p + '-et'", sentence: "Princippet bag forsøget er faktisk simpelt.", difficulty: 3 },
-    { word: "gymnasiet", hint: "Bestemt form af 'gymnasium'", patternHint: "'-ium' → '-iet'", sentence: "Min storesøster går på gymnasiet i Odense.", difficulty: 3 },
-  ],
+    { word: "hunde", hint: "Flertal af 'hund'", patternHint: "flertal: '-e'", sentence: "Der er to hunde i parken.", level: 1, category: "Navneordsendelser" },
+    { word: "huset", hint: "Bestemt form af 'hus'", patternHint: "bestemt: '-et'", sentence: "Huset er rødt med hvide vinduer.", level: 1, category: "Navneordsendelser" },
+    { word: "stolen", hint: "Bestemt form af 'stol'", patternHint: "bestemt: '-en'", sentence: "Stolen står ved bordet.", level: 1, category: "Navneordsendelser" },
+    { word: "lamper", hint: "Flertal af 'lampe'", patternHint: "flertal: '-er'", sentence: "Alle lamper i stuen var tændt.", level: 2, category: "Navneordsendelser" },
+    { word: "bøger", hint: "Flertal af 'bog'", patternHint: "uregelmæssigt: 'o'->'ø'", sentence: "Jeg har læst tre bøger i ferien.", level: 2, category: "Navneordsendelser" },
+    { word: "børnene", hint: "Bestemt flertal af 'barn'", patternHint: "uregelmæssigt + '-ene'", sentence: "Børnene legede ude i solen.", level: 2, category: "Navneordsendelser" },
+    { word: "mænd", hint: "Flertal af 'mand'", patternHint: "uregelmæssigt: 'a'->'æ'", sentence: "De to mænd ventede ved indgangen.", level: 3, category: "Navneordsendelser" },
+    { word: "princippet", hint: "Bestemt form af 'princip'", patternHint: "dobbelt-p + '-et'", sentence: "Princippet bag forsøget er faktisk simpelt.", level: 3, category: "Navneordsendelser" },
+    { word: "gymnasiet", hint: "Bestemt form af 'gymnasium'", patternHint: "'-ium' -> '-iet'", sentence: "Min storesøster går på gymnasiet i Odense.", level: 3, category: "Navneordsendelser" },
+    { word: "laboratoriet", hint: "Bestemt form af 'laboratorium'", patternHint: "'-ium' -> '-iet'", sentence: "Vi lavede forsøg i laboratoriet.", level: 4, category: "Navneordsendelser" },
+    { word: "vanskelighederne", hint: "Bestemt flertal af 'vanskelighed'", patternHint: "'-hed' + '-er' + '-ne'", sentence: "Vanskelighederne blev større og større.", level: 4, category: "Navneordsendelser" },
+    { word: "seværdighederne", hint: "Bestemt flertal af 'seværdighed'", patternHint: "'se' + 'værdig' + '-hed' + '-er' + '-ne'", sentence: "Vi besøgte alle seværdighederne i byen.", level: 4, category: "Navneordsendelser" }
+  ]
 };
 
-const PATTERN_RULES = {
+var PATTERN_RULES = {
   "Stumme bogstaver": "I dansk er nogle bogstaver 'stumme' — de skrives men udtales ikke. Typiske eksempler: 'hj-' (hjælp), 'hv-' (hvid), stumt 'v' (halvt, selv), og stumt 'g' (egentlig). Tip: Hvis du kender ordets oprindelse eller familie, kan du ofte huske det stumme bogstav.",
   "Dobbeltkonsonant": "Vi fordobler konsonanten når vokalen foran er kort og trykstærk. Sig ordet langsomt — lyder vokalen kort (som i 'hoppe')? Så dobbeltkonsonant. Lyder den lang (som i 'bade')? Så enkelt konsonant. Kort vokal = dobbelt konsonant er hovedreglen!",
   "For- og efterstavelser": "Mange danske ord er bygget af faste dele: forstavelser ('be-', 'for-', 'u-') og efterstavelser ('-hed', '-else', '-ing', '-lig', '-som'). Disse dele staves altid ens! Kan du genkende delene, kan du stave mange ord korrekt. Del ordet op: 'for-bered-else' = tre dele du kender.",
   "Sammensatte ord": "Dansk sætter tit ord sammen til nye ord. Hemmeligheden: del ordet i stykker! 'skole+arbejde', 'mad+pakke'. Pas på fuge-s: 'verden-s-rekord'. Kan du stave hvert stykke for sig, kan du stave hele ordet!",
   "Verbernes bøjning": "Datid: De fleste verber får '-ede' (legede, cyklede), men korte stammer får '-te' (spiste, bestemte). Tillægsform (kort): '-et' (udviklet) eller '-t' (bestemt). Tip: Sig grundformen højt — er stammen kort? Så bruges '-te'/'-t'.",
-  "Navneordsendelser": "Flertal: De fleste navneord får '-e' eller '-er' (hunde, lamper). Bestemt form: fælleskøn får '-en' (stolen), intetkøn '-et' (huset). Pas på uregelmæssige former: bog→bøger, mand→mænd, barn→børn. Disse må man lære udenad!",
+  "Navneordsendelser": "Flertal: De fleste navneord får '-e' eller '-er' (hunde, lamper). Bestemt form: fælleskøn får '-en' (stolen), intetkøn '-et' (huset). Pas på uregelmæssige former: bog->bøger, mand->mænd, barn->børn. Disse må man lære udenad!"
 };
 
-const CATEGORY_ICONS = {
-  "Stumme bogstaver": "🔇",
-  "Dobbeltkonsonant": "✌️",
-  "For- og efterstavelser": "🧩",
-  "Sammensatte ord": "🔗",
-  "Verbernes bøjning": "✏️",
-  "Navneordsendelser": "📝",
+var CATEGORY_ICONS = {
+  "Stumme bogstaver": "\u{1F507}",
+  "Dobbeltkonsonant": "\u270C\uFE0F",
+  "For- og efterstavelser": "\u{1F9E9}",
+  "Sammensatte ord": "\u{1F517}",
+  "Verbernes bøjning": "\u270F\uFE0F",
+  "Navneordsendelser": "\u{1F4DD}"
 };
 
-const ALL_CATEGORIES = Object.keys(WORD_BANK);
+var ALL_CATEGORIES = Object.keys(WORD_BANK);
 
-// ── State ─────────────────────────────────────────────────────────────────
-let currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
-let gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
-let diagnosticWordsList = []; // track which words were used in diagnostic
+var LEVEL_LABELS = {
+  1: { text: "\u{1F7E2} Niveau 1 (1.-2. klasse)", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
+  2: { text: "\u{1F7E1} Niveau 2 (3.-4. klasse)", bg: "rgba(245,166,35,0.15)", color: "var(--accent)" },
+  3: { text: "\u{1F7E0} Niveau 3 (5.-6. klasse)", bg: "rgba(249,115,22,0.15)", color: "#f97316" },
+  4: { text: "\u{1F534} Niveau 4 (7.-8. klasse)", bg: "rgba(244,63,94,0.15)", color: "var(--red)" }
+};
 
-// ── Utility ───────────────────────────────────────────────────────────────
+var LEVEL_GRADE_MAP = {
+  1: "1.-2. klasse niveau",
+  2: "3.-4. klasse niveau",
+  3: "5.-6. klasse niveau",
+  4: "7.-8. klasse niveau"
+};
+
+// State
+var currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
+var gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
+var diagnosticWordsList = [];
+var adaptiveState = null;
+
+// Utility
 function show(id) { document.getElementById(id).classList.remove('hidden'); }
 function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results'].forEach(id => hide(id));
+  ['phase-test','phase-analyzing','phase-profile','phase-results'].forEach(function(id) { hide(id); });
+  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   show('phase-welcome');
   refreshWelcomeButtons();
 }
-function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
-// ── Storage: Spaced Repetition ────────────────────────────────────────────
-const SR_INTERVALS = [0, 86400000, 3*86400000, 7*86400000, 14*86400000]; // ms
+// Grade selector
+function selectGrade(g) {
+  try { localStorage.setItem('student_grade', g); } catch(e) {}
+  var btns = document.querySelectorAll('.grade-btn');
+  btns.forEach(function(b, i) {
+    if (i + 1 === g) b.classList.add('active');
+    else b.classList.remove('active');
+  });
+}
+
+function loadGrade() {
+  try { return parseInt(localStorage.getItem('student_grade')) || 0; } catch(e) { return 0; }
+}
+
+function restoreGradeSelection() {
+  var g = loadGrade();
+  if (g >= 1 && g <= 8) {
+    var btns = document.querySelectorAll('.grade-btn');
+    btns.forEach(function(b, i) {
+      if (i + 1 === g) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+  }
+}
+
+// Settings toggle
+function toggleSettings() {
+  var panel = document.getElementById('settingsPanel');
+  panel.classList.toggle('open');
+}
+
+// Spaced Repetition
+var SR_INTERVALS = [0, 86400000, 3*86400000, 7*86400000, 14*86400000];
 
 function loadSRData() {
-  try {
-    const raw = localStorage.getItem('sr_data');
-    return raw ? JSON.parse(raw) : { words: {} };
-  } catch(e) { return { words: {} }; }
+  try { var raw = localStorage.getItem('sr_data'); return raw ? JSON.parse(raw) : { words: {} }; } catch(e) { return { words: {} }; }
 }
 
 function saveSRData(data) {
@@ -429,60 +538,49 @@ function saveSRData(data) {
 }
 
 function updateSRWord(word, correct, category) {
-  const sr = loadSRData();
-  if (!sr.words[word]) {
-    sr.words[word] = { level: 0, nextReview: Date.now(), category };
-  }
-  if (correct) {
-    sr.words[word].level = Math.min(sr.words[word].level + 1, 4);
-  } else {
-    sr.words[word].level = 0;
-  }
-  const interval = SR_INTERVALS[sr.words[word].level] || 0;
+  var sr = loadSRData();
+  if (!sr.words[word]) { sr.words[word] = { level: 0, nextReview: Date.now(), category: category }; }
+  if (correct) { sr.words[word].level = Math.min(sr.words[word].level + 1, 4); }
+  else { sr.words[word].level = 0; }
+  var interval = SR_INTERVALS[sr.words[word].level] || 0;
   sr.words[word].nextReview = Date.now() + interval;
   sr.words[word].category = category;
   saveSRData(sr);
 }
 
 function getDueWords() {
-  const sr = loadSRData();
-  const now = Date.now();
-  const due = [];
-  for (const [word, data] of Object.entries(sr.words)) {
-    if (now >= data.nextReview) {
-      // Find the full word object
-      for (const cat of ALL_CATEGORIES) {
-        const found = WORD_BANK[cat].find(w => w.word === word);
-        if (found) {
-          due.push({ ...found, category: cat });
-          break;
-        }
+  var sr = loadSRData();
+  var now = Date.now();
+  var due = [];
+  for (var word in sr.words) {
+    if (now >= sr.words[word].nextReview) {
+      for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+        var cat = ALL_CATEGORIES[ci];
+        var found = WORD_BANK[cat].find(function(w) { return w.word === word; });
+        if (found) { due.push(Object.assign({}, found, { category: cat })); break; }
       }
     }
   }
   return due;
 }
 
-// ── Storage: Profile ──────────────────────────────────────────────────────
+// Profile storage
 function loadProfile() {
-  try {
-    const raw = localStorage.getItem('profile_data');
-    return raw ? JSON.parse(raw) : null;
-  } catch(e) { return null; }
+  try { var raw = localStorage.getItem('profile_data'); return raw ? JSON.parse(raw) : null; } catch(e) { return null; }
 }
 
 function saveProfile(data) {
   try { localStorage.setItem('profile_data', JSON.stringify(data)); } catch(e) {}
 }
 
-// ── Voice / TTS ───────────────────────────────────────────────────────────
+// Voice / TTS
 function setVoice(voiceId) {
   try { localStorage.setItem('tts_voice', voiceId); } catch(e) {}
   audioCache = {};
-  const allBtns = document.querySelectorAll('.voice-btn');
-  allBtns.forEach(b => b.classList.remove('active'));
-  const map = { 'da-DK-Neural2-D': ['vbtn-D','vbtn-D2'], 'da-DK-Neural2-A': ['vbtn-A','vbtn-A2'], 'da-DK-Wavenet-C': ['vbtn-C','vbtn-C2'], 'da-DK-Wavenet-A': ['vbtn-WA','vbtn-WA2'] };
-  (map[voiceId] || []).forEach(id => { const b = document.getElementById(id); if(b) b.classList.add('active'); });
+  var allBtns = document.querySelectorAll('.voice-btn');
+  allBtns.forEach(function(b) { b.classList.remove('active'); });
+  var map = { 'da-DK-Neural2-D': ['vbtn-D','vbtn-D2'], 'da-DK-Neural2-A': ['vbtn-A','vbtn-A2'], 'da-DK-Wavenet-C': ['vbtn-C','vbtn-C2'], 'da-DK-Wavenet-A': ['vbtn-WA','vbtn-WA2'] };
+  (map[voiceId] || []).forEach(function(id) { var b = document.getElementById(id); if(b) b.classList.add('active'); });
 }
 
 function loadVoice() {
@@ -490,20 +588,20 @@ function loadVoice() {
 }
 
 function toggleApiPanel() {
-  const p = document.getElementById('apiPanel');
+  var p = document.getElementById('apiPanel');
   if (!p) return;
   p.style.display = p.style.display === 'none' ? 'block' : 'none';
   if (p.style.display === 'block') {
-    const k = loadApiKey();
-    const inp = document.getElementById('apiKeyInput2');
+    var k = loadApiKey();
+    var inp = document.getElementById('apiKeyInput2');
     if (inp) { inp.value = k; updateApiStatus2(k); }
   }
 }
 
 function syncApiInputs() {
-  const k = loadApiKey();
-  const i1 = document.getElementById('apiKeyInput');
-  const i2 = document.getElementById('apiKeyInput2');
+  var k = loadApiKey();
+  var i1 = document.getElementById('apiKeyInput');
+  var i2 = document.getElementById('apiKeyInput2');
   if (i1 && i1.value !== k) i1.value = k;
   if (i2 && i2.value !== k) i2.value = k;
   updateApiStatus(k);
@@ -511,14 +609,12 @@ function syncApiInputs() {
 }
 
 function updateApiStatus2(key) {
-  const el = document.getElementById('apiKeyStatus2');
+  var el = document.getElementById('apiKeyStatus2');
   if (!el) return;
-  el.innerHTML = key
-    ? '<span style="color:var(--green)">✓ Aktiveret</span>'
-    : 'Ingen nøgle — bruger browser-stemme';
+  el.innerHTML = key ? '<span style="color:var(--green)">\u2713 Aktiveret</span>' : 'Ingen nøgle — bruger browser-stemme';
 }
 
-// ── API key storage (Google Cloud TTS) ──────────────────────────────────────
+// API key storage (Google Cloud TTS)
 function saveApiKey(val) {
   try { localStorage.setItem('gcloud_tts_key', val.trim()); } catch(e){}
   updateApiStatus(val.trim());
@@ -528,14 +624,14 @@ function loadApiKey() {
   try { return localStorage.getItem('gcloud_tts_key') || ''; } catch(e) { return ''; }
 }
 function updateApiStatus(key) {
-  const el = document.getElementById('apiKeyStatus');
+  var el = document.getElementById('apiKeyStatus');
   if (!el) return;
   el.innerHTML = key
-    ? '<span style="color:var(--green)">✓ Google TTS aktiveret — naturlig dansk stemme</span>'
-    : 'Opret gratis på <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> → aktiver Text-to-Speech API → Credentials → API Key.';
+    ? '<span style="color:var(--green)">\u2713 Google TTS aktiveret — naturlig dansk stemme</span>'
+    : 'Opret gratis på <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue)">console.cloud.google.com</a> \u2192 aktiver Text-to-Speech API \u2192 Credentials \u2192 API Key.';
 }
 
-// ── Anthropic API key (kun i hukommelsen — gemmes ikke) ─────────────────────
+// Anthropic API key
 function saveAnthropicKey(val) {
   try { localStorage.setItem('anthropic_api_key', val.trim()); } catch(e){}
   updateAnthropicStatus(val.trim());
@@ -544,47 +640,45 @@ function loadAnthropicKey() {
   try { return localStorage.getItem('anthropic_api_key') || ''; } catch(e) { return ''; }
 }
 function updateAnthropicStatus(key) {
-  const el = document.getElementById('anthropicKeyStatus');
+  var el = document.getElementById('anthropicKeyStatus');
   if (!el) return;
   el.innerHTML = key
-    ? '<span style="color:var(--green)">✓ Anthropic API aktiveret — AI-analyse klar</span>'
-    : 'Hent nøgle på <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a> → API Keys. Uden nøgle vises en simpel opsummering.';
+    ? '<span style="color:var(--green)">\u2713 Anthropic API aktiveret — AI-analyse klar</span>'
+    : 'Hent nøgle på <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a> \u2192 API Keys.';
 }
 
-// ── TTS — Google Cloud with browser fallback ───────────────────────────────
-let audioCache = {};
+// TTS - Google Cloud with browser fallback
+var audioCache = {};
 
-async function speakWord(word, sentence = null) {
-  const btn = document.getElementById('listenBtn');
-  if (btn) { btn.classList.add('speaking'); btn.textContent = '🔉 Læser op...'; }
+async function speakWord(word, sentence) {
+  var btn = document.getElementById('listenBtn');
+  if (btn) { btn.classList.add('speaking'); btn.textContent = '\u{1F509} Læser op...'; }
 
-  const apiKey = loadApiKey();
-  const texts = sentence ? [word, sentence] : [word];
+  var apiKey = loadApiKey();
+  var texts = sentence ? [word, sentence] : [word];
 
   if (apiKey) {
     try {
-      const cacheKey = texts.join('|');
+      var cacheKey = texts.join('|');
       if (audioCache[cacheKey]) { playAudioBase64(audioCache[cacheKey], btn); return; }
 
-      const audioParts = [];
-      for (const text of texts) {
-        const res = await fetch(
-          `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
+      var audioParts = [];
+      for (var ti = 0; ti < texts.length; ti++) {
+        var text = texts[ti];
+        var res = await fetch(
+          'https://texttospeech.googleapis.com/v1/text:synthesize?key=' + apiKey,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              input: { text },
+              input: { text: text },
               voice: { languageCode: 'da-DK', name: loadVoice() },
-              audioConfig: {
-                audioEncoding: 'MP3',
-                speakingRate: text === word ? 0.8 : 0.95
-              }
+              audioConfig: { audioEncoding: 'MP3', speakingRate: text === word ? 0.8 : 0.95 }
             })
           }
         );
         if (!res.ok) throw new Error('Google TTS fejl: ' + res.status);
-        const data = await res.json();
+        var data = await res.json();
         audioParts.push(data.audioContent);
       }
       audioCache[cacheKey] = audioParts;
@@ -597,134 +691,178 @@ async function speakWord(word, sentence = null) {
 
   // Browser TTS fallback
   window.speechSynthesis.cancel();
-  const voices = window.speechSynthesis.getVoices();
-  const v = voices.find(v => v.lang.startsWith('da')) || voices.find(v => v.lang.startsWith('nb'));
-  const wordUtter = new SpeechSynthesisUtterance(word);
+  var voices = window.speechSynthesis.getVoices();
+  var v = voices.find(function(v) { return v.lang.startsWith('da'); }) || voices.find(function(v) { return v.lang.startsWith('nb'); });
+  var wordUtter = new SpeechSynthesisUtterance(word);
   wordUtter.lang = 'da-DK'; wordUtter.rate = 0.75; wordUtter.pitch = 1;
   if (v) wordUtter.voice = v;
   if (sentence) {
-    wordUtter.onend = () => setTimeout(() => {
-      const sentUtter = new SpeechSynthesisUtterance(sentence);
-      sentUtter.lang = 'da-DK'; sentUtter.rate = 0.9; sentUtter.pitch = 1;
-      if (v) sentUtter.voice = v;
-      sentUtter.onend = sentUtter.onerror = () => {
-        if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen'; }
-      };
-      window.speechSynthesis.speak(sentUtter);
-    }, 600);
+    wordUtter.onend = function() {
+      setTimeout(function() {
+        var sentUtter = new SpeechSynthesisUtterance(sentence);
+        sentUtter.lang = 'da-DK'; sentUtter.rate = 0.9; sentUtter.pitch = 1;
+        if (v) sentUtter.voice = v;
+        sentUtter.onend = sentUtter.onerror = function() {
+          if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen'; }
+        };
+        window.speechSynthesis.speak(sentUtter);
+      }, 600);
+    };
   } else {
-    wordUtter.onend = wordUtter.onerror = () => {
-      if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen'; }
+    wordUtter.onend = wordUtter.onerror = function() {
+      if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen'; }
     };
   }
   window.speechSynthesis.speak(wordUtter);
 }
 
-function playAudioBase64(parts, btn, index = 0) {
+function playAudioBase64(parts, btn, index) {
+  if (index === undefined) index = 0;
   if (index >= parts.length) {
-    if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen'; }
+    if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen'; }
     return;
   }
-  const audio = new Audio('data:audio/mp3;base64,' + parts[index]);
-  audio.onended = () => setTimeout(() => playAudioBase64(parts, btn, index + 1), index === 0 && parts.length > 1 ? 600 : 0);
-  audio.onerror = () => { if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen'; } };
+  var audio = new Audio('data:audio/mp3;base64,' + parts[index]);
+  audio.onended = function() { setTimeout(function() { playAudioBase64(parts, btn, index + 1); }, index === 0 && parts.length > 1 ? 600 : 0); };
+  audio.onerror = function() { if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen'; } };
   audio.play();
 }
 
 function speakCurrentWord() {
-  const w = currentWords[currentIndex];
+  var w = currentWords[currentIndex];
   speakWord(w.word, w.sentence || null);
 }
 
-// ── Build word lists ──────────────────────────────────────────────────────
-function buildDiagnosticList() {
-  // 1 word per category per difficulty = 18 words
-  // Order: all 6 easy (shuffled), then 6 medium (shuffled), then 6 hard (shuffled)
-  const easy = [], medium = [], hard = [];
-  for (const cat of ALL_CATEGORIES) {
-    const words = WORD_BANK[cat];
-    const easyPool = shuffle(words.filter(w => w.difficulty === 1));
-    const medPool = shuffle(words.filter(w => w.difficulty === 2));
-    const hardPool = shuffle(words.filter(w => w.difficulty === 3));
-    if (easyPool.length > 0) easy.push({ ...easyPool[0], category: cat });
-    if (medPool.length > 0) medium.push({ ...medPool[0], category: cat });
-    if (hardPool.length > 0) hard.push({ ...hardPool[0], category: cat });
+// Spelling level estimation
+function estimateSpellingLevel(res) {
+  for (var level = 4; level >= 1; level--) {
+    var levelResults = res.filter(function(r) { return r.level === level; });
+    if (levelResults.length === 0) continue;
+    var correct = levelResults.filter(function(r) { return r.correct; }).length;
+    if (correct / levelResults.length >= 0.66) return level;
   }
-  return [...shuffle(easy), ...shuffle(medium), ...shuffle(hard)];
+  return 1;
 }
 
-function buildTrainingList(weakCategories, diagnosticWords) {
-  // Pick 6-8 words from weak categories, NOT used in diagnostic
-  const excludeWords = new Set(diagnosticWords.map(w => w.word));
-  let pool = [];
-  for (const cat of weakCategories) {
-    const available = WORD_BANK[cat]
-      .filter(w => !excludeWords.has(w.word))
-      .map(w => ({ ...w, category: cat }));
-    pool = pool.concat(available);
+function gradeToExpectedLevel(grade) {
+  if (grade <= 2) return 1;
+  if (grade <= 4) return 2;
+  if (grade <= 6) return 3;
+  return 4;
+}
+
+// Adaptive diagnostic builder
+function buildAdaptiveDiagnosticWords(level) {
+  // Pick 3 words from given level, each from a different random category
+  var cats = shuffle(ALL_CATEGORIES);
+  var picked = [];
+  for (var ci = 0; ci < cats.length && picked.length < 3; ci++) {
+    var cat = cats[ci];
+    var pool = WORD_BANK[cat].filter(function(w) {
+      return w.level === level && !diagnosticWordsList.find(function(d) { return d.word === w.word; });
+    });
+    if (pool.length > 0) {
+      var word = shuffle(pool)[0];
+      picked.push(Object.assign({}, word, { category: cat }));
+    }
   }
-  pool = shuffle(pool);
-  // Take 6-8 words, aim for even distribution across weak categories
-  const target = Math.min(8, Math.max(6, pool.length));
-  return pool.slice(0, target);
+  // If not enough from unique categories, fill from any category
+  if (picked.length < 3) {
+    for (var ci2 = 0; ci2 < ALL_CATEGORIES.length && picked.length < 3; ci2++) {
+      var cat2 = ALL_CATEGORIES[ci2];
+      var pool2 = WORD_BANK[cat2].filter(function(w) {
+        return w.level === level && !diagnosticWordsList.find(function(d) { return d.word === w.word; }) && !picked.find(function(p) { return p.word === w.word; });
+      });
+      if (pool2.length > 0) {
+        picked.push(Object.assign({}, shuffle(pool2)[0], { category: cat2 }));
+      }
+    }
+  }
+  return shuffle(picked);
 }
 
-function buildReviewList() {
-  return shuffle(getDueWords());
-}
-
-// ── Start Diagnostic ──────────────────────────────────────────────────────
+// Start Diagnostic with adaptive logic
 function startDiagnostic() {
   gameMode = 'diagnostic';
-  currentWords = buildDiagnosticList();
-  diagnosticWordsList = [...currentWords];
-  currentIndex = 0; results = [];
+  diagnosticWordsList = [];
+  results = [];
+  currentIndex = 0;
+  adaptiveState = {
+    currentLevel: 1,
+    levelResults: [],
+    phase: 'testing', // 'testing' | 'confirming'
+    confirmedLevel: null,
+    totalWordsShown: 0,
+    finished: false
+  };
+
+  // Get first batch of words for level 1
+  var firstBatch = buildAdaptiveDiagnosticWords(1);
+  diagnosticWordsList = diagnosticWordsList.concat(firstBatch);
+  currentWords = firstBatch;
+
   document.getElementById('scoreCorrect').textContent = '0';
   document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').textContent = '📋 Diagnostisk test';
-  document.querySelectorAll('.session-badge').forEach(el => el.remove());
+  document.getElementById('testPhaseLabel').textContent = '\u{1F4CB} Diagnostisk test';
+  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   hide('phase-welcome');
   show('phase-test');
   renderWord();
 }
 
-// ── Start Training ────────────────────────────────────────────────────────
+// Training mode
 function startTrainingFromProfile() {
-  const profile = loadProfile();
+  var profile = loadProfile();
   if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
     startDiagnostic();
     return;
   }
   gameMode = 'training';
-  currentWords = buildTrainingList(profile.weakCategories, profile.diagnosticResults || []);
-  if (currentWords.length === 0) {
-    // If no training words available (all used in diagnostic), just use weak category words
-    let pool = [];
-    for (const cat of profile.weakCategories) {
-      pool = pool.concat(WORD_BANK[cat].map(w => ({ ...w, category: cat })));
-    }
-    currentWords = shuffle(pool).slice(0, 8);
+  var excludeWords = {};
+  if (profile.diagnosticResults) {
+    profile.diagnosticResults.forEach(function(r) { excludeWords[r.word] = true; });
   }
+  // Target estimated level and one below
+  var targetLevel = profile.spellingLevel || 2;
+  var minLevel = Math.max(1, targetLevel - 1);
+  var pool = [];
+  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
+    var cat = profile.weakCategories[ci];
+    var words = WORD_BANK[cat].filter(function(w) {
+      return !excludeWords[w.word] && w.level >= minLevel && w.level <= targetLevel;
+    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
+    pool = pool.concat(words);
+  }
+  pool = shuffle(pool);
+  if (pool.length === 0) {
+    // Fallback: use any words from weak categories
+    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
+      var cat2 = profile.weakCategories[ci2];
+      pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
+    }
+    pool = shuffle(pool);
+  }
+  currentWords = pool.slice(0, 8);
   currentIndex = 0; results = [];
   document.getElementById('scoreCorrect').textContent = '0';
   document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').textContent = '🎯 Træning';
+  document.getElementById('testPhaseLabel').textContent = '\u{1F3AF} Træning';
   document.getElementById('difficultyLabel').innerHTML = '';
-  document.querySelectorAll('.session-badge').forEach(el => el.remove());
+  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   hide('phase-welcome');
   hide('phase-profile');
   show('phase-test');
-  const b = document.createElement('div');
+  var b = document.createElement('div');
   b.className = 'session-badge';
-  b.innerHTML = '🎯 Træningsmodus — fokus på dine svage kategorier';
+  b.innerHTML = '\u{1F3AF} Træningsmodus — fokus på dine svage kategorier';
   document.getElementById('phase-test').insertBefore(b, document.getElementById('phase-test').firstChild);
   renderWord();
 }
 
-// ── Start Review ──────────────────────────────────────────────────────────
+// Review mode
 function startReview() {
   gameMode = 'review';
-  currentWords = buildReviewList();
+  currentWords = shuffle(getDueWords());
   if (currentWords.length === 0) {
     alert('Ingen ord klar til gennemgang lige nu.');
     return;
@@ -732,56 +870,51 @@ function startReview() {
   currentIndex = 0; results = [];
   document.getElementById('scoreCorrect').textContent = '0';
   document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').textContent = '📖 Gennemgang';
+  document.getElementById('testPhaseLabel').textContent = '\u{1F4D6} Gennemgang';
   document.getElementById('difficultyLabel').innerHTML = '';
-  document.querySelectorAll('.session-badge').forEach(el => el.remove());
+  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   hide('phase-welcome');
   show('phase-test');
-  const b = document.createElement('div');
+  var b = document.createElement('div');
   b.className = 'session-badge';
-  b.innerHTML = '📖 Gennemgang — spaced repetition';
+  b.innerHTML = '\u{1F4D6} Gennemgang — spaced repetition';
   document.getElementById('phase-test').insertBefore(b, document.getElementById('phase-test').firstChild);
   renderWord();
 }
 
-// ── Render word ────────────────────────────────────────────────────────────
+// Render word
 function renderWord() {
-  const w = currentWords[currentIndex];
-  const total = currentWords.length;
-  document.getElementById('wordNum').textContent = currentIndex + 1;
-  document.getElementById('progressBar').style.width = ((currentIndex / total) * 100) + '%';
-  document.getElementById('patternBadge').textContent = (CATEGORY_ICONS[w.category] || '🔠') + ' ' + w.category;
+  var w = currentWords[currentIndex];
+  var total = currentWords.length;
+  document.getElementById('wordNum').textContent = (results.length + 1);
+  document.getElementById('progressBar').style.width = ((results.length / Math.max(total, results.length + 1)) * 100) + '%';
+  document.getElementById('patternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
   document.getElementById('spellingInput').value = '';
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('checkBtn').classList.remove('hidden');
   document.getElementById('nextBtn').classList.add('hidden');
-  const btn = document.getElementById('listenBtn');
-  btn.classList.remove('speaking'); btn.innerHTML = '🔈 Hør ordet igen';
+  var btn = document.getElementById('listenBtn');
+  btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen';
   feedbackShown = false;
 
-  const flashEl = document.getElementById('wordFlash');
-  const wrap = document.getElementById('countdownWrap');
-  const bar = document.getElementById('countdownBar');
-  const hintEl = document.getElementById('wordHint');
-  const sentEl = document.getElementById('wordSentence');
-  const diffLabel = document.getElementById('difficultyLabel');
+  var flashEl = document.getElementById('wordFlash');
+  var wrap = document.getElementById('countdownWrap');
+  var bar = document.getElementById('countdownBar');
+  var hintEl = document.getElementById('wordHint');
+  var sentEl = document.getElementById('wordSentence');
+  var diffLabel = document.getElementById('difficultyLabel');
 
-  // Difficulty label for diagnostic mode
-  if (gameMode === 'diagnostic') {
-    const idx = currentIndex + 1;
-    if (idx <= 6) {
-      diffLabel.innerHTML = '<span class="difficulty-label" style="background:rgba(34,211,160,0.15);color:var(--green)">🟢 Lette ord (' + idx + '/6)</span>';
-    } else if (idx <= 12) {
-      diffLabel.innerHTML = '<span class="difficulty-label" style="background:rgba(245,166,35,0.15);color:var(--accent)">🟡 Mellem ord (' + (idx - 6) + '/6)</span>';
-    } else {
-      diffLabel.innerHTML = '<span class="difficulty-label" style="background:rgba(244,63,94,0.15);color:var(--red)">🔴 Svære ord (' + (idx - 12) + '/6)</span>';
-    }
+  // Level indicator
+  if (gameMode === 'diagnostic' && adaptiveState) {
+    var lvl = adaptiveState.currentLevel;
+    var info = LEVEL_LABELS[lvl];
+    diffLabel.innerHTML = '<span class="difficulty-label" style="background:' + info.bg + ';color:' + info.color + '">' + info.text + '</span>';
   } else {
     diffLabel.innerHTML = '';
   }
 
   // Hint always shown
-  hintEl.textContent = '💡 ' + w.hint;
+  hintEl.textContent = '\u{1F4A1} ' + w.hint;
   if (sentEl) sentEl.textContent = '';
 
   if (gameMode === 'diagnostic') {
@@ -789,105 +922,96 @@ function renderWord() {
     flashEl.textContent = '';
     flashEl.style.opacity = '0';
     wrap.style.display = 'none';
-    // Show instruction instead
-    flashEl.textContent = '🔊';
+    flashEl.textContent = '\u{1F50A}';
     flashEl.style.opacity = '1';
     flashEl.style.fontSize = '2.5rem';
-    // Play audio
-    setTimeout(() => speakWord(w.word, w.sentence || null), 200);
-    setTimeout(() => document.getElementById('spellingInput').focus(), 500);
+    setTimeout(function() { speakWord(w.word, w.sentence || null); }, 200);
+    setTimeout(function() { document.getElementById('spellingInput').focus(); }, 500);
   } else if (gameMode === 'training') {
     // TRAINING: Show word for 3 seconds
     flashEl.style.fontSize = '2.8rem';
     flashEl.textContent = w.word; flashEl.style.opacity = '1';
     wrap.style.display = 'block';
     bar.style.transition = 'none'; bar.style.width = '100%';
-    setTimeout(() => { bar.style.transition = 'width 3s linear'; bar.style.width = '0%'; }, 50);
-    setTimeout(() => {
+    setTimeout(function() { bar.style.transition = 'width 3s linear'; bar.style.width = '0%'; }, 50);
+    setTimeout(function() {
       flashEl.style.opacity = '0';
-      setTimeout(() => {
-        flashEl.textContent = ''; wrap.style.display = 'none';
-      }, 500);
+      setTimeout(function() { flashEl.textContent = ''; wrap.style.display = 'none'; }, 500);
     }, 3000);
-    setTimeout(() => speakWord(w.word, w.sentence || null), 200);
-    setTimeout(() => document.getElementById('spellingInput').focus(), 3600);
+    setTimeout(function() { speakWord(w.word, w.sentence || null); }, 200);
+    setTimeout(function() { document.getElementById('spellingInput').focus(); }, 3600);
   } else if (gameMode === 'review') {
     // REVIEW: Show word for 2 seconds
     flashEl.style.fontSize = '2.8rem';
     flashEl.textContent = w.word; flashEl.style.opacity = '1';
     wrap.style.display = 'block';
     bar.style.transition = 'none'; bar.style.width = '100%';
-    setTimeout(() => { bar.style.transition = 'width 2s linear'; bar.style.width = '0%'; }, 50);
-    setTimeout(() => {
+    setTimeout(function() { bar.style.transition = 'width 2s linear'; bar.style.width = '0%'; }, 50);
+    setTimeout(function() {
       flashEl.style.opacity = '0';
-      setTimeout(() => {
-        flashEl.textContent = ''; wrap.style.display = 'none';
-      }, 500);
+      setTimeout(function() { flashEl.textContent = ''; wrap.style.display = 'none'; }, 500);
     }, 2000);
-    setTimeout(() => speakWord(w.word, w.sentence || null), 200);
-    setTimeout(() => document.getElementById('spellingInput').focus(), 2600);
+    setTimeout(function() { speakWord(w.word, w.sentence || null); }, 200);
+    setTimeout(function() { document.getElementById('spellingInput').focus(); }, 2600);
   }
 }
 
-// ── Enter key handler ─────────────────────────────────────────────────────
-document.getElementById('spellingInput').addEventListener('keydown', e => {
+// Enter key handler
+document.getElementById('spellingInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') { if (feedbackShown) nextWord(); else checkSpelling(); }
 });
 
-// ── Diff highlight ─────────────────────────────────────────────────────────
+// Diff highlight
 function diffHighlight(correct, attempt) {
-  let out = '';
-  const maxLen = Math.max(correct.length, attempt.length);
-  for (let i = 0; i < correct.length; i++) {
-    const c = correct[i];
-    const a = i < attempt.length ? attempt[i].toLowerCase() : '';
+  var out = '';
+  for (var i = 0; i < correct.length; i++) {
+    var c = correct[i];
+    var a = i < attempt.length ? attempt[i].toLowerCase() : '';
     if (c.toLowerCase() === a) out += '<span style="color:var(--green)">' + c + '</span>';
     else out += '<span style="color:var(--red);text-decoration:underline">' + c + '</span>';
   }
   return out;
 }
 
-// ── Check spelling ─────────────────────────────────────────────────────────
+// Check spelling
 function checkSpelling() {
-  const w = currentWords[currentIndex];
-  const ans = document.getElementById('spellingInput').value.trim().toLowerCase();
+  var w = currentWords[currentIndex];
+  var ans = document.getElementById('spellingInput').value.trim().toLowerCase();
   if (!ans) return;
-  const ok = ans === w.word.toLowerCase();
-  results.push({ word: w.word, correct: ok, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', difficulty: w.difficulty || 1 });
+  var ok = ans === w.word.toLowerCase();
+  var result = { word: w.word, correct: ok, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 1 };
+  results.push(result);
+
+  // Track adaptive state for diagnostic
+  if (gameMode === 'diagnostic' && adaptiveState) {
+    adaptiveState.levelResults.push(result);
+    adaptiveState.totalWordsShown++;
+  }
 
   // Update SR for training and review modes
   if (gameMode === 'training' || gameMode === 'review') {
     updateSRWord(w.word, ok, w.category);
   }
 
-  const box = document.getElementById('feedbackBox');
+  var box = document.getElementById('feedbackBox');
   box.style.display = 'block';
 
   if (ok) {
-    box.innerHTML = '<div class="feedback-correct">✅ Rigtigt! Flot klaret! 🎉</div>';
+    box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! Flot klaret! \u{1F389}</div>';
   } else {
-    const rule = PATTERN_RULES[w.category] || '';
-    let feedbackHTML = '<div class="feedback-wrong">❌ Du skrev: <strong>' + ans + '</strong><br>' +
+    var rule = PATTERN_RULES[w.category] || '';
+    var feedbackHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + ans + '</strong><br>' +
       'Rigtigt: <span style="color:var(--green)">' + diffHighlight(w.word, ans) + '</span></div>';
-
-    // In training and review: always show detailed feedback
-    if (gameMode === 'training' || gameMode === 'review') {
-      feedbackHTML += '<div class="pattern-explain"><strong>📖 ' + w.category + ':</strong><br>' + rule;
+    if (rule) {
+      feedbackHTML += '<div class="pattern-explain"><strong>\u{1F4D6} ' + w.category + ':</strong><br>' + rule;
       if (w.patternHint) feedbackHTML += '<br><em>I dette ord: ' + w.patternHint + '</em>';
       feedbackHTML += '</div>';
-    } else {
-      // Diagnostic: show brief pattern hint
-      if (rule) {
-        feedbackHTML += '<div class="pattern-explain"><strong>📖 ' + w.category + ':</strong><br>' + rule;
-        if (w.patternHint) feedbackHTML += '<br><em>I dette ord: ' + w.patternHint + '</em>';
-        feedbackHTML += '</div>';
-      }
     }
     box.innerHTML = feedbackHTML;
   }
 
-  document.getElementById('scoreCorrect').textContent = results.filter(r => r.correct).length;
-  document.getElementById('scoreWrong').textContent = results.filter(r => !r.correct).length;
+  document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+  document.getElementById('scoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
   document.getElementById('checkBtn').classList.add('hidden');
   document.getElementById('nextBtn').classList.remove('hidden');
   feedbackShown = true;
@@ -896,46 +1020,112 @@ function checkSpelling() {
 
 function nextWord() {
   currentIndex++;
-  if (currentIndex >= currentWords.length) {
-    finishTest();
-  } else {
+
+  if (gameMode === 'diagnostic' && adaptiveState) {
+    // Check if we finished the current batch
+    if (currentIndex >= currentWords.length) {
+      // Evaluate the current level results
+      var levelCorrect = adaptiveState.levelResults.filter(function(r) { return r.correct; }).length;
+      var levelTotal = adaptiveState.levelResults.length;
+
+      if (adaptiveState.phase === 'confirming') {
+        // We were confirming a level, now finish
+        adaptiveState.finished = true;
+        finishTest();
+        return;
+      }
+
+      if (levelCorrect >= 2 && adaptiveState.currentLevel < 4) {
+        // Advance to next level
+        adaptiveState.currentLevel++;
+        adaptiveState.levelResults = [];
+        adaptiveState.phase = 'testing';
+        var nextBatch = buildAdaptiveDiagnosticWords(adaptiveState.currentLevel);
+        if (nextBatch.length === 0) {
+          adaptiveState.finished = true;
+          finishTest();
+          return;
+        }
+        diagnosticWordsList = diagnosticWordsList.concat(nextBatch);
+        currentWords = nextBatch;
+        currentIndex = 0;
+        renderWord();
+      } else if (levelCorrect >= 2 && adaptiveState.currentLevel === 4) {
+        // At max level and passed, finish
+        adaptiveState.finished = true;
+        finishTest();
+      } else {
+        // Got 2+ wrong, pick 3 more at this level to confirm
+        adaptiveState.levelResults = [];
+        adaptiveState.phase = 'confirming';
+        var confirmBatch = buildAdaptiveDiagnosticWords(adaptiveState.currentLevel);
+        if (confirmBatch.length === 0) {
+          adaptiveState.finished = true;
+          finishTest();
+          return;
+        }
+        diagnosticWordsList = diagnosticWordsList.concat(confirmBatch);
+        currentWords = confirmBatch;
+        currentIndex = 0;
+        renderWord();
+      }
+      return;
+    }
     renderWord();
+  } else {
+    if (currentIndex >= currentWords.length) {
+      finishTest();
+    } else {
+      renderWord();
+    }
   }
 }
 
-// ── Finish test ───────────────────────────────────────────────────────────
+// Finish test
 function finishTest() {
   hide('phase-test');
 
   if (gameMode === 'diagnostic') {
-    // Save diagnostic results to profile, then analyze
-    const categoryScores = {};
-    for (const cat of ALL_CATEGORIES) {
-      categoryScores[cat] = { easy: 0, medium: 0, hard: 0, total: 0, max: 3 };
+    var spellingLevel = estimateSpellingLevel(results);
+    var grade = loadGrade();
+
+    var categoryScores = {};
+    for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+      var cat = ALL_CATEGORIES[ci];
+      categoryScores[cat] = { correct: 0, total: 0 };
     }
-    for (const r of results) {
-      if (r.correct) {
-        const diff = r.difficulty || 1;
-        if (diff === 1) categoryScores[r.category].easy++;
-        else if (diff === 2) categoryScores[r.category].medium++;
-        else if (diff === 3) categoryScores[r.category].hard++;
-        categoryScores[r.category].total++;
-      }
+    for (var ri = 0; ri < results.length; ri++) {
+      var r = results[ri];
+      categoryScores[r.category].total++;
+      if (r.correct) categoryScores[r.category].correct++;
     }
-    const weakCategories = ALL_CATEGORIES.filter(cat => categoryScores[cat].total < 3);
+    var weakCategories = ALL_CATEGORIES.filter(function(cat) {
+      var cs = categoryScores[cat];
+      return cs.total > 0 && (cs.correct / cs.total) < 0.66;
+    });
+    // If no weak categories identified but there are errors, add those categories
+    if (weakCategories.length === 0) {
+      var errorCats = [];
+      results.forEach(function(r) {
+        if (!r.correct && errorCats.indexOf(r.category) === -1) errorCats.push(r.category);
+      });
+      weakCategories = errorCats;
+    }
 
     // Update SR for diagnostic words that were wrong
-    for (const r of results) {
-      if (!r.correct) {
-        updateSRWord(r.word, false, r.category);
+    for (var ri2 = 0; ri2 < results.length; ri2++) {
+      if (!results[ri2].correct) {
+        updateSRWord(results[ri2].word, false, results[ri2].category);
       }
     }
 
-    const profile = {
+    var profile = {
       lastDiagnostic: Date.now(),
-      categoryScores,
-      weakCategories,
-      diagnosticResults: results.map(r => ({ word: r.word, correct: r.correct, userAnswer: r.userAnswer, category: r.category, difficulty: r.difficulty })),
+      grade: grade,
+      spellingLevel: spellingLevel,
+      categoryScores: categoryScores,
+      weakCategories: weakCategories,
+      diagnosticResults: results.map(function(r) { return { word: r.word, correct: r.correct, userAnswer: r.userAnswer, category: r.category, level: r.level }; })
     };
     saveProfile(profile);
 
@@ -948,50 +1138,50 @@ function finishTest() {
   }
 }
 
-// ── AI Analysis ───────────────────────────────────────────────────────────
+// AI Analysis
 async function analyzeWithAI(profile) {
-  const correct = results.filter(r => r.correct).length;
-  const wrong = results.filter(r => !r.correct);
-  const cats = [...new Set(wrong.map(r => r.category))];
+  var correct = results.filter(function(r) { return r.correct; }).length;
+  var wrong = results.filter(function(r) { return !r.correct; });
+  var cats = [];
+  wrong.forEach(function(r) { if (cats.indexOf(r.category) === -1) cats.push(r.category); });
+  var grade = profile.grade || 0;
+  var spellingLevel = profile.spellingLevel || 1;
+  var gradeInfo = grade > 0 ? ('Eleven går i ' + grade + '. klasse. ') : '';
+  var levelInfo = 'Estimeret stave-niveau: ' + LEVEL_GRADE_MAP[spellingLevel] + ' (niveau ' + spellingLevel + '/4).';
 
-  const prompt = `Du er en dansk stavningstutor for en 12-årig.
+  var prompt = 'Du er en dansk stavningstutor for et barn.\n\n' +
+    gradeInfo + levelInfo + '\n\n' +
+    'Diagnostisk test med adaptivt niveau (starter let, bliver sværere).\n\n' +
+    'Testresultater:\n' +
+    results.map(function(r) { return '- "' + r.word + '" (kategori: ' + r.category + ', niveau: ' + r.level + '): ' + (r.correct ? 'RIGTIGT' : 'FORKERT — eleven skrev "' + r.userAnswer + '"'); }).join('\n') +
+    '\n\nRigtige: ' + correct + '/' + results.length + '. Fejlkategorier: ' + (cats.join(', ') || 'ingen') + '.\n\n' +
+    'Kategori-scores:\n' +
+    ALL_CATEGORIES.map(function(c) { var cs = profile.categoryScores[c]; return '- ' + c + ': ' + (cs ? cs.correct : 0) + '/' + (cs ? cs.total : 0); }).join('\n') +
+    '\n\nSvage kategorier: ' + (profile.weakCategories.join(', ') || 'ingen') + '\n\n' +
+    'Svar KUN som JSON (ingen markdown):\n' +
+    '{\n' +
+    '  "encouragement": "Varm, motiverende sætning (max 2 sætninger)",\n' +
+    '  "summary": "Analyse af mønstrene bag fejlene — forklar HVORFOR disse ord er svære på dansk (2-3 sætninger)",\n' +
+    '  "patterns": ["1-3 stavemønstre eleven bør fokusere på"],\n' +
+    '  "exercises": [\n' +
+    '    {\n' +
+    '      "title": "Øvelsens navn",\n' +
+    '      "type": "Øvelsestype",\n' +
+    '      "why": "Én sætning: hvorfor netop denne øvelse hjælper",\n' +
+    '      "description": "Konkret beskrivelse af hvad eleven skal gøre",\n' +
+    '      "words": ["ord1","ord2","ord3","ord4","ord5"],\n' +
+    '      "pattern_rule": "Den korte regel eller det mønster der binder ordene sammen"\n' +
+    '    }\n' +
+    '  ],\n' +
+    '  "daily_tip": "Ét konkret tip til hvad eleven kan gøre i morgen i 5 minutter"\n' +
+    '}\n' +
+    'Lav 2-3 øvelser. Ordene skal dele mønster med fejlene. Tilpas til elevens niveau.';
 
-Diagnostisk test — 18 ord, 6 kategorier (Stumme bogstaver, Dobbeltkonsonant, For- og efterstavelser, Sammensatte ord, Verbernes bøjning, Navneordsendelser), 3 sværhedsgrader per kategori.
-
-Testresultater:
-${results.map(r => '- "' + r.word + '" (kategori: ' + r.category + ', sværhed: ' + r.difficulty + '): ' + (r.correct ? 'RIGTIGT' : 'FORKERT — eleven skrev "' + r.userAnswer + '"')).join('\n')}
-
-Rigtige: ${correct}/${results.length}. Fejlkategorier: ${cats.join(', ') || 'ingen'}.
-
-Kategori-scores:
-${ALL_CATEGORIES.map(c => '- ' + c + ': ' + (profile.categoryScores[c]?.total || 0) + '/3').join('\n')}
-
-Svage kategorier: ${profile.weakCategories.join(', ') || 'ingen'}
-
-Svar KUN som JSON (ingen markdown):
-{
-  "encouragement": "Varm, motiverende sætning (max 2 sætninger)",
-  "summary": "Analyse af mønstrene bag fejlene — forklar HVORFOR disse ord er svære på dansk, brug begreber som 'stum konsonant', 'morfem', 'forstavelse' men forklar dem enkelt (2-3 sætninger)",
-  "patterns": ["1-3 stavemønstre eleven bør fokusere på"],
-  "exercises": [
-    {
-      "title": "Øvelsens navn",
-      "type": "Øvelsestype",
-      "why": "Én sætning: hvorfor netop denne øvelse hjælper",
-      "description": "Konkret beskrivelse af hvad eleven skal gøre",
-      "words": ["ord1","ord2","ord3","ord4","ord5"],
-      "pattern_rule": "Den korte regel eller det mønster der binder ordene sammen"
-    }
-  ],
-  "daily_tip": "Ét konkret tip til hvad eleven kan gøre i morgen i 5 minutter"
-}
-Lav 2-3 øvelser. Ordene skal dele mønster med fejlene. 12-årig niveau.`;
-
-  const anthropicKey = loadAnthropicKey();
+  var anthropicKey = loadAnthropicKey();
   if (!anthropicKey) { renderProfileFallback(profile); return; }
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    var res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1001,22 +1191,24 @@ Lav 2-3 øvelser. Ordene skal dele mønster med fejlene. 12-årig niveau.`;
       },
       body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1500, messages: [{ role: "user", content: prompt }] })
     });
-    if (!res.ok) { console.error('API error:', res.status, await res.text()); renderProfileFallback(profile); return; }
-    const data = await res.json();
-    const text = data.content.map(i => i.text || '').join('');
+    if (!res.ok) { console.error('API error:', res.status); renderProfileFallback(profile); return; }
+    var data = await res.json();
+    var text = data.content.map(function(i) { return i.text || ''; }).join('');
     renderProfile(profile, JSON.parse(text.replace(/```json|```/g, '').trim()));
   } catch(err) {
     console.error(err); renderProfileFallback(profile);
   }
 }
 
-// ── Render Profile (after diagnostic) ─────────────────────────────────────
+// Render Profile
 function renderProfile(profile, aiData) {
   hide('phase-analyzing'); show('phase-profile');
-  const correct = results.filter(r => r.correct).length;
-  const wrong = results.filter(r => !r.correct);
+  var correct = results.filter(function(r) { return r.correct; }).length;
+  var wrong = results.filter(function(r) { return !r.correct; });
+  var spellingLevel = profile.spellingLevel || 1;
+  var grade = profile.grade || 0;
 
-  let html = '';
+  var html = '';
 
   // AI feedback
   if (aiData) {
@@ -1026,33 +1218,60 @@ function renderProfile(profile, aiData) {
 
   // Overall score
   html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige ✓</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl ✗</div></div>';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
   html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
   html += '</div>';
 
+  // Spelling level display
+  html += '<div style="text-align:center;margin:16px 0 8px">';
+  html += '<h2 style="font-size:1.3rem;margin-bottom:4px">Dit stave-niveau</h2>';
+  html += '<div style="font-family:\'Fredoka One\',cursive;font-size:1.8rem;color:var(--accent)">' + LEVEL_GRADE_MAP[spellingLevel] + '</div>';
+  html += '</div>';
+
+  // Level meter
+  var meterPct = (spellingLevel / 4) * 100;
+  var meterColors = { 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
+  html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + meterPct + '%;background:' + meterColors[spellingLevel] + '"></div></div>';
+  html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
+  html += '<span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
+
+  // Grade comparison
+  if (grade > 0) {
+    var expectedLevel = gradeToExpectedLevel(grade);
+    var compHtml = '';
+    if (spellingLevel > expectedLevel) {
+      compHtml = '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Imponerende! Du staver over dit klassetrin! \u{1F680}</div>';
+    } else if (spellingLevel >= expectedLevel) {
+      compHtml = '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Flot! Du staver som forventet for dit klassetrin \u{1F31F}</div>';
+    } else {
+      compHtml = '<div class="level-comparison" style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);color:var(--accent)">Du er på vej! Lad os træne de områder der er svære \u{1F4AA}</div>';
+    }
+    html += compHtml;
+  }
+
   // Per-category breakdown
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
-  for (const cat of ALL_CATEGORIES) {
-    const cs = profile.categoryScores[cat];
-    const score = cs.total;
-    const max = cs.max;
-    const pct = Math.round((score / max) * 100);
-    let color = 'var(--green)';
-    if (score === 0) color = 'var(--red)';
-    else if (score < max) color = 'var(--accent)';
+  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+    var cat = ALL_CATEGORIES[ci];
+    var cs = profile.categoryScores[cat];
+    if (!cs || cs.total === 0) continue;
+    var pct = Math.round((cs.correct / cs.total) * 100);
+    var color = 'var(--green)';
+    if (cs.correct === 0) color = 'var(--red)';
+    else if (cs.correct < cs.total) color = 'var(--accent)';
     html += '<div class="cat-score">';
-    html += '<div class="cat-icon">' + (CATEGORY_ICONS[cat] || '🔠') + '</div>';
+    html += '<div class="cat-icon">' + (CATEGORY_ICONS[cat] || '\u{1F520}') + '</div>';
     html += '<div class="cat-name">' + cat + '</div>';
     html += '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>';
-    html += '<div class="cat-result" style="color:' + color + '">' + score + '/' + max + '</div>';
+    html += '<div class="cat-result" style="color:' + color + '">' + cs.correct + '/' + cs.total + '</div>';
     html += '</div>';
   }
 
   // Patterns to focus on
   if (aiData && aiData.patterns && aiData.patterns.length) {
     html += '<p style="margin:16px 0 8px;font-size:0.85rem;color:var(--muted)">Fokusér på disse mønstre:</p><div style="margin-bottom:16px">';
-    aiData.patterns.forEach(function(p) { html += '<span class="tag">🎯 ' + p + '</span>'; });
+    aiData.patterns.forEach(function(p) { html += '<span class="tag">\u{1F3AF} ' + p + '</span>'; });
     html += '</div>';
   }
 
@@ -1060,25 +1279,25 @@ function renderProfile(profile, aiData) {
   html += '<div style="margin-bottom:18px">';
   results.forEach(function(r) {
     html += '<div class="word-attempt">';
-    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-    html += '<span>' + (r.correct ? '<span class="correct-mark">✓ rigtigt</span>' : '<span class="wrong-mark">✗ ' + r.userAnswer + '</span>') + '</span>';
+    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + ' (niv. ' + r.level + ')</span></span>';
+    html += '<span>' + (r.correct ? '<span class="correct-mark">\u2713 rigtigt</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>') + '</span>';
     html += '</div>';
   });
   html += '</div>';
 
   // AI exercises
   if (aiData && aiData.exercises && aiData.exercises.length) {
-    html += '<h2 style="margin-bottom:14px">🏋️ Øvelser fra AI</h2>';
-    const icons = ['📚','✍️','🎲','🃏','🔤'];
+    html += '<h2 style="margin-bottom:14px">\u{1F3CB}\uFE0F Øvelser fra AI</h2>';
+    var icons = ['\u{1F4DA}','\u270D\uFE0F','\u{1F3B2}','\u{1F0CF}','\u{1F524}'];
     aiData.exercises.forEach(function(ex, i) {
       html += '<div class="exercise-block">';
       html += '<h3>' + icons[i % icons.length] + ' ' + ex.title + ' <span style="font-size:0.75rem;color:var(--muted);font-weight:400">(' + ex.type + ')</span></h3>';
-      if (ex.why) html += '<div class="why-box">🧠 ' + ex.why + '</div>';
+      if (ex.why) html += '<div class="why-box">\u{1F9E0} ' + ex.why + '</div>';
       html += '<p>' + ex.description + '</p>';
-      if (ex.pattern_rule) html += '<p style="margin-top:8px;font-size:0.85rem;color:#a78bfa">📌 Regel: <em>' + ex.pattern_rule + '</em></p>';
+      if (ex.pattern_rule) html += '<p style="margin-top:8px;font-size:0.85rem;color:#a78bfa">\u{1F4CC} Regel: <em>' + ex.pattern_rule + '</em></p>';
       if (ex.words && ex.words.length) {
         html += '<div class="word-pills">';
-        ex.words.forEach(function(w) { html += '<button class="word-pill" onclick="speakWord(\'' + w.replace(/'/g, "\\'") + '\')">' + w + ' 🔈</button>'; });
+        ex.words.forEach(function(w) { html += '<button class="word-pill" onclick="speakWord(\'' + w.replace(/'/g, "\\'") + '\')">' + w + ' \u{1F508}</button>'; });
         html += '</div>';
       }
       html += '</div>';
@@ -1088,7 +1307,7 @@ function renderProfile(profile, aiData) {
   // Daily tip
   if (wrong.length > 0 && aiData && aiData.daily_tip) {
     html += '<div class="tomorrow-box">';
-    html += '<h3>🗓️ Kom igen i morgen!</h3>';
+    html += '<h3>\u{1F5D3}\uFE0F Kom igen i morgen!</h3>';
     html += '<p>' + aiData.daily_tip + '</p>';
     html += '</div>';
   }
@@ -1096,54 +1315,81 @@ function renderProfile(profile, aiData) {
   // Action buttons
   html += '<hr class="divider">';
   if (profile.weakCategories.length > 0) {
-    html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">🎯 Start træning af svage kategorier</button>';
+    html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F3AF} Start træning af svage kategorier</button>';
   }
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goToWelcome()">🏠 Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Ny stavetest</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('profileContent').innerHTML = html;
 }
 
 function renderProfileFallback(profile) {
   hide('phase-analyzing'); show('phase-profile');
-  const correct = results.filter(r => r.correct).length;
-  const wrong = results.filter(r => !r.correct);
-  const cats = profile.weakCategories;
+  var correct = results.filter(function(r) { return r.correct; }).length;
+  var wrong = results.filter(function(r) { return !r.correct; });
+  var cats = profile.weakCategories;
+  var spellingLevel = profile.spellingLevel || 1;
+  var grade = profile.grade || 0;
 
-  const encouragements = [
-    'Godt gået! Øvelse gør mester 💪',
-    'Flot indsats! Du er på rette vej 🌟',
-    'Stærkt arbejde! Bliv ved med at øve ⭐'
+  var encouragements = [
+    'Godt gået! Øvelse gør mester \u{1F4AA}',
+    'Flot indsats! Du er på rette vej \u{1F31F}',
+    'Stærkt arbejde! Bliv ved med at øve \u2B50'
   ];
-  const encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+  var encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
 
-  let html = '';
+  var html = '';
 
   html += '<div class="ai-bubble"><p><strong>' + encouragement + '</strong></p>';
   html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige.' + (wrong.length > 0 ? ' Fokusér på: ' + cats.join(', ') + '.' : ' Perfekt score!') + '</p></div>';
 
   // Overall score
   html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige ✓</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl ✗</div></div>';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
   html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
   html += '</div>';
 
+  // Spelling level display
+  html += '<div style="text-align:center;margin:16px 0 8px">';
+  html += '<h2 style="font-size:1.3rem;margin-bottom:4px">Dit stave-niveau</h2>';
+  html += '<div style="font-family:\'Fredoka One\',cursive;font-size:1.8rem;color:var(--accent)">' + LEVEL_GRADE_MAP[spellingLevel] + '</div>';
+  html += '</div>';
+
+  // Level meter
+  var meterPct = (spellingLevel / 4) * 100;
+  var meterColors = { 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
+  html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + meterPct + '%;background:' + meterColors[spellingLevel] + '"></div></div>';
+  html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
+  html += '<span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
+
+  // Grade comparison
+  if (grade > 0) {
+    var expectedLevel = gradeToExpectedLevel(grade);
+    if (spellingLevel > expectedLevel) {
+      html += '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Imponerende! Du staver over dit klassetrin! \u{1F680}</div>';
+    } else if (spellingLevel >= expectedLevel) {
+      html += '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Flot! Du staver som forventet for dit klassetrin \u{1F31F}</div>';
+    } else {
+      html += '<div class="level-comparison" style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);color:var(--accent)">Du er på vej! Lad os træne de områder der er svære \u{1F4AA}</div>';
+    }
+  }
+
   // Per-category breakdown
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
-  for (const cat of ALL_CATEGORIES) {
-    const cs = profile.categoryScores[cat];
-    const score = cs.total;
-    const max = cs.max;
-    const pct = Math.round((score / max) * 100);
-    let color = 'var(--green)';
-    if (score === 0) color = 'var(--red)';
-    else if (score < max) color = 'var(--accent)';
+  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+    var cat = ALL_CATEGORIES[ci];
+    var cs = profile.categoryScores[cat];
+    if (!cs || cs.total === 0) continue;
+    var pct = Math.round((cs.correct / cs.total) * 100);
+    var color = 'var(--green)';
+    if (cs.correct === 0) color = 'var(--red)';
+    else if (cs.correct < cs.total) color = 'var(--accent)';
     html += '<div class="cat-score">';
-    html += '<div class="cat-icon">' + (CATEGORY_ICONS[cat] || '🔠') + '</div>';
+    html += '<div class="cat-icon">' + (CATEGORY_ICONS[cat] || '\u{1F520}') + '</div>';
     html += '<div class="cat-name">' + cat + '</div>';
     html += '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>';
-    html += '<div class="cat-result" style="color:' + color + '">' + score + '/' + max + '</div>';
+    html += '<div class="cat-result" style="color:' + color + '">' + cs.correct + '/' + cs.total + '</div>';
     html += '</div>';
   }
 
@@ -1151,35 +1397,34 @@ function renderProfileFallback(profile) {
   html += '<div style="margin:18px 0">';
   results.forEach(function(r) {
     html += '<div class="word-attempt">';
-    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-    html += '<span>' + (r.correct ? '<span class="correct-mark">✓ rigtigt</span>' : '<span class="wrong-mark">✗ ' + r.userAnswer + '</span>') + '</span>';
+    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + ' (niv. ' + r.level + ')</span></span>';
+    html += '<span>' + (r.correct ? '<span class="correct-mark">\u2713 rigtigt</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>') + '</span>';
     html += '</div>';
   });
   html += '</div>';
 
   // Show rules for weak categories
   if (cats.length > 0) {
-    html += '<h2 style="margin-bottom:14px">📖 Regler for dine fejlkategorier</h2>';
+    html += '<h2 style="margin-bottom:14px">\u{1F4D6} Regler for dine fejlkategorier</h2>';
     cats.forEach(function(cat) {
-      const catWrong = wrong.filter(r => r.category === cat);
-      const rule = PATTERN_RULES[cat] || '';
+      var catWrong = wrong.filter(function(r) { return r.category === cat; });
+      var rule = PATTERN_RULES[cat] || '';
       html += '<div class="exercise-block">';
-      html += '<h3>' + (CATEGORY_ICONS[cat] || '🔠') + ' ' + cat + '</h3>';
-      if (rule) html += '<div class="why-box">📌 ' + rule + '</div>';
+      html += '<h3>' + (CATEGORY_ICONS[cat] || '\u{1F520}') + ' ' + cat + '</h3>';
+      if (rule) html += '<div class="why-box">\u{1F4CC} ' + rule + '</div>';
       html += '<div class="word-pills">';
       catWrong.forEach(function(r) {
-        html += '<button class="word-pill" onclick="speakWord(\'' + r.word.replace(/'/g, "\\'") + '\')">' + r.word + ' 🔈</button>';
+        html += '<button class="word-pill" onclick="speakWord(\'' + r.word.replace(/'/g, "\\'") + '\')">' + r.word + ' \u{1F508}</button>';
       });
-      // Add extra practice words from same category
-      const extra = WORD_BANK[cat].filter(function(w) { return !catWrong.find(function(cw) { return cw.word === w.word; }); }).slice(0, 3);
+      var extra = WORD_BANK[cat].filter(function(w) { return !catWrong.find(function(cw) { return cw.word === w.word; }); }).slice(0, 3);
       extra.forEach(function(w) {
-        html += '<button class="word-pill" onclick="speakWord(\'' + w.word.replace(/'/g, "\\'") + '\')">' + w.word + ' 🔈</button>';
+        html += '<button class="word-pill" onclick="speakWord(\'' + w.word.replace(/'/g, "\\'") + '\')">' + w.word + ' \u{1F508}</button>';
       });
       html += '</div></div>';
     });
 
     html += '<div class="tomorrow-box">';
-    html += '<h3>🗓️ Kom igen i morgen!</h3>';
+    html += '<h3>\u{1F5D3}\uFE0F Kom igen i morgen!</h3>';
     html += '<p>Skriv hvert fejlord 3 gange og sig det højt mens du skriver. Forskning viser at korte daglige sessioner virker bedre end én lang session.</p>';
     html += '</div>';
   }
@@ -1187,124 +1432,106 @@ function renderProfileFallback(profile) {
   // Action buttons
   html += '<hr class="divider">';
   if (profile.weakCategories.length > 0) {
-    html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">🎯 Start træning af svage kategorier</button>';
+    html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F3AF} Start træning af svage kategorier</button>';
   }
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goToWelcome()">🏠 Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Ny stavetest</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('profileContent').innerHTML = html;
 }
 
-// ── Render Training Results ───────────────────────────────────────────────
+// Training results
 function renderTrainingResults() {
   show('phase-results');
-  const correct = results.filter(r => r.correct).length;
-  const wrong = results.filter(r => !r.correct);
-  const sr = loadSRData();
+  var correct = results.filter(function(r) { return r.correct; }).length;
+  var wrong = results.filter(function(r) { return !r.correct; });
+  var sr = loadSRData();
 
-  let html = '';
-
-  const encouragements = [
-    'Godt gået med træningen! 💪',
-    'Flot indsats! Du bliver bedre og bedre 🌟',
-    'Stærkt! Øvelse gør mester ⭐'
-  ];
+  var html = '';
+  var encouragements = ['Godt gået med træningen! \u{1F4AA}', 'Flot indsats! Du bliver bedre og bedre \u{1F31F}', 'Stærkt! Øvelse gør mester \u2B50'];
   html += '<div class="ai-bubble"><p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
   html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige i træningen.</p></div>';
 
   html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige ✓</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl ✗</div></div>';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
   html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
   html += '</div>';
 
-  // Per-word results with SR level
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
   html += '<div style="margin-bottom:18px">';
   results.forEach(function(r) {
-    const srWord = sr.words[r.word];
-    const level = srWord ? srWord.level : 0;
-    const levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
-    const levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+    var srWord = sr.words[r.word];
+    var level = srWord ? srWord.level : 0;
+    var levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
+    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
     html += '<div class="word-attempt">';
     html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
     html += '<span>';
-    html += (r.correct ? '<span class="correct-mark">✓</span>' : '<span class="wrong-mark">✗ ' + r.userAnswer + '</span>');
+    html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
     html += ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
     html += '</span></div>';
   });
   html += '</div>';
 
-  // Action buttons
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goToWelcome()">🏠 Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Ny stavetest</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
 
-// ── Render Review Results ─────────────────────────────────────────────────
+// Review results
 function renderReviewResults() {
   show('phase-results');
-  const correct = results.filter(r => r.correct).length;
-  const wrong = results.filter(r => !r.correct);
-  const sr = loadSRData();
+  var correct = results.filter(function(r) { return r.correct; }).length;
+  var wrong = results.filter(function(r) { return !r.correct; });
+  var sr = loadSRData();
 
-  let html = '';
-
+  var html = '';
   html += '<div class="ai-bubble"><p><strong>Gennemgang færdig!</strong></p>';
   html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige i gennemgangen.</p></div>';
 
   html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige ✓</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl ✗</div></div>';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
   html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
   html += '</div>';
 
-  // Per-word results with SR level
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">SR-opdateringer</h2>';
   html += '<div style="margin-bottom:18px">';
   results.forEach(function(r) {
-    const srWord = sr.words[r.word];
-    const level = srWord ? srWord.level : 0;
-    const levelNames = ['Nulstillet', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
-    const levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+    var srWord = sr.words[r.word];
+    var level = srWord ? srWord.level : 0;
+    var levelNames = ['Nulstillet', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
+    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
     html += '<div class="word-attempt">';
     html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
     html += '<span>';
-    html += (r.correct ? '<span class="correct-mark">✓</span>' : '<span class="wrong-mark">✗ ' + r.userAnswer + '</span>');
+    html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
     html += ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
     html += '</span></div>';
   });
   html += '</div>';
 
-  // Action buttons
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">🔄 Ny diagnostisk test</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goToWelcome()">🏠 Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Ny stavetest</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
 
-// ── Navigation ────────────────────────────────────────────────────────────
-function goToWelcome() {
-  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
-  hide('phase-test'); hide('phase-analyzing'); hide('phase-profile'); hide('phase-results');
-  show('phase-welcome');
-  refreshWelcomeButtons();
-}
-
+// Welcome buttons
 function refreshWelcomeButtons() {
-  const profile = loadProfile();
-  const dueWords = getDueWords();
+  var profile = loadProfile();
+  var dueWords = getDueWords();
 
-  const startBtn = document.getElementById('startDiagBtn');
-  const continueBtn = document.getElementById('continueTrainBtn');
-  const newDiagBtn = document.getElementById('newDiagBtn');
-  const reviewBtn = document.getElementById('reviewBtn');
+  var startBtn = document.getElementById('startDiagBtn');
+  var continueBtn = document.getElementById('continueTrainBtn');
+  var newDiagBtn = document.getElementById('newDiagBtn');
+  var reviewBtn = document.getElementById('reviewBtn');
 
   if (profile) {
-    // Profile exists: show continue training + new diagnostic
     startBtn.classList.add('hidden');
     if (profile.weakCategories && profile.weakCategories.length > 0) {
       continueBtn.classList.remove('hidden');
@@ -1313,36 +1540,34 @@ function refreshWelcomeButtons() {
     }
     newDiagBtn.classList.remove('hidden');
   } else {
-    // No profile: show start diagnostic only
     startBtn.classList.remove('hidden');
     continueBtn.classList.add('hidden');
     newDiagBtn.classList.add('hidden');
   }
 
-  // SR review button
   if (dueWords.length > 0) {
-    reviewBtn.textContent = '📖 ' + dueWords.length + ' ord klar til gennemgang';
+    reviewBtn.textContent = '\u{1F501} ' + dueWords.length + ' ord klar til gennemgang';
     reviewBtn.classList.remove('hidden');
   } else {
     reviewBtn.classList.add('hidden');
   }
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────
+// Init
 window.addEventListener('load', function() {
   window.speechSynthesis.getVoices();
-  // Restore saved API key
-  const savedKey = loadApiKey();
-  const keyInput = document.getElementById('apiKeyInput');
+  var savedKey = loadApiKey();
+  var keyInput = document.getElementById('apiKeyInput');
   if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }
   updateApiStatus2(savedKey);
-  // Restore saved Anthropic key
-  const savedAnthropicKey = loadAnthropicKey();
-  const anthropicInput = document.getElementById('anthropicKeyInput');
+  var savedAnthropicKey = loadAnthropicKey();
+  var anthropicInput = document.getElementById('anthropicKeyInput');
   if (anthropicInput && savedAnthropicKey) { anthropicInput.value = savedAnthropicKey; updateAnthropicStatus(savedAnthropicKey); }
   setVoice(loadVoice());
+  restoreGradeSelection();
   refreshWelcomeButtons();
 });
+
 </script>
 </body>
 </html>

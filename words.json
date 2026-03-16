@@ -295,6 +295,246 @@
       "sentence": "Kniven er meget hvass, så pas på.",
       "level": 3,
       "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvis",
+      "hint": "Betingelse for noget",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvis det regner, bliver vi inde.",
+      "level": 1,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hver",
+      "hint": "Alle sammen, én ad gangen",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hver dag går vi i skole.",
+      "level": 1,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hjemme",
+      "hint": "I sit eget hus",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Mor er hjemme hele dagen.",
+      "level": 1,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvalp",
+      "hint": "En lille hund",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Vi har fået en lille hvalp.",
+      "level": 1,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvidt",
+      "hint": "Farven hvid i intetkøn",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Huset er hvidt med rødt tag.",
+      "level": 1,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hjælp",
+      "hint": "Man beder om hjælp",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Hjælp, jeg kan ikke nå op!",
+      "level": 1,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvalros",
+      "hint": "Stort dyr med stødtænder",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "En hvalros lever i det kolde hav.",
+      "level": 1,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvede",
+      "hint": "Korn til brød",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Bonden dyrker hvede på marken.",
+      "level": 1,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvorhen",
+      "hint": "Spørger om retning",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvorhen skal vi køre i dag?",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvæse",
+      "hint": "Lave en slangelyd",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Slangen begyndte at hvæse ad os.",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hjemad",
+      "hint": "På vej mod hjemmet",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Vi gik hjemad efter skole.",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hjelm",
+      "hint": "Beskytter hovedet",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Husk at tage din hjelm på cyklen.",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "halvt",
+      "hint": "En halv del",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Klokken er halvt tre.",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "gulv",
+      "hint": "Det man går på indendørs",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Katten ligger på gulvet.",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "tolv",
+      "hint": "Tallet 12",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Der er tolv måneder på et år.",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "sølv",
+      "hint": "Et skinnende metal",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Ringen er lavet af sølv.",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvirvle",
+      "hint": "Dreje rundt og rundt",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Bladene begyndte at hvirvle i vinden.",
+      "level": 2,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvorfra",
+      "hint": "Spørger om oprindelse",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvorfra kommer du egentlig?",
+      "level": 3,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hjemkomst",
+      "hint": "Når man ankommer hjem",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Familiens hjemkomst blev fejret med kage.",
+      "level": 3,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "halvdel",
+      "hint": "Den ene af to dele",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Jeg spiste halvdelen af kagen.",
+      "level": 3,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "kalv",
+      "hint": "En ung ko",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Bonden har en ny kalv i stalden.",
+      "level": 3,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "mild",
+      "hint": "Blid og rolig",
+      "patternHint": "stumt 'd' efter 'l'",
+      "sentence": "Vinden er mild i aften.",
+      "level": 3,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvortil",
+      "hint": "Spørger om destination",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvortil skal rejsen gå i år?",
+      "level": 3,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "guld",
+      "hint": "Dyrebart gult metal",
+      "patternHint": "stumt 'd' efter 'l'",
+      "sentence": "Ringen er lavet af guld.",
+      "level": 3,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvælvet",
+      "hint": "En buet form",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Loftet i kirken er hvælvet.",
+      "level": 4,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hverdag",
+      "hint": "En almindelig dag",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Livet i hverdagen kan også være spændende.",
+      "level": 4,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "told",
+      "hint": "Afgift på varer",
+      "patternHint": "stumt 'd' efter 'l'",
+      "sentence": "Der skal betales told på varen.",
+      "level": 4,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "vild",
+      "hint": "Ikke tam, ukontrolleret",
+      "patternHint": "stumt 'd' efter 'l'",
+      "sentence": "Den vilde kat lever i skoven.",
+      "level": 4,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hjemstavns",
+      "hint": "Relateret til hjemsted",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "De studerede hjemstavns historie i skolen.",
+      "level": 4,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "stiltiende",
+      "hint": "Uden at sige noget",
+      "patternHint": "stumt 'd' i 'tiende'",
+      "sentence": "De indgik en stiltiende aftale.",
+      "level": 4,
+      "category": "Stumme bogstaver"
     }
   ],
   "Dobbeltkonsonant": [
@@ -593,6 +833,246 @@
       "sentence": "Jeg har fået nye bukser i gave.",
       "level": 1,
       "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "lamme",
+      "hint": "Små får",
+      "patternHint": "dobbelt 'm' efter kort vokal",
+      "sentence": "De små lamme leger på marken.",
+      "level": 1,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "tasse",
+      "hint": "Gå stille",
+      "patternHint": "dobbelt 's' efter kort vokal",
+      "sentence": "Katten tasser stille hen over gulvet.",
+      "level": 1,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "rulle",
+      "hint": "Dreje rundt",
+      "patternHint": "dobbelt 'l' efter kort vokal",
+      "sentence": "Bolden kan rulle hen ad vejen.",
+      "level": 1,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "masse",
+      "hint": "Rigtig mange",
+      "patternHint": "dobbelt 's' efter kort vokal",
+      "sentence": "Der var en masse børn til festen.",
+      "level": 1,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "kopper",
+      "hint": "Man drikker af dem",
+      "patternHint": "dobbelt 'p' efter kort vokal",
+      "sentence": "Mor hældte te i kopperne.",
+      "level": 1,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "rytte",
+      "hint": "Person på en hest",
+      "patternHint": "dobbelt 't' efter kort vokal",
+      "sentence": "En dygtig rytter red forbi på hesten.",
+      "level": 1,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "nisse",
+      "hint": "Lille julevæsen",
+      "patternHint": "dobbelt 's' efter kort vokal",
+      "sentence": "Nissen bor på loftet.",
+      "level": 1,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "snappe",
+      "hint": "Gribe hurtigt",
+      "patternHint": "dobbelt 'p' efter kort vokal",
+      "sentence": "Hunden kan snappe bolden i luften.",
+      "level": 2,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "trappe",
+      "hint": "Man går op ad den",
+      "patternHint": "dobbelt 'p' efter kort vokal",
+      "sentence": "Vi løb op ad trappen til tredje sal.",
+      "level": 2,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "grille",
+      "hint": "Stege mad udenfor",
+      "patternHint": "dobbelt 'l' efter kort vokal",
+      "sentence": "Far vil grille pølser i haven.",
+      "level": 2,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "svømme",
+      "hint": "Bevæge sig i vand",
+      "patternHint": "dobbelt 'm' efter kort vokal",
+      "sentence": "Vi skal lære at svømme i skolen.",
+      "level": 2,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "stige",
+      "hint": "Gå opad",
+      "patternHint": "enkelt konsonant, lang vokal som kontrast",
+      "sentence": "Priserne kan stige meget hurtigt.",
+      "level": 2,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "makker",
+      "hint": "En kammerat",
+      "patternHint": "dobbelt 'k' efter kort vokal",
+      "sentence": "Min makker og jeg lavede opgaven sammen.",
+      "level": 2,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "pille",
+      "hint": "Tage ved noget småt",
+      "patternHint": "dobbelt 'l' efter kort vokal",
+      "sentence": "Du skal ikke pille ved såret.",
+      "level": 2,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "male",
+      "hint": "Bruge pensel og maling",
+      "patternHint": "enkelt konsonant, lang vokal som kontrast",
+      "sentence": "Vi skal male hegnet hvidt.",
+      "level": 2,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "apparat",
+      "hint": "En maskine eller enhed",
+      "patternHint": "dobbelt 'p' efter kort vokal",
+      "sentence": "Han brugte et apparat til at måle med.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "terrasse",
+      "hint": "Udeområde ved huset",
+      "patternHint": "dobbelt 'r' og dobbelt 's'",
+      "sentence": "Vi spiste aftensmad på terrassen.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "parallel",
+      "hint": "To linjer side om side",
+      "patternHint": "dobbelt 'l' efter kort vokal",
+      "sentence": "Vejene løber parallel med hinanden.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "middel",
+      "hint": "Et redskab eller metode",
+      "patternHint": "dobbelt 'd' efter kort vokal",
+      "sentence": "Motion er et godt middel mod stress.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "platte",
+      "hint": "Flad tallerken",
+      "patternHint": "dobbelt 't' efter kort vokal",
+      "sentence": "Maden blev serveret på en stor platte.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "bagage",
+      "hint": "Kufferter og tasker",
+      "patternHint": "enkelt konsonant, lang vokal som kontrast",
+      "sentence": "Vi hentede vores bagage i lufthavnen.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "allerede",
+      "hint": "Noget der er sket",
+      "patternHint": "dobbelt 'l' efter kort vokal",
+      "sentence": "Toget var allerede kørt, da vi kom.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "moppe",
+      "hint": "Redskab til gulvvask",
+      "patternHint": "dobbelt 'p' efter kort vokal",
+      "sentence": "Hun brugte en moppe til at vaske gulvet.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "kassere",
+      "hint": "Smide noget ud",
+      "patternHint": "dobbelt 's' efter kort vokal",
+      "sentence": "Vi måtte kassere de gamle bøger.",
+      "level": 3,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "kommunal",
+      "hint": "Tilhører kommunen",
+      "patternHint": "dobbelt 'm' efter kort vokal",
+      "sentence": "Den kommunale skole ligger tæt på.",
+      "level": 4,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "kollegium",
+      "hint": "Bolig for studerende",
+      "patternHint": "dobbelt 'l' efter kort vokal",
+      "sentence": "Hun bor på et kollegium i byen.",
+      "level": 4,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "appel",
+      "hint": "Anke en afgørelse",
+      "patternHint": "dobbelt 'p' efter kort vokal",
+      "sentence": "Advokaten indgav en appel til retten.",
+      "level": 4,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "illusion",
+      "hint": "Noget der ikke er virkeligt",
+      "patternHint": "dobbelt 'l' efter kort vokal",
+      "sentence": "Tryllekunstneren skabte en illusion.",
+      "level": 4,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "aggressive",
+      "hint": "Fjendtlig opførsel",
+      "patternHint": "dobbelt 'g' og dobbelt 's'",
+      "sentence": "Den aggressive tone gjorde alle utrygge.",
+      "level": 4,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "eppelin",
+      "hint": "Stort luftskib med gas",
+      "patternHint": "dobbelt 'p' efter kort vokal",
+      "sentence": "Den store zeppelin svævede over byen.",
+      "level": 4,
+      "category": "Dobbeltkonsonant"
     }
   ],
   "For- og efterstavelser": [
@@ -889,6 +1369,246 @@
       "hint": "Passe på og reparere",
       "patternHint": "'ved-' + 'lige' + '-holde' + '-else'",
       "sentence": "Huset kræver løbende vedligeholdelse.",
+      "level": 4,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "ulige",
+      "hint": "Ikke lige, uens",
+      "patternHint": "forstavelsen 'u-' betyder ikke/modsat",
+      "sentence": "Tre er et ulige tal.",
+      "level": 1,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "synlig",
+      "hint": "Noget man kan se",
+      "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
+      "sentence": "Stjernerne er synlige på en klar nat.",
+      "level": 1,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "ærlig",
+      "hint": "Taler sandt",
+      "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
+      "sentence": "Det er vigtigt at være ærlig.",
+      "level": 1,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "rolig",
+      "hint": "Stille og fredfyldt",
+      "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
+      "sentence": "Vær rolig, alt bliver godt.",
+      "level": 1,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "sygdom",
+      "hint": "Når man er syg",
+      "patternHint": "efterstavelsen '-dom' danner navneord",
+      "sentence": "Han var hjemme på grund af sygdom.",
+      "level": 1,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "frihed",
+      "hint": "At være fri",
+      "patternHint": "efterstavelsen '-hed' danner navneord",
+      "sentence": "Børnene nød friheden i sommerferien.",
+      "level": 1,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "modig",
+      "hint": "Ikke bange",
+      "patternHint": "efterstavelsen '-ig' gør ord til tillægsord",
+      "sentence": "Den modige dreng klatrede op i træet.",
+      "level": 1,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "ulykke",
+      "hint": "Noget slemt der sker",
+      "patternHint": "forstavelsen 'u-' betyder ikke/modsat",
+      "sentence": "Der var en ulykke på vejen.",
+      "level": 1,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "usynlig",
+      "hint": "Kan ikke ses",
+      "patternHint": "forstavelsen 'u-' + efterstavelsen '-lig'",
+      "sentence": "Vinden er usynlig, men man kan mærke den.",
+      "level": 2,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "forlade",
+      "hint": "Gå væk fra",
+      "patternHint": "forstavelsen 'for-' ændrer ordets betydning",
+      "sentence": "Vi måtte forlade huset i en fart.",
+      "level": 2,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "indgang",
+      "hint": "Stedet man går ind",
+      "patternHint": "forstavelsen 'ind-' angiver retning",
+      "sentence": "Indgangen til skolen er der henne.",
+      "level": 2,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "udgang",
+      "hint": "Stedet man går ud",
+      "patternHint": "forstavelsen 'ud-' angiver retning",
+      "sentence": "Udgangen er markeret med et grønt skilt.",
+      "level": 2,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "omvej",
+      "hint": "En længere vej rundt",
+      "patternHint": "forstavelsen 'om-' betyder rundt om",
+      "sentence": "Vi tog en omvej gennem parken.",
+      "level": 2,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "afstand",
+      "hint": "Hvor langt der er",
+      "patternHint": "forstavelsen 'af-' ændrer betydning",
+      "sentence": "Der er lang afstand til skolen.",
+      "level": 2,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "overgang",
+      "hint": "Sted man krydser over",
+      "patternHint": "forstavelsen 'over-' angiver retning",
+      "sentence": "Brug altid fodgængerovergangen.",
+      "level": 2,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "underlig",
+      "hint": "Mærkelig og sær",
+      "patternHint": "forstavelsen 'under-' + efterstavelsen '-lig'",
+      "sentence": "Der var en underlig lyd i kælderen.",
+      "level": 2,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "bevægelse",
+      "hint": "At flytte sig",
+      "patternHint": "forstavelsen 'be-' + efterstavelsen '-else'",
+      "sentence": "Katten lå helt stille uden bevægelse.",
+      "level": 3,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "forekomst",
+      "hint": "At noget optræder",
+      "patternHint": "forstavelsen 'fore-' angiver forud",
+      "sentence": "Der er stor forekomst af allergi i Danmark.",
+      "level": 3,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "indflydelse",
+      "hint": "Påvirkning af andre",
+      "patternHint": "forstavelsen 'ind-' + efterstavelsen '-else'",
+      "sentence": "Læreren havde stor indflydelse på eleverne.",
+      "level": 3,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "overraskelse",
+      "hint": "Noget uventet",
+      "patternHint": "forstavelsen 'over-' + efterstavelsen '-else'",
+      "sentence": "Festen var en stor overraskelse for ham.",
+      "level": 3,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "uforsigtig",
+      "hint": "Ikke forsigtig",
+      "patternHint": "forstavelsen 'u-' gør ordet til modsat",
+      "sentence": "Vær ikke uforsigtig med saksen.",
+      "level": 3,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "opdragelse",
+      "hint": "At lære børn god opførsel",
+      "patternHint": "forstavelsen 'op-' + efterstavelsen '-else'",
+      "sentence": "God opdragelse er vigtig for alle børn.",
+      "level": 3,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "ansvarlig",
+      "hint": "Har ansvar for noget",
+      "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
+      "sentence": "Hun er ansvarlig for at låse døren.",
+      "level": 3,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "udbredelse",
+      "hint": "At noget spreder sig",
+      "patternHint": "forstavelsen 'ud-' + efterstavelsen '-else'",
+      "sentence": "Sygdommens udbredelse blev bremset.",
+      "level": 3,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "utilregnelig",
+      "hint": "Ikke ansvarlig for handlinger",
+      "patternHint": "forstavelsen 'u-' + 'til-' + efterstavelsen '-lig'",
+      "sentence": "Manden blev erklæret utilregnelig af retten.",
+      "level": 4,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "omstændighed",
+      "hint": "De forhold noget sker under",
+      "patternHint": "forstavelsen 'om-' + efterstavelsen '-hed'",
+      "sentence": "Under disse omstændigheder må vi vente.",
+      "level": 4,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "uigennemskuelig",
+      "hint": "Svært at forstå",
+      "patternHint": "forstavelsen 'u-' + 'igennem-' + efterstavelsen '-lig'",
+      "sentence": "Reglerne er uigennemskuelige for mange.",
+      "level": 4,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "undertrykkelse",
+      "hint": "At holde nogen nede",
+      "patternHint": "forstavelsen 'under-' + efterstavelsen '-else'",
+      "sentence": "Undertrykkelse af ytringsfriheden er forkert.",
+      "level": 4,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "overbevisning",
+      "hint": "Stærk tro på noget",
+      "patternHint": "forstavelsen 'over-' + efterstavelsen '-ning'",
+      "sentence": "Hun handlede ud fra sin overbevisning.",
+      "level": 4,
+      "category": "For- og efterstavelser"
+    },
+    {
+      "word": "afhængighed",
+      "hint": "At være afhængig",
+      "patternHint": "forstavelsen 'af-' + efterstavelsen '-hed'",
+      "sentence": "Afhængighed af telefonen er et problem.",
       "level": 4,
       "category": "For- og efterstavelser"
     }
@@ -1189,6 +1909,246 @@
       "sentence": "Vi cykler på cykelstien langs åen.",
       "level": 1,
       "category": "Sammensatte ord"
+    },
+    {
+      "word": "sandkasse",
+      "hint": "Sted med sand til leg",
+      "patternHint": "sammensat af 'sand' + 'kasse'",
+      "sentence": "Børnene leger i sandkassen.",
+      "level": 1,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "blyant",
+      "hint": "Man skriver med den",
+      "patternHint": "sammensat af 'bly' + 'ant'",
+      "sentence": "Jeg tegner med min blyant.",
+      "level": 1,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "isterning",
+      "hint": "Frossen vandklump",
+      "patternHint": "sammensat af 'is' + 'terning'",
+      "sentence": "Vil du have isterninger i din juice?",
+      "level": 1,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "hundehus",
+      "hint": "Hus til en hund",
+      "patternHint": "sammensat med fuge-e: 'hunde' + 'hus'",
+      "sentence": "Hunden sover i sit hundehus.",
+      "level": 1,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "regnbue",
+      "hint": "Farver på himlen efter regn",
+      "patternHint": "sammensat af 'regn' + 'bue'",
+      "sentence": "Se, der er en flot regnbue!",
+      "level": 1,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "vindmølle",
+      "hint": "Mølle der drives af vind",
+      "patternHint": "sammensat af 'vind' + 'mølle'",
+      "sentence": "Den gamle vindmølle står på bakken.",
+      "level": 1,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "sovepude",
+      "hint": "Pude man sover på",
+      "patternHint": "sammensat med fuge-e: 'sove' + 'pude'",
+      "sentence": "Min sovepude er blød og dejlig.",
+      "level": 1,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "cykelhjelm",
+      "hint": "Hjelm til cykling",
+      "patternHint": "sammensat af 'cykel' + 'hjelm'",
+      "sentence": "Husk altid din cykelhjelm.",
+      "level": 2,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "rugbrød",
+      "hint": "Mørkt dansk brød",
+      "patternHint": "sammensat af 'rug' + 'brød'",
+      "sentence": "Vi spiser rugbrød til frokost.",
+      "level": 2,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "huskat",
+      "hint": "Kat der bor indendørs",
+      "patternHint": "sammensat af 'hus' + 'kat'",
+      "sentence": "Vores huskat hedder Misser.",
+      "level": 2,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "vandkande",
+      "hint": "Kande til at vande blomster",
+      "patternHint": "sammensat af 'vand' + 'kande'",
+      "sentence": "Hent vandkanden, så vi kan vande blomsterne.",
+      "level": 2,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "skovsøen",
+      "hint": "En sø i skoven",
+      "patternHint": "sammensat af 'skov' + 'sø' + '-en'",
+      "sentence": "Vi gik en tur rundt om skovsøen.",
+      "level": 2,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "dyreparken",
+      "hint": "Sted med mange dyr",
+      "patternHint": "sammensat med fuge-e: 'dyre' + 'park'",
+      "sentence": "Vi besøgte dyreparken i weekenden.",
+      "level": 2,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "barnepige",
+      "hint": "En der passer børn",
+      "patternHint": "sammensat med fuge-e: 'barne' + 'pige'",
+      "sentence": "Barnepigen legede med børnene hele aftenen.",
+      "level": 2,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "madlavning",
+      "hint": "At lave mad",
+      "patternHint": "sammensat af 'mad' + 'lavning'",
+      "sentence": "Far er god til madlavning.",
+      "level": 2,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "landsmand",
+      "hint": "Person fra samme land",
+      "patternHint": "sammensat med fuge-s: 'lands' + 'mand'",
+      "sentence": "Han mødte en landsmand på rejsen.",
+      "level": 3,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "arbejdsplads",
+      "hint": "Sted hvor man arbejder",
+      "patternHint": "sammensat med fuge-s: 'arbejds' + 'plads'",
+      "sentence": "Mors arbejdsplads ligger i byen.",
+      "level": 3,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "døgnrytme",
+      "hint": "Kroppens daglige rytme",
+      "patternHint": "sammensat af 'døgn' + 'rytme'",
+      "sentence": "Jetlag forstyrrer din døgnrytme.",
+      "level": 3,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "vandreturisme",
+      "hint": "Turisme med vandring",
+      "patternHint": "sammensat af 'vandre' + 'turisme'",
+      "sentence": "Vandreturisme er populært i Norge.",
+      "level": 3,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "sportsklub",
+      "hint": "Klub for sport",
+      "patternHint": "sammensat med fuge-s: 'sports' + 'klub'",
+      "sentence": "Han er medlem af den lokale sportsklub.",
+      "level": 3,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "familiemedlem",
+      "hint": "Person i familien",
+      "patternHint": "sammensat med fuge-e: 'familie' + 'medlem'",
+      "sentence": "Hvert familiemedlem fik en gave.",
+      "level": 3,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "drikkevand",
+      "hint": "Vand man kan drikke",
+      "patternHint": "sammensat med fuge-e: 'drikke' + 'vand'",
+      "sentence": "Rent drikkevand er vigtigt for sundheden.",
+      "level": 3,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "havneområde",
+      "hint": "Område ved havnen",
+      "patternHint": "sammensat med fuge-e: 'havne' + 'område'",
+      "sentence": "Havneområdet er blevet renoveret.",
+      "level": 3,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "trafiksikkerhed",
+      "hint": "Sikkerhed i trafikken",
+      "patternHint": "sammensat af 'trafik' + 'sikkerhed'",
+      "sentence": "Trafiksikkerhed er vigtigt for alle.",
+      "level": 4,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "miljøbeskyttelse",
+      "hint": "Beskyttelse af naturen",
+      "patternHint": "sammensat af 'miljø' + 'beskyttelse'",
+      "sentence": "Miljøbeskyttelse kræver en fælles indsats.",
+      "level": 4,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "grundlovsdag",
+      "hint": "Dansk nationaldag",
+      "patternHint": "sammensat med fuge-s: 'grundlovs' + 'dag'",
+      "sentence": "Grundlovsdag fejres den 5. juni.",
+      "level": 4,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "udenrigsministerium",
+      "hint": "Ministerium for udenrigspolitik",
+      "patternHint": "sammensat af 'udenrigs' + 'ministerium'",
+      "sentence": "Et udenrigsministerium tager sig af internationale relationer.",
+      "level": 4,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "oversvømmelsesfare",
+      "hint": "Risiko for oversvømmelse",
+      "patternHint": "sammensat med fuge-s: 'oversvømmelses' + 'fare'",
+      "sentence": "Der er oversvømmelsesfare ved kysten.",
+      "level": 4,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "verdensanskuelse",
+      "hint": "Syn på verden",
+      "patternHint": "sammensat med fuge-s: 'verdens' + 'anskuelse'",
+      "sentence": "Alle har deres egen verdensanskuelse.",
+      "level": 4,
+      "category": "Sammensatte ord"
+    },
+    {
+      "word": "informationsteknologi",
+      "hint": "IT og computere",
+      "patternHint": "sammensat med fuge-s: 'informations' + 'teknologi'",
+      "sentence": "Informationsteknologi fylder meget i dag.",
+      "level": 4,
+      "category": "Sammensatte ord"
     }
   ],
   "Verbernes bøjning": [
@@ -1487,6 +2447,238 @@
       "sentence": "Alt er omhyggeligt dokumenteret i rapporten.",
       "level": 4,
       "category": "Verbernes bøjning"
+    },
+    {
+      "word": "løber",
+      "hint": "At bevæge sig hurtigt nu",
+      "patternHint": "nutid: løb + '-er'",
+      "sentence": "Hunden løber rundt i haven.",
+      "level": 1,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "synger",
+      "hint": "At synge lige nu",
+      "patternHint": "nutid: syng + '-er'",
+      "sentence": "Fuglen synger i træet.",
+      "level": 1,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "svømmede",
+      "hint": "Svømmede i fortid",
+      "patternHint": "datid med '-ede': svømm + '-ede'",
+      "sentence": "Vi svømmede i søen hele dagen.",
+      "level": 1,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "faldt",
+      "hint": "At falde i fortid",
+      "patternHint": "uregelmæssig datid af 'falde'",
+      "sentence": "Han faldt ned fra gyngen.",
+      "level": 1,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "gav",
+      "hint": "At give i fortid",
+      "patternHint": "uregelmæssig datid af 'give'",
+      "sentence": "Mor gav mig en is.",
+      "level": 1,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "sad",
+      "hint": "At sidde i fortid",
+      "patternHint": "uregelmæssig datid af 'sidde'",
+      "sentence": "Vi sad stille i klassen.",
+      "level": 1,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "stod",
+      "hint": "At stå i fortid",
+      "patternHint": "uregelmæssig datid af 'stå'",
+      "sentence": "Han stod ved døren og ventede.",
+      "level": 1,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "tog",
+      "hint": "At tage i fortid",
+      "patternHint": "uregelmæssig datid af 'tage'",
+      "sentence": "Hun tog sin taske og gik.",
+      "level": 1,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "spurgte",
+      "hint": "At spørge i fortid",
+      "patternHint": "uregelmæssig datid af 'spørge'",
+      "sentence": "Læreren spurgte om vi var klar.",
+      "level": 2,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "valgte",
+      "hint": "At vælge i fortid",
+      "patternHint": "uregelmæssig datid af 'vælge'",
+      "sentence": "Hun valgte den røde kjole.",
+      "level": 2,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "bragte",
+      "hint": "At bringe i fortid",
+      "patternHint": "uregelmæssig datid af 'bringe'",
+      "sentence": "Posten bragte en pakke til os.",
+      "level": 2,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "sluttede",
+      "hint": "At slutte i fortid",
+      "patternHint": "datid med '-ede': slutt + '-ede'",
+      "sentence": "Filmen sluttede klokken ni.",
+      "level": 2,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "øvede",
+      "hint": "At øve i fortid",
+      "patternHint": "datid med '-ede': øv + '-ede'",
+      "sentence": "Vi øvede os på diktat hver dag.",
+      "level": 2,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "gemte",
+      "hint": "At gemme i fortid",
+      "patternHint": "datid med '-te': gem + '-te'",
+      "sentence": "Barnet gemte sig bag sofaen.",
+      "level": 2,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "reddede",
+      "hint": "At redde i fortid",
+      "patternHint": "datid med '-ede': redd + '-ede'",
+      "sentence": "Brandmanden reddede katten fra træet.",
+      "level": 2,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "råbte",
+      "hint": "At råbe i fortid",
+      "patternHint": "datid med '-te': råb + '-te'",
+      "sentence": "Han råbte højt om hjælp.",
+      "level": 2,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "overtog",
+      "hint": "At overtage i fortid",
+      "patternHint": "uregelmæssig datid af 'overtage'",
+      "sentence": "Den nye chef overtog ansvaret.",
+      "level": 3,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "afslørede",
+      "hint": "At afsløre i fortid",
+      "patternHint": "datid med '-ede': afslør + '-ede'",
+      "sentence": "Detektiven afslørede tyven.",
+      "level": 3,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "forklarede",
+      "hint": "At forklare i fortid",
+      "patternHint": "datid med '-ede': forklar + '-ede'",
+      "sentence": "Læreren forklarede reglen tydeligt.",
+      "level": 3,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "udviklede",
+      "hint": "At udvikle i fortid",
+      "patternHint": "datid med '-ede': udvikl + '-ede'",
+      "sentence": "Firmaet udviklede en ny app.",
+      "level": 3,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "oplevede",
+      "hint": "At opleve i fortid",
+      "patternHint": "datid med '-ede': oplev + '-ede'",
+      "sentence": "Vi oplevede en fantastisk solnedgang.",
+      "level": 3,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "mistede",
+      "hint": "At miste i fortid",
+      "patternHint": "datid med '-ede': mist + '-ede'",
+      "sentence": "Han mistede sin pung på toget.",
+      "level": 3,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "lykkedes",
+      "hint": "At lykkes i fortid",
+      "patternHint": "passiv datid: lykke + '-des'",
+      "sentence": "Det lykkedes os at nå toget.",
+      "level": 3,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "konfronteret",
+      "hint": "Stillet ansigt til ansigt",
+      "patternHint": "tillægsform: konfronter + '-et'",
+      "sentence": "Han blev konfronteret med sandheden.",
+      "level": 4,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "reflekteret",
+      "hint": "Tænkt grundigt over noget",
+      "patternHint": "tillægsform: reflekter + '-et'",
+      "sentence": "Hun havde reflekteret over situationen.",
+      "level": 4,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "præsenteret",
+      "hint": "Fremvist noget",
+      "patternHint": "tillægsform: præsenter + '-et'",
+      "sentence": "Projektet blev præsenteret for klassen.",
+      "level": 4,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "konstrueret",
+      "hint": "Bygget eller samlet",
+      "patternHint": "tillægsform: konstruer + '-et'",
+      "sentence": "Broen er konstrueret af stål og beton.",
+      "level": 4,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "accepteret",
+      "hint": "Godkendt noget",
+      "patternHint": "tillægsform: accepter + '-et'",
+      "sentence": "Forslaget blev accepteret af alle.",
+      "level": 4,
+      "category": "Verbernes bøjning"
+    },
+    {
+      "word": "reduceret",
+      "hint": "Gjort mindre",
+      "patternHint": "tillægsform: reducer + '-et'",
+      "sentence": "Prisen er reduceret med tyve procent.",
+      "level": 4,
+      "category": "Verbernes bøjning"
     }
   ],
   "Navneordsendelser": [
@@ -1775,6 +2967,246 @@
       "hint": "Bestemt flertal af 'omgivelse'",
       "patternHint": "flertal: '-er' + '-ne'",
       "sentence": "De smukke omgivelserne inspirerede kunstneren.",
+      "level": 4,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "pigen",
+      "hint": "En pige i bestemt form",
+      "patternHint": "bestemt form ental: pige + '-n'",
+      "sentence": "Pigen leger med sin bold.",
+      "level": 1,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "biler",
+      "hint": "Flere biler",
+      "patternHint": "flertal: bil + '-er'",
+      "sentence": "Der holder mange biler på vejen.",
+      "level": 1,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "hesten",
+      "hint": "En hest i bestemt form",
+      "patternHint": "bestemt form ental: hest + '-en'",
+      "sentence": "Hesten løber rundt på marken.",
+      "level": 1,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "træet",
+      "hint": "Et træ i bestemt form",
+      "patternHint": "bestemt form ental intetkøn: træ + '-et'",
+      "sentence": "Træet har mange grønne blade.",
+      "level": 1,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "fiske",
+      "hint": "Flere fisk",
+      "patternHint": "flertal: fisk + '-e'",
+      "sentence": "Der svømmer mange fiske i søen.",
+      "level": 1,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "gaven",
+      "hint": "En gave i bestemt form",
+      "patternHint": "bestemt form ental: gave + '-n'",
+      "sentence": "Gaven var pakket ind i rødt papir.",
+      "level": 1,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "lampen",
+      "hint": "En lampe i bestemt form",
+      "patternHint": "bestemt form ental: lampe + '-n'",
+      "sentence": "Lampen lyser over bordet.",
+      "level": 1,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "skyer",
+      "hint": "Flere skyer",
+      "patternHint": "flertal: sky + '-er'",
+      "sentence": "Der er mange skyer på himlen i dag.",
+      "level": 1,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "bilerne",
+      "hint": "Bestemt form flertal",
+      "patternHint": "bestemt flertal: bil + '-erne'",
+      "sentence": "Bilerne holder i kø på motorvejen.",
+      "level": 2,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "hestene",
+      "hint": "Bestemt form flertal",
+      "patternHint": "bestemt flertal: hest + '-ene'",
+      "sentence": "Hestene græsser på engen.",
+      "level": 2,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "dagene",
+      "hint": "Bestemt form flertal",
+      "patternHint": "bestemt flertal: dag + '-ene'",
+      "sentence": "Dagene bliver længere om foråret.",
+      "level": 2,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "fuglene",
+      "hint": "Bestemt form flertal",
+      "patternHint": "bestemt flertal: fugl + '-ene'",
+      "sentence": "Fuglene synger tidligt om morgenen.",
+      "level": 2,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "vinduet",
+      "hint": "Bestemt form intetkøn",
+      "patternHint": "bestemt ental intetkøn: vindue + '-t'",
+      "sentence": "Vinduet står åbent i stuen.",
+      "level": 2,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "blomsterne",
+      "hint": "Bestemt form flertal",
+      "patternHint": "bestemt flertal: blomst + '-erne'",
+      "sentence": "Blomsterne i haven dufter dejligt.",
+      "level": 2,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "gaverne",
+      "hint": "Bestemt form flertal",
+      "patternHint": "bestemt flertal: gave + '-rne'",
+      "sentence": "Gaverne lå under juletræet.",
+      "level": 2,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "opgaver",
+      "hint": "Flere opgaver",
+      "patternHint": "flertal: opgave + '-r'",
+      "sentence": "Vi fik mange opgaver for i matematik.",
+      "level": 2,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "ænder",
+      "hint": "Flere ænder",
+      "patternHint": "flertal med vokalskifte: and → ænder",
+      "sentence": "Ænderne svømmer i søen.",
+      "level": 3,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "gæster",
+      "hint": "Flere gæster",
+      "patternHint": "flertal: gæst + '-er'",
+      "sentence": "Der kom mange gæster til festen.",
+      "level": 3,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "natten",
+      "hint": "Bestemt form af nat",
+      "patternHint": "bestemt ental: nat + '-ten'",
+      "sentence": "Natten var kold og stille.",
+      "level": 3,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "kunderne",
+      "hint": "Bestemt form flertal",
+      "patternHint": "bestemt flertal: kunde + '-rne'",
+      "sentence": "Kunderne ventede tålmodigt i køen.",
+      "level": 3,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "bønder",
+      "hint": "Flere bønder",
+      "patternHint": "flertal med vokalskifte: bonde → bønder",
+      "sentence": "Bønderne dyrker korn på markerne.",
+      "level": 3,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "redskabet",
+      "hint": "Bestemt form intetkøn",
+      "patternHint": "bestemt ental intetkøn: redskab + '-et'",
+      "sentence": "Redskabet ligger i skuret.",
+      "level": 3,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "brødrene",
+      "hint": "Bestemt flertal af bror",
+      "patternHint": "uregelmæssig flertal: bror → brødre → brødrene",
+      "sentence": "Brødrene legede sammen i haven.",
+      "level": 3,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "fænomenerne",
+      "hint": "Bestemt flertal",
+      "patternHint": "bestemt flertal: fænomen + '-erne'",
+      "sentence": "Fænomenerne i naturen er fascinerende at studere.",
+      "level": 4,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "argumenterne",
+      "hint": "Bestemt flertal",
+      "patternHint": "bestemt flertal: argument + '-erne'",
+      "sentence": "Argumenterne i debatten var stærke.",
+      "level": 4,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "traditioner",
+      "hint": "Flertal af tradition",
+      "patternHint": "flertal: tradition + '-er'",
+      "sentence": "Danske traditioner er vigtige for mange.",
+      "level": 4,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "individerne",
+      "hint": "Bestemt flertal",
+      "patternHint": "bestemt flertal: individ + '-erne'",
+      "sentence": "Individerne i gruppen arbejdede godt sammen.",
+      "level": 4,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "perspektivet",
+      "hint": "Bestemt form intetkøn",
+      "patternHint": "bestemt ental intetkøn: perspektiv + '-et'",
+      "sentence": "Perspektivet ændrede sig efter samtalen.",
+      "level": 4,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "konsekvenserne",
+      "hint": "Bestemt flertal",
+      "patternHint": "bestemt flertal: konsekvens + '-erne'",
+      "sentence": "Konsekvenserne af beslutningen var store.",
+      "level": 4,
+      "category": "Navneordsendelser"
+    },
+    {
+      "word": "dimensionerne",
+      "hint": "Bestemt flertal",
+      "patternHint": "bestemt flertal: dimension + '-erne'",
+      "sentence": "Dimensionerne på rummet var imponerende.",
       "level": 4,
       "category": "Navneordsendelser"
     }

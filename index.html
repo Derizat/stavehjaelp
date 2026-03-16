@@ -1431,13 +1431,9 @@ function checkSpelling() {
     }
   }
 
-  // Track boss trigger
+  // Track boss trigger — boss appears when word is wrong after both attempts
   if (!ok && !selfCorrected && (gameMode === 'training' || gameMode === 'review')) {
-    if (!wrongCountPerWord[w.word]) wrongCountPerWord[w.word] = 0;
-    wrongCountPerWord[w.word]++;
-    if (wrongCountPerWord[w.word] >= 2) {
-      pendingBoss = { word: w.word, category: w.category };
-    }
+    pendingBoss = { word: w.word, category: w.category };
   }
 
   document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;

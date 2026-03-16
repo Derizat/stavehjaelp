@@ -205,6 +205,18 @@
   .boss-attack { animation: boss-shake 0.4s ease; }
   @keyframes boss-damage { 0% { transform: scale(1); } 50% { transform: scale(0.7) rotate(-10deg); opacity: 0.5; } 100% { transform: scale(1); } }
   @keyframes boss-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-15px); } 75% { transform: translateX(15px); } }
+  .boss-dying { animation: boss-death 1.6s ease forwards; pointer-events: none; }
+  @keyframes boss-death {
+    0% { transform: scale(1) rotate(0deg); opacity: 1; }
+    15% { transform: scale(1.3) rotate(-10deg); }
+    30% { transform: scale(0.8) rotate(20deg); }
+    45% { transform: scale(1.1) rotate(-30deg); }
+    55% { transform: scale(0.6) rotate(50deg); }
+    65% { transform: scale(0.4) rotate(-70deg); opacity: 0.8; }
+    80% { transform: scale(0.2) rotate(180deg) translateY(40px); opacity: 0.5; }
+    90% { transform: scale(3) rotate(360deg) translateY(-20px); opacity: 0.3; }
+    100% { transform: scale(0) rotate(720deg) translateY(200px); opacity: 0; }
+  }
   .boss-hp-wrap { background: #2d3158; border-radius: 99px; height: 14px; overflow: hidden; margin: 0 auto; max-width: 250px; }
   .boss-hp-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--red), #ef4444); transition: width 0.5s ease; }
   .boss-word-progress { display: flex; justify-content: center; gap: 6px; margin: 16px 0; font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--muted); }
@@ -2396,14 +2408,26 @@ function bossTapLetter(letter, buttonIndex) {
 }
 
 function bossDefeated() {
+  var defeatedWord = bossState ? bossState.word : '';
   bossState = null;
-  var content = document.getElementById('bossContent');
-  content.innerHTML = '<div style="text-align:center;padding:30px">' +
-    '<div style="font-size:4rem;margin-bottom:12px">\uD83C\uDF89</div>' +
-    '<h2 style="color:var(--green);margin-bottom:8px">Boss besejret!</h2>' +
-    '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">+15 XP bonus!</p>' +
-    '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
-    '</div>';
+
+  // Play death animation on the monster
+  var monster = document.getElementById('bossMonster');
+  if (monster) {
+    monster.classList.add('boss-dying');
+  }
+
+  // After death animation, show victory screen
+  setTimeout(function() {
+    var content = document.getElementById('bossContent');
+    content.innerHTML = '<div style="text-align:center;padding:30px">' +
+      '<div style="font-size:4rem;margin-bottom:12px">\uD83C\uDF89</div>' +
+      '<h2 style="color:var(--green);margin-bottom:8px">Boss besejret!</h2>' +
+      '<p style="font-family:Fredoka One,cursive;font-size:1.6rem;color:var(--green);margin:10px 0;letter-spacing:3px">' + defeatedWord + '</p>' +
+      '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">+15 XP bonus!</p>' +
+      '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
+      '</div>';
+  }, 1700);
 
   // Award bonus XP
   var data = loadRewardData();

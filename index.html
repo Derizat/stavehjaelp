@@ -205,18 +205,80 @@
   .boss-attack { animation: boss-shake 0.4s ease; }
   @keyframes boss-damage { 0% { transform: scale(1); } 50% { transform: scale(0.7) rotate(-10deg); opacity: 0.5; } 100% { transform: scale(1); } }
   @keyframes boss-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-15px); } 75% { transform: translateX(15px); } }
-  .boss-dying { animation: boss-death 1.6s ease forwards; pointer-events: none; }
-  @keyframes boss-death {
+
+  /* Boss death animations — 4 variants */
+  .boss-death-spin { animation: boss-death-spin 1.6s ease forwards; pointer-events: none; }
+  @keyframes boss-death-spin {
     0% { transform: scale(1) rotate(0deg); opacity: 1; }
     15% { transform: scale(1.3) rotate(-10deg); }
     30% { transform: scale(0.8) rotate(20deg); }
     45% { transform: scale(1.1) rotate(-30deg); }
     55% { transform: scale(0.6) rotate(50deg); }
-    65% { transform: scale(0.4) rotate(-70deg); opacity: 0.8; }
     80% { transform: scale(0.2) rotate(180deg) translateY(40px); opacity: 0.5; }
     90% { transform: scale(3) rotate(360deg) translateY(-20px); opacity: 0.3; }
     100% { transform: scale(0) rotate(720deg) translateY(200px); opacity: 0; }
   }
+  .boss-death-explode { animation: boss-death-explode 1.4s ease forwards; pointer-events: none; }
+  @keyframes boss-death-explode {
+    0% { transform: scale(1); opacity: 1; filter: hue-rotate(0deg); }
+    20% { transform: scale(1.5); filter: hue-rotate(60deg); }
+    40% { transform: scale(0.3); filter: hue-rotate(120deg); }
+    50% { transform: scale(2.5); filter: hue-rotate(200deg) brightness(2); }
+    65% { transform: scale(3.5); opacity: 0.7; filter: hue-rotate(300deg) brightness(3); }
+    80% { transform: scale(5); opacity: 0.3; filter: hue-rotate(360deg) blur(4px); }
+    100% { transform: scale(8); opacity: 0; filter: blur(10px); }
+  }
+  .boss-death-melt { animation: boss-death-melt 1.8s ease forwards; pointer-events: none; }
+  @keyframes boss-death-melt {
+    0% { transform: scaleY(1) scaleX(1); opacity: 1; }
+    20% { transform: scaleY(1.1) scaleX(0.9); }
+    40% { transform: scaleY(0.8) scaleX(1.3); }
+    60% { transform: scaleY(0.5) scaleX(1.8) translateY(30px); opacity: 0.8; }
+    80% { transform: scaleY(0.2) scaleX(2.5) translateY(60px); opacity: 0.5; }
+    90% { transform: scaleY(0.05) scaleX(3) translateY(80px); opacity: 0.3; }
+    100% { transform: scaleY(0) scaleX(4) translateY(100px); opacity: 0; }
+  }
+  .boss-death-launch { animation: boss-death-launch 1.5s ease forwards; pointer-events: none; }
+  @keyframes boss-death-launch {
+    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    15% { transform: translateY(20px) rotate(-5deg) scale(0.9); }
+    30% { transform: translateY(10px) rotate(5deg) scale(1.1); }
+    40% { transform: translateY(0px) scale(1.3); }
+    55% { transform: translateY(-80px) rotate(-20deg) scale(0.8); }
+    70% { transform: translateY(-200px) rotate(-45deg) scale(0.5); opacity: 0.7; }
+    85% { transform: translateY(-400px) rotate(-90deg) scale(0.2); opacity: 0.3; }
+    95% { transform: translateY(-500px) rotate(-120deg) scale(0.1); opacity: 0.1; }
+    100% { transform: translateY(-600px) rotate(-180deg) scale(0); opacity: 0; }
+  }
+  .boss-idle-float { animation: boss-idle-float 2s ease-in-out infinite; }
+  @keyframes boss-idle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .boss-idle-pulse { animation: boss-idle-pulse 1.5s ease-in-out infinite; }
+  @keyframes boss-idle-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .boss-idle-wobble { animation: boss-idle-wobble 1.8s ease-in-out infinite; }
+  @keyframes boss-idle-wobble {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  /* Boss rain minigame */
+  .boss-rain-area { position: relative; height: 280px; overflow: hidden; background: rgba(45,49,88,0.3); border-radius: 14px; margin: 12px 0; }
+  .boss-rain-letter {
+    position: absolute; font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--text);
+    background: var(--card2); border: 2px solid #3d4270; border-radius: 10px;
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: border-color 0.15s; user-select: none;
+  }
+  .boss-rain-letter:hover { border-color: var(--accent); }
+  .boss-rain-letter.caught { background: rgba(34,211,160,0.3); border-color: var(--green); color: var(--green); pointer-events: none; }
+  .boss-rain-letter.missed { opacity: 0.3; pointer-events: none; }
+  .boss-rain-target { text-align: center; font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--accent); margin-bottom: 8px; }
+  /* Boss memory minigame */
+  .boss-memory-word { font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--accent); letter-spacing: 4px; transition: opacity 0.5s ease; }
   .boss-hp-wrap { background: #2d3158; border-radius: 99px; height: 14px; overflow: hidden; margin: 0 auto; max-width: 250px; }
   .boss-hp-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--red), #ef4444); transition: width 0.5s ease; }
   .boss-word-progress { display: flex; justify-content: center; gap: 6px; margin: 16px 0; font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--muted); }
@@ -2320,116 +2382,362 @@ var BOSS_MONSTERS = {
   "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex" }
 };
 
+var BOSS_BATTLE_TYPES = ['scramble', 'rain', 'memory', 'reverse'];
+var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];
+var BOSS_IDLE_ANIMS = ['boss-idle-float', 'boss-idle-pulse', 'boss-idle-wobble'];
+var BOSS_VICTORY_MSGS = [
+  'Boss besejret!', 'Knust!', 'Totalt smadret!', 'Udslettet!',
+  'Du vandt!', 'Ingen chance!', 'Ordmester!', 'Fantastisk!'
+];
+
 var bossState = null;
+var bossRainInterval = null;
+
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function showBossMinigame(bossData) {
   hide('phase-test');
   show('phase-boss');
 
   var word = bossData.word.toLowerCase();
-  var letters = word.split('');
   var boss = BOSS_MONSTERS[bossData.category] || { emoji: "\uD83D\uDC7E", name: "Ordbossen" };
+  var battleType = pickRandom(BOSS_BATTLE_TYPES);
+  var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
 
-  // Generate 2-3 distractor letters (random Danish letters not in word)
+  bossState = {
+    word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
+    battleType: battleType, boss: boss, idleAnim: idleAnim,
+    deathAnim: pickRandom(BOSS_DEATH_ANIMS)
+  };
+
+  if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
+  else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
+  else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
+  else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
+}
+
+// --- Shared boss UI helpers ---
+function renderBossHeader(boss, idleAnim, hp, maxHP) {
+  return '<div style="text-align:center">' +
+    '<div id="bossMonster" class="boss-monster ' + idleAnim + '">' + boss.emoji + '</div>' +
+    '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;color:var(--red);margin:8px 0">' + boss.name + '</div>' +
+    '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>' +
+    '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:14px" id="bossHPText">HP: ' + hp + '/' + maxHP + '</div>' +
+    '</div>';
+}
+
+function renderBossWordSlots(word) {
+  var html = '<div class="boss-word-progress" id="bossWordProgress">';
+  for (var i = 0; i < word.length; i++) {
+    html += '<span class="boss-word-slot" id="bossSlot' + i + '">_</span>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function updateBossHP() {
+  var pct = (bossState.hp / bossState.maxHP) * 100;
+  document.getElementById('bossHPBar').style.width = pct + '%';
+  document.getElementById('bossHPText').textContent = 'HP: ' + bossState.hp + '/' + bossState.maxHP;
+}
+
+function bossHitAnim() {
+  var monster = document.getElementById('bossMonster');
+  if (!monster) return;
+  monster.className = 'boss-monster boss-hit';
+  setTimeout(function() {
+    if (bossState) monster.className = 'boss-monster ' + bossState.idleAnim;
+  }, 400);
+}
+
+function bossAttackAnim() {
+  var monster = document.getElementById('bossMonster');
+  if (!monster) return;
+  monster.className = 'boss-monster boss-attack';
+  setTimeout(function() {
+    if (bossState) monster.className = 'boss-monster ' + bossState.idleAnim;
+  }, 500);
+}
+
+function revealBossSlot(index, letter) {
+  var slot = document.getElementById('bossSlot' + index);
+  if (slot) { slot.textContent = letter; slot.classList.add('revealed'); }
+}
+
+// --- Type 1: SCRAMBLE (original) ---
+function renderBossScramble(word, boss, idleAnim) {
+  var letters = word.split('');
   var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
   var distractors = [];
   var shuffledAlpha = shuffle(alphabet.split(''));
   for (var d = 0; d < shuffledAlpha.length && distractors.length < 3; d++) {
     if (word.indexOf(shuffledAlpha[d]) === -1) distractors.push(shuffledAlpha[d]);
   }
-
   var allLetters = shuffle(letters.concat(distractors));
 
-  bossState = { word: word, hp: letters.length, maxHP: letters.length, letterIndex: 0 };
-
-  var html = '';
-  html += '<div style="text-align:center">';
-  html += '<div id="bossMonster" class="boss-monster">' + boss.emoji + '</div>';
-  html += '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;color:var(--red);margin:8px 0">' + boss.name + '</div>';
-  html += '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>';
-  html += '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:14px" id="bossHPText">HP: ' + letters.length + '/' + letters.length + '</div>';
-  html += '</div>';
-
-  // Word progress (underscores for unguessed letters)
-  html += '<div class="boss-word-progress" id="bossWordProgress">';
-  for (var i = 0; i < letters.length; i++) {
-    html += '<span class="boss-word-slot" id="bossSlot' + i + '">_</span>';
-  }
-  html += '</div>';
-
-  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:12px 0">Tryk bogstaverne i den rigtige r\u00E6kkef\u00F8lge for at besejre bossen!</p>';
-
+  var html = renderBossHeader(boss, idleAnim, letters.length, letters.length);
+  html += renderBossWordSlots(word);
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:12px 0">\u2694\uFE0F Tryk bogstaverne i den rigtige r\u00E6kkef\u00F8lge!</p>';
   html += '<div class="boss-letters" id="bossLetters">';
   for (var j = 0; j < allLetters.length; j++) {
-    html += '<button class="boss-letter" id="bossLetter' + j + '" onclick="bossTapLetter(\'' + allLetters[j].replace(/'/g, "\\'") + '\', ' + j + ')">' + allLetters[j] + '</button>';
+    html += '<button class="boss-letter" id="bossLetter' + j + '" onclick="bossScrambleTap(\'' + allLetters[j].replace(/'/g, "\\'") + '\', ' + j + ')">' + allLetters[j] + '</button>';
   }
   html += '</div>';
-
   document.getElementById('bossContent').innerHTML = html;
 }
 
-function bossTapLetter(letter, buttonIndex) {
+function bossScrambleTap(letter, btnIdx) {
   if (!bossState) return;
   var expected = bossState.word[bossState.letterIndex];
-  var btn = document.getElementById('bossLetter' + buttonIndex);
-
+  var btn = document.getElementById('bossLetter' + btnIdx);
   if (letter === expected) {
-    // Correct!
-    btn.classList.add('correct');
-    btn.style.pointerEvents = 'none';
-    bossState.hp--;
-    bossState.letterIndex++;
-
-    // Update word progress
-    document.getElementById('bossSlot' + (bossState.letterIndex - 1)).textContent = letter;
-    document.getElementById('bossSlot' + (bossState.letterIndex - 1)).classList.add('revealed');
-
-    // Update HP bar
-    var pct = (bossState.hp / bossState.maxHP) * 100;
-    document.getElementById('bossHPBar').style.width = pct + '%';
-    document.getElementById('bossHPText').textContent = 'HP: ' + bossState.hp + '/' + bossState.maxHP;
-
-    // Boss damage animation
-    var monster = document.getElementById('bossMonster');
-    monster.classList.add('boss-hit');
-    setTimeout(function() { monster.classList.remove('boss-hit'); }, 400);
-
-    if (bossState.hp <= 0) {
-      bossDefeated();
-    }
+    btn.classList.add('correct'); btn.style.pointerEvents = 'none';
+    bossState.hp--; bossState.letterIndex++;
+    revealBossSlot(bossState.letterIndex - 1, letter);
+    updateBossHP(); bossHitAnim();
+    if (bossState.hp <= 0) bossDefeated();
   } else {
-    // Wrong! Boss attacks
     btn.classList.add('wrong');
     setTimeout(function() { btn.classList.remove('wrong'); }, 500);
-    var monster2 = document.getElementById('bossMonster');
-    monster2.classList.add('boss-attack');
-    setTimeout(function() { monster2.classList.remove('boss-attack'); }, 500);
+    bossAttackAnim();
   }
 }
 
+// --- Type 2: RAIN (letters fall, catch the right one) ---
+function renderBossRain(word, boss, idleAnim) {
+  var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+  html += renderBossWordSlots(word);
+  html += '<div class="boss-rain-target" id="bossRainTarget">\u{1F3AF} Fang bogstavet: <strong>' + word[0] + '</strong></div>';
+  html += '<div class="boss-rain-area" id="bossRainArea"></div>';
+  document.getElementById('bossContent').innerHTML = html;
+  bossState.rainDrops = [];
+  bossState.rainSpawnCount = 0;
+  bossRainInterval = setInterval(function() { spawnRainLetter(); }, 900);
+  setTimeout(function() { spawnRainLetter(); }, 200);
+}
+
+function spawnRainLetter() {
+  if (!bossState || bossState.battleType !== 'rain') { clearInterval(bossRainInterval); return; }
+  var area = document.getElementById('bossRainArea');
+  if (!area) { clearInterval(bossRainInterval); return; }
+  var target = bossState.word[bossState.letterIndex];
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
+
+  // Sometimes spawn the target letter, sometimes a distractor
+  var letter;
+  if (Math.random() < 0.35 || bossState.rainSpawnCount % 4 === 0) {
+    letter = target;
+  } else {
+    letter = alphabet[Math.floor(Math.random() * alphabet.length)];
+  }
+  bossState.rainSpawnCount++;
+
+  var el = document.createElement('div');
+  el.className = 'boss-rain-letter';
+  el.textContent = letter;
+  var leftPos = 10 + Math.random() * (area.offsetWidth - 60);
+  el.style.left = leftPos + 'px';
+  el.style.top = '-44px';
+  var dropId = 'rainDrop' + bossState.rainSpawnCount;
+  el.id = dropId;
+  el.onclick = function() { catchRainLetter(dropId, letter); };
+  area.appendChild(el);
+
+  // Animate falling
+  var startTime = Date.now();
+  var duration = 2800 + Math.random() * 1200;
+  var areaHeight = area.offsetHeight;
+  function animateDrop() {
+    if (!document.getElementById(dropId)) return;
+    var elapsed = Date.now() - startTime;
+    var progress = elapsed / duration;
+    if (progress >= 1) {
+      var dropEl = document.getElementById(dropId);
+      if (dropEl && !dropEl.classList.contains('caught')) {
+        dropEl.classList.add('missed');
+        setTimeout(function() { if (dropEl.parentNode) dropEl.parentNode.removeChild(dropEl); }, 300);
+      }
+      return;
+    }
+    el.style.top = (progress * (areaHeight - 44)) + 'px';
+    requestAnimationFrame(animateDrop);
+  }
+  requestAnimationFrame(animateDrop);
+}
+
+function catchRainLetter(dropId, letter) {
+  if (!bossState) return;
+  var el = document.getElementById(dropId);
+  if (!el || el.classList.contains('caught') || el.classList.contains('missed')) return;
+  var target = bossState.word[bossState.letterIndex];
+  if (letter === target) {
+    el.classList.add('caught');
+    bossState.hp--; bossState.letterIndex++;
+    revealBossSlot(bossState.letterIndex - 1, letter);
+    updateBossHP(); bossHitAnim();
+    if (bossState.hp <= 0) {
+      clearInterval(bossRainInterval);
+      bossDefeated();
+    } else {
+      var targetEl = document.getElementById('bossRainTarget');
+      if (targetEl) targetEl.innerHTML = '\u{1F3AF} Fang bogstavet: <strong>' + bossState.word[bossState.letterIndex] + '</strong>';
+    }
+  } else {
+    el.style.borderColor = 'var(--red)';
+    setTimeout(function() { if (el) el.style.borderColor = '#3d4270'; }, 400);
+    bossAttackAnim();
+  }
+}
+
+// --- Type 3: MEMORY (see word, then spell from memory) ---
+function renderBossMemory(word, boss, idleAnim) {
+  var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+  html += '<div style="text-align:center;margin:20px 0">';
+  html += '<p style="color:var(--muted);font-size:0.95rem;margin-bottom:12px">\u{1F9E0} Husk ordet!</p>';
+  html += '<div class="boss-memory-word" id="bossMemoryWord">' + word + '</div>';
+  html += '</div>';
+  html += '<div id="bossMemoryInput" style="display:none">';
+  html += renderBossWordSlots(word);
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:12px 0">\u270F\uFE0F Stav ordet fra hukommelsen!</p>';
+  html += '<input type="text" id="bossMemInput" placeholder="Skriv ordet her..." style="margin-bottom:12px" autocomplete="off" autocapitalize="off" />';
+  html += '<button class="btn btn-primary btn-full" onclick="checkBossMemory()">\u2714\uFE0F Tjek</button>';
+  html += '</div>';
+  document.getElementById('bossContent').innerHTML = html;
+
+  // Show word for 2.5 seconds then hide
+  setTimeout(function() {
+    var wordEl = document.getElementById('bossMemoryWord');
+    if (wordEl) wordEl.style.opacity = '0';
+    setTimeout(function() {
+      if (wordEl) wordEl.textContent = '\u{1F50D}';
+      if (wordEl) wordEl.style.opacity = '1';
+      var inputArea = document.getElementById('bossMemoryInput');
+      if (inputArea) inputArea.style.display = 'block';
+      var inp = document.getElementById('bossMemInput');
+      if (inp) inp.focus();
+    }, 500);
+  }, 2500);
+}
+
+function checkBossMemory() {
+  if (!bossState) return;
+  var inp = document.getElementById('bossMemInput');
+  if (!inp) return;
+  var answer = inp.value.trim().toLowerCase();
+  if (!answer) return;
+
+  if (answer === bossState.word) {
+    // All correct at once!
+    for (var i = 0; i < bossState.word.length; i++) {
+      revealBossSlot(i, bossState.word[i]);
+    }
+    bossState.hp = 0;
+    updateBossHP(); bossHitAnim();
+    setTimeout(function() { bossDefeated(); }, 300);
+  } else {
+    // Show which letters were correct, deal partial damage
+    var correct = 0;
+    for (var j = 0; j < bossState.word.length; j++) {
+      if (j < answer.length && answer[j] === bossState.word[j]) {
+        revealBossSlot(j, bossState.word[j]);
+        correct++;
+      }
+    }
+    bossState.hp = Math.max(0, bossState.hp - correct);
+    bossState.letterIndex = bossState.word.length; // prevent further slot updates
+    updateBossHP();
+    bossAttackAnim();
+
+    if (bossState.hp <= 0) {
+      setTimeout(function() { bossDefeated(); }, 300);
+    } else {
+      // Give another try
+      inp.value = '';
+      inp.classList.add('input-retry');
+      setTimeout(function() { inp.classList.remove('input-retry'); }, 600);
+      inp.focus();
+    }
+  }
+}
+
+// --- Type 4: REVERSE (word shown backwards, type it correctly) ---
+function renderBossReverse(word, boss, idleAnim) {
+  var reversed = word.split('').reverse().join('');
+  var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+  html += '<div style="text-align:center;margin:16px 0">';
+  html += '<p style="color:var(--muted);font-size:0.95rem;margin-bottom:8px">\u{1F500} Ordet er bagl\u00E6ns! Skriv det rigtigt:</p>';
+  html += '<div style="font-family:Fredoka One,cursive;font-size:2.2rem;color:var(--red);letter-spacing:6px;margin:10px 0">' + reversed + '</div>';
+  html += '</div>';
+  html += renderBossWordSlots(word);
+  html += '<input type="text" id="bossReverseInput" placeholder="Skriv ordet rigtigt..." style="margin:12px 0" autocomplete="off" autocapitalize="off" />';
+  html += '<button class="btn btn-primary btn-full" onclick="checkBossReverse()">\u2714\uFE0F Tjek</button>';
+  document.getElementById('bossContent').innerHTML = html;
+  setTimeout(function() {
+    var inp = document.getElementById('bossReverseInput');
+    if (inp) inp.focus();
+  }, 300);
+}
+
+function checkBossReverse() {
+  if (!bossState) return;
+  var inp = document.getElementById('bossReverseInput');
+  if (!inp) return;
+  var answer = inp.value.trim().toLowerCase();
+  if (!answer) return;
+
+  if (answer === bossState.word) {
+    for (var i = 0; i < bossState.word.length; i++) {
+      revealBossSlot(i, bossState.word[i]);
+    }
+    bossState.hp = 0;
+    updateBossHP(); bossHitAnim();
+    setTimeout(function() { bossDefeated(); }, 300);
+  } else {
+    var correct = 0;
+    for (var j = 0; j < bossState.word.length; j++) {
+      if (j < answer.length && answer[j] === bossState.word[j]) {
+        revealBossSlot(j, bossState.word[j]);
+        correct++;
+      }
+    }
+    bossState.hp = Math.max(0, bossState.hp - correct);
+    updateBossHP();
+    bossAttackAnim();
+    if (bossState.hp <= 0) {
+      setTimeout(function() { bossDefeated(); }, 300);
+    } else {
+      inp.value = '';
+      inp.classList.add('input-retry');
+      setTimeout(function() { inp.classList.remove('input-retry'); }, 600);
+      inp.focus();
+    }
+  }
+}
+
+// --- Boss defeated (shared) ---
 function bossDefeated() {
   var defeatedWord = bossState ? bossState.word : '';
+  var deathAnim = bossState ? bossState.deathAnim : 'boss-death-spin';
+  if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
   bossState = null;
 
-  // Play death animation on the monster
   var monster = document.getElementById('bossMonster');
   if (monster) {
-    monster.classList.add('boss-dying');
+    monster.className = 'boss-monster ' + deathAnim;
   }
 
-  // After death animation, show victory screen
+  var victoryMsg = pickRandom(BOSS_VICTORY_MSGS);
   setTimeout(function() {
     var content = document.getElementById('bossContent');
     content.innerHTML = '<div style="text-align:center;padding:30px">' +
       '<div style="font-size:4rem;margin-bottom:12px">\uD83C\uDF89</div>' +
-      '<h2 style="color:var(--green);margin-bottom:8px">Boss besejret!</h2>' +
+      '<h2 style="color:var(--green);margin-bottom:8px">' + victoryMsg + '</h2>' +
       '<p style="font-family:Fredoka One,cursive;font-size:1.6rem;color:var(--green);margin:10px 0;letter-spacing:3px">' + defeatedWord + '</p>' +
       '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">+15 XP bonus!</p>' +
       '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
       '</div>';
   }, 1700);
 
-  // Award bonus XP
   var data = loadRewardData();
   data.totalXP = (data.totalXP || 0) + 15;
   data.todayXP = (data.todayXP || 0) + 15;

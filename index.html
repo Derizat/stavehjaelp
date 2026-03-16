@@ -199,6 +199,47 @@
   .level-meter { background: #2d3158; border-radius: 99px; height: 14px; overflow: hidden; margin: 8px 0 12px; }
   .level-meter-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
 
+  /* Boss minigame */
+  .boss-monster { font-size: 5rem; transition: transform 0.3s; }
+  .boss-hit { animation: boss-damage 0.4s ease; }
+  .boss-attack { animation: boss-shake 0.4s ease; }
+  @keyframes boss-damage { 0% { transform: scale(1); } 50% { transform: scale(0.7) rotate(-10deg); opacity: 0.5; } 100% { transform: scale(1); } }
+  @keyframes boss-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-15px); } 75% { transform: translateX(15px); } }
+  .boss-hp-wrap { background: #2d3158; border-radius: 99px; height: 14px; overflow: hidden; margin: 0 auto; max-width: 250px; }
+  .boss-hp-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--red), #ef4444); transition: width 0.5s ease; }
+  .boss-word-progress { display: flex; justify-content: center; gap: 6px; margin: 16px 0; font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--muted); }
+  .boss-word-slot { min-width: 30px; text-align: center; border-bottom: 3px solid #3d4270; }
+  .boss-word-slot.revealed { color: var(--green); border-color: var(--green); }
+  .boss-letters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; }
+  .boss-letter {
+    width: 48px; height: 48px; border-radius: 10px; border: 2px solid #3d4270;
+    background: var(--card2); color: var(--text); font-family: 'Nunito', sans-serif;
+    font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .boss-letter:hover { border-color: var(--accent); transform: scale(1.05); }
+  .boss-letter.correct { background: rgba(34,211,160,0.3); border-color: var(--green); color: var(--green); pointer-events: none; }
+  .boss-letter.wrong { animation: boss-shake 0.3s ease; border-color: var(--red); }
+
+  /* Treasure chest */
+  .chest-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000;
+    background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .chest-card {
+    background: var(--card); border-radius: var(--radius); border: 2px solid;
+    padding: 32px; text-align: center; max-width: 360px; width: 100%;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .chest-emoji { font-size: 4rem; animation: chest-wobble 0.8s ease infinite; }
+  .chest-opened { animation: chest-pop 0.5s ease !important; }
+  @keyframes chest-wobble { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+  @keyframes chest-pop { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+  .chest-rarity { font-family: 'Fredoka One', cursive; font-size: 1.1rem; margin: 8px 0 14px; }
+  .chest-reward { animation: chest-reveal 0.5s ease; }
+  @keyframes chest-reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
   .level-comparison {
     text-align: center; padding: 14px; border-radius: 12px; margin: 12px 0 16px;
     font-size: 1rem; font-weight: 700; line-height: 1.5;
@@ -464,6 +505,16 @@
 
 <!-- WELCOME -->
 <div id="phase-welcome" class="card">
+  <div id="welcomeAvatarSection" style="text-align:center;margin-bottom:16px">
+    <div id="avatarEmoji" style="font-size:4rem;line-height:1.2"></div>
+    <div id="avatarTitle" style="font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--accent);margin-top:4px"></div>
+    <div id="avatarDesc" style="font-size:0.85rem;color:var(--muted);margin-top:2px"></div>
+    <div style="max-width:200px;margin:8px auto">
+      <div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%"></div></div>
+    </div>
+    <div id="avatarProgressLabel" style="font-size:0.75rem;color:var(--muted)"></div>
+  </div>
+
   <!-- Welcome streak section (dynamic) -->
   <div id="welcomeStreakSection" class="welcome-streak-section hidden">
     <div class="streak-big" id="welcomeStreakBig">&#x1F525; 0 dages streak</div>
@@ -674,6 +725,15 @@
   <div id="screeningResultsContent"></div>
 </div>
 
+<!-- BOSS MINIGAME -->
+<div id="phase-boss" class="card hidden">
+  <div class="phase-label">&#x2694;&#xFE0F; Ord-Boss!</div>
+  <div id="bossContent"></div>
+</div>
+
+<!-- TREASURE CHEST OVERLAY -->
+<div id="chestOverlay" class="chest-overlay hidden"></div>
+
 <script>
 
 // Word bank loaded from words.json
@@ -726,17 +786,26 @@ var gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
 var diagnosticWordsList = [];
 var adaptiveState = null;
 
+// Gamification state
+var wrongCountPerWord = {};
+var pendingBoss = null;
+var sessionCorrectCount = 0;
+var pendingChest = false;
+var pendingInterruptAction = null; // stores what to do after boss/chest
+
 // Utility
 function show(id) { document.getElementById(id).classList.remove('hidden'); }
 function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss'].forEach(function(id) { hide(id); });
+  document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   show('phase-welcome');
   refreshWelcomeButtons();
   updateWelcomeStreak();
+  updateWelcomeAvatar();
   // Hide reward bar on welcome (welcome has its own streak display)
   hide('rewardBar');
   hide('rewardXPBarWrap');
@@ -1078,6 +1147,10 @@ function startDiagnostic() {
   diagnosticWordsList = [];
   results = [];
   currentIndex = 0;
+  wrongCountPerWord = {};
+  pendingBoss = null;
+  sessionCorrectCount = 0;
+  pendingChest = false;
   var startLevel = 1;
   var selectedGrade = loadGrade();
   if (selectedGrade >= 0 && selectedGrade <= 1) startLevel = 0;
@@ -1116,6 +1189,10 @@ function startTrainingFromProfile() {
     return;
   }
   gameMode = 'training';
+  wrongCountPerWord = {};
+  pendingBoss = null;
+  sessionCorrectCount = 0;
+  pendingChest = false;
   var excludeWords = {};
   if (profile.diagnosticResults) {
     profile.diagnosticResults.forEach(function(r) { excludeWords[r.word] = true; });
@@ -1163,6 +1240,10 @@ function startTrainingFromProfile() {
 // Review mode
 function startReview() {
   gameMode = 'review';
+  wrongCountPerWord = {};
+  pendingBoss = null;
+  sessionCorrectCount = 0;
+  pendingChest = false;
   currentWords = shuffle(getDueWords());
   if (currentWords.length === 0) {
     alert('Ingen ord klar til gennemgang lige nu.');
@@ -1342,6 +1423,23 @@ function checkSpelling() {
     box.innerHTML = feedbackHTML;
   }
 
+  // Count correct for chest
+  if (ok || selfCorrected) {
+    sessionCorrectCount++;
+    if (sessionCorrectCount % 5 === 0) {
+      pendingChest = true;
+    }
+  }
+
+  // Track boss trigger
+  if (!ok && !selfCorrected && (gameMode === 'training' || gameMode === 'review')) {
+    if (!wrongCountPerWord[w.word]) wrongCountPerWord[w.word] = 0;
+    wrongCountPerWord[w.word]++;
+    if (wrongCountPerWord[w.word] >= 2) {
+      pendingBoss = { word: w.word, category: w.category };
+    }
+  }
+
   document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
   document.getElementById('scoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
   document.getElementById('checkBtn').classList.add('hidden');
@@ -1406,6 +1504,17 @@ function nextWord() {
     }
     renderWord();
   } else {
+    // Check for pending boss or chest before continuing
+    if (pendingBoss) {
+      pendingInterruptAction = currentIndex >= currentWords.length ? 'finish' : 'continue';
+      showBossMinigame(pendingBoss);
+      return;
+    }
+    if (pendingChest) {
+      pendingInterruptAction = currentIndex >= currentWords.length ? 'finish' : 'continue';
+      showTreasureChest();
+      return;
+    }
     if (currentIndex >= currentWords.length) {
       finishTest();
     } else {
@@ -1421,8 +1530,12 @@ function finishTest() {
   // === Reward system: award XP and update streak ===
   var correctCount = results.filter(function(r) { return r.correct; }).length;
   var totalCount = results.length;
+  var prevXP = loadRewardData().totalXP || 0;
   var rewardResult = awardSessionXP(correctCount, totalCount);
   var rewardData = loadRewardData();
+  var newXP = rewardData.totalXP || 0;
+  var prevLevel = getAvatarLevel(prevXP);
+  var newLevel = getAvatarLevel(newXP);
   var milestone = checkMilestone(rewardData);
   updateRewardBar();
 
@@ -1437,6 +1550,11 @@ function finishTest() {
   // Show milestone after reward overlay fades
   if (milestone) {
     setTimeout(function() { showMilestonePopup(milestone); }, 1800);
+  }
+
+  // Show level-up popup if avatar level changed
+  if (newLevel.index > prevLevel.index) {
+    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
   }
 
   // Show reward bar now that we're leaving the test phase
@@ -2181,6 +2299,308 @@ function showRewardFloat(text) {
 
 // ===== END REWARD SYSTEM =====
 
+// ===== BOSS MINIGAME =====
+
+var BOSS_MONSTERS = {
+  "Stumme bogstaver": { emoji: "\uD83D\uDC7B", name: "Sp\u00F8gelsesbossen" },
+  "Dobbeltkonsonant": { emoji: "\uD83D\uDC09", name: "Dobbeltdragen" },
+  "For- og efterstavelser": { emoji: "\uD83E\uDDD9", name: "Troldmanden" },
+  "Sammensatte ord": { emoji: "\uD83D\uDC79", name: "Samlemonsteret" },
+  "Verbernes b\u00F8jning": { emoji: "\uD83E\uDDDF", name: "B\u00F8jningszombien" },
+  "Navneordsendelser": { emoji: "\uD83D\uDC7E", name: "Endelsesalienen" },
+  "Lydrette ord": { emoji: "\uD83D\uDC3B", name: "Lydbj\u00F8rnen" },
+  "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex" }
+};
+
+var bossState = null;
+
+function showBossMinigame(bossData) {
+  hide('phase-test');
+  show('phase-boss');
+
+  var word = bossData.word.toLowerCase();
+  var letters = word.split('');
+  var boss = BOSS_MONSTERS[bossData.category] || { emoji: "\uD83D\uDC7E", name: "Ordbossen" };
+
+  // Generate 2-3 distractor letters (random Danish letters not in word)
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
+  var distractors = [];
+  var shuffledAlpha = shuffle(alphabet.split(''));
+  for (var d = 0; d < shuffledAlpha.length && distractors.length < 3; d++) {
+    if (word.indexOf(shuffledAlpha[d]) === -1) distractors.push(shuffledAlpha[d]);
+  }
+
+  var allLetters = shuffle(letters.concat(distractors));
+
+  bossState = { word: word, hp: letters.length, maxHP: letters.length, letterIndex: 0 };
+
+  var html = '';
+  html += '<div style="text-align:center">';
+  html += '<div id="bossMonster" class="boss-monster">' + boss.emoji + '</div>';
+  html += '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;color:var(--red);margin:8px 0">' + boss.name + '</div>';
+  html += '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>';
+  html += '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:14px" id="bossHPText">HP: ' + letters.length + '/' + letters.length + '</div>';
+  html += '</div>';
+
+  // Word progress (underscores for unguessed letters)
+  html += '<div class="boss-word-progress" id="bossWordProgress">';
+  for (var i = 0; i < letters.length; i++) {
+    html += '<span class="boss-word-slot" id="bossSlot' + i + '">_</span>';
+  }
+  html += '</div>';
+
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:12px 0">Tryk bogstaverne i den rigtige r\u00E6kkef\u00F8lge for at besejre bossen!</p>';
+
+  html += '<div class="boss-letters" id="bossLetters">';
+  for (var j = 0; j < allLetters.length; j++) {
+    html += '<button class="boss-letter" id="bossLetter' + j + '" onclick="bossTapLetter(\'' + allLetters[j].replace(/'/g, "\\'") + '\', ' + j + ')">' + allLetters[j] + '</button>';
+  }
+  html += '</div>';
+
+  document.getElementById('bossContent').innerHTML = html;
+}
+
+function bossTapLetter(letter, buttonIndex) {
+  if (!bossState) return;
+  var expected = bossState.word[bossState.letterIndex];
+  var btn = document.getElementById('bossLetter' + buttonIndex);
+
+  if (letter === expected) {
+    // Correct!
+    btn.classList.add('correct');
+    btn.style.pointerEvents = 'none';
+    bossState.hp--;
+    bossState.letterIndex++;
+
+    // Update word progress
+    document.getElementById('bossSlot' + (bossState.letterIndex - 1)).textContent = letter;
+    document.getElementById('bossSlot' + (bossState.letterIndex - 1)).classList.add('revealed');
+
+    // Update HP bar
+    var pct = (bossState.hp / bossState.maxHP) * 100;
+    document.getElementById('bossHPBar').style.width = pct + '%';
+    document.getElementById('bossHPText').textContent = 'HP: ' + bossState.hp + '/' + bossState.maxHP;
+
+    // Boss damage animation
+    var monster = document.getElementById('bossMonster');
+    monster.classList.add('boss-hit');
+    setTimeout(function() { monster.classList.remove('boss-hit'); }, 400);
+
+    if (bossState.hp <= 0) {
+      bossDefeated();
+    }
+  } else {
+    // Wrong! Boss attacks
+    btn.classList.add('wrong');
+    setTimeout(function() { btn.classList.remove('wrong'); }, 500);
+    var monster2 = document.getElementById('bossMonster');
+    monster2.classList.add('boss-attack');
+    setTimeout(function() { monster2.classList.remove('boss-attack'); }, 500);
+  }
+}
+
+function bossDefeated() {
+  bossState = null;
+  var content = document.getElementById('bossContent');
+  content.innerHTML = '<div style="text-align:center;padding:30px">' +
+    '<div style="font-size:4rem;margin-bottom:12px">\uD83C\uDF89</div>' +
+    '<h2 style="color:var(--green);margin-bottom:8px">Boss besejret!</h2>' +
+    '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">+15 XP bonus!</p>' +
+    '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
+    '</div>';
+
+  // Award bonus XP
+  var data = loadRewardData();
+  data.totalXP = (data.totalXP || 0) + 15;
+  data.todayXP = (data.todayXP || 0) + 15;
+  saveRewardData(data);
+  updateRewardBar();
+}
+
+function continueAfterBoss() {
+  pendingBoss = null;
+  hide('phase-boss');
+  show('phase-test');
+  proceedAfterInterrupt();
+}
+
+function proceedAfterInterrupt() {
+  var action = pendingInterruptAction;
+  pendingInterruptAction = null;
+
+  // Check if there's still a pending chest (boss was handled, now chest)
+  if (pendingChest) {
+    showTreasureChest();
+    return;
+  }
+
+  if (action === 'finish') {
+    finishTest();
+  } else {
+    renderWord();
+  }
+}
+
+// ===== TREASURE CHESTS =====
+
+var CHEST_REWARDS = {
+  common:   { weight: 60, rewards: [
+    { type: 'xp', amount: 10, text: '+10 XP', emoji: '\u2728' },
+    { type: 'xp', amount: 15, text: '+15 XP', emoji: '\u2728' },
+    { type: 'message', text: 'Godt g\u00E5et!', emoji: '\uD83D\uDC4D' }
+  ]},
+  uncommon: { weight: 25, rewards: [
+    { type: 'xp', amount: 25, text: '+25 XP', emoji: '\uD83D\uDCA5' },
+    { type: 'gems', amount: 2, text: '+2 Diamanter', emoji: '\uD83D\uDC8E' },
+    { type: 'gems', amount: 3, text: '+3 Diamanter', emoji: '\uD83D\uDC8E' }
+  ]},
+  rare:     { weight: 10, rewards: [
+    { type: 'xp', amount: 40, text: '+40 XP', emoji: '\uD83D\uDD25' },
+    { type: 'gems', amount: 5, text: '+5 Diamanter', emoji: '\uD83D\uDC8E' },
+    { type: 'streakFreeze', amount: 1, text: 'Streak Freeze!', emoji: '\u2744\uFE0F' }
+  ]},
+  epic:     { weight: 5, rewards: [
+    { type: 'xp', amount: 75, text: '+75 XP!', emoji: '\uD83C\uDF1F' },
+    { type: 'gems', amount: 8, text: '+8 Diamanter!', emoji: '\uD83D\uDC8E' },
+    { type: 'combo', xp: 30, gems: 3, text: '+30 XP & +3 \uD83D\uDC8E', emoji: '\uD83C\uDF08' }
+  ]}
+};
+
+var CHEST_RARITY_COLORS = {
+  common: { border: '#8892b0', bg: 'rgba(136,146,176,0.1)', label: 'Almindelig' },
+  uncommon: { border: '#22d3a0', bg: 'rgba(34,211,160,0.1)', label: 'Ualmindelig' },
+  rare: { border: '#0ea5e9', bg: 'rgba(14,165,233,0.1)', label: 'Sj\u00E6lden' },
+  epic: { border: '#a855f7', bg: 'rgba(168,85,247,0.15)', label: 'Episk' }
+};
+
+function rollChestReward() {
+  var roll = Math.random() * 100;
+  var cumulative = 0;
+  var rarities = ['common', 'uncommon', 'rare', 'epic'];
+  for (var i = 0; i < rarities.length; i++) {
+    cumulative += CHEST_REWARDS[rarities[i]].weight;
+    if (roll < cumulative) {
+      var pool = CHEST_REWARDS[rarities[i]].rewards;
+      return { rarity: rarities[i], reward: pool[Math.floor(Math.random() * pool.length)] };
+    }
+  }
+  return { rarity: 'common', reward: CHEST_REWARDS.common.rewards[0] };
+}
+
+function showTreasureChest() {
+  var result = rollChestReward();
+  var colors = CHEST_RARITY_COLORS[result.rarity];
+
+  var overlay = document.getElementById('chestOverlay');
+  overlay.innerHTML = '<div class="chest-card" style="border-color:' + colors.border + '">' +
+    '<div class="chest-emoji" id="chestEmoji">\uD83D\uDDC3\uFE0F</div>' +
+    '<div class="chest-rarity" style="color:' + colors.border + '">' + colors.label + ' Skattekiste!</div>' +
+    '<div class="chest-reward hidden" id="chestReward">' +
+    '<div style="font-size:2.5rem;margin-bottom:8px">' + result.reward.emoji + '</div>' +
+    '<div style="font-size:1.2rem;font-weight:800;color:var(--text)">' + result.reward.text + '</div>' +
+    '</div>' +
+    '<button class="btn btn-accent hidden" id="chestCloseBtn" onclick="closeChest()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
+    '</div>';
+  overlay.classList.remove('hidden');
+
+  // Animate: shake for 1s, then open
+  setTimeout(function() {
+    document.getElementById('chestEmoji').textContent = '\uD83C\uDF81'; // gift box = opened
+    document.getElementById('chestEmoji').classList.add('chest-opened');
+    document.getElementById('chestReward').classList.remove('hidden');
+    document.getElementById('chestCloseBtn').classList.remove('hidden');
+
+    // Apply reward
+    applyChestReward(result);
+  }, 1200);
+
+  pendingChest = false;
+}
+
+function applyChestReward(result) {
+  var data = loadRewardData();
+  var r = result.reward;
+  if (r.type === 'xp') { data.totalXP += r.amount; data.todayXP += r.amount; }
+  else if (r.type === 'gems') { data.gems += r.amount; }
+  else if (r.type === 'streakFreeze') { data.streakFreezes = Math.min((data.streakFreezes || 0) + r.amount, 3); }
+  else if (r.type === 'combo') { data.totalXP += r.xp; data.todayXP += r.xp; data.gems += r.gems; }
+  // 'message' type = no reward, just encouragement
+  saveRewardData(data);
+  updateRewardBar();
+}
+
+function closeChest() {
+  document.getElementById('chestOverlay').classList.add('hidden');
+  // Resume normal flow - the proceedAfterInterrupt function will continue
+  proceedAfterInterrupt();
+}
+
+// ===== AVATAR PROGRESSION =====
+
+var AVATAR_LEVELS = [
+  { minXP: 0,    emoji: '\uD83E\uDD8A', title: 'Baby R\u00E6v', desc: 'Stavesp\u00E6d' },
+  { minXP: 100,  emoji: '\uD83E\uDD8A\uD83C\uDFA9', title: 'R\u00E6v med Hat', desc: 'Stavebegynder' },
+  { minXP: 300,  emoji: '\uD83E\uDD8A\uD83E\uDDB8', title: 'Super-R\u00E6v', desc: 'Bogstavhelt' },
+  { minXP: 600,  emoji: '\uD83E\uDD8A\u2694\uFE0F', title: 'R\u00E6v-Kriger', desc: 'Bogstavkriger' },
+  { minXP: 1000, emoji: '\uD83E\uDD8A\uD83D\uDC51', title: 'R\u00E6v-Dronning', desc: 'Ordmester' },
+  { minXP: 2000, emoji: '\uD83D\uDC3A', title: 'Ulven', desc: 'Stave-Champion' },
+  { minXP: 3500, emoji: '\uD83D\uDC3A\uD83D\uDEE1\uFE0F', title: 'Pansret Ulv', desc: 'Ordgeneral' },
+  { minXP: 5000, emoji: '\uD83D\uDC32', title: 'Stavedragen', desc: 'Den Legendariske' }
+];
+
+function getAvatarLevel(totalXP) {
+  var level = AVATAR_LEVELS[0];
+  var idx = 0;
+  for (var i = AVATAR_LEVELS.length - 1; i >= 0; i--) {
+    if (totalXP >= AVATAR_LEVELS[i].minXP) {
+      level = AVATAR_LEVELS[i];
+      idx = i;
+      break;
+    }
+  }
+  var nextLevel = idx < AVATAR_LEVELS.length - 1 ? AVATAR_LEVELS[idx + 1] : null;
+  var progress = nextLevel ? (totalXP - level.minXP) / (nextLevel.minXP - level.minXP) : 1;
+  return { emoji: level.emoji, title: level.title, desc: level.desc, index: idx, progress: progress, nextXP: nextLevel ? nextLevel.minXP : null, currentXP: totalXP };
+}
+
+function updateWelcomeAvatar() {
+  var data = loadRewardData();
+  var level = getAvatarLevel(data.totalXP || 0);
+
+  var el = document.getElementById('avatarEmoji');
+  if (el) el.textContent = level.emoji;
+  var titleEl = document.getElementById('avatarTitle');
+  if (titleEl) titleEl.textContent = level.title;
+  var descEl = document.getElementById('avatarDesc');
+  if (descEl) descEl.textContent = level.desc;
+  var bar = document.getElementById('avatarProgressBar');
+  if (bar) bar.style.width = (level.progress * 100) + '%';
+  var label = document.getElementById('avatarProgressLabel');
+  if (label) {
+    if (level.nextXP) {
+      label.textContent = (data.totalXP || 0) + ' / ' + level.nextXP + ' XP til n\u00E6ste form';
+    } else {
+      label.textContent = 'Maksimalt niveau! ' + (data.totalXP || 0) + ' XP';
+    }
+  }
+}
+
+function showLevelUpPopup(newLevel) {
+  var overlay = document.createElement('div');
+  overlay.className = 'milestone-overlay';
+  overlay.id = 'levelUpOverlay';
+  overlay.innerHTML = '<div class="milestone-card">' +
+    '<div style="font-size:4rem;margin-bottom:10px">' + newLevel.emoji + '</div>' +
+    '<div style="font-family:Fredoka One,cursive;font-size:1.5rem;color:var(--accent);margin-bottom:6px">Nyt Niveau!</div>' +
+    '<div style="font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px">' + newLevel.title + '</div>' +
+    '<div style="font-size:0.9rem;color:var(--muted);margin-bottom:16px">' + newLevel.desc + '</div>' +
+    '<button class="btn btn-accent" onclick="document.getElementById(\'levelUpOverlay\').remove()">\uD83C\uDF89 Sejt!</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+}
+
+// ===== END GAMIFICATION =====
+
 // ===== SCREENING (Stavevurdering) =====
 
 var NONORD_ITEMS = [
@@ -2827,6 +3247,7 @@ function initApp() {
   saveRewardData(rewardData);
   updateRewardBar();
   updateWelcomeStreak();
+  updateWelcomeAvatar();
 
   // Check for pending milestone on load
   var milestone = checkMilestone(rewardData);

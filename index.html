@@ -95,6 +95,8 @@
 
   .feedback-correct { background: rgba(34,211,160,0.1); border: 2px solid var(--green); border-radius: 10px; padding: 14px; text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--green); margin-top: 12px; }
   .feedback-wrong { background: rgba(244,63,94,0.1); border: 2px solid var(--red); border-radius: 10px; padding: 14px; text-align: center; font-size: 1.05rem; font-weight: 700; color: var(--red); margin-top: 12px; }
+  .feedback-retry { background: rgba(245,166,35,0.12); border: 2px solid var(--accent); border-radius: 10px; padding: 14px; text-align: center; font-size: 1.05rem; font-weight: 700; color: var(--accent); margin-top: 12px; }
+  .input-retry { border-color: var(--accent) !important; }
 
   .pattern-explain {
     background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.3);
@@ -377,17 +379,20 @@
     </p>
   </div>
   <div class="pattern-list">
+    <div class="pattern-item"><div class="pi-icon">&#x1F524;</div><div class="pi-text"><strong>Lydrette ord</strong><span>Ord der staves pr&#xe6;cis som de lyder</span></div></div>
     <div class="pattern-item"><div class="pi-icon">&#x1F507;</div><div class="pi-text"><strong>Stumme bogstaver</strong><span>Bogstaver der skrives men ikke udtales</span></div></div>
     <div class="pattern-item"><div class="pi-icon">&#x270C;&#xFE0F;</div><div class="pi-text"><strong>Dobbeltkonsonant</strong><span>Hvornår skriver man to ens bogstaver?</span></div></div>
     <div class="pattern-item"><div class="pi-icon">&#x1F9E9;</div><div class="pi-text"><strong>For- og efterstavelser</strong><span>be-, for-, -hed, -else, -ing, -lig, -som</span></div></div>
     <div class="pattern-item"><div class="pi-icon">&#x1F517;</div><div class="pi-text"><strong>Sammensatte ord</strong><span>Del ordet op — så er det lettere!</span></div></div>
     <div class="pattern-item"><div class="pi-icon">&#x270F;&#xFE0F;</div><div class="pi-text"><strong>Verbernes bøjning</strong><span>Datid og tillægsform: -ede/-te, -et/-t</span></div></div>
     <div class="pattern-item"><div class="pi-icon">&#x1F4DD;</div><div class="pi-text"><strong>Navneordsendelser</strong><span>Flertal, bestemt form, uregelmæssige</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#xAE;&#xFE0F;</div><div class="pi-text"><strong>Nutids-r</strong><span>Verber i nutid ender p&#xe5; '-r': han l&#xf8;ber</span></div></div>
   </div>
 
   <div style="text-align:center; margin-top:16px">
     <p style="font-weight:700; font-size:0.95rem; margin-bottom:6px">Hvilket klassetrin går du i?</p>
     <div class="grade-selector" id="gradeSelector">
+      <button class="grade-btn" onclick="selectGrade(0)">0. kl</button>
       <button class="grade-btn" onclick="selectGrade(1)">1. kl</button>
       <button class="grade-btn" onclick="selectGrade(2)">2. kl</button>
       <button class="grade-btn" onclick="selectGrade(3)">3. kl</button>
@@ -520,7 +525,9 @@ var PATTERN_RULES = {
   "For- og efterstavelser": "Mange danske ord er bygget af faste dele: forstavelser ('be-', 'for-', 'u-') og efterstavelser ('-hed', '-else', '-ing', '-lig', '-som'). Disse dele staves altid ens! Kan du genkende delene, kan du stave mange ord korrekt. Del ordet op: 'for-bered-else' = tre dele du kender.",
   "Sammensatte ord": "Dansk sætter tit ord sammen til nye ord. Hemmeligheden: del ordet i stykker! 'skole+arbejde', 'mad+pakke'. Pas på fuge-s: 'verden-s-rekord'. Kan du stave hvert stykke for sig, kan du stave hele ordet!",
   "Verbernes bøjning": "Datid: De fleste verber får '-ede' (legede, cyklede), men korte stammer får '-te' (spiste, bestemte). Tillægsform (kort): '-et' (udviklet) eller '-t' (bestemt). Tip: Sig grundformen højt — er stammen kort? Så bruges '-te'/'-t'.",
-  "Navneordsendelser": "Flertal: De fleste navneord får '-e' eller '-er' (hunde, lamper). Bestemt form: fælleskøn får '-en' (stolen), intetkøn '-et' (huset). Pas på uregelmæssige former: bog->bøger, mand->mænd, barn->børn. Disse må man lære udenad!"
+  "Navneordsendelser": "Flertal: De fleste navneord får '-e' eller '-er' (hunde, lamper). Bestemt form: fælleskøn får '-en' (stolen), intetkøn '-et' (huset). Pas på uregelmæssige former: bog->bøger, mand->mænd, barn->børn. Disse må man lære udenad!",
+  "Lydrette ord": "Lydrette ord staves pr\u00E6cis som de lyder. Sig ordet langsomt og skriv de lyde du h\u00F8rer \u2014 \u00E9n lyd ad gangen!",
+  "Nutids-r": "I nutid (pr\u00E6sens) ender danske verber p\u00E5 '-r': 'han l\u00F8ber', 'hun spiser', 'de leger'. Uden '-r' er det navneform: 'at l\u00F8be', 'at spise', 'at lege'. Tip: Kan du s\u00E6tte 'han/hun/den' foran? S\u00E5 skal der '-r' p\u00E5!"
 };
 
 var CATEGORY_ICONS = {
@@ -529,12 +536,15 @@ var CATEGORY_ICONS = {
   "For- og efterstavelser": "\u{1F9E9}",
   "Sammensatte ord": "\u{1F517}",
   "Verbernes bøjning": "\u270F\uFE0F",
-  "Navneordsendelser": "\u{1F4DD}"
+  "Navneordsendelser": "\u{1F4DD}",
+  "Lydrette ord": "\u{1F524}",
+  "Nutids-r": "\u00AE\uFE0F"
 };
 
 var ALL_CATEGORIES = [];
 
 var LEVEL_LABELS = {
+  0: { text: "\u26AA Niveau 0 (0. klasse)", bg: "rgba(255,255,255,0.1)", color: "#ccc" },
   1: { text: "\u{1F7E2} Niveau 1 (1.-2. klasse)", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
   2: { text: "\u{1F7E1} Niveau 2 (3.-4. klasse)", bg: "rgba(245,166,35,0.15)", color: "var(--accent)" },
   3: { text: "\u{1F7E0} Niveau 3 (5.-6. klasse)", bg: "rgba(249,115,22,0.15)", color: "#f97316" },
@@ -542,6 +552,7 @@ var LEVEL_LABELS = {
 };
 
 var LEVEL_GRADE_MAP = {
+  0: "0. klasse niveau",
   1: "1.-2. klasse niveau",
   2: "3.-4. klasse niveau",
   3: "5.-6. klasse niveau",
@@ -550,6 +561,7 @@ var LEVEL_GRADE_MAP = {
 
 // State
 var currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
+var retryAttempt = false;
 var gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
 var diagnosticWordsList = [];
 var adaptiveState = null;
@@ -572,24 +584,29 @@ function goHome() {
 
 // Grade selector
 function selectGrade(g) {
-  try { localStorage.setItem('student_grade', g); } catch(e) {}
+  try { localStorage.setItem('student_grade', g.toString()); } catch(e) {}
   var btns = document.querySelectorAll('.grade-btn');
   btns.forEach(function(b, i) {
-    if (i + 1 === g) b.classList.add('active');
+    if (i === g) b.classList.add('active');
     else b.classList.remove('active');
   });
 }
 
 function loadGrade() {
-  try { return parseInt(localStorage.getItem('student_grade')) || 0; } catch(e) { return 0; }
+  try {
+    var v = localStorage.getItem('student_grade');
+    if (v === null) return -1;
+    var n = parseInt(v);
+    return isNaN(n) ? -1 : n;
+  } catch(e) { return -1; }
 }
 
 function restoreGradeSelection() {
   var g = loadGrade();
-  if (g >= 1 && g <= 8) {
+  if (g >= 0 && g <= 8) {
     var btns = document.querySelectorAll('.grade-btn');
     btns.forEach(function(b, i) {
-      if (i + 1 === g) b.classList.add('active');
+      if (i === g) b.classList.add('active');
       else b.classList.remove('active');
     });
   }
@@ -848,16 +865,17 @@ function speakCurrentWord() {
 
 // Spelling level estimation
 function estimateSpellingLevel(res) {
-  for (var level = 4; level >= 1; level--) {
+  for (var level = 4; level >= 0; level--) {
     var levelResults = res.filter(function(r) { return r.level === level; });
     if (levelResults.length === 0) continue;
     var correct = levelResults.filter(function(r) { return r.correct; }).length;
     if (correct / levelResults.length >= 0.66) return level;
   }
-  return 1;
+  return 0;
 }
 
 function gradeToExpectedLevel(grade) {
+  if (grade <= 0) return 0;
   if (grade <= 2) return 1;
   if (grade <= 4) return 2;
   if (grade <= 6) return 3;
@@ -900,8 +918,12 @@ function startDiagnostic() {
   diagnosticWordsList = [];
   results = [];
   currentIndex = 0;
+  var startLevel = 1;
+  var selectedGrade = loadGrade();
+  if (selectedGrade >= 0 && selectedGrade <= 1) startLevel = 0;
+
   adaptiveState = {
-    currentLevel: 1,
+    currentLevel: startLevel,
     levelResults: [],
     phase: 'testing', // 'testing' | 'confirming'
     confirmedLevel: null,
@@ -909,8 +931,8 @@ function startDiagnostic() {
     finished: false
   };
 
-  // Get first batch of words for level 1
-  var firstBatch = buildAdaptiveDiagnosticWords(1);
+  // Get first batch of words for starting level
+  var firstBatch = buildAdaptiveDiagnosticWords(startLevel);
   diagnosticWordsList = diagnosticWordsList.concat(firstBatch);
   currentWords = firstBatch;
 
@@ -1014,10 +1036,13 @@ function renderWord() {
   document.getElementById('spellingInput').value = '';
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('checkBtn').classList.remove('hidden');
+  document.getElementById('checkBtn').innerHTML = '\u270F\uFE0F Tjek stavning';
   document.getElementById('nextBtn').classList.add('hidden');
   var btn = document.getElementById('listenBtn');
   btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen';
   feedbackShown = false;
+  retryAttempt = false;
+  document.getElementById('spellingInput').classList.remove('input-retry');
 
   var flashEl = document.getElementById('wordFlash');
   var wrap = document.getElementById('countdownWrap');
@@ -1080,7 +1105,10 @@ function renderWord() {
 
 // Enter key handler
 document.getElementById('spellingInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') { if (feedbackShown) nextWord(); else checkSpelling(); }
+  if (e.key === 'Enter') {
+    if (feedbackShown && !retryAttempt) nextWord();
+    else checkSpelling();
+  }
 });
 
 // Diff highlight
@@ -1098,10 +1126,31 @@ function diffHighlight(correct, attempt) {
 // Check spelling
 function checkSpelling() {
   var w = currentWords[currentIndex];
-  var ans = document.getElementById('spellingInput').value.trim().toLowerCase();
+  var inp = document.getElementById('spellingInput');
+  var ans = inp.value.trim().toLowerCase();
   if (!ans) return;
   var ok = ans === w.word.toLowerCase();
-  var result = { word: w.word, correct: ok, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 1 };
+  var box = document.getElementById('feedbackBox');
+  box.style.display = 'block';
+
+  // FIRST ATTEMPT: wrong — give a chance to retry
+  if (!ok && !retryAttempt) {
+    retryAttempt = true;
+    box.innerHTML = '<div class="feedback-retry">\u{1F504} Ikke helt rigtigt \u2014 pr\u00F8v at rette det!</div>';
+    inp.classList.add('input-retry');
+    inp.focus();
+    inp.select();
+    document.getElementById('checkBtn').innerHTML = '\u270F\uFE0F Tjek igen';
+    return;
+  }
+
+  // SECOND ATTEMPT (retry) or first-try correct
+  var selfCorrected = false;
+  if (retryAttempt && ok) {
+    selfCorrected = true;
+  }
+
+  var result = { word: w.word, correct: ok || selfCorrected, selfCorrected: selfCorrected, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
 
   // Track adaptive state for diagnostic
@@ -1115,11 +1164,12 @@ function checkSpelling() {
     updateSRWord(w.word, ok, w.category);
   }
 
-  var box = document.getElementById('feedbackBox');
-  box.style.display = 'block';
+  inp.classList.remove('input-retry');
 
-  if (ok) {
+  if (ok && !selfCorrected) {
     box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! Flot klaret! \u{1F389}</div>';
+  } else if (selfCorrected) {
+    box.innerHTML = '<div class="feedback-correct">\u{1F31F} Flot! Du rettede det selv! \u{1F31F}</div>';
   } else {
     var rule = PATTERN_RULES[w.category] || '';
     var feedbackHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + ans + '</strong><br>' +
@@ -1137,6 +1187,7 @@ function checkSpelling() {
   document.getElementById('checkBtn').classList.add('hidden');
   document.getElementById('nextBtn').classList.remove('hidden');
   feedbackShown = true;
+  retryAttempt = false;
   document.getElementById('nextBtn').focus();
 }
 
@@ -1293,7 +1344,7 @@ async function analyzeWithAI(profile) {
   wrong.forEach(function(r) { if (cats.indexOf(r.category) === -1) cats.push(r.category); });
   var grade = profile.grade || 0;
   var spellingLevel = profile.spellingLevel || 1;
-  var gradeInfo = grade > 0 ? ('Eleven går i ' + grade + '. klasse. ') : '';
+  var gradeInfo = grade >= 0 ? ('Eleven går i ' + grade + '. klasse. ') : '';
   var levelInfo = 'Estimeret stave-niveau: ' + LEVEL_GRADE_MAP[spellingLevel] + ' (niveau ' + spellingLevel + '/4).';
 
   var prompt = 'Du er en dansk stavningstutor for et barn.\n\n' +
@@ -1378,13 +1429,13 @@ function renderProfile(profile, aiData) {
 
   // Level meter
   var meterPct = (spellingLevel / 4) * 100;
-  var meterColors = { 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
-  html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + meterPct + '%;background:' + meterColors[spellingLevel] + '"></div></div>';
+  var meterColors = { 0: '#ccc', 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
+  html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + Math.max(meterPct, 5) + '%;background:' + (meterColors[spellingLevel] || '#ccc') + '"></div></div>';
   html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
-  html += '<span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
+  html += '<span>0. kl</span><span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
 
   // Grade comparison
-  if (grade > 0) {
+  if (grade >= 0) {
     var expectedLevel = gradeToExpectedLevel(grade);
     var compHtml = '';
     if (spellingLevel > expectedLevel) {
@@ -1505,13 +1556,13 @@ function renderProfileFallback(profile) {
 
   // Level meter
   var meterPct = (spellingLevel / 4) * 100;
-  var meterColors = { 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
-  html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + meterPct + '%;background:' + meterColors[spellingLevel] + '"></div></div>';
+  var meterColors = { 0: '#ccc', 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
+  html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + Math.max(meterPct, 5) + '%;background:' + (meterColors[spellingLevel] || '#ccc') + '"></div></div>';
   html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
-  html += '<span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
+  html += '<span>0. kl</span><span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
 
   // Grade comparison
-  if (grade > 0) {
+  if (grade >= 0) {
     var expectedLevel = gradeToExpectedLevel(grade);
     if (spellingLevel > expectedLevel) {
       html += '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Imponerende! Du staver over dit klassetrin! \u{1F680}</div>';
@@ -1753,6 +1804,9 @@ function awardSessionXP(correctCount, totalCount) {
   xpEarned += correctCount * 10;
   // +5 XP per incorrect word (rewards effort)
   xpEarned += (totalCount - correctCount) * 5;
+  // +3 XP bonus per self-corrected answer
+  var selfCorrectedCount = results.filter(function(r) { return r.selfCorrected; }).length;
+  xpEarned += selfCorrectedCount * 3;
   // +20 XP bonus for completing session
   xpEarned += 20;
   // +10 XP bonus if streak day

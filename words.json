@@ -1,6 +1,22 @@
 {
   "Stumme bogstaver": [
     {
+      "word": "hvil",
+      "hint": "Hold en pause",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Nu skal du hvile dig lidt.",
+      "level": 0,
+      "category": "Stumme bogstaver"
+    },
+    {
+      "word": "hvæs",
+      "hint": "Lyden en slange laver",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Slangen sagde hvæs!",
+      "level": 0,
+      "category": "Stumme bogstaver"
+    },
+    {
       "word": "hvid",
       "hint": "En farve som sne",
       "patternHint": "stumt 'h' i 'hv'",
@@ -539,6 +555,22 @@
   ],
   "Dobbeltkonsonant": [
     {
+      "word": "kok",
+      "hint": "Person der laver mad",
+      "patternHint": "enkelt konsonant, kort ord",
+      "sentence": "Kokken laver mad i køkkenet.",
+      "level": 0,
+      "category": "Dobbeltkonsonant"
+    },
+    {
+      "word": "tap",
+      "hint": "Man åbner for vand",
+      "patternHint": "enkelt konsonant, kort ord",
+      "sentence": "Vandet løber fra tappen.",
+      "level": 0,
+      "category": "Dobbeltkonsonant"
+    },
+    {
       "word": "hoppe",
       "hint": "Springe op og ned",
       "patternHint": "dobbelt-p efter kort 'o'",
@@ -1076,6 +1108,14 @@
     }
   ],
   "For- og efterstavelser": [
+    {
+      "word": "slem",
+      "hint": "Ikke sød, lidt ond",
+      "patternHint": "enkelt kort ord — bruges som basis",
+      "sentence": "Trolden i eventyret er slem.",
+      "level": 0,
+      "category": "For- og efterstavelser"
+    },
     {
       "word": "venlig",
       "hint": "Rar og sød",
@@ -3209,6 +3249,402 @@
       "sentence": "Dimensionerne på rummet var imponerende.",
       "level": 4,
       "category": "Navneordsendelser"
+    }
+  ],
+  "Lydrette ord": [
+    {
+      "word": "sol",
+      "hint": "Den skinner på himlen",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Solen skinner i dag.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "mus",
+      "hint": "Lille dyr med lang hale",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Musen løb hen over gulvet.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "hus",
+      "hint": "Man bor i det",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi bor i et rødt hus.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "kat",
+      "hint": "Dyr der siger mjav",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Katten sover på sofaen.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "hund",
+      "hint": "Dyr der siger vov",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Hunden leger i haven.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "bold",
+      "hint": "Rund ting man leger med",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi spiller bold i parken.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "lam",
+      "hint": "Et lille får",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Lammet spiser græs på marken.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "fin",
+      "hint": "Pæn og flot",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Du ser fin ud i dag.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "stor",
+      "hint": "Ikke lille",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Elefanten er meget stor.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "bil",
+      "hint": "Man kører i den",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Far kører i sin bil.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "bus",
+      "hint": "Stor vogn med mange pladser",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi tager bussen til skole.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "hat",
+      "hint": "Noget man har på hovedet",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Manden har en stor hat på.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "is",
+      "hint": "Kold og sød dessert",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi spiser is om sommeren.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "ost",
+      "hint": "Man putter det på brød",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Der er ost på min mad.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "leg",
+      "hint": "Noget sjovt man gør",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Leg er sjovt for alle børn.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "bad",
+      "hint": "Man bader i det",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Jeg tog et varmt bad.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "bog",
+      "hint": "Man læser i den",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Jeg læser en god bog.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "ko",
+      "hint": "Stort dyr på bondegården",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Koen giver mælk.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "sø",
+      "hint": "Vand i naturen",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi bader i søen.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "god",
+      "hint": "Rar og venlig",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Du er en god ven.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "lampe",
+      "hint": "Giver lys i mørket",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Lampen lyser i stuen.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "fisk",
+      "hint": "Dyr der lever i vand",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Fisken svømmer i akvariet.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "pude",
+      "hint": "Man lægger hovedet på den",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Min pude er blød og rar.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "banan",
+      "hint": "Gul frugt",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Aben spiser en banan.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "tomat",
+      "hint": "Rød grøntsag",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Der er tomat i salaten.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "sofa",
+      "hint": "Man sidder i den",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi sidder i sofaen og ser fjernsyn.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "panda",
+      "hint": "Sort og hvid bjørn",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Pandaen spiser bambus.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "tiger",
+      "hint": "Stort stribet rovdyr",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Tigeren lever i junglen.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "gulerod",
+      "hint": "Orange grøntsag",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Kaninen elsker gulerødder.",
+      "level": 1,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "vindus",
+      "hint": "Man kigger ud igennem det",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Fuglen sad på vinduskarmen.",
+      "level": 1,
+      "category": "Lydrette ord"
+    }
+  ],
+  "Nutids-r": [
+    {
+      "word": "hopper",
+      "hint": "Springer op fra jorden",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (hun hopper)",
+      "sentence": "Hun hopper på trampolinen.",
+      "level": 1,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "spiser",
+      "hint": "Putter mad i munden",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (hun spiser)",
+      "sentence": "Hun spiser morgenmad.",
+      "level": 1,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "leger",
+      "hint": "Har det sjovt",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (de leger)",
+      "sentence": "De leger i haven.",
+      "level": 1,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "sover",
+      "hint": "Lukker øjnene og hviler",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (katten sover)",
+      "sentence": "Katten sover på sofaen.",
+      "level": 1,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "cykler",
+      "hint": "Kører på to hjul",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (pigen cykler)",
+      "sentence": "Pigen cykler til skole.",
+      "level": 2,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "svømmer",
+      "hint": "Bevæger sig i vand",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (han svømmer)",
+      "sentence": "Han svømmer i bassinet.",
+      "level": 2,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "tegner",
+      "hint": "Laver billeder med en blyant",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (drengen tegner)",
+      "sentence": "Drengen tegner et hus.",
+      "level": 2,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "danser",
+      "hint": "Bevæger sig til musik",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (hun danser)",
+      "sentence": "Hun danser til musikken.",
+      "level": 2,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "lytter",
+      "hint": "Bruger ørerne",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (de lytter)",
+      "sentence": "De lytter til musik.",
+      "level": 2,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "interesserer",
+      "hint": "Fanger opmærksomheden",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (emnet interesserer)",
+      "sentence": "Emnet interesserer mange elever.",
+      "level": 3,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "koncentrerer",
+      "hint": "Fokuserer sin opmærksomhed",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (hun koncentrerer)",
+      "sentence": "Hun koncentrerer sig om opgaven.",
+      "level": 3,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "diskuterer",
+      "hint": "Taler frem og tilbage om noget",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (de diskuterer)",
+      "sentence": "De diskuterer planen.",
+      "level": 3,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "præsenterer",
+      "hint": "Viser noget frem",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (eleven præsenterer)",
+      "sentence": "Eleven præsenterer sit projekt.",
+      "level": 3,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "observerer",
+      "hint": "Kigger nøje på noget",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (forskeren observerer)",
+      "sentence": "Forskeren observerer dyret.",
+      "level": 3,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "kommunikerer",
+      "hint": "Udveksler information",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (holdet kommunikerer)",
+      "sentence": "Holdet kommunikerer godt sammen.",
+      "level": 4,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "analyserer",
+      "hint": "Undersøger noget grundigt",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (vi analyserer)",
+      "sentence": "Vi analyserer resultaterne.",
+      "level": 4,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "organiserer",
+      "hint": "Planlægger og ordner",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (han organiserer)",
+      "sentence": "Han organiserer hele arrangementet.",
+      "level": 4,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "reflekterer",
+      "hint": "Tænker grundigt over noget",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (eleven reflekterer)",
+      "sentence": "Eleven reflekterer over sin læring.",
+      "level": 4,
+      "category": "Nutids-r"
+    },
+    {
+      "word": "reproducerer",
+      "hint": "Genskaber noget",
+      "patternHint": "nutids-r: verbet ender på '-r' i nutid (maskinen reproducerer)",
+      "sentence": "Maskinen reproducerer lyden perfekt.",
+      "level": 4,
+      "category": "Nutids-r"
     }
   ]
 }

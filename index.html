@@ -724,11 +724,49 @@ function updateAnthropicStatus(key) {
 
 // TTS - Google Cloud with browser fallback
 var audioCache = {};
+var audioManifest = null;
+
+function sanitizeFilename(word) {
+  return word.toLowerCase()
+    .replace(/æ/g, 'ae').replace(/ø/g, 'oe').replace(/å/g, 'aa')
+    .replace(/[^a-z0-9]/g, '_');
+}
+
+function playStaticAudio(wordAudioUrl, sentenceAudioUrl, btn) {
+  var wordAudio = new Audio(wordAudioUrl);
+  wordAudio.onerror = function() {
+    if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen'; }
+  };
+  if (sentenceAudioUrl) {
+    wordAudio.onended = function() {
+      setTimeout(function() {
+        var sentAudio = new Audio(sentenceAudioUrl);
+        sentAudio.onended = sentAudio.onerror = function() {
+          if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen'; }
+        };
+        sentAudio.play();
+      }, 600);
+    };
+  } else {
+    wordAudio.onended = function() {
+      if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} Hør ordet igen'; }
+    };
+  }
+  wordAudio.play();
+}
 
 async function speakWord(word, sentence) {
   var btn = document.getElementById('listenBtn');
   if (btn) { btn.classList.add('speaking'); btn.textContent = '\u{1F509} Læser op...'; }
 
+  // 1. Try pre-generated static audio files
+  if (audioManifest && audioManifest[word]) {
+    var m = audioManifest[word];
+    playStaticAudio(m.word, sentence ? m.sentence : null, btn);
+    return;
+  }
+
+  // 2. Try Google Cloud TTS API
   var apiKey = loadApiKey();
   var texts = sentence ? [word, sentence] : [word];
 
@@ -764,7 +802,7 @@ async function speakWord(word, sentence) {
     }
   }
 
-  // Browser TTS fallback
+  // 3. Browser TTS fallback
   window.speechSynthesis.cancel();
   var voices = window.speechSynthesis.getVoices();
   var v = voices.find(function(v) { return v.lang.startsWith('da'); }) || voices.find(function(v) { return v.lang.startsWith('nb'); });
@@ -1979,6 +2017,12 @@ window.addEventListener('load', function() {
 });
 
 function initApp() {
+  // Load audio manifest for pre-generated audio files
+  fetch('audio-manifest.json')
+    .then(function(res) { return res.json(); })
+    .then(function(data) { audioManifest = data; console.log('Lydmanifest indlæst (' + Object.keys(data).length + ' ord)'); })
+    .catch(function() { console.log('Ingen pre-genererede lydfiler fundet, bruger TTS API/browser'); });
+
   var savedKey = loadApiKey();
   var keyInput = document.getElementById('apiKeyInput');
   if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }

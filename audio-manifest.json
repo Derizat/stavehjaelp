@@ -1,0 +1,1602 @@
+{
+  "hvid": {
+    "word": "audio/word_hvid.mp3",
+    "sentence": "audio/sentence_hvid.mp3"
+  },
+  "hjul": {
+    "word": "audio/word_hjul.mp3",
+    "sentence": "audio/sentence_hjul.mp3"
+  },
+  "hvad": {
+    "word": "audio/word_hvad.mp3",
+    "sentence": "audio/sentence_hvad.mp3"
+  },
+  "hvor": {
+    "word": "audio/word_hvor.mp3",
+    "sentence": "audio/sentence_hvor.mp3"
+  },
+  "hjem": {
+    "word": "audio/word_hjem.mp3",
+    "sentence": "audio/sentence_hjem.mp3"
+  },
+  "hvornår": {
+    "word": "audio/word_hvornaar.mp3",
+    "sentence": "audio/sentence_hvornaar.mp3"
+  },
+  "hjørne": {
+    "word": "audio/word_hjoerne.mp3",
+    "sentence": "audio/sentence_hjoerne.mp3"
+  },
+  "hvile": {
+    "word": "audio/word_hvile.mp3",
+    "sentence": "audio/sentence_hvile.mp3"
+  },
+  "hjælpe": {
+    "word": "audio/word_hjaelpe.mp3",
+    "sentence": "audio/sentence_hjaelpe.mp3"
+  },
+  "hvem": {
+    "word": "audio/word_hvem.mp3",
+    "sentence": "audio/sentence_hvem.mp3"
+  },
+  "hjerte": {
+    "word": "audio/word_hjerte.mp3",
+    "sentence": "audio/sentence_hjerte.mp3"
+  },
+  "hvilken": {
+    "word": "audio/word_hvilken.mp3",
+    "sentence": "audio/sentence_hvilken.mp3"
+  },
+  "hvorfor": {
+    "word": "audio/word_hvorfor.mp3",
+    "sentence": "audio/sentence_hvorfor.mp3"
+  },
+  "hjerne": {
+    "word": "audio/word_hjerne.mp3",
+    "sentence": "audio/sentence_hjerne.mp3"
+  },
+  "hveps": {
+    "word": "audio/word_hveps.mp3",
+    "sentence": "audio/sentence_hveps.mp3"
+  },
+  "hjort": {
+    "word": "audio/word_hjort.mp3",
+    "sentence": "audio/sentence_hjort.mp3"
+  },
+  "hvisker": {
+    "word": "audio/word_hvisker.mp3",
+    "sentence": "audio/sentence_hvisker.mp3"
+  },
+  "halvanden": {
+    "word": "audio/word_halvanden.mp3",
+    "sentence": "audio/sentence_halvanden.mp3"
+  },
+  "tvivler": {
+    "word": "audio/word_tvivler.mp3",
+    "sentence": "audio/sentence_tvivler.mp3"
+  },
+  "hvordan": {
+    "word": "audio/word_hvordan.mp3",
+    "sentence": "audio/sentence_hvordan.mp3"
+  },
+  "hvæsse": {
+    "word": "audio/word_hvaesse.mp3",
+    "sentence": "audio/sentence_hvaesse.mp3"
+  },
+  "dværg": {
+    "word": "audio/word_dvaerg.mp3",
+    "sentence": "audio/sentence_dvaerg.mp3"
+  },
+  "hverdagen": {
+    "word": "audio/word_hverdagen.mp3",
+    "sentence": "audio/sentence_hverdagen.mp3"
+  },
+  "hjemmelavet": {
+    "word": "audio/word_hjemmelavet.mp3",
+    "sentence": "audio/sentence_hjemmelavet.mp3"
+  },
+  "egentlig": {
+    "word": "audio/word_egentlig.mp3",
+    "sentence": "audio/sentence_egentlig.mp3"
+  },
+  "selvfølgelig": {
+    "word": "audio/word_selvfoelgelig.mp3",
+    "sentence": "audio/sentence_selvfoelgelig.mp3"
+  },
+  "chokolade": {
+    "word": "audio/word_chokolade.mp3",
+    "sentence": "audio/sentence_chokolade.mp3"
+  },
+  "fuldstændig": {
+    "word": "audio/word_fuldstaendig.mp3",
+    "sentence": "audio/sentence_fuldstaendig.mp3"
+  },
+  "ordentlig": {
+    "word": "audio/word_ordentlig.mp3",
+    "sentence": "audio/sentence_ordentlig.mp3"
+  },
+  "afdeling": {
+    "word": "audio/word_afdeling.mp3",
+    "sentence": "audio/sentence_afdeling.mp3"
+  },
+  "menneske": {
+    "word": "audio/word_menneske.mp3",
+    "sentence": "audio/sentence_menneske.mp3"
+  },
+  "højre": {
+    "word": "audio/word_hoejre.mp3",
+    "sentence": "audio/sentence_hoejre.mp3"
+  },
+  "hvælving": {
+    "word": "audio/word_hvaelving.mp3",
+    "sentence": "audio/sentence_hvaelving.mp3"
+  },
+  "hjemmehørende": {
+    "word": "audio/word_hjemmehoerende.mp3",
+    "sentence": "audio/sentence_hjemmehoerende.mp3"
+  },
+  "hviske": {
+    "word": "audio/word_hviske.mp3",
+    "sentence": "audio/sentence_hviske.mp3"
+  },
+  "hval": {
+    "word": "audio/word_hval.mp3",
+    "sentence": "audio/sentence_hval.mp3"
+  },
+  "hvass": {
+    "word": "audio/word_hvass.mp3",
+    "sentence": "audio/sentence_hvass.mp3"
+  },
+  "hvis": {
+    "word": "audio/word_hvis.mp3",
+    "sentence": "audio/sentence_hvis.mp3"
+  },
+  "hver": {
+    "word": "audio/word_hver.mp3",
+    "sentence": "audio/sentence_hver.mp3"
+  },
+  "hjemme": {
+    "word": "audio/word_hjemme.mp3",
+    "sentence": "audio/sentence_hjemme.mp3"
+  },
+  "hvalp": {
+    "word": "audio/word_hvalp.mp3",
+    "sentence": "audio/sentence_hvalp.mp3"
+  },
+  "hvidt": {
+    "word": "audio/word_hvidt.mp3",
+    "sentence": "audio/sentence_hvidt.mp3"
+  },
+  "hjælp": {
+    "word": "audio/word_hjaelp.mp3",
+    "sentence": "audio/sentence_hjaelp.mp3"
+  },
+  "hvalros": {
+    "word": "audio/word_hvalros.mp3",
+    "sentence": "audio/sentence_hvalros.mp3"
+  },
+  "hvede": {
+    "word": "audio/word_hvede.mp3",
+    "sentence": "audio/sentence_hvede.mp3"
+  },
+  "hvorhen": {
+    "word": "audio/word_hvorhen.mp3",
+    "sentence": "audio/sentence_hvorhen.mp3"
+  },
+  "hvæse": {
+    "word": "audio/word_hvaese.mp3",
+    "sentence": "audio/sentence_hvaese.mp3"
+  },
+  "hjemad": {
+    "word": "audio/word_hjemad.mp3",
+    "sentence": "audio/sentence_hjemad.mp3"
+  },
+  "hjelm": {
+    "word": "audio/word_hjelm.mp3",
+    "sentence": "audio/sentence_hjelm.mp3"
+  },
+  "halvt": {
+    "word": "audio/word_halvt.mp3",
+    "sentence": "audio/sentence_halvt.mp3"
+  },
+  "gulv": {
+    "word": "audio/word_gulv.mp3",
+    "sentence": "audio/sentence_gulv.mp3"
+  },
+  "tolv": {
+    "word": "audio/word_tolv.mp3",
+    "sentence": "audio/sentence_tolv.mp3"
+  },
+  "sølv": {
+    "word": "audio/word_soelv.mp3",
+    "sentence": "audio/sentence_soelv.mp3"
+  },
+  "hvirvle": {
+    "word": "audio/word_hvirvle.mp3",
+    "sentence": "audio/sentence_hvirvle.mp3"
+  },
+  "hvorfra": {
+    "word": "audio/word_hvorfra.mp3",
+    "sentence": "audio/sentence_hvorfra.mp3"
+  },
+  "hjemkomst": {
+    "word": "audio/word_hjemkomst.mp3",
+    "sentence": "audio/sentence_hjemkomst.mp3"
+  },
+  "halvdel": {
+    "word": "audio/word_halvdel.mp3",
+    "sentence": "audio/sentence_halvdel.mp3"
+  },
+  "kalv": {
+    "word": "audio/word_kalv.mp3",
+    "sentence": "audio/sentence_kalv.mp3"
+  },
+  "mild": {
+    "word": "audio/word_mild.mp3",
+    "sentence": "audio/sentence_mild.mp3"
+  },
+  "hvortil": {
+    "word": "audio/word_hvortil.mp3",
+    "sentence": "audio/sentence_hvortil.mp3"
+  },
+  "guld": {
+    "word": "audio/word_guld.mp3",
+    "sentence": "audio/sentence_guld.mp3"
+  },
+  "hvælvet": {
+    "word": "audio/word_hvaelvet.mp3",
+    "sentence": "audio/sentence_hvaelvet.mp3"
+  },
+  "hverdag": {
+    "word": "audio/word_hverdag.mp3",
+    "sentence": "audio/sentence_hverdag.mp3"
+  },
+  "told": {
+    "word": "audio/word_told.mp3",
+    "sentence": "audio/sentence_told.mp3"
+  },
+  "vild": {
+    "word": "audio/word_vild.mp3",
+    "sentence": "audio/sentence_vild.mp3"
+  },
+  "hjemstavns": {
+    "word": "audio/word_hjemstavns.mp3",
+    "sentence": "audio/sentence_hjemstavns.mp3"
+  },
+  "stiltiende": {
+    "word": "audio/word_stiltiende.mp3",
+    "sentence": "audio/sentence_stiltiende.mp3"
+  },
+  "hoppe": {
+    "word": "audio/word_hoppe.mp3",
+    "sentence": "audio/sentence_hoppe.mp3"
+  },
+  "kaffe": {
+    "word": "audio/word_kaffe.mp3",
+    "sentence": "audio/sentence_kaffe.mp3"
+  },
+  "sommer": {
+    "word": "audio/word_sommer.mp3",
+    "sentence": "audio/sentence_sommer.mp3"
+  },
+  "suppe": {
+    "word": "audio/word_suppe.mp3",
+    "sentence": "audio/sentence_suppe.mp3"
+  },
+  "putte": {
+    "word": "audio/word_putte.mp3",
+    "sentence": "audio/sentence_putte.mp3"
+  },
+  "trappen": {
+    "word": "audio/word_trappen.mp3",
+    "sentence": "audio/sentence_trappen.mp3"
+  },
+  "vinter": {
+    "word": "audio/word_vinter.mp3",
+    "sentence": "audio/sentence_vinter.mp3"
+  },
+  "katte": {
+    "word": "audio/word_katte.mp3",
+    "sentence": "audio/sentence_katte.mp3"
+  },
+  "tappe": {
+    "word": "audio/word_tappe.mp3",
+    "sentence": "audio/sentence_tappe.mp3"
+  },
+  "klasse": {
+    "word": "audio/word_klasse.mp3",
+    "sentence": "audio/sentence_klasse.mp3"
+  },
+  "briller": {
+    "word": "audio/word_briller.mp3",
+    "sentence": "audio/sentence_briller.mp3"
+  },
+  "klipper": {
+    "word": "audio/word_klipper.mp3",
+    "sentence": "audio/sentence_klipper.mp3"
+  },
+  "dukke": {
+    "word": "audio/word_dukke.mp3",
+    "sentence": "audio/sentence_dukke.mp3"
+  },
+  "stopper": {
+    "word": "audio/word_stopper.mp3",
+    "sentence": "audio/sentence_stopper.mp3"
+  },
+  "voksen": {
+    "word": "audio/word_voksen.mp3",
+    "sentence": "audio/sentence_voksen.mp3"
+  },
+  "bade": {
+    "word": "audio/word_bade.mp3",
+    "sentence": "audio/sentence_bade.mp3"
+  },
+  "tromme": {
+    "word": "audio/word_tromme.mp3",
+    "sentence": "audio/sentence_tromme.mp3"
+  },
+  "flaske": {
+    "word": "audio/word_flaske.mp3",
+    "sentence": "audio/sentence_flaske.mp3"
+  },
+  "tilladelse": {
+    "word": "audio/word_tilladelse.mp3",
+    "sentence": "audio/sentence_tilladelse.mp3"
+  },
+  "kommando": {
+    "word": "audio/word_kommando.mp3",
+    "sentence": "audio/sentence_kommando.mp3"
+  },
+  "mulighed": {
+    "word": "audio/word_mulighed.mp3",
+    "sentence": "audio/sentence_mulighed.mp3"
+  },
+  "irritere": {
+    "word": "audio/word_irritere.mp3",
+    "sentence": "audio/sentence_irritere.mp3"
+  },
+  "korrekt": {
+    "word": "audio/word_korrekt.mp3",
+    "sentence": "audio/sentence_korrekt.mp3"
+  },
+  "uddannelse": {
+    "word": "audio/word_uddannelse.mp3",
+    "sentence": "audio/sentence_uddannelse.mp3"
+  },
+  "skole": {
+    "word": "audio/word_skole.mp3",
+    "sentence": "audio/sentence_skole.mp3"
+  },
+  "kollega": {
+    "word": "audio/word_kollega.mp3",
+    "sentence": "audio/sentence_kollega.mp3"
+  },
+  "interessant": {
+    "word": "audio/word_interessant.mp3",
+    "sentence": "audio/sentence_interessant.mp3"
+  },
+  "forskellig": {
+    "word": "audio/word_forskellig.mp3",
+    "sentence": "audio/sentence_forskellig.mp3"
+  },
+  "kommunikation": {
+    "word": "audio/word_kommunikation.mp3",
+    "sentence": "audio/sentence_kommunikation.mp3"
+  },
+  "accelerere": {
+    "word": "audio/word_accelerere.mp3",
+    "sentence": "audio/sentence_accelerere.mp3"
+  },
+  "appetit": {
+    "word": "audio/word_appetit.mp3",
+    "sentence": "audio/sentence_appetit.mp3"
+  },
+  "grammatik": {
+    "word": "audio/word_grammatik.mp3",
+    "sentence": "audio/sentence_grammatik.mp3"
+  },
+  "intelligens": {
+    "word": "audio/word_intelligens.mp3",
+    "sentence": "audio/sentence_intelligens.mp3"
+  },
+  "kommission": {
+    "word": "audio/word_kommission.mp3",
+    "sentence": "audio/sentence_kommission.mp3"
+  },
+  "nødvendig": {
+    "word": "audio/word_noedvendig.mp3",
+    "sentence": "audio/sentence_noedvendig.mp3"
+  },
+  "effektiv": {
+    "word": "audio/word_effektiv.mp3",
+    "sentence": "audio/sentence_effektiv.mp3"
+  },
+  "bukser": {
+    "word": "audio/word_bukser.mp3",
+    "sentence": "audio/sentence_bukser.mp3"
+  },
+  "lamme": {
+    "word": "audio/word_lamme.mp3",
+    "sentence": "audio/sentence_lamme.mp3"
+  },
+  "tasse": {
+    "word": "audio/word_tasse.mp3",
+    "sentence": "audio/sentence_tasse.mp3"
+  },
+  "rulle": {
+    "word": "audio/word_rulle.mp3",
+    "sentence": "audio/sentence_rulle.mp3"
+  },
+  "masse": {
+    "word": "audio/word_masse.mp3",
+    "sentence": "audio/sentence_masse.mp3"
+  },
+  "kopper": {
+    "word": "audio/word_kopper.mp3",
+    "sentence": "audio/sentence_kopper.mp3"
+  },
+  "rytte": {
+    "word": "audio/word_rytte.mp3",
+    "sentence": "audio/sentence_rytte.mp3"
+  },
+  "nisse": {
+    "word": "audio/word_nisse.mp3",
+    "sentence": "audio/sentence_nisse.mp3"
+  },
+  "snappe": {
+    "word": "audio/word_snappe.mp3",
+    "sentence": "audio/sentence_snappe.mp3"
+  },
+  "trappe": {
+    "word": "audio/word_trappe.mp3",
+    "sentence": "audio/sentence_trappe.mp3"
+  },
+  "grille": {
+    "word": "audio/word_grille.mp3",
+    "sentence": "audio/sentence_grille.mp3"
+  },
+  "svømme": {
+    "word": "audio/word_svoemme.mp3",
+    "sentence": "audio/sentence_svoemme.mp3"
+  },
+  "stige": {
+    "word": "audio/word_stige.mp3",
+    "sentence": "audio/sentence_stige.mp3"
+  },
+  "makker": {
+    "word": "audio/word_makker.mp3",
+    "sentence": "audio/sentence_makker.mp3"
+  },
+  "pille": {
+    "word": "audio/word_pille.mp3",
+    "sentence": "audio/sentence_pille.mp3"
+  },
+  "male": {
+    "word": "audio/word_male.mp3",
+    "sentence": "audio/sentence_male.mp3"
+  },
+  "apparat": {
+    "word": "audio/word_apparat.mp3",
+    "sentence": "audio/sentence_apparat.mp3"
+  },
+  "terrasse": {
+    "word": "audio/word_terrasse.mp3",
+    "sentence": "audio/sentence_terrasse.mp3"
+  },
+  "parallel": {
+    "word": "audio/word_parallel.mp3",
+    "sentence": "audio/sentence_parallel.mp3"
+  },
+  "middel": {
+    "word": "audio/word_middel.mp3",
+    "sentence": "audio/sentence_middel.mp3"
+  },
+  "platte": {
+    "word": "audio/word_platte.mp3",
+    "sentence": "audio/sentence_platte.mp3"
+  },
+  "bagage": {
+    "word": "audio/word_bagage.mp3",
+    "sentence": "audio/sentence_bagage.mp3"
+  },
+  "allerede": {
+    "word": "audio/word_allerede.mp3",
+    "sentence": "audio/sentence_allerede.mp3"
+  },
+  "moppe": {
+    "word": "audio/word_moppe.mp3",
+    "sentence": "audio/sentence_moppe.mp3"
+  },
+  "kassere": {
+    "word": "audio/word_kassere.mp3",
+    "sentence": "audio/sentence_kassere.mp3"
+  },
+  "kommunal": {
+    "word": "audio/word_kommunal.mp3",
+    "sentence": "audio/sentence_kommunal.mp3"
+  },
+  "kollegium": {
+    "word": "audio/word_kollegium.mp3",
+    "sentence": "audio/sentence_kollegium.mp3"
+  },
+  "appel": {
+    "word": "audio/word_appel.mp3",
+    "sentence": "audio/sentence_appel.mp3"
+  },
+  "illusion": {
+    "word": "audio/word_illusion.mp3",
+    "sentence": "audio/sentence_illusion.mp3"
+  },
+  "aggressive": {
+    "word": "audio/word_aggressive.mp3",
+    "sentence": "audio/sentence_aggressive.mp3"
+  },
+  "eppelin": {
+    "word": "audio/word_eppelin.mp3",
+    "sentence": "audio/sentence_eppelin.mp3"
+  },
+  "venlig": {
+    "word": "audio/word_venlig.mp3",
+    "sentence": "audio/sentence_venlig.mp3"
+  },
+  "langsom": {
+    "word": "audio/word_langsom.mp3",
+    "sentence": "audio/sentence_langsom.mp3"
+  },
+  "umulig": {
+    "word": "audio/word_umulig.mp3",
+    "sentence": "audio/sentence_umulig.mp3"
+  },
+  "dejlig": {
+    "word": "audio/word_dejlig.mp3",
+    "sentence": "audio/sentence_dejlig.mp3"
+  },
+  "farlig": {
+    "word": "audio/word_farlig.mp3",
+    "sentence": "audio/sentence_farlig.mp3"
+  },
+  "rigtig": {
+    "word": "audio/word_rigtig.mp3",
+    "sentence": "audio/sentence_rigtig.mp3"
+  },
+  "uheld": {
+    "word": "audio/word_uheld.mp3",
+    "sentence": "audio/sentence_uheld.mp3"
+  },
+  "lykkelig": {
+    "word": "audio/word_lykkelig.mp3",
+    "sentence": "audio/sentence_lykkelig.mp3"
+  },
+  "fredelig": {
+    "word": "audio/word_fredelig.mp3",
+    "sentence": "audio/sentence_fredelig.mp3"
+  },
+  "begynde": {
+    "word": "audio/word_begynde.mp3",
+    "sentence": "audio/sentence_begynde.mp3"
+  },
+  "kærlig": {
+    "word": "audio/word_kaerlig.mp3",
+    "sentence": "audio/sentence_kaerlig.mp3"
+  },
+  "fordi": {
+    "word": "audio/word_fordi.mp3",
+    "sentence": "audio/sentence_fordi.mp3"
+  },
+  "heldig": {
+    "word": "audio/word_heldig.mp3",
+    "sentence": "audio/sentence_heldig.mp3"
+  },
+  "undskylde": {
+    "word": "audio/word_undskylde.mp3",
+    "sentence": "audio/sentence_undskylde.mp3"
+  },
+  "forsigtig": {
+    "word": "audio/word_forsigtig.mp3",
+    "sentence": "audio/sentence_forsigtig.mp3"
+  },
+  "uventet": {
+    "word": "audio/word_uventet.mp3",
+    "sentence": "audio/sentence_uventet.mp3"
+  },
+  "forsinket": {
+    "word": "audio/word_forsinket.mp3",
+    "sentence": "audio/sentence_forsinket.mp3"
+  },
+  "tålmodig": {
+    "word": "audio/word_taalmodig.mp3",
+    "sentence": "audio/sentence_taalmodig.mp3"
+  },
+  "bekymret": {
+    "word": "audio/word_bekymret.mp3",
+    "sentence": "audio/sentence_bekymret.mp3"
+  },
+  "forklaring": {
+    "word": "audio/word_forklaring.mp3",
+    "sentence": "audio/sentence_forklaring.mp3"
+  },
+  "kærlighed": {
+    "word": "audio/word_kaerlighed.mp3",
+    "sentence": "audio/sentence_kaerlighed.mp3"
+  },
+  "behandling": {
+    "word": "audio/word_behandling.mp3",
+    "sentence": "audio/sentence_behandling.mp3"
+  },
+  "udvikling": {
+    "word": "audio/word_udvikling.mp3",
+    "sentence": "audio/sentence_udvikling.mp3"
+  },
+  "udfordring": {
+    "word": "audio/word_udfordring.mp3",
+    "sentence": "audio/sentence_udfordring.mp3"
+  },
+  "ensomhed": {
+    "word": "audio/word_ensomhed.mp3",
+    "sentence": "audio/sentence_ensomhed.mp3"
+  },
+  "forståelse": {
+    "word": "audio/word_forstaaelse.mp3",
+    "sentence": "audio/sentence_forstaaelse.mp3"
+  },
+  "opmærksom": {
+    "word": "audio/word_opmaerksom.mp3",
+    "sentence": "audio/sentence_opmaerksom.mp3"
+  },
+  "forberedelse": {
+    "word": "audio/word_forberedelse.mp3",
+    "sentence": "audio/sentence_forberedelse.mp3"
+  },
+  "vanskelighed": {
+    "word": "audio/word_vanskelighed.mp3",
+    "sentence": "audio/sentence_vanskelighed.mp3"
+  },
+  "beskyttelse": {
+    "word": "audio/word_beskyttelse.mp3",
+    "sentence": "audio/sentence_beskyttelse.mp3"
+  },
+  "uafhængig": {
+    "word": "audio/word_uafhaengig.mp3",
+    "sentence": "audio/sentence_uafhaengig.mp3"
+  },
+  "utilfreds": {
+    "word": "audio/word_utilfreds.mp3",
+    "sentence": "audio/sentence_utilfreds.mp3"
+  },
+  "bevidsthed": {
+    "word": "audio/word_bevidsthed.mp3",
+    "sentence": "audio/sentence_bevidsthed.mp3"
+  },
+  "hensynsfuld": {
+    "word": "audio/word_hensynsfuld.mp3",
+    "sentence": "audio/sentence_hensynsfuld.mp3"
+  },
+  "tilgængelighed": {
+    "word": "audio/word_tilgaengelighed.mp3",
+    "sentence": "audio/sentence_tilgaengelighed.mp3"
+  },
+  "uforglemmelig": {
+    "word": "audio/word_uforglemmelig.mp3",
+    "sentence": "audio/sentence_uforglemmelig.mp3"
+  },
+  "vedligeholdelse": {
+    "word": "audio/word_vedligeholdelse.mp3",
+    "sentence": "audio/sentence_vedligeholdelse.mp3"
+  },
+  "ulige": {
+    "word": "audio/word_ulige.mp3",
+    "sentence": "audio/sentence_ulige.mp3"
+  },
+  "synlig": {
+    "word": "audio/word_synlig.mp3",
+    "sentence": "audio/sentence_synlig.mp3"
+  },
+  "ærlig": {
+    "word": "audio/word_aerlig.mp3",
+    "sentence": "audio/sentence_aerlig.mp3"
+  },
+  "rolig": {
+    "word": "audio/word_rolig.mp3",
+    "sentence": "audio/sentence_rolig.mp3"
+  },
+  "sygdom": {
+    "word": "audio/word_sygdom.mp3",
+    "sentence": "audio/sentence_sygdom.mp3"
+  },
+  "frihed": {
+    "word": "audio/word_frihed.mp3",
+    "sentence": "audio/sentence_frihed.mp3"
+  },
+  "modig": {
+    "word": "audio/word_modig.mp3",
+    "sentence": "audio/sentence_modig.mp3"
+  },
+  "ulykke": {
+    "word": "audio/word_ulykke.mp3",
+    "sentence": "audio/sentence_ulykke.mp3"
+  },
+  "usynlig": {
+    "word": "audio/word_usynlig.mp3",
+    "sentence": "audio/sentence_usynlig.mp3"
+  },
+  "forlade": {
+    "word": "audio/word_forlade.mp3",
+    "sentence": "audio/sentence_forlade.mp3"
+  },
+  "indgang": {
+    "word": "audio/word_indgang.mp3",
+    "sentence": "audio/sentence_indgang.mp3"
+  },
+  "udgang": {
+    "word": "audio/word_udgang.mp3",
+    "sentence": "audio/sentence_udgang.mp3"
+  },
+  "omvej": {
+    "word": "audio/word_omvej.mp3",
+    "sentence": "audio/sentence_omvej.mp3"
+  },
+  "afstand": {
+    "word": "audio/word_afstand.mp3",
+    "sentence": "audio/sentence_afstand.mp3"
+  },
+  "overgang": {
+    "word": "audio/word_overgang.mp3",
+    "sentence": "audio/sentence_overgang.mp3"
+  },
+  "underlig": {
+    "word": "audio/word_underlig.mp3",
+    "sentence": "audio/sentence_underlig.mp3"
+  },
+  "bevægelse": {
+    "word": "audio/word_bevaegelse.mp3",
+    "sentence": "audio/sentence_bevaegelse.mp3"
+  },
+  "forekomst": {
+    "word": "audio/word_forekomst.mp3",
+    "sentence": "audio/sentence_forekomst.mp3"
+  },
+  "indflydelse": {
+    "word": "audio/word_indflydelse.mp3",
+    "sentence": "audio/sentence_indflydelse.mp3"
+  },
+  "overraskelse": {
+    "word": "audio/word_overraskelse.mp3",
+    "sentence": "audio/sentence_overraskelse.mp3"
+  },
+  "uforsigtig": {
+    "word": "audio/word_uforsigtig.mp3",
+    "sentence": "audio/sentence_uforsigtig.mp3"
+  },
+  "opdragelse": {
+    "word": "audio/word_opdragelse.mp3",
+    "sentence": "audio/sentence_opdragelse.mp3"
+  },
+  "ansvarlig": {
+    "word": "audio/word_ansvarlig.mp3",
+    "sentence": "audio/sentence_ansvarlig.mp3"
+  },
+  "udbredelse": {
+    "word": "audio/word_udbredelse.mp3",
+    "sentence": "audio/sentence_udbredelse.mp3"
+  },
+  "utilregnelig": {
+    "word": "audio/word_utilregnelig.mp3",
+    "sentence": "audio/sentence_utilregnelig.mp3"
+  },
+  "omstændighed": {
+    "word": "audio/word_omstaendighed.mp3",
+    "sentence": "audio/sentence_omstaendighed.mp3"
+  },
+  "uigennemskuelig": {
+    "word": "audio/word_uigennemskuelig.mp3",
+    "sentence": "audio/sentence_uigennemskuelig.mp3"
+  },
+  "undertrykkelse": {
+    "word": "audio/word_undertrykkelse.mp3",
+    "sentence": "audio/sentence_undertrykkelse.mp3"
+  },
+  "overbevisning": {
+    "word": "audio/word_overbevisning.mp3",
+    "sentence": "audio/sentence_overbevisning.mp3"
+  },
+  "afhængighed": {
+    "word": "audio/word_afhaengighed.mp3",
+    "sentence": "audio/sentence_afhaengighed.mp3"
+  },
+  "fodbold": {
+    "word": "audio/word_fodbold.mp3",
+    "sentence": "audio/sentence_fodbold.mp3"
+  },
+  "madpakke": {
+    "word": "audio/word_madpakke.mp3",
+    "sentence": "audio/sentence_madpakke.mp3"
+  },
+  "skoletaske": {
+    "word": "audio/word_skoletaske.mp3",
+    "sentence": "audio/sentence_skoletaske.mp3"
+  },
+  "soveværelse": {
+    "word": "audio/word_sovevaerelse.mp3",
+    "sentence": "audio/sentence_sovevaerelse.mp3"
+  },
+  "badeværelse": {
+    "word": "audio/word_badevaerelse.mp3",
+    "sentence": "audio/sentence_badevaerelse.mp3"
+  },
+  "tandpasta": {
+    "word": "audio/word_tandpasta.mp3",
+    "sentence": "audio/sentence_tandpasta.mp3"
+  },
+  "solskin": {
+    "word": "audio/word_solskin.mp3",
+    "sentence": "audio/sentence_solskin.mp3"
+  },
+  "legeplads": {
+    "word": "audio/word_legeplads.mp3",
+    "sentence": "audio/sentence_legeplads.mp3"
+  },
+  "regnjakke": {
+    "word": "audio/word_regnjakke.mp3",
+    "sentence": "audio/sentence_regnjakke.mp3"
+  },
+  "sengetøj": {
+    "word": "audio/word_sengetoej.mp3",
+    "sentence": "audio/sentence_sengetoej.mp3"
+  },
+  "tandlæge": {
+    "word": "audio/word_tandlaege.mp3",
+    "sentence": "audio/sentence_tandlaege.mp3"
+  },
+  "badminton": {
+    "word": "audio/word_badminton.mp3",
+    "sentence": "audio/sentence_badminton.mp3"
+  },
+  "frikvarter": {
+    "word": "audio/word_frikvarter.mp3",
+    "sentence": "audio/sentence_frikvarter.mp3"
+  },
+  "svømmehal": {
+    "word": "audio/word_svoemmehal.mp3",
+    "sentence": "audio/sentence_svoemmehal.mp3"
+  },
+  "morgensmad": {
+    "word": "audio/word_morgensmad.mp3",
+    "sentence": "audio/sentence_morgensmad.mp3"
+  },
+  "løbesko": {
+    "word": "audio/word_loebesko.mp3",
+    "sentence": "audio/sentence_loebesko.mp3"
+  },
+  "fodboldbane": {
+    "word": "audio/word_fodboldbane.mp3",
+    "sentence": "audio/sentence_fodboldbane.mp3"
+  },
+  "bordtennis": {
+    "word": "audio/word_bordtennis.mp3",
+    "sentence": "audio/sentence_bordtennis.mp3"
+  },
+  "skolearbejde": {
+    "word": "audio/word_skolearbejde.mp3",
+    "sentence": "audio/sentence_skolearbejde.mp3"
+  },
+  "hjemmeopgave": {
+    "word": "audio/word_hjemmeopgave.mp3",
+    "sentence": "audio/sentence_hjemmeopgave.mp3"
+  },
+  "verdensrekord": {
+    "word": "audio/word_verdensrekord.mp3",
+    "sentence": "audio/sentence_verdensrekord.mp3"
+  },
+  "fødselsdagsgave": {
+    "word": "audio/word_foedselsdagsgave.mp3",
+    "sentence": "audio/sentence_foedselsdagsgave.mp3"
+  },
+  "eftermiddagsmad": {
+    "word": "audio/word_eftermiddagsmad.mp3",
+    "sentence": "audio/sentence_eftermiddagsmad.mp3"
+  },
+  "klasseværelse": {
+    "word": "audio/word_klassevaerelse.mp3",
+    "sentence": "audio/sentence_klassevaerelse.mp3"
+  },
+  "håndboldkamp": {
+    "word": "audio/word_haandboldkamp.mp3",
+    "sentence": "audio/sentence_haandboldkamp.mp3"
+  },
+  "sommerfugl": {
+    "word": "audio/word_sommerfugl.mp3",
+    "sentence": "audio/sentence_sommerfugl.mp3"
+  },
+  "kartoffelsuppe": {
+    "word": "audio/word_kartoffelsuppe.mp3",
+    "sentence": "audio/sentence_kartoffelsuppe.mp3"
+  },
+  "ungdomsuddannelse": {
+    "word": "audio/word_ungdomsuddannelse.mp3",
+    "sentence": "audio/sentence_ungdomsuddannelse.mp3"
+  },
+  "biblioteket": {
+    "word": "audio/word_biblioteket.mp3",
+    "sentence": "audio/sentence_biblioteket.mp3"
+  },
+  "arbejdsmarkedet": {
+    "word": "audio/word_arbejdsmarkedet.mp3",
+    "sentence": "audio/sentence_arbejdsmarkedet.mp3"
+  },
+  "sundhedssystem": {
+    "word": "audio/word_sundhedssystem.mp3",
+    "sentence": "audio/sentence_sundhedssystem.mp3"
+  },
+  "samfundsfag": {
+    "word": "audio/word_samfundsfag.mp3",
+    "sentence": "audio/sentence_samfundsfag.mp3"
+  },
+  "uddannelsesinstitution": {
+    "word": "audio/word_uddannelsesinstitution.mp3",
+    "sentence": "audio/sentence_uddannelsesinstitution.mp3"
+  },
+  "menneskerettigheder": {
+    "word": "audio/word_menneskerettigheder.mp3",
+    "sentence": "audio/sentence_menneskerettigheder.mp3"
+  },
+  "erhvervsuddannelse": {
+    "word": "audio/word_erhvervsuddannelse.mp3",
+    "sentence": "audio/sentence_erhvervsuddannelse.mp3"
+  },
+  "naturvidenskab": {
+    "word": "audio/word_naturvidenskab.mp3",
+    "sentence": "audio/sentence_naturvidenskab.mp3"
+  },
+  "cykelsti": {
+    "word": "audio/word_cykelsti.mp3",
+    "sentence": "audio/sentence_cykelsti.mp3"
+  },
+  "sandkasse": {
+    "word": "audio/word_sandkasse.mp3",
+    "sentence": "audio/sentence_sandkasse.mp3"
+  },
+  "blyant": {
+    "word": "audio/word_blyant.mp3",
+    "sentence": "audio/sentence_blyant.mp3"
+  },
+  "isterning": {
+    "word": "audio/word_isterning.mp3",
+    "sentence": "audio/sentence_isterning.mp3"
+  },
+  "hundehus": {
+    "word": "audio/word_hundehus.mp3",
+    "sentence": "audio/sentence_hundehus.mp3"
+  },
+  "regnbue": {
+    "word": "audio/word_regnbue.mp3",
+    "sentence": "audio/sentence_regnbue.mp3"
+  },
+  "vindmølle": {
+    "word": "audio/word_vindmoelle.mp3",
+    "sentence": "audio/sentence_vindmoelle.mp3"
+  },
+  "sovepude": {
+    "word": "audio/word_sovepude.mp3",
+    "sentence": "audio/sentence_sovepude.mp3"
+  },
+  "cykelhjelm": {
+    "word": "audio/word_cykelhjelm.mp3",
+    "sentence": "audio/sentence_cykelhjelm.mp3"
+  },
+  "rugbrød": {
+    "word": "audio/word_rugbroed.mp3",
+    "sentence": "audio/sentence_rugbroed.mp3"
+  },
+  "huskat": {
+    "word": "audio/word_huskat.mp3",
+    "sentence": "audio/sentence_huskat.mp3"
+  },
+  "vandkande": {
+    "word": "audio/word_vandkande.mp3",
+    "sentence": "audio/sentence_vandkande.mp3"
+  },
+  "skovsøen": {
+    "word": "audio/word_skovsoeen.mp3",
+    "sentence": "audio/sentence_skovsoeen.mp3"
+  },
+  "dyreparken": {
+    "word": "audio/word_dyreparken.mp3",
+    "sentence": "audio/sentence_dyreparken.mp3"
+  },
+  "barnepige": {
+    "word": "audio/word_barnepige.mp3",
+    "sentence": "audio/sentence_barnepige.mp3"
+  },
+  "madlavning": {
+    "word": "audio/word_madlavning.mp3",
+    "sentence": "audio/sentence_madlavning.mp3"
+  },
+  "landsmand": {
+    "word": "audio/word_landsmand.mp3",
+    "sentence": "audio/sentence_landsmand.mp3"
+  },
+  "arbejdsplads": {
+    "word": "audio/word_arbejdsplads.mp3",
+    "sentence": "audio/sentence_arbejdsplads.mp3"
+  },
+  "døgnrytme": {
+    "word": "audio/word_doegnrytme.mp3",
+    "sentence": "audio/sentence_doegnrytme.mp3"
+  },
+  "vandreturisme": {
+    "word": "audio/word_vandreturisme.mp3",
+    "sentence": "audio/sentence_vandreturisme.mp3"
+  },
+  "sportsklub": {
+    "word": "audio/word_sportsklub.mp3",
+    "sentence": "audio/sentence_sportsklub.mp3"
+  },
+  "familiemedlem": {
+    "word": "audio/word_familiemedlem.mp3",
+    "sentence": "audio/sentence_familiemedlem.mp3"
+  },
+  "drikkevand": {
+    "word": "audio/word_drikkevand.mp3",
+    "sentence": "audio/sentence_drikkevand.mp3"
+  },
+  "havneområde": {
+    "word": "audio/word_havneomraade.mp3",
+    "sentence": "audio/sentence_havneomraade.mp3"
+  },
+  "trafiksikkerhed": {
+    "word": "audio/word_trafiksikkerhed.mp3",
+    "sentence": "audio/sentence_trafiksikkerhed.mp3"
+  },
+  "miljøbeskyttelse": {
+    "word": "audio/word_miljoebeskyttelse.mp3",
+    "sentence": "audio/sentence_miljoebeskyttelse.mp3"
+  },
+  "grundlovsdag": {
+    "word": "audio/word_grundlovsdag.mp3",
+    "sentence": "audio/sentence_grundlovsdag.mp3"
+  },
+  "udenrigsministerium": {
+    "word": "audio/word_udenrigsministerium.mp3",
+    "sentence": "audio/sentence_udenrigsministerium.mp3"
+  },
+  "oversvømmelsesfare": {
+    "word": "audio/word_oversvoemmelsesfare.mp3",
+    "sentence": "audio/sentence_oversvoemmelsesfare.mp3"
+  },
+  "verdensanskuelse": {
+    "word": "audio/word_verdensanskuelse.mp3",
+    "sentence": "audio/sentence_verdensanskuelse.mp3"
+  },
+  "informationsteknologi": {
+    "word": "audio/word_informationsteknologi.mp3",
+    "sentence": "audio/sentence_informationsteknologi.mp3"
+  },
+  "spiste": {
+    "word": "audio/word_spiste.mp3",
+    "sentence": "audio/sentence_spiste.mp3"
+  },
+  "legede": {
+    "word": "audio/word_legede.mp3",
+    "sentence": "audio/sentence_legede.mp3"
+  },
+  "hoppede": {
+    "word": "audio/word_hoppede.mp3",
+    "sentence": "audio/sentence_hoppede.mp3"
+  },
+  "sov": {
+    "word": "audio/word_sov.mp3",
+    "sentence": "audio/sentence_sov.mp3"
+  },
+  "drak": {
+    "word": "audio/word_drak.mp3",
+    "sentence": "audio/sentence_drak.mp3"
+  },
+  "sang": {
+    "word": "audio/word_sang.mp3",
+    "sentence": "audio/sentence_sang.mp3"
+  },
+  "løb": {
+    "word": "audio/word_loeb.mp3",
+    "sentence": "audio/sentence_loeb.mp3"
+  },
+  "malede": {
+    "word": "audio/word_malede.mp3",
+    "sentence": "audio/sentence_malede.mp3"
+  },
+  "sagde": {
+    "word": "audio/word_sagde.mp3",
+    "sentence": "audio/sentence_sagde.mp3"
+  },
+  "cyklede": {
+    "word": "audio/word_cyklede.mp3",
+    "sentence": "audio/sentence_cyklede.mp3"
+  },
+  "købte": {
+    "word": "audio/word_koebte.mp3",
+    "sentence": "audio/sentence_koebte.mp3"
+  },
+  "tænkte": {
+    "word": "audio/word_taenkte.mp3",
+    "sentence": "audio/sentence_taenkte.mp3"
+  },
+  "glemte": {
+    "word": "audio/word_glemte.mp3",
+    "sentence": "audio/sentence_glemte.mp3"
+  },
+  "rejste": {
+    "word": "audio/word_rejste.mp3",
+    "sentence": "audio/sentence_rejste.mp3"
+  },
+  "kastede": {
+    "word": "audio/word_kastede.mp3",
+    "sentence": "audio/sentence_kastede.mp3"
+  },
+  "fandt": {
+    "word": "audio/word_fandt.mp3",
+    "sentence": "audio/sentence_fandt.mp3"
+  },
+  "skrev": {
+    "word": "audio/word_skrev.mp3",
+    "sentence": "audio/sentence_skrev.mp3"
+  },
+  "havde": {
+    "word": "audio/word_havde.mp3",
+    "sentence": "audio/sentence_havde.mp3"
+  },
+  "bestemte": {
+    "word": "audio/word_bestemte.mp3",
+    "sentence": "audio/sentence_bestemte.mp3"
+  },
+  "begyndte": {
+    "word": "audio/word_begyndte.mp3",
+    "sentence": "audio/sentence_begyndte.mp3"
+  },
+  "opdagede": {
+    "word": "audio/word_opdagede.mp3",
+    "sentence": "audio/sentence_opdagede.mp3"
+  },
+  "undskyldte": {
+    "word": "audio/word_undskyldte.mp3",
+    "sentence": "audio/sentence_undskyldte.mp3"
+  },
+  "behandlede": {
+    "word": "audio/word_behandlede.mp3",
+    "sentence": "audio/sentence_behandlede.mp3"
+  },
+  "besluttede": {
+    "word": "audio/word_besluttede.mp3",
+    "sentence": "audio/sentence_besluttede.mp3"
+  },
+  "fortsatte": {
+    "word": "audio/word_fortsatte.mp3",
+    "sentence": "audio/sentence_fortsatte.mp3"
+  },
+  "modtog": {
+    "word": "audio/word_modtog.mp3",
+    "sentence": "audio/sentence_modtog.mp3"
+  },
+  "forsvandt": {
+    "word": "audio/word_forsvandt.mp3",
+    "sentence": "audio/sentence_forsvandt.mp3"
+  },
+  "udviklet": {
+    "word": "audio/word_udviklet.mp3",
+    "sentence": "audio/sentence_udviklet.mp3"
+  },
+  "overrasket": {
+    "word": "audio/word_overrasket.mp3",
+    "sentence": "audio/sentence_overrasket.mp3"
+  },
+  "produceret": {
+    "word": "audio/word_produceret.mp3",
+    "sentence": "audio/sentence_produceret.mp3"
+  },
+  "organiseret": {
+    "word": "audio/word_organiseret.mp3",
+    "sentence": "audio/sentence_organiseret.mp3"
+  },
+  "koncentreret": {
+    "word": "audio/word_koncentreret.mp3",
+    "sentence": "audio/sentence_koncentreret.mp3"
+  },
+  "identificeret": {
+    "word": "audio/word_identificeret.mp3",
+    "sentence": "audio/sentence_identificeret.mp3"
+  },
+  "analyseret": {
+    "word": "audio/word_analyseret.mp3",
+    "sentence": "audio/sentence_analyseret.mp3"
+  },
+  "diskuteret": {
+    "word": "audio/word_diskuteret.mp3",
+    "sentence": "audio/sentence_diskuteret.mp3"
+  },
+  "kommunikeret": {
+    "word": "audio/word_kommunikeret.mp3",
+    "sentence": "audio/sentence_kommunikeret.mp3"
+  },
+  "dokumenteret": {
+    "word": "audio/word_dokumenteret.mp3",
+    "sentence": "audio/sentence_dokumenteret.mp3"
+  },
+  "løber": {
+    "word": "audio/word_loeber.mp3",
+    "sentence": "audio/sentence_loeber.mp3"
+  },
+  "synger": {
+    "word": "audio/word_synger.mp3",
+    "sentence": "audio/sentence_synger.mp3"
+  },
+  "svømmede": {
+    "word": "audio/word_svoemmede.mp3",
+    "sentence": "audio/sentence_svoemmede.mp3"
+  },
+  "faldt": {
+    "word": "audio/word_faldt.mp3",
+    "sentence": "audio/sentence_faldt.mp3"
+  },
+  "gav": {
+    "word": "audio/word_gav.mp3",
+    "sentence": "audio/sentence_gav.mp3"
+  },
+  "sad": {
+    "word": "audio/word_sad.mp3",
+    "sentence": "audio/sentence_sad.mp3"
+  },
+  "stod": {
+    "word": "audio/word_stod.mp3",
+    "sentence": "audio/sentence_stod.mp3"
+  },
+  "tog": {
+    "word": "audio/word_tog.mp3",
+    "sentence": "audio/sentence_tog.mp3"
+  },
+  "spurgte": {
+    "word": "audio/word_spurgte.mp3",
+    "sentence": "audio/sentence_spurgte.mp3"
+  },
+  "valgte": {
+    "word": "audio/word_valgte.mp3",
+    "sentence": "audio/sentence_valgte.mp3"
+  },
+  "bragte": {
+    "word": "audio/word_bragte.mp3",
+    "sentence": "audio/sentence_bragte.mp3"
+  },
+  "sluttede": {
+    "word": "audio/word_sluttede.mp3",
+    "sentence": "audio/sentence_sluttede.mp3"
+  },
+  "øvede": {
+    "word": "audio/word_oevede.mp3",
+    "sentence": "audio/sentence_oevede.mp3"
+  },
+  "gemte": {
+    "word": "audio/word_gemte.mp3",
+    "sentence": "audio/sentence_gemte.mp3"
+  },
+  "reddede": {
+    "word": "audio/word_reddede.mp3",
+    "sentence": "audio/sentence_reddede.mp3"
+  },
+  "råbte": {
+    "word": "audio/word_raabte.mp3",
+    "sentence": "audio/sentence_raabte.mp3"
+  },
+  "overtog": {
+    "word": "audio/word_overtog.mp3",
+    "sentence": "audio/sentence_overtog.mp3"
+  },
+  "afslørede": {
+    "word": "audio/word_afsloerede.mp3",
+    "sentence": "audio/sentence_afsloerede.mp3"
+  },
+  "forklarede": {
+    "word": "audio/word_forklarede.mp3",
+    "sentence": "audio/sentence_forklarede.mp3"
+  },
+  "udviklede": {
+    "word": "audio/word_udviklede.mp3",
+    "sentence": "audio/sentence_udviklede.mp3"
+  },
+  "oplevede": {
+    "word": "audio/word_oplevede.mp3",
+    "sentence": "audio/sentence_oplevede.mp3"
+  },
+  "mistede": {
+    "word": "audio/word_mistede.mp3",
+    "sentence": "audio/sentence_mistede.mp3"
+  },
+  "lykkedes": {
+    "word": "audio/word_lykkedes.mp3",
+    "sentence": "audio/sentence_lykkedes.mp3"
+  },
+  "konfronteret": {
+    "word": "audio/word_konfronteret.mp3",
+    "sentence": "audio/sentence_konfronteret.mp3"
+  },
+  "reflekteret": {
+    "word": "audio/word_reflekteret.mp3",
+    "sentence": "audio/sentence_reflekteret.mp3"
+  },
+  "præsenteret": {
+    "word": "audio/word_praesenteret.mp3",
+    "sentence": "audio/sentence_praesenteret.mp3"
+  },
+  "konstrueret": {
+    "word": "audio/word_konstrueret.mp3",
+    "sentence": "audio/sentence_konstrueret.mp3"
+  },
+  "accepteret": {
+    "word": "audio/word_accepteret.mp3",
+    "sentence": "audio/sentence_accepteret.mp3"
+  },
+  "reduceret": {
+    "word": "audio/word_reduceret.mp3",
+    "sentence": "audio/sentence_reduceret.mp3"
+  },
+  "hunde": {
+    "word": "audio/word_hunde.mp3",
+    "sentence": "audio/sentence_hunde.mp3"
+  },
+  "huset": {
+    "word": "audio/word_huset.mp3",
+    "sentence": "audio/sentence_huset.mp3"
+  },
+  "stolen": {
+    "word": "audio/word_stolen.mp3",
+    "sentence": "audio/sentence_stolen.mp3"
+  },
+  "katten": {
+    "word": "audio/word_katten.mp3",
+    "sentence": "audio/sentence_katten.mp3"
+  },
+  "bogen": {
+    "word": "audio/word_bogen.mp3",
+    "sentence": "audio/sentence_bogen.mp3"
+  },
+  "drengen": {
+    "word": "audio/word_drengen.mp3",
+    "sentence": "audio/sentence_drengen.mp3"
+  },
+  "bolde": {
+    "word": "audio/word_bolde.mp3",
+    "sentence": "audio/sentence_bolde.mp3"
+  },
+  "blomster": {
+    "word": "audio/word_blomster.mp3",
+    "sentence": "audio/sentence_blomster.mp3"
+  },
+  "fuglen": {
+    "word": "audio/word_fuglen.mp3",
+    "sentence": "audio/sentence_fuglen.mp3"
+  },
+  "lamper": {
+    "word": "audio/word_lamper.mp3",
+    "sentence": "audio/sentence_lamper.mp3"
+  },
+  "bøger": {
+    "word": "audio/word_boeger.mp3",
+    "sentence": "audio/sentence_boeger.mp3"
+  },
+  "børnene": {
+    "word": "audio/word_boernene.mp3",
+    "sentence": "audio/sentence_boernene.mp3"
+  },
+  "drengene": {
+    "word": "audio/word_drengene.mp3",
+    "sentence": "audio/sentence_drengene.mp3"
+  },
+  "pigerne": {
+    "word": "audio/word_pigerne.mp3",
+    "sentence": "audio/sentence_pigerne.mp3"
+  },
+  "læreren": {
+    "word": "audio/word_laereren.mp3",
+    "sentence": "audio/sentence_laereren.mp3"
+  },
+  "æbler": {
+    "word": "audio/word_aebler.mp3",
+    "sentence": "audio/sentence_aebler.mp3"
+  },
+  "husene": {
+    "word": "audio/word_husene.mp3",
+    "sentence": "audio/sentence_husene.mp3"
+  },
+  "venner": {
+    "word": "audio/word_venner.mp3",
+    "sentence": "audio/sentence_venner.mp3"
+  },
+  "mænd": {
+    "word": "audio/word_maend.mp3",
+    "sentence": "audio/sentence_maend.mp3"
+  },
+  "princippet": {
+    "word": "audio/word_princippet.mp3",
+    "sentence": "audio/sentence_princippet.mp3"
+  },
+  "gymnasiet": {
+    "word": "audio/word_gymnasiet.mp3",
+    "sentence": "audio/sentence_gymnasiet.mp3"
+  },
+  "tøjet": {
+    "word": "audio/word_toejet.mp3",
+    "sentence": "audio/sentence_toejet.mp3"
+  },
+  "brødet": {
+    "word": "audio/word_broedet.mp3",
+    "sentence": "audio/sentence_broedet.mp3"
+  },
+  "nettet": {
+    "word": "audio/word_nettet.mp3",
+    "sentence": "audio/sentence_nettet.mp3"
+  },
+  "kvinder": {
+    "word": "audio/word_kvinder.mp3",
+    "sentence": "audio/sentence_kvinder.mp3"
+  },
+  "museer": {
+    "word": "audio/word_museer.mp3",
+    "sentence": "audio/sentence_museer.mp3"
+  },
+  "fødder": {
+    "word": "audio/word_foedder.mp3",
+    "sentence": "audio/sentence_foedder.mp3"
+  },
+  "laboratoriet": {
+    "word": "audio/word_laboratoriet.mp3",
+    "sentence": "audio/sentence_laboratoriet.mp3"
+  },
+  "vanskelighederne": {
+    "word": "audio/word_vanskelighederne.mp3",
+    "sentence": "audio/sentence_vanskelighederne.mp3"
+  },
+  "seværdighederne": {
+    "word": "audio/word_sevaerdighederne.mp3",
+    "sentence": "audio/sentence_sevaerdighederne.mp3"
+  },
+  "universiteterne": {
+    "word": "audio/word_universiteterne.mp3",
+    "sentence": "audio/sentence_universiteterne.mp3"
+  },
+  "principperne": {
+    "word": "audio/word_principperne.mp3",
+    "sentence": "audio/sentence_principperne.mp3"
+  },
+  "mulighederne": {
+    "word": "audio/word_mulighederne.mp3",
+    "sentence": "audio/sentence_mulighederne.mp3"
+  },
+  "ministeriet": {
+    "word": "audio/word_ministeriet.mp3",
+    "sentence": "audio/sentence_ministeriet.mp3"
+  },
+  "egenskaberne": {
+    "word": "audio/word_egenskaberne.mp3",
+    "sentence": "audio/sentence_egenskaberne.mp3"
+  },
+  "omgivelserne": {
+    "word": "audio/word_omgivelserne.mp3",
+    "sentence": "audio/sentence_omgivelserne.mp3"
+  },
+  "pigen": {
+    "word": "audio/word_pigen.mp3",
+    "sentence": "audio/sentence_pigen.mp3"
+  },
+  "biler": {
+    "word": "audio/word_biler.mp3",
+    "sentence": "audio/sentence_biler.mp3"
+  },
+  "hesten": {
+    "word": "audio/word_hesten.mp3",
+    "sentence": "audio/sentence_hesten.mp3"
+  },
+  "træet": {
+    "word": "audio/word_traeet.mp3",
+    "sentence": "audio/sentence_traeet.mp3"
+  },
+  "fiske": {
+    "word": "audio/word_fiske.mp3",
+    "sentence": "audio/sentence_fiske.mp3"
+  },
+  "gaven": {
+    "word": "audio/word_gaven.mp3",
+    "sentence": "audio/sentence_gaven.mp3"
+  },
+  "lampen": {
+    "word": "audio/word_lampen.mp3",
+    "sentence": "audio/sentence_lampen.mp3"
+  },
+  "skyer": {
+    "word": "audio/word_skyer.mp3",
+    "sentence": "audio/sentence_skyer.mp3"
+  },
+  "bilerne": {
+    "word": "audio/word_bilerne.mp3",
+    "sentence": "audio/sentence_bilerne.mp3"
+  },
+  "hestene": {
+    "word": "audio/word_hestene.mp3",
+    "sentence": "audio/sentence_hestene.mp3"
+  },
+  "dagene": {
+    "word": "audio/word_dagene.mp3",
+    "sentence": "audio/sentence_dagene.mp3"
+  },
+  "fuglene": {
+    "word": "audio/word_fuglene.mp3",
+    "sentence": "audio/sentence_fuglene.mp3"
+  },
+  "vinduet": {
+    "word": "audio/word_vinduet.mp3",
+    "sentence": "audio/sentence_vinduet.mp3"
+  },
+  "blomsterne": {
+    "word": "audio/word_blomsterne.mp3",
+    "sentence": "audio/sentence_blomsterne.mp3"
+  },
+  "gaverne": {
+    "word": "audio/word_gaverne.mp3",
+    "sentence": "audio/sentence_gaverne.mp3"
+  },
+  "opgaver": {
+    "word": "audio/word_opgaver.mp3",
+    "sentence": "audio/sentence_opgaver.mp3"
+  },
+  "ænder": {
+    "word": "audio/word_aender.mp3",
+    "sentence": "audio/sentence_aender.mp3"
+  },
+  "gæster": {
+    "word": "audio/word_gaester.mp3",
+    "sentence": "audio/sentence_gaester.mp3"
+  },
+  "natten": {
+    "word": "audio/word_natten.mp3",
+    "sentence": "audio/sentence_natten.mp3"
+  },
+  "kunderne": {
+    "word": "audio/word_kunderne.mp3",
+    "sentence": "audio/sentence_kunderne.mp3"
+  },
+  "bønder": {
+    "word": "audio/word_boender.mp3",
+    "sentence": "audio/sentence_boender.mp3"
+  },
+  "redskabet": {
+    "word": "audio/word_redskabet.mp3",
+    "sentence": "audio/sentence_redskabet.mp3"
+  },
+  "brødrene": {
+    "word": "audio/word_broedrene.mp3",
+    "sentence": "audio/sentence_broedrene.mp3"
+  },
+  "fænomenerne": {
+    "word": "audio/word_faenomenerne.mp3",
+    "sentence": "audio/sentence_faenomenerne.mp3"
+  },
+  "argumenterne": {
+    "word": "audio/word_argumenterne.mp3",
+    "sentence": "audio/sentence_argumenterne.mp3"
+  },
+  "traditioner": {
+    "word": "audio/word_traditioner.mp3",
+    "sentence": "audio/sentence_traditioner.mp3"
+  },
+  "individerne": {
+    "word": "audio/word_individerne.mp3",
+    "sentence": "audio/sentence_individerne.mp3"
+  },
+  "perspektivet": {
+    "word": "audio/word_perspektivet.mp3",
+    "sentence": "audio/sentence_perspektivet.mp3"
+  },
+  "konsekvenserne": {
+    "word": "audio/word_konsekvenserne.mp3",
+    "sentence": "audio/sentence_konsekvenserne.mp3"
+  },
+  "dimensionerne": {
+    "word": "audio/word_dimensionerne.mp3",
+    "sentence": "audio/sentence_dimensionerne.mp3"
+  }
+}

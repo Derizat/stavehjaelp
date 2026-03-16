@@ -335,6 +335,108 @@
     0% { opacity: 1; transform: translateX(-50%) translateY(0); }
     100% { opacity: 0; transform: translateX(-50%) translateY(-60px); }
   }
+
+  /* ===== SCREENING (Stavevurdering) ===== */
+  .screening-option {
+    background: var(--card2); border: 2px solid #3d4270; border-radius: 12px;
+    color: var(--text); font-family: 'Nunito', sans-serif; font-size: 1.15rem; font-weight: 700;
+    padding: 16px 20px; cursor: pointer; transition: all 0.15s; text-align: center;
+    min-height: 56px; display: flex; align-items: center; justify-content: center;
+  }
+  .screening-option:hover { border-color: var(--accent2); background: rgba(124,58,237,0.1); }
+  .screening-option.selected { border-color: var(--accent2); background: rgba(124,58,237,0.2); color: #c4b5fd; }
+  .screening-option.correct { border-color: var(--green); background: rgba(34,211,160,0.15); color: var(--green); }
+  .screening-option.wrong { border-color: var(--red); background: rgba(244,63,94,0.15); color: var(--red); }
+  .screening-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+  .screening-options-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .chain-container { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px; margin: 20px 0; }
+  .chain-letter {
+    font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--text);
+    padding: 4px 2px; user-select: none;
+  }
+  .chain-gap {
+    width: 20px; height: 48px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border-radius: 6px; transition: all 0.15s; position: relative;
+  }
+  .chain-gap:hover { background: rgba(124,58,237,0.15); }
+  .chain-gap.active { background: rgba(245,166,35,0.2); }
+  .chain-gap.active::after {
+    content: '|'; font-family: 'Fredoka One', cursive; font-size: 2rem;
+    color: var(--accent); font-weight: 900;
+  }
+  .chain-gap.gap-correct { background: rgba(34,211,160,0.2); }
+  .chain-gap.gap-correct::after { color: var(--green); }
+  .chain-gap.gap-wrong { background: rgba(244,63,94,0.2); }
+  .chain-gap.gap-wrong::after { content: '|'; font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--red); font-weight: 900; }
+
+  .ran-grid {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px;
+    max-width: 480px; margin: 16px auto;
+  }
+  .ran-cell {
+    width: 100%; aspect-ratio: 1; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; color: transparent;
+  }
+
+  .risk-indicator {
+    display: flex; align-items: center; gap: 16px; justify-content: center;
+    padding: 20px; border-radius: 14px; margin: 16px 0;
+  }
+  .risk-indicator .risk-light {
+    width: 48px; height: 48px; border-radius: 50%;
+    box-shadow: 0 0 20px currentColor;
+  }
+  .risk-indicator .risk-text { font-family: 'Fredoka One', cursive; font-size: 1.4rem; }
+  .risk-low { background: rgba(34,211,160,0.1); border: 1px solid rgba(34,211,160,0.3); }
+  .risk-low .risk-light { background: var(--green); color: var(--green); }
+  .risk-low .risk-text { color: var(--green); }
+  .risk-medium { background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.3); }
+  .risk-medium .risk-light { background: var(--accent); color: var(--accent); }
+  .risk-medium .risk-text { color: var(--accent); }
+  .risk-high { background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.3); }
+  .risk-high .risk-light { background: var(--red); color: var(--red); }
+  .risk-high .risk-text { color: var(--red); }
+
+  .disclaimer-box {
+    background: rgba(244,63,94,0.08); border: 2px solid rgba(244,63,94,0.3);
+    border-radius: 12px; padding: 16px 20px; margin: 18px 0;
+    font-size: 0.88rem; color: #fca5a5; line-height: 1.7;
+  }
+  .disclaimer-box strong { color: var(--red); }
+
+  .screening-progress {
+    background: #2d3158; border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 14px;
+  }
+  .screening-progress-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--blue), var(--accent2));
+    transition: width 0.4s ease;
+  }
+  .screening-subtest-label {
+    font-size: 0.82rem; font-weight: 700; color: var(--muted);
+    text-align: center; margin-bottom: 8px;
+  }
+  .screening-question {
+    text-align: center; font-size: 1.15rem; font-weight: 700;
+    color: var(--text); margin: 12px 0 16px; line-height: 1.5;
+  }
+  .screening-question .target-word {
+    font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--accent);
+  }
+  .ran-timer {
+    font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--accent);
+    text-align: center; margin: 12px 0;
+  }
+  .screening-subtest-bar {
+    display: flex; align-items: center; gap: 10px; background: var(--card2);
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
+  }
+  .screening-subtest-bar .stb-name { flex: 1; font-weight: 700; font-size: 0.9rem; }
+  .screening-subtest-bar .stb-bar { flex: 0 0 80px; height: 8px; background: #2d3158; border-radius: 99px; overflow: hidden; }
+  .screening-subtest-bar .stb-bar-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+  .screening-subtest-bar .stb-score { font-family: 'Fredoka One', cursive; font-size: 0.95rem; min-width: 50px; text-align: right; }
 </style>
 </head>
 <body>
@@ -408,6 +510,7 @@
   <button class="btn btn-primary btn-full hidden" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
   <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
   <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
+  <button class="btn btn-blue btn-full hidden" id="screeningBtn" onclick="startScreening()">&#x1F4CB; Stavevurdering</button>
 
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
   <div class="settings-panel" id="settingsPanel">
@@ -514,6 +617,63 @@
   <div id="resultsContent"></div>
 </div>
 
+<!-- SCREENING INTRO -->
+<div id="phase-screening-intro" class="card hidden">
+  <div class="phase-label">&#x1F4CB; Stavevurdering</div>
+  <div style="text-align:center;margin-bottom:16px">
+    <div style="font-size:3.5rem;margin-bottom:10px">&#x1F50D;</div>
+    <h2>Stavevurdering</h2>
+    <p style="color:var(--muted);line-height:1.7;margin-top:10px">
+      Denne test ser p&#xE5; om du har tegn p&#xE5; stavevanskeligheder.<br>
+      Den best&#xE5;r af 4 korte opgaver:
+    </p>
+  </div>
+  <div class="pattern-list">
+    <div class="pattern-item"><div class="pi-icon">&#x1F50A;</div><div class="pi-text"><strong>Nonord</strong><span>Lyt til et opdigtet ord og find den rigtige stavem&#xE5;de</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x1F3B5;</div><div class="pi-text"><strong>Fonologisk bevidsthed</strong><span>Rim, lyde og ordlege</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x1F517;</div><div class="pi-text"><strong>Ordk&#xE6;der</strong><span>Find de 3 ord der er klistret sammen</span></div></div>
+    <div class="pattern-item"><div class="pi-icon">&#x1F3A8;</div><div class="pi-text"><strong>Hurtig navngivning</strong><span>Sig farven p&#xE5; cirklerne s&#xE5; hurtigt du kan</span></div></div>
+  </div>
+  <p style="color:var(--muted);font-size:0.88rem;text-align:center;margin-top:14px;line-height:1.6">
+    Det tager ca. 10-15 minutter. Tag dig god tid &#x2014; der er ingen tidspres p&#xE5; de fleste opgaver.
+  </p>
+  <button class="btn btn-primary btn-full" onclick="beginScreeningSubtest('nonord')" style="margin-top:16px">&#x1F680; Start vurdering</button>
+  <button class="btn btn-blue btn-full" onclick="goHome()" style="margin-top:8px">&#x2190; Tilbage</button>
+</div>
+
+<!-- SCREENING TEST (shared for nonord, fonologisk, ordkaeder) -->
+<div id="phase-screening-test" class="card hidden">
+  <div class="phase-label" id="screeningTestLabel">&#x1F4CB; Stavevurdering</div>
+  <div class="screening-subtest-label" id="screeningSubtestLabel">Opgave 1 af 4</div>
+  <div class="screening-progress"><div class="screening-progress-fill" id="screeningProgressFill" style="width:0%"></div></div>
+  <div id="screeningQuestionArea"></div>
+</div>
+
+<!-- SCREENING RAN -->
+<div id="phase-screening-ran" class="card hidden">
+  <div class="phase-label">&#x1F4CB; Stavevurdering</div>
+  <div class="screening-subtest-label">Opgave 4 af 4 &#x2014; Hurtig navngivning</div>
+  <div class="screening-progress"><div class="screening-progress-fill" style="width:75%"></div></div>
+  <div id="ranInstructions" style="text-align:center;margin-bottom:14px">
+    <p style="color:var(--text);font-size:1rem;font-weight:700;line-height:1.6;margin-bottom:12px">
+      Sig farven p&#xE5; hver cirkel h&#xF8;jt, fra venstre mod h&#xF8;jre, oppefra og ned.<br>
+      Tryk <strong>Start</strong> n&#xE5;r du er klar!
+    </p>
+  </div>
+  <div id="ranGridArea"></div>
+  <div class="ran-timer" id="ranTimer">0.0s</div>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:10px" id="ranButtons">
+    <button class="btn btn-green" id="ranStartBtn" onclick="startRANTimer()">&#x25B6;&#xFE0F; Start</button>
+    <button class="btn btn-accent hidden" id="ranStopBtn" onclick="stopRANTimer()">&#x23F9;&#xFE0F; F&#xE6;rdig!</button>
+  </div>
+</div>
+
+<!-- SCREENING RESULTS -->
+<div id="phase-screening-results" class="card hidden">
+  <div class="phase-label">&#x1F4CB; Stavevurdering &#x2014; Resultater</div>
+  <div id="screeningResultsContent"></div>
+</div>
+
 <script>
 
 // Word bank loaded from words.json
@@ -572,7 +732,7 @@ function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results'].forEach(function(id) { hide(id); });
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   show('phase-welcome');
   refreshWelcomeButtons();
@@ -2021,6 +2181,575 @@ function showRewardFloat(text) {
 
 // ===== END REWARD SYSTEM =====
 
+// ===== SCREENING (Stavevurdering) =====
+
+var NONORD_ITEMS = [
+  { text: "n\u00F8f", correct: "n\u00F8f", options: ["n\u00F8f", "n\u00F8ff", "n\u00F8v", "n\u00F8vf", "n\u00F8fv"] },
+  { text: "blek", correct: "blek", options: ["blek", "bl\u00E6k", "bl\u00E6g", "bleg", "bleck"] },
+  { text: "sp\u00F8l", correct: "sp\u00F8l", options: ["sp\u00F8l", "sp\u00F8ll", "sp\u00F8le", "sb\u00F8l", "sp\u00F8hl"] },
+  { text: "kr\u00E5n", correct: "kr\u00E5n", options: ["kr\u00E5n", "kron", "gr\u00E5n", "krohn", "kronn"] },
+  { text: "hvirm", correct: "hvirm", options: ["hvirm", "virm", "hverm", "hvirmm", "hirm"] },
+  { text: "gj\u00E6p", correct: "gj\u00E6p", options: ["gj\u00E6p", "j\u00E6p", "g\u00E6p", "gjep", "gj\u00E6b"] },
+  { text: "fn\u00F8s", correct: "fn\u00F8s", options: ["fn\u00F8s", "fn\u00F8ss", "fn\u00F8se", "fn\u00F8hs", "fny\u00F8s"] },
+  { text: "tv\u00E5l", correct: "tv\u00E5l", options: ["tv\u00E5l", "tvo\u00E5l", "tv\u00E5ll", "dv\u00E5l", "tvol"] },
+  { text: "sn\u00E6lk", correct: "sn\u00E6lk", options: ["sn\u00E6lk", "snelk", "sn\u00E6lg", "sn\u00E6ld", "sn\u00E6lck"] },
+  { text: "pl\u00E5m", correct: "pl\u00E5m", options: ["pl\u00E5m", "plom", "pl\u00E5mm", "bl\u00E5m", "plohm"] },
+  { text: "dr\u00F8jf", correct: "dr\u00F8jf", options: ["dr\u00F8jf", "dr\u00F8jv", "dr\u00F8if", "dr\u00F8jff", "dr\u00F8jfv"] },
+  { text: "skr\u00F8n", correct: "skr\u00F8n", options: ["skr\u00F8n", "skr\u00F8nn", "sgr\u00F8n", "skr\u00F8hn", "skr\u00F6n"] }
+];
+
+var FONOLOGISK_ITEMS = [
+  { type: "rim", instruction: "Hvilket ord rimer p\u00E5", target: "kat", correct: "hat", options: ["hat", "kap", "kas", "kar"] },
+  { type: "rim", instruction: "Hvilket ord rimer p\u00E5", target: "bold", correct: "told", options: ["told", "bolle", "bukke", "bord"] },
+  { type: "rim", instruction: "Hvilket ord rimer p\u00E5", target: "hest", correct: "rest", options: ["rest", "helt", "heks", "fest"] },
+  { type: "rim", instruction: "Hvilket ord rimer p\u00E5", target: "sol", correct: "stol", options: ["stol", "sod", "som", "sog"] },
+  { type: "fjern", instruction: "Hvad bliver 'stol' uden 's'-lyden?", correct: "tol", options: ["tol", "sol", "sto", "stel"] },
+  { type: "fjern", instruction: "Hvad bliver 'bleg' uden 'b'-lyden?", correct: "leg", options: ["leg", "beg", "ble", "bl\u00E6g"] },
+  { type: "fjern", instruction: "Hvad bliver 'skab' uden 's'-lyden?", correct: "kab", options: ["kab", "sab", "ska", "skab"] },
+  { type: "lyd", instruction: "Hvilken lyd starter ordet 'blomst' med?", correct: "b", options: ["b", "bl", "m", "l"] },
+  { type: "lyd", instruction: "Hvilken lyd starter ordet 'pris' med?", correct: "p", options: ["p", "r", "pr", "s"] },
+  { type: "lyd", instruction: "Hvilken lyd starter ordet 'glas' med?", correct: "g", options: ["g", "l", "gl", "s"] }
+];
+
+var ORDKAEDER_ITEMS = [
+  { chain: "hunkatbil", words: ["hun", "kat", "bil"] },
+  { chain: "solskohat", words: ["sol", "sko", "hat"] },
+  { chain: "benarm\u00F8re", words: ["ben", "arm", "\u00F8re"] },
+  { chain: "husboldbog", words: ["hus", "bold", "bog"] },
+  { chain: "vindstolris", words: ["vind", "stol", "ris"] },
+  { chain: "blomstfuglregn", words: ["blomst", "fugl", "regn"] },
+  { chain: "d\u00F8rlampesol", words: ["d\u00F8r", "lampe", "sol"] },
+  { chain: "skoletidbus", words: ["skole", "tid", "bus"] },
+  { chain: "vandflaskeis", words: ["vand", "flaske", "is"] },
+  { chain: "hovedpudesen", words: ["hoved", "pude", "sen"] }
+];
+
+var RAN_COLORS = [
+  { name: "r\u00F8d", color: "#ef4444" },
+  { name: "bl\u00E5", color: "#3b82f6" },
+  { name: "gr\u00F8n", color: "#22c55e" },
+  { name: "gul", color: "#eab308" },
+  { name: "sort", color: "#374151" }
+];
+
+var screeningState = null;
+var ranTimerInterval = null;
+var ranStartTime = null;
+
+function startScreening() {
+  screeningState = {
+    currentSubtest: 'nonord',
+    subtestIndex: 0,
+    results: { nonord: [], fonologisk: [], ordkaeder: [], ran: null },
+    startedAt: Date.now()
+  };
+  hide('phase-welcome');
+  show('phase-screening-intro');
+}
+
+function beginScreeningSubtest(subtest) {
+  if (!screeningState) return;
+  screeningState.currentSubtest = subtest;
+  screeningState.subtestIndex = 0;
+
+  if (subtest === 'ran') {
+    hide('phase-screening-intro');
+    hide('phase-screening-test');
+    startRAN();
+    return;
+  }
+
+  hide('phase-screening-intro');
+  hide('phase-screening-ran');
+  show('phase-screening-test');
+
+  if (subtest === 'nonord') {
+    document.getElementById('screeningTestLabel').textContent = '\u{1F4CB} Nonord';
+    renderNonordItem(0);
+  } else if (subtest === 'fonologisk') {
+    document.getElementById('screeningTestLabel').textContent = '\u{1F4CB} Fonologisk bevidsthed';
+    renderFonologiskItem(0);
+  } else if (subtest === 'ordkaeder') {
+    document.getElementById('screeningTestLabel').textContent = '\u{1F4CB} Ordk\u00E6der';
+    renderOrdkaederItem(0);
+  }
+}
+
+function showScreeningTransition(message, nextSubtest) {
+  var area = document.getElementById('screeningQuestionArea');
+  area.innerHTML = '<div style="text-align:center;padding:40px 20px">' +
+    '<div style="font-size:3rem;margin-bottom:14px">\u{1F31F}</div>' +
+    '<h2 style="color:var(--green);margin-bottom:8px">' + message + '</h2>' +
+    '<p style="color:var(--muted)">N\u00E6ste opgave starter om et \u00F8jeblik...</p>' +
+    '</div>';
+  setTimeout(function() {
+    beginScreeningSubtest(nextSubtest);
+  }, 2000);
+}
+
+function updateScreeningProgress(subtest, index) {
+  var subtestNum = 1;
+  var subtestNames = { nonord: 1, fonologisk: 2, ordkaeder: 3, ran: 4 };
+  subtestNum = subtestNames[subtest] || 1;
+  var total = 4;
+  var items = 0;
+  var itemTotal = 0;
+  if (subtest === 'nonord') { items = index; itemTotal = NONORD_ITEMS.length; }
+  else if (subtest === 'fonologisk') { items = index; itemTotal = FONOLOGISK_ITEMS.length; }
+  else if (subtest === 'ordkaeder') { items = index; itemTotal = ORDKAEDER_ITEMS.length; }
+
+  var label = document.getElementById('screeningSubtestLabel');
+  if (label) label.textContent = 'Opgave ' + subtestNum + ' af ' + total + ' \u2014 ' + (index + 1) + '/' + itemTotal;
+
+  var fill = document.getElementById('screeningProgressFill');
+  if (fill) {
+    var basePct = ((subtestNum - 1) / total) * 100;
+    var subPct = itemTotal > 0 ? ((index / itemTotal) * (100 / total)) : 0;
+    fill.style.width = Math.min(basePct + subPct, 100) + '%';
+  }
+}
+
+function renderNonordItem(index) {
+  screeningState.subtestIndex = index;
+  if (index >= NONORD_ITEMS.length) {
+    showScreeningTransition('Godt klaret!', 'fonologisk');
+    return;
+  }
+  updateScreeningProgress('nonord', index);
+  var item = NONORD_ITEMS[index];
+  var opts = shuffle(item.options);
+
+  var html = '<div style="text-align:center;margin-bottom:12px">' +
+    '<p class="screening-question">Lyt til ordet og v\u00E6lg den rigtige stavem\u00E5de</p>' +
+    '<button class="btn-listen" onclick="speakWord(\'' + item.text.replace(/'/g, "\\'") + '\', null)">\u{1F50A} H\u00F8r ordet</button>' +
+    '</div>';
+  html += '<div class="screening-options-grid">';
+  for (var i = 0; i < opts.length; i++) {
+    html += '<button class="screening-option" onclick="checkNonordAnswer(this, ' + index + ', \'' + opts[i].replace(/'/g, "\\'") + '\')">' + opts[i] + '</button>';
+  }
+  html += '</div>';
+
+  document.getElementById('screeningQuestionArea').innerHTML = html;
+  setTimeout(function() { speakWord(item.text, null); }, 300);
+}
+
+function checkNonordAnswer(btn, index, answer) {
+  var item = NONORD_ITEMS[index];
+  var isCorrect = answer === item.correct;
+  screeningState.results.nonord.push({ correct: isCorrect, item: item.text, answer: answer });
+
+  var btns = document.querySelectorAll('#screeningQuestionArea .screening-option');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].onclick = null;
+    btns[i].style.pointerEvents = 'none';
+    if (btns[i].textContent === item.correct) btns[i].classList.add('correct');
+    else if (btns[i] === btn && !isCorrect) btns[i].classList.add('wrong');
+  }
+
+  setTimeout(function() { renderNonordItem(index + 1); }, 1200);
+}
+
+function renderFonologiskItem(index) {
+  screeningState.subtestIndex = index;
+  if (index >= FONOLOGISK_ITEMS.length) {
+    showScreeningTransition('Flot gjort!', 'ordkaeder');
+    return;
+  }
+  updateScreeningProgress('fonologisk', index);
+  var item = FONOLOGISK_ITEMS[index];
+  var opts = shuffle(item.options);
+
+  var questionText = '';
+  if (item.type === 'rim') {
+    questionText = '<p class="screening-question">' + item.instruction + ' <span class="target-word">' + item.target + '</span>?</p>';
+  } else {
+    questionText = '<p class="screening-question">' + item.instruction + '</p>';
+  }
+
+  var html = questionText;
+  html += '<div class="screening-options-grid">';
+  for (var i = 0; i < opts.length; i++) {
+    html += '<button class="screening-option" onclick="checkFonologiskAnswer(this, ' + index + ', \'' + opts[i].replace(/'/g, "\\'") + '\')">' + opts[i] + '</button>';
+  }
+  html += '</div>';
+
+  document.getElementById('screeningQuestionArea').innerHTML = html;
+}
+
+function checkFonologiskAnswer(btn, index, answer) {
+  var item = FONOLOGISK_ITEMS[index];
+  var isCorrect = answer === item.correct;
+  screeningState.results.fonologisk.push({ correct: isCorrect, item: item.instruction, answer: answer });
+
+  var btns = document.querySelectorAll('#screeningQuestionArea .screening-option');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].onclick = null;
+    btns[i].style.pointerEvents = 'none';
+    if (btns[i].textContent === item.correct) btns[i].classList.add('correct');
+    else if (btns[i] === btn && !isCorrect) btns[i].classList.add('wrong');
+  }
+
+  setTimeout(function() { renderFonologiskItem(index + 1); }, 1200);
+}
+
+function renderOrdkaederItem(index) {
+  screeningState.subtestIndex = index;
+  if (index >= ORDKAEDER_ITEMS.length) {
+    showScreeningTransition('Superflot!', 'ran');
+    return;
+  }
+  updateScreeningProgress('ordkaeder', index);
+  var item = ORDKAEDER_ITEMS[index];
+  var letters = item.chain.split('');
+
+  var html = '<p class="screening-question">Find de 3 ord der er sat sammen. Tryk mellem bogstaverne for at s\u00E6tte en skillelinje.</p>';
+  html += '<div class="chain-container" id="chainContainer">';
+  for (var i = 0; i < letters.length; i++) {
+    html += '<span class="chain-letter">' + letters[i] + '</span>';
+    if (i < letters.length - 1) {
+      html += '<span class="chain-gap" data-pos="' + (i + 1) + '" onclick="toggleChainGap(this)"></span>';
+    }
+  }
+  html += '</div>';
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin-bottom:12px" id="chainHint">Placer 2 skillelinjer for at dele k\u00E6den i 3 ord</p>';
+  html += '<div style="text-align:center"><button class="btn btn-primary" onclick="checkOrdkaede(' + index + ')">\u2714\uFE0F Tjek</button></div>';
+
+  document.getElementById('screeningQuestionArea').innerHTML = html;
+}
+
+function toggleChainGap(el) {
+  var activeGaps = document.querySelectorAll('.chain-gap.active');
+  if (el.classList.contains('active')) {
+    el.classList.remove('active');
+  } else {
+    if (activeGaps.length >= 2) return;
+    el.classList.add('active');
+  }
+  var count = document.querySelectorAll('.chain-gap.active').length;
+  var hint = document.getElementById('chainHint');
+  if (hint) {
+    if (count === 0) hint.textContent = 'Placer 2 skillelinjer for at dele k\u00E6den i 3 ord';
+    else if (count === 1) hint.textContent = 'Placer 1 skillelinje mere';
+    else hint.textContent = 'Tryk Tjek n\u00E5r du er klar!';
+  }
+}
+
+function checkOrdkaede(index) {
+  var item = ORDKAEDER_ITEMS[index];
+  var activeGaps = document.querySelectorAll('.chain-gap.active');
+  if (activeGaps.length !== 2) return;
+
+  var positions = [];
+  for (var i = 0; i < activeGaps.length; i++) {
+    positions.push(parseInt(activeGaps[i].getAttribute('data-pos')));
+  }
+  positions.sort(function(a, b) { return a - b; });
+
+  // Compute correct positions from words
+  var correctPositions = [];
+  var pos = 0;
+  for (var w = 0; w < item.words.length - 1; w++) {
+    pos += item.words[w].length;
+    correctPositions.push(pos);
+  }
+
+  var isCorrect = positions.length === correctPositions.length &&
+    positions[0] === correctPositions[0] && positions[1] === correctPositions[1];
+
+  screeningState.results.ordkaeder.push({ correct: isCorrect, chain: item.chain, positions: positions, correctPositions: correctPositions });
+
+  // Show feedback on gaps
+  var allGaps = document.querySelectorAll('.chain-gap');
+  for (var g = 0; g < allGaps.length; g++) {
+    allGaps[g].onclick = null;
+    allGaps[g].style.pointerEvents = 'none';
+    var gapPos = parseInt(allGaps[g].getAttribute('data-pos'));
+    if (correctPositions.indexOf(gapPos) !== -1) {
+      allGaps[g].classList.add('active');
+      allGaps[g].classList.add('gap-correct');
+    } else if (allGaps[g].classList.contains('active')) {
+      allGaps[g].classList.add('gap-wrong');
+    }
+  }
+
+  // Disable check button
+  var checkBtns = document.querySelectorAll('#screeningQuestionArea .btn');
+  for (var b = 0; b < checkBtns.length; b++) {
+    checkBtns[b].onclick = null;
+    checkBtns[b].style.pointerEvents = 'none';
+  }
+
+  var hint = document.getElementById('chainHint');
+  if (hint) {
+    if (isCorrect) hint.innerHTML = '<span style="color:var(--green)">\u2705 Rigtigt! ' + item.words.join(' | ') + '</span>';
+    else hint.innerHTML = '<span style="color:var(--red)">\u274C Svaret var: ' + item.words.join(' | ') + '</span>';
+  }
+
+  setTimeout(function() { renderOrdkaederItem(index + 1); }, 1500);
+}
+
+function buildRANGrid() {
+  var grid = [];
+  for (var i = 0; i < 40; i++) {
+    grid.push(RAN_COLORS[i % RAN_COLORS.length]);
+  }
+  // Shuffle
+  for (var j = grid.length - 1; j > 0; j--) {
+    var k = Math.floor(Math.random() * (j + 1));
+    var tmp = grid[j]; grid[j] = grid[k]; grid[k] = tmp;
+  }
+  return grid;
+}
+
+function startRAN() {
+  hide('phase-screening-test');
+  show('phase-screening-ran');
+
+  var grid = buildRANGrid();
+  var html = '<div class="ran-grid">';
+  for (var i = 0; i < grid.length; i++) {
+    html += '<div class="ran-cell" style="background:' + grid[i].color + '" title="' + grid[i].name + '"></div>';
+  }
+  html += '</div>';
+  document.getElementById('ranGridArea').innerHTML = html;
+  document.getElementById('ranTimer').textContent = '0.0s';
+  document.getElementById('ranStartBtn').classList.remove('hidden');
+  document.getElementById('ranStopBtn').classList.add('hidden');
+  ranStartTime = null;
+  if (ranTimerInterval) clearInterval(ranTimerInterval);
+}
+
+function startRANTimer() {
+  ranStartTime = Date.now();
+  document.getElementById('ranStartBtn').classList.add('hidden');
+  document.getElementById('ranStopBtn').classList.remove('hidden');
+  ranTimerInterval = setInterval(function() {
+    var elapsed = (Date.now() - ranStartTime) / 1000;
+    document.getElementById('ranTimer').textContent = elapsed.toFixed(1) + 's';
+  }, 100);
+}
+
+function stopRANTimer() {
+  if (ranTimerInterval) clearInterval(ranTimerInterval);
+  var elapsed = ranStartTime ? (Date.now() - ranStartTime) / 1000 : 0;
+  document.getElementById('ranTimer').textContent = elapsed.toFixed(1) + 's';
+  document.getElementById('ranStopBtn').classList.add('hidden');
+  screeningState.results.ran = { time: elapsed };
+  setTimeout(function() { finishScreening(); }, 800);
+}
+
+function analyzePassiveData() {
+  var score = 50; // default middle score
+  try {
+    var sr = loadSRData();
+    var profile = loadProfile();
+    var totalWords = 0;
+    var totalErrors = 0;
+    var phonologicalErrors = 0;
+
+    if (sr && sr.words) {
+      for (var word in sr.words) {
+        totalWords++;
+        if (sr.words[word].level === 0) totalErrors++;
+      }
+    }
+
+    if (profile && profile.diagnosticResults) {
+      for (var i = 0; i < profile.diagnosticResults.length; i++) {
+        var r = profile.diagnosticResults[i];
+        if (!r.correct) {
+          totalErrors++;
+          // Check for phonological error patterns
+          if (r.category === 'Stumme bogstaver' || r.category === 'Lydrette ord') {
+            phonologicalErrors++;
+          }
+        }
+        totalWords++;
+      }
+    }
+
+    if (totalWords === 0) return 50;
+
+    var errorRate = totalErrors / totalWords;
+    score = Math.max(0, Math.min(100, Math.round((1 - errorRate) * 100)));
+
+    // Phonological errors are a stronger indicator
+    if (phonologicalErrors > 2) {
+      score = Math.max(0, score - 15);
+    }
+  } catch(e) {
+    score = 50;
+  }
+  return score;
+}
+
+function computeScreeningRisk(results, passiveScore) {
+  // Nonord score (0-100)
+  var nonordCorrect = 0;
+  for (var i = 0; i < results.nonord.length; i++) {
+    if (results.nonord[i].correct) nonordCorrect++;
+  }
+  var nonordScore = results.nonord.length > 0 ? (nonordCorrect / results.nonord.length) * 100 : 50;
+
+  // Fonologisk score (0-100)
+  var fonCorrect = 0;
+  for (var j = 0; j < results.fonologisk.length; j++) {
+    if (results.fonologisk[j].correct) fonCorrect++;
+  }
+  var fonScore = results.fonologisk.length > 0 ? (fonCorrect / results.fonologisk.length) * 100 : 50;
+
+  // Ordkaeder score (0-100)
+  var ordCorrect = 0;
+  for (var k = 0; k < results.ordkaeder.length; k++) {
+    if (results.ordkaeder[k].correct) ordCorrect++;
+  }
+  var ordScore = results.ordkaeder.length > 0 ? (ordCorrect / results.ordkaeder.length) * 100 : 50;
+
+  // RAN score (0-100) - normalized by grade
+  var ranScore = 50;
+  if (results.ran && results.ran.time > 0) {
+    var grade = loadGrade();
+    var expectedTime = 40; // default
+    if (grade <= 1) expectedTime = 60;
+    else if (grade <= 3) expectedTime = 45;
+    else if (grade <= 5) expectedTime = 35;
+    else expectedTime = 28;
+
+    if (results.ran.time <= expectedTime) {
+      ranScore = 80 + Math.min(20, (expectedTime - results.ran.time) / expectedTime * 40);
+    } else {
+      ranScore = Math.max(0, 80 - ((results.ran.time - expectedTime) / expectedTime) * 80);
+    }
+  }
+
+  // Weighted composite
+  var composite = nonordScore * 0.35 + fonScore * 0.25 + ordScore * 0.20 + ranScore * 0.10 + passiveScore * 0.10;
+  composite = Math.round(composite);
+
+  var riskLevel = 'lav';
+  if (composite < 45) riskLevel = 'hoej';
+  else if (composite < 70) riskLevel = 'mellem';
+
+  return {
+    composite: composite,
+    riskLevel: riskLevel,
+    nonordScore: Math.round(nonordScore),
+    fonScore: Math.round(fonScore),
+    ordScore: Math.round(ordScore),
+    ranScore: Math.round(ranScore),
+    passiveScore: passiveScore
+  };
+}
+
+function finishScreening() {
+  hide('phase-screening-test');
+  hide('phase-screening-ran');
+
+  var passiveScore = analyzePassiveData();
+  var risk = computeScreeningRisk(screeningState.results, passiveScore);
+
+  renderScreeningResults(screeningState.results, risk);
+
+  var data = {
+    date: Date.now(),
+    results: screeningState.results,
+    risk: risk
+  };
+  saveScreeningData(data);
+}
+
+function renderScreeningResults(results, risk) {
+  show('phase-screening-results');
+
+  var riskClass = 'risk-low';
+  var riskLabel = 'Lav risiko';
+  var riskEmoji = '\u2705';
+  if (risk.riskLevel === 'mellem') {
+    riskClass = 'risk-medium';
+    riskLabel = 'Moderat risiko';
+    riskEmoji = '\u26A0\uFE0F';
+  } else if (risk.riskLevel === 'hoej') {
+    riskClass = 'risk-high';
+    riskLabel = 'Forh\u00F8jet risiko';
+    riskEmoji = '\u26A0\uFE0F';
+  }
+
+  var html = '';
+
+  // Traffic light
+  html += '<div class="risk-indicator ' + riskClass + '">';
+  html += '<div class="risk-light"></div>';
+  html += '<div><div class="risk-text">' + riskEmoji + ' ' + riskLabel + '</div>';
+  html += '<div style="font-size:0.85rem;color:var(--muted);margin-top:4px">Samlet score: ' + risk.composite + '/100</div>';
+  html += '</div></div>';
+
+  // Per-subtest breakdown
+  html += '<h2 style="margin:18px 0 12px;font-size:1.1rem">Delresultater</h2>';
+
+  var subtests = [
+    { name: 'Nonord (lyd-til-bogstav)', score: risk.nonordScore, weight: '35%', icon: '\u{1F50A}' },
+    { name: 'Fonologisk bevidsthed', score: risk.fonScore, weight: '25%', icon: '\u{1F3B5}' },
+    { name: 'Ordk\u00E6der', score: risk.ordScore, weight: '20%', icon: '\u{1F517}' },
+    { name: 'Hurtig navngivning (RAN)', score: risk.ranScore, weight: '10%', icon: '\u{1F3A8}' },
+    { name: 'Passiv analyse', score: risk.passiveScore, weight: '10%', icon: '\u{1F4CA}' }
+  ];
+
+  for (var i = 0; i < subtests.length; i++) {
+    var st = subtests[i];
+    var barColor = 'var(--green)';
+    if (st.score < 45) barColor = 'var(--red)';
+    else if (st.score < 70) barColor = 'var(--accent)';
+
+    html += '<div class="screening-subtest-bar">';
+    html += '<div style="font-size:1.1rem">' + st.icon + '</div>';
+    html += '<div class="stb-name">' + st.name + ' <span style="font-size:0.72rem;color:var(--muted)">(' + st.weight + ')</span></div>';
+    html += '<div class="stb-bar"><div class="stb-bar-fill" style="width:' + st.score + '%;background:' + barColor + '"></div></div>';
+    html += '<div class="stb-score" style="color:' + barColor + '">' + st.score + '%</div>';
+    html += '</div>';
+  }
+
+  // RAN time
+  if (results.ran) {
+    html += '<p style="text-align:center;color:var(--muted);font-size:0.88rem;margin:8px 0">RAN-tid: ' + results.ran.time.toFixed(1) + ' sekunder</p>';
+  }
+
+  // Detail counts
+  var nonordCorrect = results.nonord.filter(function(r) { return r.correct; }).length;
+  var fonCorrect = results.fonologisk.filter(function(r) { return r.correct; }).length;
+  var ordCorrect = results.ordkaeder.filter(function(r) { return r.correct; }).length;
+
+  html += '<div class="score-row" style="margin-top:14px">';
+  html += '<div class="score-box"><div class="num num-green">' + nonordCorrect + '/' + results.nonord.length + '</div><div class="lbl">Nonord</div></div>';
+  html += '<div class="score-box"><div class="num num-green">' + fonCorrect + '/' + results.fonologisk.length + '</div><div class="lbl">Fonologisk</div></div>';
+  html += '<div class="score-box"><div class="num num-green">' + ordCorrect + '/' + results.ordkaeder.length + '</div><div class="lbl">Ordk\u00E6der</div></div>';
+  html += '</div>';
+
+  // Disclaimer
+  html += '<div class="disclaimer-box">';
+  html += '<strong>VIGTIGT:</strong> Denne stavevurdering er IKKE en diagnose for ordblindhed. ';
+  html += 'Den kan kun vise tegn p\u00E5 stavevanskeligheder. ';
+  html += 'Kun en professionel test hos PPR eller en l\u00E6sevejleder kan fastsl\u00E5 om der er tale om ordblindhed. ';
+  html += 'Tal med din l\u00E6rer eller for\u00E6ldre hvis du er bekymret.';
+  html += '</div>';
+
+  // Action buttons
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-primary btn-full" onclick="startScreening()">\u{1F504} Tag testen igen</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+
+  document.getElementById('screeningResultsContent').innerHTML = html;
+}
+
+function saveScreeningData(data) {
+  try { localStorage.setItem('screening_data', JSON.stringify(data)); } catch(e) {}
+}
+
+function loadScreeningData() {
+  try { var raw = localStorage.getItem('screening_data'); return raw ? JSON.parse(raw) : null; } catch(e) { return null; }
+}
+
+// ===== END SCREENING =====
+
 // Welcome buttons
 function refreshWelcomeButtons() {
   var profile = loadProfile();
@@ -2051,6 +2780,10 @@ function refreshWelcomeButtons() {
   } else {
     reviewBtn.classList.add('hidden');
   }
+
+  // Screening button always visible
+  var screeningBtn = document.getElementById('screeningBtn');
+  if (screeningBtn) screeningBtn.classList.remove('hidden');
 }
 
 // Init

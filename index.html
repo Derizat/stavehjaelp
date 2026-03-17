@@ -562,7 +562,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.6</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.7</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -674,6 +674,14 @@
       <p id="anthropicKeyStatus" style="font-size:0.78rem;color:var(--muted);margin-top:6px">
         Hent nøgle på <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a> &rarr; API Keys.
       </p>
+    </div>
+    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-top:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:1.2rem">&#x1F504;</span>
+        <strong style="font-size:0.9rem">Nulstil data</strong>
+      </div>
+      <button class="btn btn-full" onclick="resetProfile()" style="background:#e74c3c;color:white;font-size:0.85rem;padding:10px">&#x1F5D1;&#xFE0F; Nulstil stavetest-resultat</button>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:6px">Sletter dit niveau og svage kategorier, s&aring; du kan tage stavetesten forfra.</p>
     </div>
   </div>
 </div>
@@ -967,6 +975,12 @@ function loadProfile() {
 
 function saveProfile(data) {
   try { localStorage.setItem('profile_data', JSON.stringify(data)); } catch(e) {}
+}
+
+function resetProfile() {
+  if (!confirm('Er du sikker? Dit stavetest-resultat og niveau bliver slettet.')) return;
+  localStorage.removeItem('profile_data');
+  goHome();
 }
 
 // Voice / TTS
@@ -1286,9 +1300,9 @@ function startTrainingFromProfile() {
   if (profile.diagnosticResults) {
     profile.diagnosticResults.forEach(function(r) { excludeWords[r.word] = true; });
   }
-  // Target estimated level and one below
+  // Target estimated level and two below for a mix of easy and hard
   var targetLevel = profile.spellingLevel || 2;
-  var minLevel = Math.max(1, targetLevel - 1);
+  var minLevel = Math.max(0, targetLevel - 2);
   var pool = [];
   for (var ci = 0; ci < profile.weakCategories.length; ci++) {
     var cat = profile.weakCategories[ci];

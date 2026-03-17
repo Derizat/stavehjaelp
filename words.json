@@ -100,7 +100,7 @@
       "word": "hjerte",
       "hint": "Pumper blodet rundt",
       "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Hjertet slår hurtigere når man løber.",
+      "sentence": "Dit hjerte pumper blod rundt i kroppen.",
       "level": 2,
       "category": "Stumme bogstaver"
     },
@@ -790,7 +790,7 @@
       "word": "forskellig",
       "hint": "Ikke ens",
       "patternHint": "dobbelt-l efter kort 'e'",
-      "sentence": "Tvillingerne er faktisk meget forskellige.",
+      "sentence": "Vejret er meget forskellig fra dag til dag.",
       "level": 4,
       "category": "Dobbeltkonsonant"
     },

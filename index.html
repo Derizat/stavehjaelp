@@ -305,6 +305,11 @@
     background: var(--card); border-radius: var(--radius); border: 2px solid;
     padding: 32px; text-align: center; max-width: 360px; width: 100%;
     box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    animation: chest-entrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes chest-entrance {
+    0% { transform: scale(0) translateY(60px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
   }
   .chest-emoji { font-size: 4rem; animation: chest-wobble 0.8s ease infinite; }
   .chest-opened { animation: chest-pop 0.5s ease !important; }
@@ -1507,11 +1512,11 @@ function checkSpelling() {
     box.innerHTML = feedbackHTML;
   }
 
-  // Count correct for chest
+  // Count correct for chest — show after a delay so "Rigtigt!" is visible first
   if (ok || selfCorrected) {
     sessionCorrectCount++;
     if (sessionCorrectCount % 5 === 0) {
-      pendingChest = true;
+      setTimeout(function() { showTreasureChest(); }, 1500);
     }
   }
 
@@ -1584,15 +1589,10 @@ function nextWord() {
     }
     renderWord();
   } else {
-    // Check for pending boss or chest before continuing
+    // Check for pending boss before continuing
     if (pendingBoss) {
       pendingInterruptAction = currentIndex >= currentWords.length ? 'finish' : 'continue';
       showBossMinigame(pendingBoss);
-      return;
-    }
-    if (pendingChest) {
-      pendingInterruptAction = currentIndex >= currentWords.length ? 'finish' : 'continue';
-      showTreasureChest();
       return;
     }
     if (currentIndex >= currentWords.length) {
@@ -2766,12 +2766,6 @@ function proceedAfterInterrupt() {
   var action = pendingInterruptAction;
   pendingInterruptAction = null;
 
-  // Check if there's still a pending chest (boss was handled, now chest)
-  if (pendingChest) {
-    showTreasureChest();
-    return;
-  }
-
   if (action === 'finish') {
     finishTest();
   } else {
@@ -2869,8 +2863,6 @@ function applyChestReward(result) {
 
 function closeChest() {
   document.getElementById('chestOverlay').classList.add('hidden');
-  // Resume normal flow - the proceedAfterInterrupt function will continue
-  proceedAfterInterrupt();
 }
 
 // ===== AVATAR PROGRESSION =====

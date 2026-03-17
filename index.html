@@ -562,7 +562,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1322,7 +1322,7 @@ function startTrainingFromProfile() {
   var b = document.createElement('div');
   b.className = 'session-badge';
   b.innerHTML = '\u{1F3AF} Træningsmodus — fokus på dine svage kategorier';
-  document.getElementById('phase-test').insertBefore(b, document.getElementById('phase-test').firstChild);
+  document.getElementById('phase-test').appendChild(b);
   renderWord();
 }
 
@@ -1352,12 +1352,16 @@ function startReview() {
   var b = document.createElement('div');
   b.className = 'session-badge';
   b.innerHTML = '\u{1F4D6} Gennemgang — spaced repetition';
-  document.getElementById('phase-test').insertBefore(b, document.getElementById('phase-test').firstChild);
+  document.getElementById('phase-test').appendChild(b);
   renderWord();
 }
 
 // Render word
 function renderWord() {
+  // Safety: don't render if chest or boss overlay is visible
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
   var w = currentWords[currentIndex];
   var total = currentWords.length;
   document.getElementById('wordNum').textContent = (results.length + 1);
@@ -1512,11 +1516,11 @@ function checkSpelling() {
     box.innerHTML = feedbackHTML;
   }
 
-  // Count correct for chest — show after a delay so "Rigtigt!" is visible first
+  // Count correct for chest
   if (ok || selfCorrected) {
     sessionCorrectCount++;
     if (sessionCorrectCount % 5 === 0) {
-      setTimeout(function() { showTreasureChest(); }, 1500);
+      pendingChest = true;
     }
   }
 
@@ -1535,6 +1539,20 @@ function checkSpelling() {
 }
 
 function nextWord() {
+  // Block if an interrupt overlay is active
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+
+  // Check for pending chest BEFORE advancing index
+  if (pendingChest && gameMode !== 'diagnostic') {
+    pendingChest = false;
+    pendingInterruptAction = (currentIndex + 1) >= currentWords.length ? 'finish' : 'continue';
+    currentIndex++;
+    showTreasureChest();
+    return;
+  }
+
   currentIndex++;
 
   if (gameMode === 'diagnostic' && adaptiveState) {
@@ -2863,6 +2881,7 @@ function applyChestReward(result) {
 
 function closeChest() {
   document.getElementById('chestOverlay').classList.add('hidden');
+  proceedAfterInterrupt();
 }
 
 // ===== AVATAR PROGRESSION =====

@@ -562,7 +562,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.7</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.8</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -680,8 +680,10 @@
         <span style="font-size:1.2rem">&#x1F504;</span>
         <strong style="font-size:0.9rem">Nulstil data</strong>
       </div>
-      <button class="btn btn-full" onclick="resetProfile()" style="background:#e74c3c;color:white;font-size:0.85rem;padding:10px">&#x1F5D1;&#xFE0F; Nulstil stavetest-resultat</button>
-      <p style="font-size:0.75rem;color:var(--muted);margin-top:6px">Sletter dit niveau og svage kategorier, s&aring; du kan tage stavetesten forfra.</p>
+      <button class="btn btn-full" onclick="resetProfile()" style="background:#e67e22;color:white;font-size:0.85rem;padding:10px">&#x1F504; Nulstil stavetest-resultat</button>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter dit niveau og svage kategorier, s&aring; du kan tage stavetesten forfra. XP, streak og &oslash;veord beholdes.</p>
+      <button class="btn btn-full" onclick="resetAll()" style="background:#e74c3c;color:white;font-size:0.85rem;padding:10px;margin-top:8px">&#x1F5D1;&#xFE0F; Nulstil alt</button>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter ALT — stavetest, XP, streak, &oslash;veord og screening. Du starter helt forfra.</p>
     </div>
   </div>
 </div>
@@ -980,6 +982,15 @@ function saveProfile(data) {
 function resetProfile() {
   if (!confirm('Er du sikker? Dit stavetest-resultat og niveau bliver slettet.')) return;
   localStorage.removeItem('profile_data');
+  goHome();
+}
+
+function resetAll() {
+  if (!confirm('Er du HELT sikker? ALT bliver slettet — stavetest, XP, streak, øveord og screening.')) return;
+  localStorage.removeItem('profile_data');
+  localStorage.removeItem('reward_data');
+  localStorage.removeItem('sr_data');
+  localStorage.removeItem('screening_data');
   goHome();
 }
 

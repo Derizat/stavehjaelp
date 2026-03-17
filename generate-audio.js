@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Generate audio files for all words and sentences in words.json
-// Usage: GOOGLE_TTS_KEY=your-api-key node generate-audio.js
+// Usage: GOOGLE_TTS_KEY=your-api-key node generate-audio.js [--suffix _m] [--voice da-DK-Wavenet-G]
 
 const fs = require('fs');
 const path = require('path');
@@ -13,11 +13,19 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-const VOICE = process.env.TTS_VOICE || 'da-DK-Neural2-D';
+// Parse CLI args
+const args = process.argv.slice(2);
+let VOICE = process.env.TTS_VOICE || 'da-DK-Neural2-F';
+let SUFFIX = '';
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '--voice' && args[i + 1]) { VOICE = args[i + 1]; i++; }
+  if (args[i] === '--suffix' && args[i + 1]) { SUFFIX = args[i + 1]; i++; }
+}
+
 const AUDIO_DIR = path.join(__dirname, 'audio');
 const WORDS_FILE = path.join(__dirname, 'words.json');
 
-// Rate limiting: max 10 requests per second
+// Rate limiting
 const DELAY_MS = 120;
 
 function sleep(ms) {
@@ -75,6 +83,7 @@ async function main() {
 
   console.log('Genererer lyd for ' + allWords.length + ' ord...');
   console.log('Stemme: ' + VOICE);
+  console.log('Suffix: ' + (SUFFIX || '(ingen)'));
   console.log('Output: ' + AUDIO_DIR);
   console.log('');
 
@@ -83,8 +92,9 @@ async function main() {
   let errors = 0;
 
   for (const entry of allWords) {
-    const wordFile = path.join(AUDIO_DIR, 'word_' + sanitizeFilename(entry.word) + '.mp3');
-    const sentenceFile = path.join(AUDIO_DIR, 'sentence_' + sanitizeFilename(entry.word) + '.mp3');
+    const key = sanitizeFilename(entry.word);
+    const wordFile = path.join(AUDIO_DIR, 'word_' + key + SUFFIX + '.mp3');
+    const sentenceFile = path.join(AUDIO_DIR, 'sentence_' + key + SUFFIX + '.mp3');
 
     // Generate word audio
     if (fs.existsSync(wordFile)) {
@@ -128,14 +138,18 @@ async function main() {
   console.log('Sprunget over (fandtes allerede): ' + skipped);
   console.log('Fejl: ' + errors);
 
-  // Generate manifest file for the app
+  // Generate manifest file with both voice sets
   const manifest = {};
   for (const entry of allWords) {
     const key = sanitizeFilename(entry.word);
-    manifest[entry.word] = {
-      word: 'audio/word_' + key + '.mp3',
-      sentence: 'audio/sentence_' + key + '.mp3'
-    };
+    if (!manifest[entry.word]) {
+      manifest[entry.word] = {
+        word: 'audio/word_' + key + '.mp3',
+        sentence: 'audio/sentence_' + key + '.mp3',
+        word_m: 'audio/word_' + key + '_m.mp3',
+        sentence_m: 'audio/sentence_' + key + '_m.mp3'
+      };
+    }
   }
   fs.writeFileSync(path.join(__dirname, 'audio-manifest.json'), JSON.stringify(manifest, null, 2));
   console.log('Manifest skrevet til audio-manifest.json');

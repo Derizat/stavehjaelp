@@ -648,12 +648,10 @@
       <input type="password" id="apiKeyInput" class="settings-input" placeholder="Indsæt din Google Cloud API-nøgle her..."
         oninput="saveApiKey(this.value)" />
       <div style="margin-top:10px">
-        <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">&#x1F5E3;&#xFE0F; Vælg stemme</div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">&#x1F5E3;&#xFE0F; V&#xe6;lg stemme</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          <button onclick="setVoice('da-DK-Neural2-D')" class="voice-btn" id="vbtn-D2">&#x1F468; Neural Mand</button>
-          <button onclick="setVoice('da-DK-Neural2-A')" class="voice-btn" id="vbtn-A2">&#x1F469; Neural Kvinde</button>
-          <button onclick="setVoice('da-DK-Wavenet-C')" class="voice-btn" id="vbtn-C2">&#x1F468; WaveNet Mand</button>
-          <button onclick="setVoice('da-DK-Wavenet-A')" class="voice-btn" id="vbtn-WA2">&#x1F469; WaveNet Kvinde</button>
+          <button onclick="setVoice('male')" class="voice-btn" id="vbtn-male2">&#x1F468; Mand</button>
+          <button onclick="setVoice('female')" class="voice-btn" id="vbtn-female2">&#x1F469; Kvinde</button>
         </div>
       </div>
       <p id="apiKeyStatus" style="font-size:0.78rem;color:var(--muted);margin-top:6px">
@@ -688,12 +686,10 @@
       oninput="saveApiKey(this.value);syncApiInputs()" />
     <p id="apiKeyStatus2" style="font-size:0.75rem;color:var(--muted);margin-top:5px"></p>
     <div style="margin-top:10px">
-      <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">&#x1F5E3;&#xFE0F; Vælg stemme</div>
+      <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px">&#x1F5E3;&#xFE0F; V&#xe6;lg stemme</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="voiceSelector2">
-        <button onclick="setVoice('da-DK-Neural2-D')" class="voice-btn" id="vbtn-D">&#x1F468; Neural Mand</button>
-        <button onclick="setVoice('da-DK-Neural2-A')" class="voice-btn" id="vbtn-A">&#x1F469; Neural Kvinde</button>
-        <button onclick="setVoice('da-DK-Wavenet-C')" class="voice-btn" id="vbtn-C">&#x1F468; WaveNet Mand</button>
-        <button onclick="setVoice('da-DK-Wavenet-A')" class="voice-btn" id="vbtn-WA">&#x1F469; WaveNet Kvinde</button>
+        <button onclick="setVoice('male')" class="voice-btn" id="vbtn-male">&#x1F468; Mand</button>
+        <button onclick="setVoice('female')" class="voice-btn" id="vbtn-female">&#x1F469; Kvinde</button>
       </div>
     </div>
   </div>
@@ -974,12 +970,23 @@ function setVoice(voiceId) {
   audioCache = {};
   var allBtns = document.querySelectorAll('.voice-btn');
   allBtns.forEach(function(b) { b.classList.remove('active'); });
-  var map = { 'da-DK-Neural2-D': ['vbtn-D','vbtn-D2'], 'da-DK-Neural2-A': ['vbtn-A','vbtn-A2'], 'da-DK-Wavenet-C': ['vbtn-C','vbtn-C2'], 'da-DK-Wavenet-A': ['vbtn-WA','vbtn-WA2'] };
-  (map[voiceId] || []).forEach(function(id) { var b = document.getElementById(id); if(b) b.classList.add('active'); });
+  var btnId = voiceId === 'male' ? 'vbtn-male' : 'vbtn-female';
+  var b = document.getElementById(btnId); if (b) b.classList.add('active');
+  // Also update in-test voice buttons
+  var btnId2 = voiceId === 'male' ? 'vbtn-male2' : 'vbtn-female2';
+  var b2 = document.getElementById(btnId2); if (b2) b2.classList.add('active');
 }
 
 function loadVoice() {
-  try { return localStorage.getItem('tts_voice') || 'da-DK-Neural2-D'; } catch(e) { return 'da-DK-Neural2-D'; }
+  try {
+    var v = localStorage.getItem('tts_voice') || 'female';
+    // Migrate old voice IDs
+    if (v !== 'male' && v !== 'female') {
+      v = (v.indexOf('-D') !== -1 || v.indexOf('-C') !== -1 || v.indexOf('-G') !== -1) ? 'male' : 'female';
+      localStorage.setItem('tts_voice', v);
+    }
+    return v;
+  } catch(e) { return 'female'; }
 }
 
 function toggleApiPanel() {
@@ -1082,7 +1089,10 @@ async function speakWord(word, sentence) {
   // 1. Try pre-generated static audio files
   if (audioManifest && audioManifest[word]) {
     var m = audioManifest[word];
-    playStaticAudio(m.word, sentence ? m.sentence : null, btn);
+    var voice = loadVoice();
+    var wordUrl = voice === 'male' && m.word_m ? m.word_m : m.word;
+    var sentUrl = voice === 'male' && m.sentence_m ? m.sentence_m : m.sentence;
+    playStaticAudio(wordUrl, sentence ? sentUrl : null, btn);
     return;
   }
 

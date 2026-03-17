@@ -562,7 +562,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.5</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.6</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2843,8 +2843,9 @@ function showTreasureChest() {
 
   var overlay = document.getElementById('chestOverlay');
   overlay.innerHTML = '<div class="chest-card" style="border-color:' + colors.border + '">' +
-    '<div class="chest-emoji" id="chestEmoji">\uD83D\uDDC3\uFE0F</div>' +
+    '<div class="chest-emoji" id="chestEmoji" style="cursor:pointer" onclick="openChest()">\uD83D\uDDC3\uFE0F</div>' +
     '<div class="chest-rarity" style="color:' + colors.border + '">' + colors.label + ' Skattekiste!</div>' +
+    '<div style="font-size:0.85rem;color:var(--muted);margin-top:4px" id="chestTapHint">Tryk for at \u00E5bne!</div>' +
     '<div class="chest-reward hidden" id="chestReward">' +
     '<div style="font-size:2.5rem;margin-bottom:8px">' + result.reward.emoji + '</div>' +
     '<div style="font-size:1.2rem;font-weight:800;color:var(--text)">' + result.reward.text + '</div>' +
@@ -2852,17 +2853,7 @@ function showTreasureChest() {
     '<button class="btn btn-accent hidden" id="chestCloseBtn" onclick="closeChest()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
     '</div>';
   overlay.classList.remove('hidden');
-
-  // Animate: shake for 1s, then open
-  setTimeout(function() {
-    document.getElementById('chestEmoji').textContent = '\uD83C\uDF81'; // gift box = opened
-    document.getElementById('chestEmoji').classList.add('chest-opened');
-    document.getElementById('chestReward').classList.remove('hidden');
-    document.getElementById('chestCloseBtn').classList.remove('hidden');
-
-    // Apply reward
-    applyChestReward(result);
-  }, 1200);
+  overlay._chestResult = result;
 
   pendingChest = false;
 }
@@ -2882,6 +2873,21 @@ function applyChestReward(result) {
 function closeChest() {
   document.getElementById('chestOverlay').classList.add('hidden');
   proceedAfterInterrupt();
+}
+
+function openChest() {
+  var overlay = document.getElementById('chestOverlay');
+  var result = overlay._chestResult;
+  if (!result) return;
+  overlay._chestResult = null; // prevent double open
+  document.getElementById('chestEmoji').textContent = '\uD83C\uDF81';
+  document.getElementById('chestEmoji').classList.add('chest-opened');
+  document.getElementById('chestEmoji').style.cursor = 'default';
+  document.getElementById('chestEmoji').removeAttribute('onclick');
+  document.getElementById('chestTapHint').style.display = 'none';
+  document.getElementById('chestReward').classList.remove('hidden');
+  document.getElementById('chestCloseBtn').classList.remove('hidden');
+  applyChestReward(result);
 }
 
 // ===== AVATAR PROGRESSION =====

@@ -720,6 +720,7 @@
     <h2>Hvem spiller?</h2>
     <p style="color:var(--muted);line-height:1.6;margin-top:6px">V&#xe6;lg din profil eller opret en ny</p>
   </div>
+  <div id="migrationHint" class="hidden" style="background:var(--card2);border-radius:10px;padding:12px;margin-bottom:12px;font-size:0.9rem;color:var(--muted);text-align:center">Din gamle data er gemt under &ldquo;Spiller 1&rdquo;. Opret en ny profil med dit navn, eller forts&#xe6;t som Spiller 1.</div>
   <div class="profile-picker-grid" id="profilePickerGrid"></div>
   <div id="newPlayerForm" class="hidden" style="margin-top:16px">
     <input type="text" id="newPlayerInput" placeholder="Skriv dit navn..." maxlength="20" style="margin-bottom:12px" />
@@ -1182,10 +1183,10 @@ function confirmNewPlayer() {
 // Migrate old data (pre-profile system) to first profile
 function migrateOldData() {
   var list = loadPlayersList();
-  if (list.length > 0) return; // already migrated or has profiles
+  if (list.length > 0) return false; // already migrated or has profiles
   // Check if there's any old data
   var hasOld = localStorage.getItem('profile_data') || localStorage.getItem('reward_data') || localStorage.getItem('sr_data');
-  if (!hasOld) return;
+  if (!hasOld) return false;
   var migrateName = 'Spiller 1';
   var oldKeys = ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade'];
   for (var i = 0; i < oldKeys.length; i++) {
@@ -1196,6 +1197,7 @@ function migrateOldData() {
     }
   }
   addPlayer(migrateName);
+  return true;
 }
 // ===== END MULTI-PROFILE SYSTEM =====
 
@@ -4966,26 +4968,27 @@ function initApp() {
   setVoice(loadVoice());
 
   // Migrate old single-player data if needed
-  migrateOldData();
+  var justMigrated = migrateOldData();
 
   // Profile system: show picker or auto-select
   var players = loadPlayersList();
   var lastPlayer = '';
   try { lastPlayer = localStorage.getItem('last_player') || ''; } catch(e) {}
 
-  if (players.length === 1) {
-    // Only one player, auto-select
+  if (justMigrated) {
+    // Just migrated from v1 — always show picker so user can set their name
+    hide('phase-welcome');
+    show('phase-profile-picker');
+    show('migrationHint');
+    renderProfilePicker();
+  } else if (players.length === 1 && lastPlayer) {
+    // Only one player and they've used v2 before, auto-select
     selectPlayer(players[0]);
   } else if (players.length > 1 && lastPlayer && players.indexOf(lastPlayer) !== -1) {
     // Multiple players, auto-select last used
     selectPlayer(lastPlayer);
-  } else if (players.length > 1) {
-    // Multiple players, show picker
-    hide('phase-welcome');
-    show('phase-profile-picker');
-    renderProfilePicker();
   } else {
-    // No players — show picker to create first one
+    // No players, multiple without last, or first v2 visit — show picker
     hide('phase-welcome');
     show('phase-profile-picker');
     renderProfilePicker();

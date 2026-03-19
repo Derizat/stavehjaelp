@@ -986,6 +986,48 @@ var supabase = window.supabase.createClient(
   'sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt'
 );
 
+// Sync player data to Supabase
+function syncToSupabase() {
+  if (!activePlayer) return;
+  var profileRaw = localStorage.getItem(playerKey('profile_data'));
+  var rewardRaw = localStorage.getItem(playerKey('reward_data'));
+  var srRaw = localStorage.getItem(playerKey('sr_data'));
+  var grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0;
+  var row = {
+    player: activePlayer,
+    profile_data: profileRaw ? JSON.parse(profileRaw) : {},
+    reward_data: rewardRaw ? JSON.parse(rewardRaw) : {},
+    sr_data: srRaw ? JSON.parse(srRaw) : {},
+    student_grade: grade,
+    updated_at: new Date().toISOString()
+  };
+  supabase.from('profiles').upsert(row, { onConflict: 'player' }).then(function(res) {
+    if (res.error) console.warn('Supabase sync fejl:', res.error.message);
+  });
+}
+
+// Load player data from Supabase into localStorage
+function syncFromSupabase(name, callback) {
+  supabase.from('profiles').select('*').eq('player', name).single().then(function(res) {
+    if (res.data) {
+      var d = res.data;
+      if (d.profile_data && Object.keys(d.profile_data).length > 0) {
+        localStorage.setItem(name + '_profile_data', JSON.stringify(d.profile_data));
+      }
+      if (d.reward_data && Object.keys(d.reward_data).length > 0) {
+        localStorage.setItem(name + '_reward_data', JSON.stringify(d.reward_data));
+      }
+      if (d.sr_data && Object.keys(d.sr_data).length > 0) {
+        localStorage.setItem(name + '_sr_data', JSON.stringify(d.sr_data));
+      }
+      if (d.student_grade) {
+        localStorage.setItem(name + '_student_grade', d.student_grade.toString());
+      }
+    }
+    if (callback) callback();
+  });
+}
+
 function logAnswer(word, answer, correct, attempt, category, level) {
   var grade = 0;
   try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
@@ -1106,19 +1148,24 @@ function removePlayer(name) {
 function selectPlayer(name) {
   activePlayer = name;
   try { localStorage.setItem('last_player', name); } catch(e) {}
+  // Add to players list if not already there (for cross-device sync)
+  var list = loadPlayersList();
+  if (list.indexOf(name) === -1) { addPlayer(name); }
   hide('phase-profile-picker');
   show('phase-welcome');
-  // Update player name display
   var nameEl = document.getElementById('playerNameDisplay');
   if (nameEl) nameEl.textContent = activePlayer;
-  refreshWelcomeButtons();
-  updateWelcomeStreak();
-  updateWelcomeAvatar();
-  restoreGradeSelection();
-  var rewardData = loadRewardData();
-  rewardData = checkStreak(rewardData);
-  saveRewardData(rewardData);
-  updateRewardBar();
+  // Load from Supabase then refresh UI
+  syncFromSupabase(name, function() {
+    refreshWelcomeButtons();
+    updateWelcomeStreak();
+    updateWelcomeAvatar();
+    restoreGradeSelection();
+    var rewardData = loadRewardData();
+    rewardData = checkStreak(rewardData);
+    saveRewardData(rewardData);
+    updateRewardBar();
+  });
 }
 
 function switchPlayer() {
@@ -1134,11 +1181,29 @@ function switchPlayer() {
 
 function renderProfilePicker() {
   var list = loadPlayersList();
+  renderProfileGrid(list);
+  // Also fetch players from Supabase to show profiles from other devices
+  supabase.from('profiles').select('player').then(function(res) {
+    if (res.data) {
+      var merged = list.slice();
+      for (var i = 0; i < res.data.length; i++) {
+        if (merged.indexOf(res.data[i].player) === -1) {
+          merged.push(res.data[i].player);
+        }
+      }
+      if (merged.length !== list.length) {
+        savePlayersList(merged);
+        renderProfileGrid(merged);
+      }
+    }
+  });
+}
+
+function renderProfileGrid(list) {
   var grid = document.getElementById('profilePickerGrid');
   var html = '';
   for (var i = 0; i < list.length; i++) {
     var name = list[i];
-    // Load this player's avatar
     var emoji = '\u{1F98A}';
     try {
       var raw = localStorage.getItem(name + '_reward_data');
@@ -1225,6 +1290,7 @@ function goHome() {
 // Grade selector
 function selectGrade(g) {
   try { localStorage.setItem(playerKey('student_grade'), g.toString()); } catch(e) {}
+  syncToSupabase();
   var btns = document.querySelectorAll('.grade-btn');
   btns.forEach(function(b, i) {
     if (i === g) b.classList.add('active');
@@ -1267,6 +1333,7 @@ function loadSRData() {
 
 function saveSRData(data) {
   try { localStorage.setItem(playerKey('sr_data'), JSON.stringify(data)); } catch(e) {}
+  syncToSupabase();
 }
 
 function updateSRWord(word, correct, category) {
@@ -1303,6 +1370,7 @@ function loadProfile() {
 
 function saveProfile(data) {
   try { localStorage.setItem(playerKey('profile_data'), JSON.stringify(data)); } catch(e) {}
+  syncToSupabase();
 }
 
 function resetProfile() {
@@ -2451,6 +2519,7 @@ function loadRewardData() {
 
 function saveRewardData(data) {
   try { localStorage.setItem(playerKey('reward_data'), JSON.stringify(data)); } catch(e) {}
+  syncToSupabase();
 }
 
 function getTodayStr() {

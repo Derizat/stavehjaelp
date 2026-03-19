@@ -953,14 +953,14 @@
 var WORD_BANK = {};
 
 var PATTERN_RULES = {
-  "Stumme bogstaver": "I dansk er nogle bogstaver 'stumme' — de skrives men udtales ikke. Typiske eksempler: 'hj-' (hjælp), 'hv-' (hvid), stumt 'v' (halvt, selv), og stumt 'g' (egentlig). Tip: Hvis du kender ordets oprindelse eller familie, kan du ofte huske det stumme bogstav.",
-  "Dobbeltkonsonant": "Vi fordobler konsonanten når vokalen foran er kort og trykstærk. Sig ordet langsomt — lyder vokalen kort (som i 'hoppe')? Så dobbeltkonsonant. Lyder den lang (som i 'bade')? Så enkelt konsonant. Kort vokal = dobbelt konsonant er hovedreglen!",
-  "For- og efterstavelser": "Mange danske ord er bygget af faste dele: forstavelser ('be-', 'for-', 'u-') og efterstavelser ('-hed', '-else', '-ing', '-lig', '-som'). Disse dele staves altid ens! Kan du genkende delene, kan du stave mange ord korrekt. Del ordet op: 'for-bered-else' = tre dele du kender.",
-  "Sammensatte ord": "Dansk sætter tit ord sammen til nye ord. Hemmeligheden: del ordet i stykker! 'skole+arbejde', 'mad+pakke'. Pas på fuge-s: 'verden-s-rekord'. Kan du stave hvert stykke for sig, kan du stave hele ordet!",
-  "Verbernes bøjning": "Datid: De fleste verber får '-ede' (legede, cyklede), men korte stammer får '-te' (spiste, bestemte). Tillægsform (kort): '-et' (udviklet) eller '-t' (bestemt). Tip: Sig grundformen højt — er stammen kort? Så bruges '-te'/'-t'.",
-  "Navneordsendelser": "Flertal: De fleste navneord får '-e' eller '-er' (hunde, lamper). Bestemt form: fælleskøn får '-en' (stolen), intetkøn '-et' (huset). Pas på uregelmæssige former: bog->bøger, mand->mænd, barn->børn. Disse må man lære udenad!",
-  "Lydrette ord": "Lydrette ord staves pr\u00E6cis som de lyder. Sig ordet langsomt og skriv de lyde du h\u00F8rer \u2014 \u00E9n lyd ad gangen!",
-  "Nutids-r": "I nutid (pr\u00E6sens) ender danske verber p\u00E5 '-r': 'han l\u00F8ber', 'hun spiser', 'de leger'. Uden '-r' er det navneform: 'at l\u00F8be', 'at spise', 'at lege'. Tip: Kan du s\u00E6tte 'han/hun/den' foran? S\u00E5 skal der '-r' p\u00E5!"
+  "Stumme bogstaver": "<b>Nogle bogstaver er usynlige!</b> De skrives, men man kan ikke h\u00F8re dem.<br><span style='color:var(--accent)'>hv-</span> (hvid), <span style='color:var(--accent)'>hj-</span> (hj\u00E6lp) \u2014 h'et er stumt!",
+  "Dobbeltkonsonant": "<b>Kort vokal = dobbelt!</b><br>Sig vokalen: er den <span style='color:var(--red)'>kort</span>? \u2192 dobbelt (<span style='color:var(--accent)'>hoppe</span>)<br>Er den <span style='color:var(--green)'>lang</span>? \u2192 enkelt (<span style='color:var(--accent)'>bade</span>)",
+  "For- og efterstavelser": "<b>Del ordet op i klodser!</b><br>Forstavelser: <span style='color:var(--accent)'>be-</span>, <span style='color:var(--accent)'>for-</span>, <span style='color:var(--accent)'>u-</span><br>Efterstavelser: <span style='color:var(--accent)'>-hed</span>, <span style='color:var(--accent)'>-else</span>, <span style='color:var(--accent)'>-lig</span><br>Klodserne staves altid ens!",
+  "Sammensatte ord": "<b>Del ordet i stykker!</b><br><span style='color:var(--accent)'>skole + arbejde</span>, <span style='color:var(--accent)'>mad + pakke</span><br>Kan du stave stykkerne? S\u00E5 kan du stave hele ordet!",
+  "Verbernes bøjning": "<b>Hvad skete der?</b><br>De fleste: <span style='color:var(--accent)'>-ede</span> (legede, cyklede)<br>Korte ord: <span style='color:var(--accent)'>-te</span> (spiste, k\u00F8bte)",
+  "Navneordsendelser": "<b>Hvor mange? Hvilken \u00E9n?</b><br>Flertal: <span style='color:var(--accent)'>-e</span> eller <span style='color:var(--accent)'>-er</span> (hunde, lamper)<br>Bestemt: en-ord f\u00E5r <span style='color:var(--accent)'>-en</span>, et-ord f\u00E5r <span style='color:var(--accent)'>-et</span>",
+  "Lydrette ord": "<b>Sig ordet langsomt!</b> Skriv \u00E9n lyd ad gangen \u2014 det staves pr\u00E6cis som det lyder.",
+  "Nutids-r": "<b>Pr\u00F8v at s\u00E6tte \u201Dhan\u201D foran!</b><br>Han hoppe<span style='color:var(--green);font-weight:800'>r</span>, hun spise<span style='color:var(--green);font-weight:800'>r</span>, de lege<span style='color:var(--green);font-weight:800'>r</span><br>Passer \u201Dhan/hun\u201D foran? S\u00E5 skal der <span style='color:var(--green);font-weight:800'>-r</span> p\u00E5!"
 };
 
 var CATEGORY_ICONS = {
@@ -1629,8 +1629,8 @@ function checkSpelling() {
     var hintLen = Math.max(1, Math.ceil(w.word.length / 2));
     var hintText = w.word.substring(0, hintLen);
     box.innerHTML = '<div class="feedback-retry">\u{1F504} Ikke helt rigtigt \u2014 pr\u00F8v igen!' +
-      '<div style="margin-top:10px"><button class="btn btn-blue" style="font-size:0.85rem;padding:8px 16px" ' +
-      'onclick="useHint()"> \u{1F4A1} F\u00E5 et hint</button></div></div>';
+      '<div style="margin-top:12px"><button class="btn btn-accent" style="font-size:1rem;padding:12px 24px" ' +
+      'onclick="useHint()">\u{1F4A1} F\u00E5 et hint</button></div></div>';
     inp.classList.add('input-retry');
     inp.focus();
     inp.select();

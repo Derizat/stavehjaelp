@@ -736,12 +736,10 @@
   <div id="welcomeAvatarSection" style="text-align:center;margin-bottom:16px">
     <div id="avatarEmoji" style="font-size:4rem;line-height:1.2"></div>
     <div id="playerNameDisplay" class="player-name-display"></div>
-    <div id="avatarTitle" style="font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--accent);margin-top:4px"></div>
+    <div id="avatarTitle" class="hidden"></div>
     <div id="avatarDesc" style="font-size:0.85rem;color:var(--muted);margin-top:2px"></div>
-    <div style="max-width:200px;margin:8px auto">
-      <div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%"></div></div>
-    </div>
-    <div id="avatarProgressLabel" style="font-size:0.75rem;color:var(--muted)"></div>
+    <div class="hidden"><div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%"></div></div></div>
+    <div id="avatarProgressLabel" class="hidden"></div>
   </div>
 
   <!-- Welcome streak section (dynamic) -->
@@ -752,14 +750,6 @@
     <div id="welcomeFreezeBtn"></div>
   </div>
 
-  <div style="text-align:center; margin-bottom:16px">
-    <div style="font-size:3.5rem; margin-bottom:10px">&#x1F4DD;</div>
-    <h2>Klar til at teste din stavning?</h2>
-    <p style="color:var(--muted); line-height:1.6; margin-bottom:18px">
-      Stavehjælpen finder ud af hvad du er god til,<br>
-      og hvad du skal øve dig på!
-    </p>
-  </div>
   <div style="text-align:center; margin-top:16px">
     <p style="font-weight:700; font-size:0.95rem; margin-bottom:6px">Hvilket klassetrin går du i?</p>
     <div class="grade-selector" id="gradeSelector">
@@ -775,22 +765,12 @@
     </div>
   </div>
 
-  <button class="btn btn-accent btn-full" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavetest!</button>
-  <button class="btn btn-primary btn-full hidden" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
-  <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
-  <button class="btn btn-accent btn-full hidden" id="fillInBtn" onclick="startFillIn()">&#x270D;&#xFE0F; Udfyld bogstav</button>
-  <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
-  <button class="btn btn-blue btn-full hidden" id="screeningBtn" onclick="startScreening()">&#x1F4CB; Stavevurdering</button>
-
-  <div class="pattern-list" style="margin-top:20px">
-    <div class="pattern-item"><div class="pi-icon">&#x1F524;</div><div class="pi-text"><strong>Lydrette ord</strong><span>Ord der staves pr&#xe6;cis som de lyder</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x1F507;</div><div class="pi-text"><strong>Stumme bogstaver</strong><span>Bogstaver der skrives men ikke udtales</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x270C;&#xFE0F;</div><div class="pi-text"><strong>Dobbeltkonsonant</strong><span>Hvornår skriver man to ens bogstaver?</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x1F9E9;</div><div class="pi-text"><strong>For- og efterstavelser</strong><span>be-, for-, -hed, -else, -ing, -lig, -som</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x1F517;</div><div class="pi-text"><strong>Sammensatte ord</strong><span>Del ordet op — så er det lettere!</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x270F;&#xFE0F;</div><div class="pi-text"><strong>Verbernes bøjning</strong><span>Datid og tillægsform: -ede/-te, -et/-t</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x1F4DD;</div><div class="pi-text"><strong>Navneordsendelser</strong><span>Flertal, bestemt form, uregelmæssige</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#xAE;&#xFE0F;</div><div class="pi-text"><strong>Nutids-r</strong><span>Verber i nutid ender p&#xe5; '-r': han l&#xf8;ber</span></div></div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+    <button class="btn btn-accent" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavetest!</button>
+    <button class="btn btn-primary hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
+    <button class="btn btn-green hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
+    <button class="btn btn-accent hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="fillInBtn" onclick="startFillIn()">&#x270D;&#xFE0F; Udfyld bogstav</button>
+    <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
   </div>
 
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>

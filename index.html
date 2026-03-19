@@ -669,7 +669,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.0.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.0.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3383,6 +3383,7 @@ function proceedAfterInterrupt() {
     if (action === 'finish') {
       finishFillIn();
     } else {
+      show('phase-fillin');
       renderFillInWord();
     }
     return;
@@ -3391,6 +3392,7 @@ function proceedAfterInterrupt() {
   if (action === 'finish') {
     finishTest();
   } else {
+    show('phase-test');
     renderWord();
   }
 }

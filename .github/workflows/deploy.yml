@@ -1,19 +1,19 @@
 name: Deploy to GitHub Pages
 
-  on:
-    push:
-      branches: [main, v2]
+on:
+  push:
+    branches: [main, v2]
 
-  permissions:
-    contents: read
-    pages: write
-    id-token: write
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
-  concurrency:
-    group: "pages"
-    cancel-in-progress: false
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
-  jobs:
+jobs:
     deploy:
       runs-on: ubuntu-latest
       environment:

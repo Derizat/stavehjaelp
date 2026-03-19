@@ -178,7 +178,7 @@
     border-radius: 99px; margin-bottom: 12px; display: inline-block;
   }
 
-  .grade-selector { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0 16px; }
+  .grade-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width:300px; margin: 10px auto 16px; }
   .grade-btn {
     background: var(--card2); border: 2px solid #3d4270; border-radius: 10px;
     color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
@@ -753,7 +753,6 @@
   <div style="text-align:center; margin-top:16px">
     <p style="font-weight:700; font-size:0.95rem; margin-bottom:6px">Hvilket klassetrin går du i?</p>
     <div class="grade-selector" id="gradeSelector">
-      <button class="grade-btn" onclick="selectGrade(0)">0. kl</button>
       <button class="grade-btn" onclick="selectGrade(1)">1. kl</button>
       <button class="grade-btn" onclick="selectGrade(2)">2. kl</button>
       <button class="grade-btn" onclick="selectGrade(3)">3. kl</button>

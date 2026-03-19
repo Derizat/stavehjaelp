@@ -5020,10 +5020,21 @@ function initApp() {
     // Multiple players, auto-select last used
     selectPlayer(lastPlayer);
   } else {
-    // No players, multiple without last, or first v2 visit — show picker
+    // No local players or first visit — check Supabase for existing profiles
     hide('phase-welcome');
     show('phase-profile-picker');
-    renderProfilePicker();
+    supabase.from('profiles').select('player').then(function(res) {
+      if (res.data && res.data.length > 0) {
+        var merged = loadPlayersList();
+        for (var i = 0; i < res.data.length; i++) {
+          if (merged.indexOf(res.data[i].player) === -1) {
+            merged.push(res.data[i].player);
+          }
+        }
+        savePlayersList(merged);
+      }
+      renderProfilePicker();
+    }).catch(function() { renderProfilePicker(); });
   }
 }
 

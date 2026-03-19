@@ -973,11 +973,35 @@
 <!-- TREASURE CHEST OVERLAY -->
 <div id="chestOverlay" class="chest-overlay hidden"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 
 // Base path for shared assets (words.json, audio-manifest.json, audio/)
 // When deployed in /v2/ subdirectory, assets are in parent directory
 var BASE_PATH = '../';
+
+// Supabase
+var supabase = window.supabase.createClient(
+  'https://cfkddsiwwujbbxjuthie.supabase.co',
+  'sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt'
+);
+
+function logAnswer(word, answer, correct, attempt, category, level) {
+  var grade = 0;
+  try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
+  supabase.from('answers').insert({
+    player: activePlayer,
+    word: word,
+    answer: answer,
+    correct: correct,
+    attempt: attempt,
+    category: category || null,
+    level: level || 0,
+    grade: grade
+  }).then(function(res) {
+    if (res.error) console.warn('Supabase log fejl:', res.error.message);
+  });
+}
 
 // Word bank loaded from words.json
 var WORD_BANK = {};
@@ -1821,6 +1845,9 @@ function checkSpelling() {
 
   var result = { word: w.word, correct: ok || selfCorrected, selfCorrected: selfCorrected, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
+
+  // Log to Supabase
+  logAnswer(w.word, ans, ok || selfCorrected, retryAttempt ? 2 : 1, w.category, w.level || 0);
 
   // Track adaptive state for diagnostic
   if (gameMode === 'diagnostic' && adaptiveState) {

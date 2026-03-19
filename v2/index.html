@@ -178,11 +178,11 @@
     border-radius: 99px; margin-bottom: 12px; display: inline-block;
   }
 
-  .grade-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width:300px; margin: 10px auto 16px; }
+  .grade-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width:340px; margin: 10px auto 16px; }
   .grade-btn {
     background: var(--card2); border: 2px solid #3d4270; border-radius: 10px;
     color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
-    padding: 8px 14px; cursor: pointer; transition: all 0.15s; min-width: 52px; text-align: center;
+    padding: 8px 10px; cursor: pointer; transition: all 0.15s; text-align: center;
   }
   .grade-btn:hover { border-color: var(--accent); color: var(--text); }
   .grade-btn.active { background: rgba(245,166,35,0.2); border-color: var(--accent); color: var(--accent); }
@@ -772,6 +772,7 @@
     <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
   </div>
 
+  <div style="margin-top:120px"></div>
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
   <div class="settings-panel" id="settingsPanel">
     <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-bottom:10px">

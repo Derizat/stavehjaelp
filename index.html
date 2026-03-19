@@ -669,7 +669,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.0.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.0.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -961,6 +961,41 @@ var PATTERN_RULES = {
   "Navneordsendelser": "<b>Hvor mange? Hvilken \u00E9n?</b><br>Flertal: <span style='color:var(--accent)'>-e</span> eller <span style='color:var(--accent)'>-er</span> (hunde, lamper)<br>Bestemt: en-ord f\u00E5r <span style='color:var(--accent)'>-en</span>, et-ord f\u00E5r <span style='color:var(--accent)'>-et</span>",
   "Lydrette ord": "<b>Sig ordet langsomt!</b> Skriv \u00E9n lyd ad gangen \u2014 det staves pr\u00E6cis som det lyder.",
   "Nutids-r": "<b>Pr\u00F8v at s\u00E6tte \u201Dhan\u201D foran!</b><br>Han hoppe<span style='color:var(--green);font-weight:800'>r</span>, hun spise<span style='color:var(--green);font-weight:800'>r</span>, de lege<span style='color:var(--green);font-weight:800'>r</span><br>Passer \u201Dhan/hun\u201D foran? S\u00E5 skal der <span style='color:var(--green);font-weight:800'>-r</span> p\u00E5!"
+};
+
+// Emoji illustrations for fill-in exercise (words with clear visual representation)
+var WORD_EMOJIS = {
+  // Stumme bogstaver
+  "hvid": "\u2B1C", "hjul": "\u{1F6DE}", "hjem": "\u{1F3E0}", "hjerte": "\u2764\uFE0F",
+  "hveps": "\u{1F41D}", "hjort": "\u{1F98C}", "hval": "\u{1F40B}", "hvalp": "\u{1F436}",
+  "hvalros": "\u{1F9AD}", "hvede": "\u{1F33E}", "hjelm": "\u26D1\uFE0F", "chokolade": "\u{1F36B}",
+  "hjerne": "\u{1F9E0}", "dværg": "\u{1F9CC}", "guld": "\u{1FAA9}", "sølv": "\u{1FA99}",
+  "gulv": "\u{1F3E0}", "kalv": "\u{1F404}", "hjørne": "\u{1F4D0}",
+  // Dobbeltkonsonant
+  "hoppe": "\u{1F407}", "kaffe": "\u2615", "sommer": "\u2600\uFE0F", "suppe": "\u{1F372}",
+  "trappen": "\u{1FA9C}", "vinter": "\u2744\uFE0F", "katte": "\u{1F431}", "briller": "\u{1F453}",
+  "dukke": "\u{1F9F8}", "tromme": "\u{1F941}", "flaske": "\u{1F37C}", "skole": "\u{1F3EB}",
+  "lamme": "\u{1F411}", "kopper": "\u2615", "nisse": "\u{1F385}", "svømme": "\u{1F3CA}",
+  "klasse": "\u{1F4DA}", "bade": "\u{1F6C1}",
+  // Navneordsendelser
+  "huset": "\u{1F3E0}", "stolen": "\u{1FA91}", "bogen": "\u{1F4D6}", "drengen": "\u{1F466}",
+  "blomster": "\u{1F490}", "fuglen": "\u{1F426}", "lamper": "\u{1F4A1}", "børnene": "\u{1F9D2}",
+  "pigerne": "\u{1F467}", "æbler": "\u{1F34E}", "brødet": "\u{1F35E}", "tøjet": "\u{1F455}",
+  "kvinder": "\u{1F469}", "biler": "\u{1F697}", "hesten": "\u{1F40E}", "træet": "\u{1F333}",
+  "skyer": "\u2601\uFE0F", "bilerne": "\u{1F697}", "hestene": "\u{1F40E}", "fuglene": "\u{1F426}",
+  "blomsterne": "\u{1F490}", "gæster": "\u{1F465}",
+  // Nutids-r
+  "hopper": "\u{1F3C3}", "spiser": "\u{1F37D}\uFE0F", "leger": "\u{1F3B2}", "sover": "\u{1F634}",
+  "cykler": "\u{1F6B2}", "svømmer": "\u{1F3CA}", "tegner": "\u{1F3A8}", "danser": "\u{1F483}",
+  "lytter": "\u{1F442}",
+  // Sammensatte ord
+  "morgensmad": "\u{1F373}", "fødselsdagsgave": "\u{1F381}",
+  // Verbernes bøjning
+  "spiste": "\u{1F37D}\uFE0F", "legede": "\u{1F3B2}", "hoppede": "\u{1F3C3}",
+  "cyklede": "\u{1F6B2}", "svømmede": "\u{1F3CA}", "rejste": "\u2708\uFE0F",
+  // For- og efterstavelser
+  "venlig": "\u{1F60A}", "farlig": "\u26A0\uFE0F", "kærlighed": "\u2764\uFE0F",
+  "frihed": "\u{1F5FD}", "ulykke": "\u{1F4A5}"
 };
 
 var CATEGORY_ICONS = {
@@ -4418,15 +4453,26 @@ function startFillIn() {
   }
   pool = shuffle(pool);
 
-  // Filter to words that have valid blanks
-  fillinWords = [];
-  fillinBlanks = [];
-  for (var i = 0; i < pool.length && fillinWords.length < 10; i++) {
+  // Filter to words that have valid blanks, prioritize words with emoji illustrations
+  var withEmoji = [], withoutEmoji = [], blanksEmoji = [], blanksNoEmoji = [];
+  for (var i = 0; i < pool.length; i++) {
     var blanks = generateBlanks(pool[i]);
     if (blanks) {
-      fillinWords.push(pool[i]);
-      fillinBlanks.push(blanks);
+      if (WORD_EMOJIS[pool[i].word]) {
+        withEmoji.push(pool[i]); blanksEmoji.push(blanks);
+      } else {
+        withoutEmoji.push(pool[i]); blanksNoEmoji.push(blanks);
+      }
     }
+  }
+  // Take emoji words first, fill up with non-emoji words
+  fillinWords = [];
+  fillinBlanks = [];
+  for (var ei = 0; ei < withEmoji.length && fillinWords.length < 10; ei++) {
+    fillinWords.push(withEmoji[ei]); fillinBlanks.push(blanksEmoji[ei]);
+  }
+  for (var ni = 0; ni < withoutEmoji.length && fillinWords.length < 10; ni++) {
+    fillinWords.push(withoutEmoji[ni]); fillinBlanks.push(blanksNoEmoji[ni]);
   }
 
   if (fillinWords.length === 0) {
@@ -4469,7 +4515,14 @@ function renderFillInWord() {
   document.getElementById('fillinPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
   document.getElementById('fillinFeedbackBox').style.display = 'none';
   document.getElementById('fillinNextBtn').classList.add('hidden');
-  document.getElementById('fillinHint').textContent = w.hint || '';
+
+  // Show emoji illustration if available, otherwise text hint
+  var emoji = WORD_EMOJIS[w.word] || '';
+  if (emoji) {
+    document.getElementById('fillinHint').innerHTML = '<span style="font-size:2.5rem;display:block;margin-bottom:4px">' + emoji + '</span>' + (w.hint || '');
+  } else {
+    document.getElementById('fillinHint').textContent = w.hint || '';
+  }
 
   // Render word with blank
   var word = blanks.word;

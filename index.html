@@ -557,12 +557,57 @@
   .screening-subtest-bar .stb-bar { flex: 0 0 80px; height: 8px; background: #2d3158; border-radius: 99px; overflow: hidden; }
   .screening-subtest-bar .stb-bar-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
   .screening-subtest-bar .stb-score { font-family: 'Fredoka One', cursive; font-size: 0.95rem; min-width: 50px; text-align: right; }
+
+  /* Fill-in exercise */
+  .fillin-word {
+    font-family: 'Fredoka One', cursive; font-size: 2.6rem; color: var(--text);
+    letter-spacing: 6px; min-height: 3.5rem; margin-bottom: 12px; line-height: 1.3;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px;
+  }
+  .fillin-word .fillin-blank {
+    display: inline-block; min-width: 1.4em; border-bottom: 4px solid var(--accent);
+    color: transparent; text-align: center; margin: 0 2px; position: relative;
+  }
+  .fillin-word .fillin-blank::after {
+    content: '?'; color: var(--accent); opacity: 0.5; font-size: 1.6rem;
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  }
+  .fillin-choices {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px; margin: 16px 0;
+  }
+  .fillin-choice-btn {
+    font-family: 'Fredoka One', cursive; font-size: 1.5rem; padding: 16px 12px;
+    border-radius: 14px; border: 3px solid #3d4270; background: var(--card2); color: var(--text);
+    cursor: pointer; transition: all 0.2s; text-align: center; letter-spacing: 2px;
+  }
+  .fillin-choice-btn:hover { border-color: var(--accent); transform: scale(1.05); }
+  .fillin-choice-btn:active { transform: scale(0.97); }
+  .fillin-choice-btn.chosen-correct {
+    border-color: var(--green); background: rgba(34,211,160,0.2); color: var(--green);
+    animation: fillin-pop 0.3s ease;
+  }
+  .fillin-choice-btn.chosen-wrong {
+    border-color: var(--red); background: rgba(244,63,94,0.15); color: var(--red);
+  }
+  .fillin-choice-btn.reveal-correct {
+    border-color: var(--green); background: rgba(34,211,160,0.1); color: var(--green);
+  }
+  @keyframes fillin-pop { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  .fillin-word .fillin-filled {
+    display: inline-block; min-width: 1.4em; text-align: center; margin: 0 2px;
+    border-bottom: 4px solid var(--green); color: var(--green);
+  }
+  .fillin-word .fillin-filled-wrong {
+    display: inline-block; min-width: 1.4em; text-align: center; margin: 0 2px;
+    border-bottom: 4px solid var(--red); color: var(--red); text-decoration: line-through;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.8</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v0.9.9</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -628,6 +673,7 @@
   <button class="btn btn-accent btn-full" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavetest!</button>
   <button class="btn btn-primary btn-full hidden" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
   <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
+  <button class="btn btn-accent btn-full hidden" id="fillInBtn" onclick="startFillIn()">&#x270D;&#xFE0F; Udfyld bogstav</button>
   <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
   <button class="btn btn-blue btn-full hidden" id="screeningBtn" onclick="startScreening()">&#x1F4CB; Stavevurdering</button>
 
@@ -751,6 +797,26 @@
 <div id="phase-results" class="card hidden">
   <div class="phase-label">&#x1F3AF; Resultater</div>
   <div id="resultsContent"></div>
+</div>
+
+<!-- FILL-IN EXERCISE -->
+<div id="phase-fillin" class="card hidden">
+  <div class="phase-label" id="fillinPhaseLabel">&#x270D;&#xFE0F; Udfyld bogstav</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="fillinProgressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="fillinWordNum">1</div><div class="lbl">Ord nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="fillinScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="fillinScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
+  </div>
+  <div class="pattern-badge" id="fillinPatternBadge">&#x1F520; M&#xf8;nster</div>
+  <div class="listen-box">
+    <div class="fillin-word" id="fillinWordDisplay"></div>
+    <p class="hint-text" id="fillinHint"></p>
+    <button class="btn-listen" id="fillinListenBtn" onclick="speakFillInWord()">&#x1F508; H&#xf8;r ordet</button>
+  </div>
+  <div class="fillin-choices" id="fillinChoices"></div>
+  <div id="fillinFeedbackBox" style="display:none; margin-top:12px;"></div>
+  <button class="btn btn-green btn-full hidden" id="fillinNextBtn" onclick="nextFillInWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
 <!-- SCREENING INTRO -->
@@ -884,7 +950,7 @@ function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   show('phase-welcome');
@@ -2450,6 +2516,7 @@ function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function showBossMinigame(bossData) {
   hide('phase-test');
+  hide('phase-fillin');
   show('phase-boss');
 
   var word = bossData.word.toLowerCase();
@@ -2801,13 +2868,26 @@ function bossDefeated() {
 function continueAfterBoss() {
   pendingBoss = null;
   hide('phase-boss');
-  show('phase-test');
+  if (gameMode === 'fillin') {
+    show('phase-fillin');
+  } else {
+    show('phase-test');
+  }
   proceedAfterInterrupt();
 }
 
 function proceedAfterInterrupt() {
   var action = pendingInterruptAction;
   pendingInterruptAction = null;
+
+  if (gameMode === 'fillin') {
+    if (action === 'finish') {
+      finishFillIn();
+    } else {
+      renderFillInWord();
+    }
+    return;
+  }
 
   if (action === 'finish') {
     finishTest();
@@ -3550,6 +3630,603 @@ function loadScreeningData() {
 
 // ===== END SCREENING =====
 
+// ===== FILL-IN EXERCISE =====
+
+// Generate blanking data for a word based on its category and patternHint
+function generateBlanks(wordObj) {
+  var word = wordObj.word;
+  var cat = wordObj.category;
+  var hint = wordObj.patternHint || '';
+
+  // --- Stumme bogstaver ---
+  if (cat === 'Stumme bogstaver') {
+    // Parse "stumt 'X' i 'YZ'" pattern
+    var stmMatch = hint.match(/stumt '(\w+)' i '(\w+)'/);
+    if (stmMatch) {
+      var silentLetter = stmMatch[1]; // e.g. 'h'
+      var cluster = stmMatch[2]; // e.g. 'hv', 'hj'
+      var pos = word.toLowerCase().indexOf(cluster.toLowerCase());
+      if (pos >= 0) {
+        var blankPos = pos; // the silent letter is first in the cluster
+        return {
+          word: word,
+          blankStart: blankPos,
+          blankLen: silentLetter.length,
+          correct: silentLetter.toLowerCase(),
+          options: shuffle([silentLetter.toLowerCase(), '']),
+          explanation: 'I "' + cluster + '" er "' + silentLetter + '" stumt — det skrives men udtales ikke'
+        };
+      }
+    }
+    // "stumt 'X' foran 'Y'" or "stumt 'X' efter 'Y'" or "stumt 'X'" or "stumt 'X' i udtalen"
+    var stmSimple = hint.match(/stumt '(\w+)'/);
+    if (stmSimple) {
+      var sl = stmSimple[1].toLowerCase();
+      var slPos = word.toLowerCase().indexOf(sl);
+      if (slPos >= 0) {
+        return {
+          word: word,
+          blankStart: slPos,
+          blankLen: sl.length,
+          correct: sl,
+          options: shuffle([sl, '']),
+          explanation: '"' + sl + '" er stumt i dette ord — skrives men udtales ikke'
+        };
+      }
+    }
+    return null;
+  }
+
+  // --- Dobbeltkonsonant ---
+  if (cat === 'Dobbeltkonsonant') {
+    // "dobbelt-X efter kort 'Y'" or "dobbelt 'X' efter kort vokal" or "dobbelt X"
+    var dblMatch = hint.match(/dobbelt[- ]'?(\w)'?/);
+    if (dblMatch) {
+      var letter = dblMatch[1].toLowerCase();
+      var dbl = letter + letter;
+      var dblPos = word.toLowerCase().indexOf(dbl);
+      if (dblPos >= 0) {
+        return {
+          word: word,
+          blankStart: dblPos,
+          blankLen: 2,
+          correct: dbl,
+          options: shuffle([dbl, letter]),
+          explanation: 'Her skal der dobbelt-' + letter + ' fordi vokalen foran er kort'
+        };
+      }
+    }
+    // "enkelt-X" or "enkelt konsonant"
+    var snglMatch = hint.match(/enkelt[- ]'?(\w)'?/);
+    if (snglMatch && snglMatch[1] !== 'k') { // skip generic 'konsonant'
+      var sLetter = snglMatch[1].toLowerCase();
+      // Find the single consonant that is NOT doubled
+      for (var si = 0; si < word.length; si++) {
+        if (word[si].toLowerCase() === sLetter && (si + 1 >= word.length || word[si + 1].toLowerCase() !== sLetter)) {
+          return {
+            word: word,
+            blankStart: si,
+            blankLen: 1,
+            correct: sLetter,
+            options: shuffle([sLetter, sLetter + sLetter]),
+            explanation: 'Her er vokalen lang, så der er kun enkelt-' + sLetter
+          };
+        }
+      }
+    }
+    return null;
+  }
+
+  // --- Nutids-r ---
+  if (cat === 'Nutids-r') {
+    // Word ends with -r in present tense
+    if (word.endsWith('r')) {
+      return {
+        word: word,
+        blankStart: word.length - 1,
+        blankLen: 1,
+        correct: 'r',
+        options: shuffle(['r', '']),
+        explanation: 'Verber i nutid ender altid på -r: "hun hoppe-r", "han løbe-r"'
+      };
+    }
+    return null;
+  }
+
+  // --- Verbernes bøjning ---
+  if (cat === 'Verbernes b\u00F8jning') {
+    // datid: '-ede' vs '-te'
+    if (hint.indexOf('-ede') >= 0) {
+      var edePos = word.lastIndexOf('ede');
+      if (edePos > 0) {
+        return {
+          word: word,
+          blankStart: edePos,
+          blankLen: 3,
+          correct: 'ede',
+          options: shuffle(['ede', 'te']),
+          explanation: 'Datid: dette verbum bøjes med "-ede" (svag bøjning)'
+        };
+      }
+    }
+    if (hint.indexOf("'-te'") >= 0 || hint.indexOf(': \'-te\'') >= 0 || (hint.indexOf('-te') >= 0 && hint.indexOf('-ede') < 0)) {
+      var tePos = word.lastIndexOf('te');
+      if (tePos > 0 && word.indexOf('ede') < 0) {
+        return {
+          word: word,
+          blankStart: tePos,
+          blankLen: 2,
+          correct: 'te',
+          options: shuffle(['te', 'ede']),
+          explanation: 'Datid: dette verbum bøjes med "-te" (kort bøjning)'
+        };
+      }
+    }
+    // tillægsform: '-et' vs '-t'
+    if (hint.indexOf('-et') >= 0 || hint.indexOf('tillægsform') >= 0) {
+      if (word.endsWith('et')) {
+        return {
+          word: word,
+          blankStart: word.length - 2,
+          blankLen: 2,
+          correct: 'et',
+          options: shuffle(['et', 't']),
+          explanation: 'Tillægsform: dette verbum ender på "-et"'
+        };
+      }
+    }
+    return null;
+  }
+
+  // --- Navneordsendelser ---
+  if (cat === 'Navneordsendelser') {
+    // bestemt form: -en vs -et
+    if (hint.indexOf('-en') >= 0 && word.endsWith('en')) {
+      return {
+        word: word,
+        blankStart: word.length - 2,
+        blankLen: 2,
+        correct: 'en',
+        options: shuffle(['en', 'et']),
+        explanation: 'Fælleskøn (en-ord): bestemt form ender på "-en"'
+      };
+    }
+    if (hint.indexOf('-et') >= 0 && word.endsWith('et')) {
+      return {
+        word: word,
+        blankStart: word.length - 2,
+        blankLen: 2,
+        correct: 'et',
+        options: shuffle(['et', 'en']),
+        explanation: 'Intetkøn (et-ord): bestemt form ender på "-et"'
+      };
+    }
+    // flertal: -er vs -e
+    if (hint.indexOf("'-er'") >= 0 && word.endsWith('er')) {
+      return {
+        word: word,
+        blankStart: word.length - 2,
+        blankLen: 2,
+        correct: 'er',
+        options: shuffle(['er', 'e', 'ene']),
+        explanation: 'Flertal dannes her med "-er"'
+      };
+    }
+    // -erne vs -ene
+    if (hint.indexOf('-erne') >= 0 && word.endsWith('erne')) {
+      return {
+        word: word,
+        blankStart: word.length - 4,
+        blankLen: 4,
+        correct: 'erne',
+        options: shuffle(['erne', 'ene']),
+        explanation: 'Bestemt flertal dannes her med "-erne"'
+      };
+    }
+    if (hint.indexOf('-ene') >= 0 && word.endsWith('ene')) {
+      return {
+        word: word,
+        blankStart: word.length - 3,
+        blankLen: 3,
+        correct: 'ene',
+        options: shuffle(['ene', 'erne']),
+        explanation: 'Bestemt flertal dannes her med "-ene"'
+      };
+    }
+    return null;
+  }
+
+  // --- For- og efterstavelser ---
+  if (cat === 'For- og efterstavelser') {
+    // efterstavelse '-lig' vs '-lig'
+    if (hint.indexOf('-lig') >= 0 && word.indexOf('lig') > 0) {
+      var ligPos = word.lastIndexOf('lig');
+      return {
+        word: word,
+        blankStart: ligPos,
+        blankLen: 3,
+        correct: 'lig',
+        options: shuffle(['lig', 'leg']),
+        explanation: 'Efterstavelsen "-lig" bruges til at danne tillægsord'
+      };
+    }
+    // '-hed'
+    if (hint.indexOf('-hed') >= 0 && word.indexOf('hed') > 0) {
+      var hedPos = word.lastIndexOf('hed');
+      return {
+        word: word,
+        blankStart: hedPos,
+        blankLen: 3,
+        correct: 'hed',
+        options: shuffle(['hed', 'het']),
+        explanation: 'Efterstavelsen "-hed" bruges til at danne navneord'
+      };
+    }
+    // '-else'
+    if (hint.indexOf('-else') >= 0 && word.indexOf('else') > 0) {
+      var elsePos = word.lastIndexOf('else');
+      return {
+        word: word,
+        blankStart: elsePos,
+        blankLen: 4,
+        correct: 'else',
+        options: shuffle(['else', 'ælse']),
+        explanation: 'Efterstavelsen "-else" bruges til at danne navneord af verber'
+      };
+    }
+    // forstavelse 'u-'
+    if (hint.indexOf("'u-'") >= 0 && word.startsWith('u')) {
+      return {
+        word: word,
+        blankStart: 0,
+        blankLen: 1,
+        correct: 'u',
+        options: shuffle(['u', 'o']),
+        explanation: 'Forstavelsen "u-" betyder "ikke" eller "modsat"'
+      };
+    }
+    return null;
+  }
+
+  // --- Sammensatte ord: blank the junction ---
+  if (cat === 'Sammensatte ord') {
+    // fuge-s
+    if (hint.indexOf('fuge-s') >= 0 || hint.indexOf("'s'") >= 0) {
+      // Find the fuge-s in the compound
+      var parts = hint.match(/'([^']+)'/g);
+      if (parts && parts.length >= 2) {
+        var firstPart = parts[0].replace(/'/g, '').toLowerCase();
+        var sPos = word.toLowerCase().indexOf(firstPart);
+        if (sPos >= 0) {
+          var fugePos = sPos + firstPart.length;
+          if (word[fugePos] === 's') {
+            return {
+              word: word,
+              blankStart: fugePos,
+              blankLen: 1,
+              correct: 's',
+              options: shuffle(['s', '']),
+              explanation: 'Sammensatte ord har her et fuge-s mellem delene'
+            };
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  // --- Lydrette ord: not suitable for fill-in (too easy/generic) ---
+  return null;
+}
+
+// Fill-in state
+var fillinWords = [], fillinIndex = 0, fillinResults = [], fillinBlanks = [];
+
+function startFillIn() {
+  var profile = loadProfile();
+  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
+    startDiagnostic();
+    return;
+  }
+  gameMode = 'fillin';
+  pendingBoss = null;
+  sessionCorrectCount = 0;
+  pendingChest = false;
+
+  var targetLevel = profile.spellingLevel || 2;
+  var minLevel = Math.max(0, targetLevel - 2);
+  var pool = [];
+  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
+    var cat = profile.weakCategories[ci];
+    if (!WORD_BANK[cat]) continue;
+    var words = WORD_BANK[cat].filter(function(w) {
+      return w.level >= minLevel && w.level <= targetLevel;
+    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
+    pool = pool.concat(words);
+  }
+  // Fallback: all words from weak categories
+  if (pool.length === 0) {
+    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
+      var cat2 = profile.weakCategories[ci2];
+      if (!WORD_BANK[cat2]) continue;
+      pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
+    }
+  }
+  pool = shuffle(pool);
+
+  // Filter to words that have valid blanks
+  fillinWords = [];
+  fillinBlanks = [];
+  for (var i = 0; i < pool.length && fillinWords.length < 10; i++) {
+    var blanks = generateBlanks(pool[i]);
+    if (blanks) {
+      fillinWords.push(pool[i]);
+      fillinBlanks.push(blanks);
+    }
+  }
+
+  if (fillinWords.length === 0) {
+    alert('Ingen ord fundet til udfyld-\u00F8velsen for dine kategorier. Pr\u00F8v tr\u00E6ningsmodus i stedet.');
+    return;
+  }
+
+  fillinIndex = 0;
+  fillinResults = [];
+  results = []; // shared results array for finishTest
+
+  document.getElementById('fillinScoreCorrect').textContent = '0';
+  document.getElementById('fillinScoreWrong').textContent = '0';
+
+  hide('phase-welcome');
+  show('phase-fillin');
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  updateRewardBar();
+
+  var b = document.createElement('div');
+  b.className = 'session-badge';
+  b.innerHTML = '\u270D\uFE0F Udfyld bogstav \u2014 v\u00E6lg det rigtige bogstav';
+  document.getElementById('phase-fillin').appendChild(b);
+
+  renderFillInWord();
+}
+
+function renderFillInWord() {
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+
+  var w = fillinWords[fillinIndex];
+  var blanks = fillinBlanks[fillinIndex];
+  var total = fillinWords.length;
+
+  document.getElementById('fillinWordNum').textContent = (fillinResults.length + 1);
+  document.getElementById('fillinProgressBar').style.width = ((fillinResults.length / total) * 100) + '%';
+  document.getElementById('fillinPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  document.getElementById('fillinFeedbackBox').style.display = 'none';
+  document.getElementById('fillinNextBtn').classList.add('hidden');
+  document.getElementById('fillinHint').textContent = w.hint || '';
+
+  // Render word with blank
+  var word = blanks.word;
+  var html = '';
+  for (var i = 0; i < word.length; i++) {
+    if (i >= blanks.blankStart && i < blanks.blankStart + blanks.blankLen) {
+      if (i === blanks.blankStart) {
+        html += '<span class="fillin-blank">' + '_'.repeat(blanks.blankLen) + '</span>';
+      }
+      // skip rest of blank characters
+    } else {
+      html += '<span>' + word[i] + '</span>';
+    }
+  }
+  // If blank is "nothing" (empty string option), the blank might be at a position
+  // For empty options (silent letter removal), show blank differently
+  document.getElementById('fillinWordDisplay').innerHTML = html;
+
+  // Render choice buttons
+  var choicesHtml = '';
+  for (var oi = 0; oi < blanks.options.length; oi++) {
+    var optLabel = blanks.options[oi] === '' ? '(intet)' : blanks.options[oi];
+    choicesHtml += '<button class="fillin-choice-btn" onclick="checkFillIn(' + oi + ')" data-index="' + oi + '">' + optLabel + '</button>';
+  }
+  document.getElementById('fillinChoices').innerHTML = choicesHtml;
+
+  // Play audio
+  speakWord(w.word, null);
+}
+
+function speakFillInWord() {
+  var w = fillinWords[fillinIndex];
+  speakWord(w.word, w.sentence || null);
+}
+
+function checkFillIn(chosenIndex) {
+  var w = fillinWords[fillinIndex];
+  var blanks = fillinBlanks[fillinIndex];
+  var chosen = blanks.options[chosenIndex];
+  var ok = (chosen === blanks.correct);
+
+  // Disable all choice buttons
+  var btns = document.querySelectorAll('.fillin-choice-btn');
+  btns.forEach(function(btn) {
+    btn.onclick = null;
+    btn.style.pointerEvents = 'none';
+    var idx = parseInt(btn.getAttribute('data-index'));
+    if (idx === chosenIndex && ok) {
+      btn.classList.add('chosen-correct');
+    } else if (idx === chosenIndex && !ok) {
+      btn.classList.add('chosen-wrong');
+    }
+    if (blanks.options[idx] === blanks.correct && !ok) {
+      btn.classList.add('reveal-correct');
+    }
+  });
+
+  // Update word display to show the filled letter
+  var word = blanks.word;
+  var html = '';
+  for (var i = 0; i < word.length; i++) {
+    if (i >= blanks.blankStart && i < blanks.blankStart + blanks.blankLen) {
+      if (i === blanks.blankStart) {
+        if (ok) {
+          html += '<span class="fillin-filled">' + blanks.correct + '</span>';
+        } else {
+          html += '<span class="fillin-filled-wrong">' + (chosen || '\u00D8') + '</span>';
+        }
+      }
+    } else {
+      html += '<span>' + word[i] + '</span>';
+    }
+  }
+  document.getElementById('fillinWordDisplay').innerHTML = html;
+
+  // Feedback
+  var box = document.getElementById('fillinFeedbackBox');
+  box.style.display = 'block';
+  if (ok) {
+    box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! "' + word + '" \u{1F389}</div>';
+  } else {
+    var rule = PATTERN_RULES[w.category] || '';
+    var feedbackHTML = '<div class="feedback-wrong">\u274C Det rigtige svar er: <strong>' + blanks.correct + '</strong> \u2192 "' + word + '"</div>';
+    if (blanks.explanation) {
+      feedbackHTML += '<div class="pattern-explain"><strong>\u{1F4D6} Staveregel:</strong><br>' + blanks.explanation + '</div>';
+    }
+    box.innerHTML = feedbackHTML;
+  }
+
+  // Record result
+  var result = {
+    word: w.word, correct: ok, selfCorrected: false,
+    userAnswer: chosen === '' ? '(intet)' : chosen,
+    category: w.category, patternHint: w.patternHint || '', level: w.level || 0
+  };
+  fillinResults.push(result);
+  results.push(result);
+
+  // SR update
+  updateSRWord(w.word, ok, w.category);
+
+  // Gamification
+  if (ok) {
+    sessionCorrectCount++;
+    if (sessionCorrectCount % 5 === 0) {
+      pendingChest = true;
+    }
+  } else {
+    pendingBoss = { word: w.word, category: w.category };
+  }
+
+  // Update scores
+  document.getElementById('fillinScoreCorrect').textContent = fillinResults.filter(function(r) { return r.correct; }).length;
+  document.getElementById('fillinScoreWrong').textContent = fillinResults.filter(function(r) { return !r.correct; }).length;
+
+  document.getElementById('fillinNextBtn').classList.remove('hidden');
+  document.getElementById('fillinNextBtn').focus();
+}
+
+function nextFillInWord() {
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+
+  // Check for pending chest
+  if (pendingChest) {
+    pendingChest = false;
+    pendingInterruptAction = (fillinIndex + 1) >= fillinWords.length ? 'finish' : 'continue';
+    fillinIndex++;
+    showTreasureChest();
+    return;
+  }
+
+  fillinIndex++;
+
+  // Check for pending boss
+  if (pendingBoss) {
+    pendingInterruptAction = fillinIndex >= fillinWords.length ? 'finish' : 'continue';
+    showBossMinigame(pendingBoss);
+    return;
+  }
+
+  if (fillinIndex >= fillinWords.length) {
+    finishFillIn();
+  } else {
+    renderFillInWord();
+  }
+}
+
+function finishFillIn() {
+  hide('phase-fillin');
+
+  // Reuse reward system
+  var correctCount = fillinResults.filter(function(r) { return r.correct; }).length;
+  var totalCount = fillinResults.length;
+  var prevXP = loadRewardData().totalXP || 0;
+  var rewardResult = awardSessionXP(correctCount, totalCount);
+  var rewardData = loadRewardData();
+  var newXP = rewardData.totalXP || 0;
+  var prevLevel = getAvatarLevel(prevXP);
+  var newLevel = getAvatarLevel(newXP);
+  var milestone = checkMilestone(rewardData);
+  updateRewardBar();
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  if (rewardResult.dailyGoalReached) {
+    setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
+  }
+  if (milestone) {
+    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
+  }
+  if (newLevel.index > prevLevel.index) {
+    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
+  }
+  show('rewardBar');
+  show('rewardXPBarWrap');
+
+  // Render results
+  renderFillInResults();
+}
+
+function renderFillInResults() {
+  show('phase-results');
+  var correct = fillinResults.filter(function(r) { return r.correct; }).length;
+  var wrong = fillinResults.filter(function(r) { return !r.correct; });
+  var sr = loadSRData();
+
+  var html = '';
+  var encouragements = ['Godt g\u00E5et! \u{1F4AA}', 'Flot indsats med bogstaverne! \u{1F31F}', 'Du bliver skarpere! \u2B50'];
+  html += '<div class="ai-bubble"><p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
+  html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + fillinResults.length + ' rigtige i udfyld-\u00F8velsen.</p></div>';
+
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / fillinResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
+  html += '<div style="margin-bottom:18px">';
+  fillinResults.forEach(function(r) {
+    var srWord = sr.words[r.word];
+    var level = srWord ? srWord.level : 0;
+    var levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
+    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+    html += '<div class="word-attempt">';
+    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+    html += '<span>';
+    html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
+    html += ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
+    html += '</span></div>';
+  });
+  html += '</div>';
+
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-accent btn-full" onclick="startFillIn()">\u270D\uFE0F Ny udfyld-\u00F8velse</button>';
+  html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F4CA} Forts\u00E6t tr\u00E6ning</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
 // Welcome buttons
 function refreshWelcomeButtons() {
   var profile = loadProfile();
@@ -3560,17 +4237,22 @@ function refreshWelcomeButtons() {
   var newDiagBtn = document.getElementById('newDiagBtn');
   var reviewBtn = document.getElementById('reviewBtn');
 
+  var fillInBtn = document.getElementById('fillInBtn');
+
   if (profile) {
     startBtn.classList.add('hidden');
     if (profile.weakCategories && profile.weakCategories.length > 0) {
       continueBtn.classList.remove('hidden');
+      fillInBtn.classList.remove('hidden');
     } else {
       continueBtn.classList.add('hidden');
+      fillInBtn.classList.add('hidden');
     }
     newDiagBtn.classList.remove('hidden');
   } else {
     startBtn.classList.remove('hidden');
     continueBtn.classList.add('hidden');
+    fillInBtn.classList.add('hidden');
     newDiagBtn.classList.add('hidden');
   }
 

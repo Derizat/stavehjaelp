@@ -187,6 +187,39 @@
   .grade-btn:hover { border-color: var(--accent); color: var(--text); }
   .grade-btn.active { background: rgba(245,166,35,0.2); border-color: var(--accent); color: var(--accent); }
 
+  /* Category lesson overlay */
+  .lesson-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000;
+    background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
+    padding: 20px; animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .lesson-card {
+    background: var(--card); border-radius: 20px; border: 2px solid var(--accent);
+    padding: 28px; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+  }
+  .lesson-card h2 { font-family: 'Fredoka One', cursive; color: var(--accent); font-size: 1.4rem; margin-bottom: 12px; text-align: center; }
+  .lesson-card .lesson-emoji { font-size: 3rem; text-align: center; margin-bottom: 8px; }
+  .lesson-rule {
+    background: var(--card2); border-radius: 12px; padding: 14px 16px;
+    margin: 12px 0; border-left: 4px solid var(--accent);
+  }
+  .lesson-rule p { margin: 6px 0; line-height: 1.6; font-size: 0.95rem; }
+  .lesson-examples {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 12px 0;
+  }
+  .lesson-example {
+    background: rgba(34,211,160,0.1); border: 1px solid rgba(34,211,160,0.3);
+    border-radius: 10px; padding: 8px 14px; font-weight: 700; font-size: 1rem;
+  }
+  .lesson-example .highlight { color: var(--green); font-size: 1.1rem; }
+  .lesson-tip {
+    background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 10px; padding: 12px 14px; margin: 12px 0; text-align: center;
+    font-size: 0.9rem; color: #c4b5fd;
+  }
+
   /* Profile picker */
   .profile-picker-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -848,7 +881,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.0.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.1.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -867,6 +900,11 @@
 
 <!-- SESSION REWARD OVERLAY (injected dynamically) -->
 <div id="rewardOverlay" class="reward-overlay hidden"></div>
+
+<!-- LESSON OVERLAY -->
+<div id="lessonOverlay" class="lesson-overlay hidden" style="display:none">
+  <div class="lesson-card" id="lessonContent"></div>
+</div>
 
 <!-- PROFILE PICKER -->
 <div id="phase-profile-picker" class="card">
@@ -1378,6 +1416,142 @@ var WORD_EMOJIS = {
   "frihed": "\u{1F5FD}", "ulykke": "\u{1F4A5}"
 };
 
+var CATEGORY_LESSONS = {
+  "Stumme bogstaver": {
+    emoji: "\u{1F47B}",
+    title: "Stumme bogstaver",
+    rule: "Nogle bogstaver er usynlige! De skrives, men man kan <strong>ikke h\u00F8re dem</strong>.",
+    examples: [
+      { word: "<span class='highlight'>h</span>vid", note: "h'et er stumt" },
+      { word: "<span class='highlight'>h</span>j\u00E6lp", note: "h'et er stumt" },
+      { word: "ha<span class='highlight'>l</span>v", note: "l'et er stumt" },
+      { word: "gul<span class='highlight'>d</span>", note: "d'et er stumt" }
+    ],
+    tip: "\u{1F4A1} Trick: Pr\u00F8v at sige ordet langsomt. Kan du h\u00F8re alle bogstaverne? Hvis ikke, er der nok et stumt bogstav gemt!"
+  },
+  "Dobbeltkonsonant": {
+    emoji: "\u270C\uFE0F",
+    title: "Dobbeltkonsonant",
+    rule: "Sig vokalen (a, e, i, o, u) h\u00F8jt. Er den <strong style='color:var(--red)'>kort</strong>? S\u00E5 <strong>dobbelt</strong> konsonant!",
+    examples: [
+      { word: "ho<span class='highlight'>pp</span>e", note: "kort 'o' \u2192 dobbelt" },
+      { word: "ka<span class='highlight'>ff</span>e", note: "kort 'a' \u2192 dobbelt" },
+      { word: "ba<span class='highlight'>d</span>e", note: "lang 'a' \u2192 enkelt" },
+      { word: "vi<span class='highlight'>d</span>e", note: "lang 'i' \u2192 enkelt" }
+    ],
+    tip: "\u{1F4A1} Trick: Sig vokalen langsomt. Kort vokal = hop-pe. Lang vokal = ba-de."
+  },
+  "For- og efterstavelser": {
+    emoji: "\u{1F9E9}",
+    title: "For- og efterstavelser",
+    rule: "Mange ord er bygget af <strong>klodser</strong> der altid staves ens!",
+    examples: [
+      { word: "<span class='highlight'>for-</span>bered<span class='highlight'>-else</span>", note: "3 klodser" },
+      { word: "<span class='highlight'>u-</span>mulig", note: "u- = ikke/modsat" },
+      { word: "ven<span class='highlight'>-lig</span>", note: "-lig, ikke -leg" },
+      { word: "k\u00E6rlig<span class='highlight'>-hed</span>", note: "-hed, ikke -het" }
+    ],
+    tip: "\u{1F4A1} Trick: Del ordet op i klodser! Kender du klodserne, kan du stave hele ordet."
+  },
+  "Sammensatte ord": {
+    emoji: "\u{1F517}",
+    title: "Sammensatte ord",
+    rule: "Dansk elsker at <strong>s\u00E6tte ord sammen</strong>. Del dem i stykker!",
+    examples: [
+      { word: "<span class='highlight'>skole</span>+<span class='highlight'>taske</span>", note: "to ord" },
+      { word: "<span class='highlight'>morgen</span>-s-<span class='highlight'>mad</span>", note: "med fuge-s" },
+      { word: "<span class='highlight'>mad</span>+<span class='highlight'>pakke</span>", note: "to ord" }
+    ],
+    tip: "\u{1F4A1} Trick: Kan du dele ordet i to ord du kender? S\u00E5 er det et sammensat ord!"
+  },
+  "Verbernes b\u00F8jning": {
+    emoji: "\u270F\uFE0F",
+    title: "Verbernes b\u00F8jning",
+    rule: "N\u00E5r noget <strong>skete i g\u00E5r</strong>, skal verbet b\u00F8jes.",
+    examples: [
+      { word: "leg<span class='highlight'>ede</span>", note: "de fleste f\u00E5r -ede" },
+      { word: "spis<span class='highlight'>te</span>", note: "korte ord f\u00E5r -te" },
+      { word: "k\u00F8b<span class='highlight'>te</span>", note: "kort stamme = -te" },
+      { word: "cykl<span class='highlight'>ede</span>", note: "lang stamme = -ede" }
+    ],
+    tip: "\u{1F4A1} Trick: Sig grundformen (at lege, at spise). F\u00F8les stammen kort? S\u00E5 -te. Lang? S\u00E5 -ede."
+  },
+  "Navneordsendelser": {
+    emoji: "\u{1F4DD}",
+    title: "Navneordsendelser",
+    rule: "Er det <strong>en</strong>-ord eller <strong>et</strong>-ord? Det bestemmer endelsen!",
+    examples: [
+      { word: "stol<span class='highlight'>en</span>", note: "en stol \u2192 -en" },
+      { word: "hus<span class='highlight'>et</span>", note: "et hus \u2192 -et" },
+      { word: "bil<span class='highlight'>er</span>", note: "flertal \u2192 -er" },
+      { word: "hund<span class='highlight'>ene</span>", note: "bestemt flertal" }
+    ],
+    tip: "\u{1F4A1} Trick: Sig \"en\" eller \"et\" foran ordet. \"En stol\" \u2192 stolen. \"Et hus\" \u2192 huset."
+  },
+  "Lydrette ord": {
+    emoji: "\u{1F524}",
+    title: "Lydrette ord",
+    rule: "Disse ord staves <strong>pr\u00E6cis som de lyder</strong>. Sig dem langsomt!",
+    examples: [
+      { word: "sol", note: "s-o-l" },
+      { word: "mus", note: "m-u-s" },
+      { word: "hund", note: "h-u-n-d" }
+    ],
+    tip: "\u{1F4A1} Trick: Sig ordet \u00E9n lyd ad gangen og skriv hver lyd ned."
+  },
+  "Nutids-r": {
+    emoji: "\u{1F996}",
+    title: "Nutids-r",
+    rule: "Pr\u00F8v at s\u00E6tte <strong>\"han\"</strong> foran! Passer det? S\u00E5 skal der <strong style='color:var(--green)'>-r</strong> p\u00E5!",
+    examples: [
+      { word: "hun hoppe<span class='highlight'>r</span>", note: "han/hun = nutid" },
+      { word: "de spise<span class='highlight'>r</span>", note: "de = nutid" },
+      { word: "at hoppe", note: "at = INGEN -r" },
+      { word: "at spise", note: "at = INGEN -r" }
+    ],
+    tip: "\u{1F4A1} Trick: \"Han hopper\" \u2192 -r. \"At hoppe\" \u2192 ingen -r. S\u00E5 simpelt er det!"
+  }
+};
+
+function showCategoryLesson(category) {
+  var lesson = CATEGORY_LESSONS[category];
+  if (!lesson) return;
+
+  var html = '<div class="lesson-emoji">' + lesson.emoji + '</div>';
+  html += '<h2>' + lesson.title + '</h2>';
+  html += '<div class="lesson-rule"><p>' + lesson.rule + '</p></div>';
+
+  html += '<div class="lesson-examples">';
+  for (var i = 0; i < lesson.examples.length; i++) {
+    var ex = lesson.examples[i];
+    html += '<div class="lesson-example"><div>' + ex.word + '</div><div style="font-size:0.75rem;color:var(--muted);font-weight:400;margin-top:2px">' + ex.note + '</div></div>';
+  }
+  html += '</div>';
+
+  html += '<div class="lesson-tip">' + lesson.tip + '</div>';
+  html += '<button class="btn btn-accent" style="width:100%;margin-top:16px;padding:14px" onclick="dismissLesson()">\u{1F4AA} Forst\u00E5et! Videre</button>';
+
+  document.getElementById('lessonContent').innerHTML = html;
+  var overlay = document.getElementById('lessonOverlay');
+  overlay.style.display = 'flex';
+  overlay.classList.remove('hidden');
+}
+
+function dismissLesson() {
+  var overlay = document.getElementById('lessonOverlay');
+  overlay.classList.add('hidden');
+  overlay.style.display = 'none';
+}
+
+function trackCategoryError(category) {
+  if (!sessionCategoryErrors[category]) sessionCategoryErrors[category] = 0;
+  sessionCategoryErrors[category]++;
+  if (sessionCategoryErrors[category] === 3) {
+    sessionCategoryErrors[category] = 0; // reset so it can trigger again after 3 more
+    showCategoryLesson(category);
+  }
+}
+
 var CATEGORY_ICONS = {
   "Stumme bogstaver": "\u{1F507}",
   "Dobbeltkonsonant": "\u270C\uFE0F",
@@ -1410,6 +1584,7 @@ var LEVEL_GRADE_MAP = {
 // State
 var currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
 var retryAttempt = false;
+var sessionCategoryErrors = {}; // track errors per category for lesson triggers
 var gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
 var diagnosticWordsList = [];
 var adaptiveState = null;
@@ -1809,7 +1984,7 @@ function startDiagnostic() {
   currentIndex = 0;
   wrongCountPerWord = {};
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
   var startLevel = 1;
   var selectedGrade = loadGrade();
@@ -1851,7 +2026,7 @@ function startTrainingFromProfile() {
   gameMode = 'training';
   wrongCountPerWord = {};
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
   var excludeWords = {};
   if (profile.diagnosticResults) {
@@ -1902,7 +2077,7 @@ function startReview() {
   gameMode = 'review';
   wrongCountPerWord = {};
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
   currentWords = shuffle(getDueWords());
   if (currentWords.length === 0) {
@@ -2083,6 +2258,7 @@ function checkSpelling() {
     }
   } else {
     sessionCorrectStreak = 0;
+    trackCategoryError(w.category);
   }
 
   document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
@@ -4814,7 +4990,7 @@ function startFillIn() {
   }
   gameMode = 'fillin';
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
   var targetLevel = profile.spellingLevel || 2;
@@ -5022,6 +5198,7 @@ function checkFillIn(chosenIndex) {
     }
   } else {
     sessionCorrectStreak = 0;
+    trackCategoryError(w.category);
   }
 
   // Update scores
@@ -5287,7 +5464,7 @@ function startRightOrWrong() {
   }
   gameMode = 'rightorwrong';
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
   var targetLevel = profile.spellingLevel || 2;
@@ -5481,6 +5658,7 @@ function checkRightOrWrong(answeredCorrect) {
   } else {
     sessionCorrectStreak = 0;
     rfCombo = 0;
+    trackCategoryError(item.category);
   }
 
   // Update scores
@@ -5664,7 +5842,7 @@ function startSpellingPolice() {
   }
   gameMode = 'spellingpolice';
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
   var targetLevel = profile.spellingLevel || 2;
@@ -5807,6 +5985,7 @@ function checkSpellingPolice(wordIndex) {
     }
   } else {
     sessionCorrectStreak = 0;
+    trackCategoryError(item.category);
   }
 
   document.getElementById('spScoreCorrect').textContent = spResults.filter(function(r) { return r.correct; }).length;
@@ -5989,7 +6168,7 @@ function startWordBuilder() {
   }
   gameMode = 'wordbuilder';
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
   var targetLevel = profile.spellingLevel || 2;
@@ -6186,6 +6365,7 @@ function wordBuilderComplete() {
     }
   } else {
     sessionCorrectStreak = 0;
+    trackCategoryError(w.category);
   }
 
   document.getElementById('wbScoreCorrect').textContent = wbResults.filter(function(r) { return r.correct; }).length;

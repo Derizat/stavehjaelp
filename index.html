@@ -697,29 +697,60 @@
   }
 
   /* Spelling Police exercise */
+  #phase-spellingpolice .listen-box { cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='24'>🔍</text></svg>") 4 4, pointer; }
+  .sp-lineup {
+    background: linear-gradient(180deg, #1a1520 0%, #12101a 100%);
+    border: 2px solid #3d4270; border-radius: 14px; padding: 16px 8px;
+    position: relative; overflow: hidden; margin: 8px 0;
+  }
+  .sp-lineup::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px);
+    pointer-events: none;
+  }
   .sp-sentence {
-    font-size: 1.3rem; line-height: 2.2; text-align: center; margin: 12px 0;
-    min-height: 4rem;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    min-height: 3rem; position: relative; z-index: 1;
   }
   .sp-word {
-    display: inline-block; padding: 4px 8px; margin: 2px; border-radius: 8px;
-    cursor: pointer; transition: all 0.15s; border: 2px solid transparent;
-    font-weight: 700;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 8px 12px; border-radius: 10px;
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='24'>🔍</text></svg>") 4 4, pointer;
+    transition: all 0.15s; border: 2px solid rgba(61,66,112,0.5);
+    background: rgba(26,29,46,0.6);
   }
-  .sp-word:hover { border-color: var(--accent); background: rgba(245,166,35,0.1); }
-  .sp-word:active { transform: scale(0.95); }
+  .sp-word .sp-number {
+    font-size: 0.65rem; color: var(--muted); font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .sp-word .sp-text {
+    font-size: 1.15rem; font-weight: 800;
+  }
+  .sp-word:hover { border-color: var(--accent); background: rgba(245,166,35,0.08); transform: scale(1.05); }
+  .sp-word:active { transform: scale(0.97); }
   .sp-word.selected-correct {
-    border-color: var(--green); background: rgba(34,211,160,0.2); color: var(--green);
-    animation: fillin-pop 0.3s ease;
+    border-color: var(--green); background: rgba(34,211,160,0.2);
+    animation: sp-caught 0.5s ease;
   }
+  .sp-word.selected-correct .sp-text { color: var(--green); }
+  .sp-word.selected-correct .sp-number::after { content: ' \u2705 FANGET!'; color: var(--green); }
   .sp-word.selected-wrong {
-    border-color: var(--red); background: rgba(244,63,94,0.15); color: var(--red);
+    border-color: var(--red); background: rgba(244,63,94,0.1);
   }
+  .sp-word.selected-wrong .sp-text { color: var(--red); }
+  .sp-word.selected-wrong .sp-number::after { content: ' Uskyldig'; color: var(--muted); }
   .sp-word.reveal-target {
-    border-color: var(--accent); background: rgba(245,166,35,0.15); color: var(--accent);
-    text-decoration: line-through;
+    border-color: #f59e0b; background: rgba(245,158,11,0.15);
   }
+  .sp-word.reveal-target .sp-text { color: #f59e0b; text-decoration: line-through; }
+  .sp-word.reveal-target .sp-number::after { content: ' \u{1F6A8} SKYLDIG!'; color: #f59e0b; }
   .sp-word.disabled { pointer-events: none; cursor: default; }
+  @keyframes sp-caught {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.15) rotate(-2deg); }
+    60% { transform: scale(1.1) rotate(2deg); }
+    100% { transform: scale(1); }
+  }
   .sp-correction {
     text-align: center; font-family: 'Fredoka One', cursive; font-size: 1.6rem;
     color: var(--green); margin: 8px 0;
@@ -774,7 +805,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.3.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.3.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -842,7 +873,7 @@
   <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
   <button class="btn btn-accent btn-full hidden" id="fillInBtn" onclick="startFillIn()">&#x270D;&#xFE0F; Udfyld bogstav</button>
   <button class="btn btn-primary btn-full hidden" id="rightOrWrongBtn" onclick="startRightOrWrong()">&#x1F441;&#xFE0F; Rigtigt eller forkert?</button>
-  <button class="btn btn-blue btn-full hidden" id="spellingPoliceBtn" onclick="startSpellingPolice()">&#x1F6A8; Stavepolitiet</button>
+  <button class="btn btn-blue btn-full hidden" id="spellingPoliceBtn" onclick="startSpellingPolice()">&#x1F50D; Stavepolitiet</button>
   <button class="btn btn-green btn-full hidden" id="wordBuilderBtn" onclick="startWordBuilder()">&#x1F9E9; Ordbyggeren</button>
   <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
   <button class="btn btn-blue btn-full hidden" id="screeningBtn" onclick="startScreening()">&#x1F4CB; Stavevurdering</button>
@@ -1011,21 +1042,23 @@
 
 <!-- SPELLING POLICE EXERCISE -->
 <div id="phase-spellingpolice" class="card hidden">
-  <div class="phase-label">&#x1F6A8; Stavepolitiet</div>
+  <div class="phase-label">&#x1F50D; Stavepolitiet</div>
   <div class="progress-bar-wrap"><div class="progress-bar" id="spProgressBar" style="width:0%"></div></div>
   <div class="score-row">
-    <div class="score-box"><div class="num num-yellow" id="spWordNum">1</div><div class="lbl">S&#xe6;tning</div></div>
-    <div class="score-box"><div class="num num-green" id="spScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
-    <div class="score-box"><div class="num num-red" id="spScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
+    <div class="score-box"><div class="num num-yellow" id="spWordNum">1</div><div class="lbl">Sag nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="spScoreCorrect">0</div><div class="lbl">Fanget &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="spScoreWrong">0</div><div class="lbl">Undslap &#x2717;</div></div>
   </div>
   <div class="pattern-badge" id="spPatternBadge">&#x1F520; M&#xf8;nster</div>
   <div class="listen-box">
-    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:10px">&#x1F50D; Find det forkert stavede ord!</p>
-    <div class="sp-sentence" id="spSentence"></div>
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:10px">&#x1F50D; Mist&#xe6;nkt line-up! Find forbrydelsen!</p>
+    <div class="sp-lineup">
+      <div class="sp-sentence" id="spSentence"></div>
+    </div>
     <div class="sp-correction hidden" id="spCorrection"></div>
   </div>
   <div id="spFeedbackBox" style="display:none; margin-top:12px;"></div>
-  <button class="btn btn-green btn-full hidden" id="spNextBtn" onclick="nextSpellingPolice()">&#x27A1;&#xFE0F; N&#xe6;ste s&#xe6;tning</button>
+  <button class="btn btn-green btn-full hidden" id="spNextBtn" onclick="nextSpellingPolice()">&#x27A1;&#xFE0F; N&#xe6;ste sag</button>
 </div>
 
 <!-- RIGHT OR WRONG EXERCISE -->
@@ -5539,7 +5572,7 @@ function startSpellingPolice() {
 
   var b = document.createElement('div');
   b.className = 'session-badge';
-  b.innerHTML = '\u{1F6A8} Stavepolitiet \u2014 find stavefejlen i s\u00E6tningen!';
+  b.innerHTML = '\u{1F50D} Stavepolitiet \u2014 find den skyldige i line-up\'et!';
   document.getElementById('phase-spellingpolice').appendChild(b);
 
   renderSpellingPoliceWord();
@@ -5560,10 +5593,13 @@ function renderSpellingPoliceWord() {
   document.getElementById('spNextBtn').classList.add('hidden');
   document.getElementById('spCorrection').classList.add('hidden');
 
-  // Render sentence with tappable words
+  // Render sentence as suspect line-up
   var html = '';
   for (var i = 0; i < item.tokens.length; i++) {
-    html += '<span class="sp-word" data-index="' + i + '" onclick="checkSpellingPolice(' + i + ')">' + item.tokens[i] + '</span> ';
+    html += '<span class="sp-word" data-index="' + i + '" onclick="checkSpellingPolice(' + i + ')">' +
+      '<span class="sp-number">#' + (i + 1) + '</span>' +
+      '<span class="sp-text">' + item.tokens[i] + '</span>' +
+      '</span>';
   }
   document.getElementById('spSentence').innerHTML = html;
 }
@@ -5596,9 +5632,9 @@ function checkSpellingPolice(wordIndex) {
   var box = document.getElementById('spFeedbackBox');
   box.style.display = 'block';
   if (ok) {
-    box.innerHTML = '<div class="feedback-correct">\u2705 Godt spottet! "' + item.misspelledWord + '" \u2192 "' + item.correctWord + '"</div>';
+    box.innerHTML = '<div class="feedback-correct">\u{1F6A8} Forbryder fanget! "' + item.misspelledWord + '" \u2192 "' + item.correctWord + '"</div>';
   } else {
-    box.innerHTML = '<div class="feedback-wrong">\u274C Fejlen var i: <strong>"' + item.misspelledWord + '"</strong> \u2192 <strong>"' + item.correctWord + '"</strong>' +
+    box.innerHTML = '<div class="feedback-wrong">\u{1F575}\uFE0F Forbryderen slap v\u00E6k! Det var: <strong>"' + item.misspelledWord + '"</strong> \u2192 <strong>"' + item.correctWord + '"</strong>' +
       (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
   }
 
@@ -5699,9 +5735,9 @@ function renderSpellingPoliceResults() {
   var wrong = spResults.filter(function(r) { return !r.correct; });
 
   var html = '';
-  var msgs = ['Skarpt politiarbejde! \u{1F6A8}', 'Godt detektivarbejde! \u{1F50D}', 'Du fanger fejlene! \u{1F3AF}'];
+  var msgs = ['Skarpt politiarbejde, betjent! \u{1F50D}', 'Mesterdetektiv! \u{1F575}\uFE0F', 'Ingen slipper forbi dig! \u{1F6A8}'];
   html += '<div class="ai-bubble"><p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
-  html += '<p style="margin-top:8px">' + correct + ' ud af ' + spResults.length + ' stavefejl fundet.</p></div>';
+  html += '<p style="margin-top:8px">' + correct + ' ud af ' + spResults.length + ' forbrydere fanget!</p></div>';
 
   html += '<div class="score-row">';
   html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Fundet \u2713</div></div>';

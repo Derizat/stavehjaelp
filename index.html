@@ -178,7 +178,7 @@
     border-radius: 99px; margin-bottom: 12px; display: inline-block;
   }
 
-  .grade-selector { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0 16px; }
+  .grade-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width: 340px; margin: 10px auto 16px; }
   .grade-btn {
     background: var(--card2); border: 2px solid #3d4270; border-radius: 10px;
     color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
@@ -186,6 +186,30 @@
   }
   .grade-btn:hover { border-color: var(--accent); color: var(--text); }
   .grade-btn.active { background: rgba(245,166,35,0.2); border-color: var(--accent); color: var(--accent); }
+
+  /* Profile picker */
+  .profile-picker-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px; margin: 20px 0;
+  }
+  .profile-picker-btn {
+    background: var(--card2); border: 2px solid #3d4270; border-radius: 14px;
+    color: var(--text); font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700;
+    padding: 18px 12px; cursor: pointer; transition: all 0.15s; text-align: center;
+  }
+  .profile-picker-btn:hover { border-color: var(--accent); transform: scale(1.03); }
+  .profile-picker-btn .pp-emoji { font-size: 2.2rem; display: block; margin-bottom: 6px; }
+  .profile-picker-btn .pp-name { display: block; }
+  .profile-picker-btn.pp-new { border-style: dashed; color: var(--muted); }
+  .profile-picker-btn.pp-new:hover { border-color: var(--green); color: var(--text); }
+  .profile-picker-btn .pp-delete {
+    display: inline-block; margin-top: 6px; font-size: 0.7rem; color: var(--muted);
+    background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; padding: 2px 6px;
+  }
+  .profile-picker-btn .pp-delete:hover { color: var(--red); }
+  .player-name-display {
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--text); margin-top: 4px;
+  }
 
   .settings-toggle {
     background: none; border: 1px solid #3d4270; border-radius: 10px;
@@ -824,7 +848,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.3.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.0.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -844,16 +868,33 @@
 <!-- SESSION REWARD OVERLAY (injected dynamically) -->
 <div id="rewardOverlay" class="reward-overlay hidden"></div>
 
+<!-- PROFILE PICKER -->
+<div id="phase-profile-picker" class="card">
+  <div style="text-align:center;margin-bottom:16px">
+    <div style="font-size:3.5rem;margin-bottom:10px">&#x1F98A;</div>
+    <h2>Hvem spiller?</h2>
+    <p style="color:var(--muted);line-height:1.6;margin-top:6px">V&#xe6;lg din profil eller opret en ny</p>
+  </div>
+  <div id="migrationHint" class="hidden" style="background:var(--card2);border-radius:10px;padding:12px;margin-bottom:12px;font-size:0.9rem;color:var(--muted);text-align:center">Din gamle data er gemt under &ldquo;Spiller 1&rdquo;. Opret en ny profil med dit navn, eller forts&#xe6;t som Spiller 1.</div>
+  <div class="profile-picker-grid" id="profilePickerGrid"></div>
+  <div id="newPlayerForm" class="hidden" style="margin-top:16px">
+    <input type="text" id="newPlayerInput" placeholder="Skriv dit navn..." maxlength="20" style="margin-bottom:12px" />
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-green" style="flex:1" onclick="confirmNewPlayer()">&#x2714;&#xFE0F; Opret</button>
+      <button class="btn btn-blue" style="flex:0" onclick="cancelNewPlayer()">Annuller</button>
+    </div>
+  </div>
+</div>
+
 <!-- WELCOME -->
-<div id="phase-welcome" class="card">
+<div id="phase-welcome" class="card hidden">
   <div id="welcomeAvatarSection" style="text-align:center;margin-bottom:16px">
     <div id="avatarEmoji" style="font-size:4rem;line-height:1.2"></div>
-    <div id="avatarTitle" style="font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--accent);margin-top:4px"></div>
+    <div id="playerNameDisplay" class="player-name-display"></div>
+    <div id="avatarTitle" class="hidden"></div>
     <div id="avatarDesc" style="font-size:0.85rem;color:var(--muted);margin-top:2px"></div>
-    <div style="max-width:200px;margin:8px auto">
-      <div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%"></div></div>
-    </div>
-    <div id="avatarProgressLabel" style="font-size:0.75rem;color:var(--muted)"></div>
+    <div class="hidden"><div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%"></div></div></div>
+    <div id="avatarProgressLabel" class="hidden"></div>
   </div>
 
   <!-- Welcome streak section (dynamic) -->
@@ -864,18 +905,9 @@
     <div id="welcomeFreezeBtn"></div>
   </div>
 
-  <div style="text-align:center; margin-bottom:16px">
-    <div style="font-size:3.5rem; margin-bottom:10px">&#x1F4DD;</div>
-    <h2>Klar til at teste din stavning?</h2>
-    <p style="color:var(--muted); line-height:1.6; margin-bottom:18px">
-      Stavehjælpen finder ud af hvad du er god til,<br>
-      og hvad du skal øve dig på!
-    </p>
-  </div>
   <div style="text-align:center; margin-top:16px">
-    <p style="font-weight:700; font-size:0.95rem; margin-bottom:6px">Hvilket klassetrin går du i?</p>
+    <p style="font-weight:700; font-size:0.95rem; margin-bottom:6px">Hvilket klassetrin g&#xe5;r du i?</p>
     <div class="grade-selector" id="gradeSelector">
-      <button class="grade-btn" onclick="selectGrade(0)">0. kl</button>
       <button class="grade-btn" onclick="selectGrade(1)">1. kl</button>
       <button class="grade-btn" onclick="selectGrade(2)">2. kl</button>
       <button class="grade-btn" onclick="selectGrade(3)">3. kl</button>
@@ -887,27 +919,19 @@
     </div>
   </div>
 
-  <button class="btn btn-accent btn-full" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavetest!</button>
-  <button class="btn btn-primary btn-full hidden" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
-  <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
-  <button class="btn btn-accent btn-full hidden" id="fillInBtn" onclick="startFillIn()">&#x270D;&#xFE0F; Udfyld bogstav</button>
-  <button class="btn btn-primary btn-full hidden" id="rightOrWrongBtn" onclick="startRightOrWrong()">&#x1F441;&#xFE0F; Rigtigt eller forkert?</button>
-  <button class="btn btn-blue btn-full hidden" id="spellingPoliceBtn" onclick="startSpellingPolice()">&#x1F50D; Stavepolitiet</button>
-  <button class="btn btn-green btn-full hidden" id="wordBuilderBtn" onclick="startWordBuilder()">&#x1F9E9; Ordbyggeren</button>
-  <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
-  <button class="btn btn-blue btn-full hidden" id="screeningBtn" onclick="startScreening()">&#x1F4CB; Stavevurdering</button>
-
-  <div class="pattern-list" style="margin-top:20px">
-    <div class="pattern-item"><div class="pi-icon">&#x1F524;</div><div class="pi-text"><strong>Lydrette ord</strong><span>Ord der staves pr&#xe6;cis som de lyder</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x1F507;</div><div class="pi-text"><strong>Stumme bogstaver</strong><span>Bogstaver der skrives men ikke udtales</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x270C;&#xFE0F;</div><div class="pi-text"><strong>Dobbeltkonsonant</strong><span>Hvornår skriver man to ens bogstaver?</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x1F9E9;</div><div class="pi-text"><strong>For- og efterstavelser</strong><span>be-, for-, -hed, -else, -ing, -lig, -som</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x1F517;</div><div class="pi-text"><strong>Sammensatte ord</strong><span>Del ordet op — så er det lettere!</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x270F;&#xFE0F;</div><div class="pi-text"><strong>Verbernes bøjning</strong><span>Datid og tillægsform: -ede/-te, -et/-t</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#x1F4DD;</div><div class="pi-text"><strong>Navneordsendelser</strong><span>Flertal, bestemt form, uregelmæssige</span></div></div>
-    <div class="pattern-item"><div class="pi-icon">&#xAE;&#xFE0F;</div><div class="pi-text"><strong>Nutids-r</strong><span>Verber i nutid ender p&#xe5; '-r': han l&#xf8;ber</span></div></div>
+  <div style="margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:8px">
+    <button class="btn btn-accent" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavetest!</button>
+    <button class="btn btn-primary hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
+    <button class="btn btn-green hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Forts&#xe6;t tr&#xe6;ning</button>
+    <button class="btn btn-accent hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="fillInBtn" onclick="startFillIn()">&#x270D;&#xFE0F; Udfyld bogstav</button>
+    <button class="btn btn-primary hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="rightOrWrongBtn" onclick="startRightOrWrong()">&#x1F441;&#xFE0F; Rigtigt eller forkert?</button>
+    <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="spellingPoliceBtn" onclick="startSpellingPolice()">&#x1F50D; Stavepolitiet</button>
+    <button class="btn btn-green hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="wordBuilderBtn" onclick="startWordBuilder()">&#x1F9E9; Ordbyggeren</button>
+    <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
+    <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="screeningBtn" onclick="startScreening()">&#x1F4CB; Stavevurdering</button>
   </div>
 
+  <button class="settings-toggle" onclick="switchPlayer()">&#x1F465; Skift spiller</button>
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
   <div class="settings-panel" id="settingsPanel">
     <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-bottom:10px">
@@ -1169,7 +1193,141 @@
 <!-- TREASURE CHEST OVERLAY -->
 <div id="chestOverlay" class="chest-overlay hidden"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+
+// ===== MULTI-PROFIL SYSTEM =====
+var activePlayer = '';
+
+function playerKey(key) {
+  return activePlayer + '_' + key;
+}
+
+function loadPlayersList() {
+  try { var raw = localStorage.getItem('players_list'); return raw ? JSON.parse(raw) : []; } catch(e) { return []; }
+}
+
+function savePlayersList(list) {
+  try { localStorage.setItem('players_list', JSON.stringify(list)); } catch(e) {}
+}
+
+function addPlayer(name) {
+  var list = loadPlayersList();
+  if (list.indexOf(name) === -1) { list.push(name); savePlayersList(list); }
+}
+
+function removePlayer(name) {
+  if (!confirm('Slet spilleren "' + name + '" og al deres data?')) return;
+  var list = loadPlayersList().filter(function(n) { return n !== name; });
+  savePlayersList(list);
+  ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade'].forEach(function(k) {
+    try { localStorage.removeItem(name + '_' + k); } catch(e) {}
+  });
+  renderProfilePicker();
+}
+
+function selectPlayer(name) {
+  activePlayer = name;
+  try { localStorage.setItem('last_player', name); } catch(e) {}
+  hide('phase-profile-picker');
+  show('phase-welcome');
+  var nameEl = document.getElementById('playerNameDisplay');
+  if (nameEl) nameEl.textContent = activePlayer;
+  refreshWelcomeButtons();
+  updateWelcomeStreak();
+  updateWelcomeAvatar();
+  restoreGradeSelection();
+  var rewardData = loadRewardData();
+  rewardData = checkStreak(rewardData);
+  saveRewardData(rewardData);
+  updateRewardBar();
+}
+
+function switchPlayer() {
+  activePlayer = '';
+  hide('phase-welcome');
+  hide('rewardBar');
+  hide('rewardXPBarWrap');
+  var panel = document.getElementById('settingsPanel');
+  if (panel) panel.classList.remove('open');
+  show('phase-profile-picker');
+  renderProfilePicker();
+}
+
+function renderProfilePicker() {
+  var list = loadPlayersList();
+  var grid = document.getElementById('profilePickerGrid');
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var name = list[i];
+    var emoji = '\u{1F98A}';
+    try {
+      var raw = localStorage.getItem(name + '_reward_data');
+      if (raw) { var rd = JSON.parse(raw); emoji = getAvatarLevel(rd.totalXP || 0).emoji; }
+    } catch(e) {}
+    html += '<button class="profile-picker-btn" onclick="selectPlayer(\'' + name.replace(/'/g, "\\'") + '\')">';
+    html += '<span class="pp-emoji">' + emoji + '</span>';
+    html += '<span class="pp-name">' + name + '</span>';
+    html += '<span class="pp-delete" onclick="event.stopPropagation();removePlayer(\'' + name.replace(/'/g, "\\'") + '\')">\u2717 slet</span>';
+    html += '</button>';
+  }
+  html += '<button class="profile-picker-btn pp-new" onclick="showNewPlayerForm()">';
+  html += '<span class="pp-emoji">&#x2795;</span><span class="pp-name">Ny spiller</span></button>';
+  grid.innerHTML = html;
+  hide('newPlayerForm');
+}
+
+function showNewPlayerForm() {
+  show('newPlayerForm');
+  var inp = document.getElementById('newPlayerInput');
+  inp.value = ''; inp.focus();
+}
+
+function cancelNewPlayer() { hide('newPlayerForm'); }
+
+function confirmNewPlayer() {
+  var inp = document.getElementById('newPlayerInput');
+  var name = inp.value.trim();
+  if (!name) return;
+  if (loadPlayersList().indexOf(name) !== -1) { alert('Der findes allerede en spiller med det navn.'); return; }
+  addPlayer(name);
+  selectPlayer(name);
+}
+
+function migrateOldData() {
+  var list = loadPlayersList();
+  if (list.length > 0) return false;
+  var hasOld = localStorage.getItem(playerKey('profile_data')) || localStorage.getItem(playerKey('reward_data')) || localStorage.getItem(playerKey('sr_data'));
+  if (!hasOld) return false;
+  var migrateName = 'Spiller 1';
+  ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade'].forEach(function(k) {
+    var val = localStorage.getItem(k);
+    if (val) { localStorage.setItem(migrateName + '_' + k, val); localStorage.removeItem(k); }
+  });
+  addPlayer(migrateName);
+  return true;
+}
+
+// ===== SUPABASE =====
+var supabaseClient = null;
+try {
+  supabaseClient = window.supabase.createClient(
+    'https://cfkddsiwwujbbxjuthie.supabase.co',
+    'sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt'
+  );
+} catch(e) { console.log('Supabase ikke tilg\u00E6ngelig'); }
+
+function logAnswer(word, answer, correct, attempt, category, level) {
+  if (!supabaseClient || !activePlayer) return;
+  var grade = 0;
+  try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
+  supabaseClient.from('answers').insert({
+    player: activePlayer, word: word, answer: answer, correct: correct,
+    attempt: attempt, category: category || null, level: level || 0, grade: grade
+  }).then(function(res) {
+    if (res.error) console.warn('Supabase log fejl:', res.error.message);
+  });
+}
 
 // Word bank loaded from words.json
 var WORD_BANK = {};
@@ -1270,7 +1428,7 @@ function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
@@ -1286,7 +1444,7 @@ function goHome() {
 
 // Grade selector
 function selectGrade(g) {
-  try { localStorage.setItem('student_grade', g.toString()); } catch(e) {}
+  try { localStorage.setItem(playerKey('student_grade'), g.toString()); } catch(e) {}
   var btns = document.querySelectorAll('.grade-btn');
   btns.forEach(function(b, i) {
     if (i === g) b.classList.add('active');
@@ -1296,7 +1454,7 @@ function selectGrade(g) {
 
 function loadGrade() {
   try {
-    var v = localStorage.getItem('student_grade');
+    var v = localStorage.getItem(playerKey('student_grade'));
     if (v === null) return -1;
     var n = parseInt(v);
     return isNaN(n) ? -1 : n;
@@ -1324,11 +1482,11 @@ function toggleSettings() {
 var SR_INTERVALS = [0, 86400000, 3*86400000, 7*86400000, 14*86400000];
 
 function loadSRData() {
-  try { var raw = localStorage.getItem('sr_data'); return raw ? JSON.parse(raw) : { words: {} }; } catch(e) { return { words: {} }; }
+  try { var raw = localStorage.getItem(playerKey('sr_data')); return raw ? JSON.parse(raw) : { words: {} }; } catch(e) { return { words: {} }; }
 }
 
 function saveSRData(data) {
-  try { localStorage.setItem('sr_data', JSON.stringify(data)); } catch(e) {}
+  try { localStorage.setItem(playerKey('sr_data'), JSON.stringify(data)); } catch(e) {}
 }
 
 function updateSRWord(word, correct, category) {
@@ -1360,25 +1518,25 @@ function getDueWords() {
 
 // Profile storage
 function loadProfile() {
-  try { var raw = localStorage.getItem('profile_data'); return raw ? JSON.parse(raw) : null; } catch(e) { return null; }
+  try { var raw = localStorage.getItem(playerKey('profile_data')); return raw ? JSON.parse(raw) : null; } catch(e) { return null; }
 }
 
 function saveProfile(data) {
-  try { localStorage.setItem('profile_data', JSON.stringify(data)); } catch(e) {}
+  try { localStorage.setItem(playerKey('profile_data'), JSON.stringify(data)); } catch(e) {}
 }
 
 function resetProfile() {
   if (!confirm('Er du sikker? Dit stavetest-resultat og niveau bliver slettet.')) return;
-  localStorage.removeItem('profile_data');
+  localStorage.removeItem(playerKey('profile_data'));
   goHome();
 }
 
 function resetAll() {
   if (!confirm('Er du HELT sikker? ALT bliver slettet — stavetest, XP, streak, øveord og screening.')) return;
-  localStorage.removeItem('profile_data');
-  localStorage.removeItem('reward_data');
-  localStorage.removeItem('sr_data');
-  localStorage.removeItem('screening_data');
+  localStorage.removeItem(playerKey('profile_data'));
+  localStorage.removeItem(playerKey('reward_data'));
+  localStorage.removeItem(playerKey('sr_data'));
+  localStorage.removeItem(playerKey('screening_data'));
   goHome();
 }
 
@@ -1903,6 +2061,7 @@ function checkSpelling() {
 
   var result = { word: w.word, correct: ok || selfCorrected, selfCorrected: selfCorrected, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
+  logAnswer(w.word, ans, ok || selfCorrected, retryAttempt ? 2 : 1, w.category, w.level || 0);
 
   // Track adaptive state for diagnostic
   if (gameMode === 'diagnostic' && adaptiveState) {
@@ -2535,7 +2694,7 @@ function renderReviewResults() {
 
 function loadRewardData() {
   try {
-    var raw = localStorage.getItem('reward_data');
+    var raw = localStorage.getItem(playerKey('reward_data'));
     if (raw) return JSON.parse(raw);
   } catch(e) {}
   return {
@@ -2551,7 +2710,7 @@ function loadRewardData() {
 }
 
 function saveRewardData(data) {
-  try { localStorage.setItem('reward_data', JSON.stringify(data)); } catch(e) {}
+  try { localStorage.setItem(playerKey('reward_data'), JSON.stringify(data)); } catch(e) {}
 }
 
 function getTodayStr() {
@@ -4383,11 +4542,11 @@ function renderScreeningResults(results, risk) {
 }
 
 function saveScreeningData(data) {
-  try { localStorage.setItem('screening_data', JSON.stringify(data)); } catch(e) {}
+  try { localStorage.setItem(playerKey('screening_data'), JSON.stringify(data)); } catch(e) {}
 }
 
 function loadScreeningData() {
-  try { var raw = localStorage.getItem('screening_data'); return raw ? JSON.parse(raw) : null; } catch(e) { return null; }
+  try { var raw = localStorage.getItem(playerKey('screening_data')); return raw ? JSON.parse(raw) : null; } catch(e) { return null; }
 }
 
 // ===== END SCREENING =====
@@ -6245,21 +6404,26 @@ function initApp() {
   var anthropicInput = document.getElementById('anthropicKeyInput');
   if (anthropicInput && savedAnthropicKey) { anthropicInput.value = savedAnthropicKey; updateAnthropicStatus(savedAnthropicKey); }
   setVoice(loadVoice());
-  restoreGradeSelection();
-  refreshWelcomeButtons();
 
-  // Reward system init
-  var rewardData = loadRewardData();
-  rewardData = checkStreak(rewardData);
-  saveRewardData(rewardData);
-  updateRewardBar();
-  updateWelcomeStreak();
-  updateWelcomeAvatar();
+  // Multi-profil initialization
+  var justMigrated = migrateOldData();
+  var players = loadPlayersList();
+  var lastPlayer = '';
+  try { lastPlayer = localStorage.getItem('last_player') || ''; } catch(e) {}
 
-  // Check for pending milestone on load
-  var milestone = checkMilestone(rewardData);
-  if (milestone) {
-    setTimeout(function() { showMilestonePopup(milestone); }, 500);
+  if (justMigrated) {
+    hide('phase-welcome');
+    show('phase-profile-picker');
+    show('migrationHint');
+    renderProfilePicker();
+  } else if (players.length === 1 && lastPlayer) {
+    selectPlayer(players[0]);
+  } else if (players.length > 1 && lastPlayer && players.indexOf(lastPlayer) !== -1) {
+    selectPlayer(lastPlayer);
+  } else {
+    hide('phase-welcome');
+    show('phase-profile-picker');
+    renderProfilePicker();
   }
 }
 

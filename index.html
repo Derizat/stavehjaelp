@@ -620,6 +620,47 @@
   }
   @keyframes guide-pulse { from { opacity: 0.8; } to { opacity: 1; text-shadow: 0 0 12px var(--accent); } }
 
+  /* Right or wrong exercise */
+  .rf-word {
+    font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--text);
+    letter-spacing: 4px; min-height: 4rem; margin: 12px 0; text-align: center;
+    transition: all 0.3s;
+  }
+  .rf-buttons {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;
+  }
+  .rf-btn {
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem; padding: 18px 12px;
+    border-radius: 14px; border: 3px solid; cursor: pointer; transition: all 0.15s;
+    text-align: center; user-select: none; -webkit-user-select: none;
+  }
+  .rf-btn:active { transform: scale(0.95); }
+  .rf-btn-correct {
+    border-color: var(--green); background: rgba(34,211,160,0.1); color: var(--green);
+  }
+  .rf-btn-correct:hover { background: rgba(34,211,160,0.2); }
+  .rf-btn-wrong {
+    border-color: var(--red); background: rgba(244,63,94,0.1); color: var(--red);
+  }
+  .rf-btn-wrong:hover { background: rgba(244,63,94,0.2); }
+  .rf-btn.disabled { opacity: 0.3; pointer-events: none; }
+  .rf-timer-wrap {
+    background: #2d3158; border-radius: 99px; height: 8px; overflow: hidden; margin: 8px 0;
+  }
+  .rf-timer-bar {
+    height: 100%; border-radius: 99px; width: 100%;
+    background: linear-gradient(90deg, var(--green), var(--accent));
+    transition: width linear;
+  }
+  .rf-combo {
+    text-align: center; font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    color: var(--accent); min-height: 2rem; transition: all 0.2s;
+  }
+  .rf-combo.pop { animation: fillin-pop 0.3s ease; }
+  .rf-flash { border-radius: var(--radius); transition: box-shadow 0.15s; }
+  .rf-flash-correct { box-shadow: inset 0 0 40px rgba(34,211,160,0.3); }
+  .rf-flash-wrong { box-shadow: inset 0 0 40px rgba(244,63,94,0.3); }
+
   /* Fill-in exercise */
   .fillin-word {
     font-family: 'Fredoka One', cursive; font-size: 2.6rem; color: var(--text);
@@ -669,7 +710,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.0.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.1.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -736,6 +777,7 @@
   <button class="btn btn-primary btn-full hidden" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
   <button class="btn btn-green btn-full hidden" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
   <button class="btn btn-accent btn-full hidden" id="fillInBtn" onclick="startFillIn()">&#x270D;&#xFE0F; Udfyld bogstav</button>
+  <button class="btn btn-primary btn-full hidden" id="rightOrWrongBtn" onclick="startRightOrWrong()">&#x1F441;&#xFE0F; Rigtigt eller forkert?</button>
   <button class="btn btn-blue btn-full hidden" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
   <button class="btn btn-blue btn-full hidden" id="screeningBtn" onclick="startScreening()">&#x1F4CB; Stavevurdering</button>
 
@@ -879,6 +921,29 @@
   <div class="fillin-choices" id="fillinChoices"></div>
   <div id="fillinFeedbackBox" style="display:none; margin-top:12px;"></div>
   <button class="btn btn-green btn-full hidden" id="fillinNextBtn" onclick="nextFillInWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
+</div>
+
+<!-- RIGHT OR WRONG EXERCISE -->
+<div id="phase-rightorwrong" class="card hidden rf-flash">
+  <div class="phase-label" id="rfPhaseLabel">&#x1F441;&#xFE0F; Rigtigt eller forkert?</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="rfProgressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="rfWordNum">1</div><div class="lbl">Ord nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="rfScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="rfScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
+  </div>
+  <div class="pattern-badge" id="rfPatternBadge">&#x1F520; M&#xf8;nster</div>
+  <div class="rf-combo" id="rfCombo"></div>
+  <div class="listen-box">
+    <div class="rf-word" id="rfWordDisplay"></div>
+    <div class="rf-timer-wrap"><div class="rf-timer-bar" id="rfTimerBar"></div></div>
+    <p class="hint-text" id="rfHint">Er dette ord stavet rigtigt?</p>
+  </div>
+  <div class="rf-buttons" id="rfButtons">
+    <button class="rf-btn rf-btn-correct" onclick="checkRightOrWrong(true)">&#x2705; Rigtigt</button>
+    <button class="rf-btn rf-btn-wrong" onclick="checkRightOrWrong(false)">&#x274C; Forkert</button>
+  </div>
+  <div id="rfFeedbackBox" style="display:none; margin-top:12px;"></div>
 </div>
 
 <!-- SCREENING INTRO -->
@@ -1048,7 +1113,7 @@ function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-rightorwrong','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
@@ -2640,6 +2705,7 @@ function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function showBossMinigame(bossData) {
   hide('phase-test');
   hide('phase-fillin');
+  hide('phase-rightorwrong');
   show('phase-boss');
 
   var word = bossData.word.toLowerCase();
@@ -3369,6 +3435,8 @@ function continueAfterBoss() {
 
   if (gameMode === 'fillin') {
     show('phase-fillin');
+  } else if (gameMode === 'rightorwrong') {
+    show('phase-rightorwrong');
   } else {
     show('phase-test');
   }
@@ -3385,6 +3453,16 @@ function proceedAfterInterrupt() {
     } else {
       show('phase-fillin');
       renderFillInWord();
+    }
+    return;
+  }
+
+  if (gameMode === 'rightorwrong') {
+    if (action === 'finish') {
+      finishRightOrWrong();
+    } else {
+      show('phase-rightorwrong');
+      renderRightOrWrongWord();
     }
     return;
   }
@@ -4752,6 +4830,463 @@ function renderFillInResults() {
   document.getElementById('resultsContent').innerHTML = html;
 }
 
+// ===== RIGHT OR WRONG EXERCISE =====
+
+function generateMisspelling(wordObj) {
+  var word = wordObj.word;
+  var cat = wordObj.category;
+  var hint = wordObj.patternHint || '';
+
+  // --- Stumme bogstaver: remove the silent letter ---
+  if (cat === 'Stumme bogstaver') {
+    var stmMatch = hint.match(/stumt '(\w+)' i '(\w+)'/);
+    if (stmMatch) {
+      var silent = stmMatch[1].toLowerCase();
+      var cluster = stmMatch[2].toLowerCase();
+      var pos = word.toLowerCase().indexOf(cluster);
+      if (pos >= 0) {
+        var misspelled = word.substring(0, pos) + word.substring(pos + silent.length);
+        return { misspelled: misspelled, explanation: '"' + silent + '" er stumt i "' + cluster + '" \u2014 det skal skrives!' };
+      }
+    }
+    var stmSimple = hint.match(/stumt '(\w+)'/);
+    if (stmSimple) {
+      var sl = stmSimple[1].toLowerCase();
+      var slPos = word.toLowerCase().indexOf(sl);
+      if (slPos >= 0) {
+        var ms = word.substring(0, slPos) + word.substring(slPos + sl.length);
+        if (ms !== word && ms.length > 1) {
+          return { misspelled: ms, explanation: '"' + sl + '" er stumt \u2014 man kan ikke h\u00F8re det, men det skal skrives!' };
+        }
+      }
+    }
+    return null;
+  }
+
+  // --- Dobbeltkonsonant: single instead of double (or vice versa) ---
+  if (cat === 'Dobbeltkonsonant') {
+    var dblMatch = hint.match(/dobbelt[- ]'?(\w)'?/);
+    if (dblMatch) {
+      var letter = dblMatch[1].toLowerCase();
+      var dbl = letter + letter;
+      var dblPos = word.toLowerCase().indexOf(dbl);
+      if (dblPos >= 0) {
+        var ms2 = word.substring(0, dblPos) + letter + word.substring(dblPos + 2);
+        return { misspelled: ms2, explanation: 'Her skal der dobbelt-' + letter + ' fordi vokalen er kort' };
+      }
+    }
+    var snglMatch = hint.match(/enkelt[- ]'?(\w)'?/);
+    if (snglMatch && snglMatch[1] !== 'k') {
+      var sLetter = snglMatch[1].toLowerCase();
+      for (var si = 0; si < word.length; si++) {
+        if (word[si].toLowerCase() === sLetter && (si + 1 >= word.length || word[si + 1].toLowerCase() !== sLetter)) {
+          var ms3 = word.substring(0, si) + sLetter + sLetter + word.substring(si + 1);
+          return { misspelled: ms3, explanation: 'Her er vokalen lang, s\u00E5 kun enkelt-' + sLetter };
+        }
+      }
+    }
+    return null;
+  }
+
+  // --- Nutids-r: remove trailing -r ---
+  if (cat === 'Nutids-r') {
+    if (word.endsWith('r')) {
+      return { misspelled: word.slice(0, -1), explanation: 'Verber i nutid ender p\u00E5 -r: "han hoppe-r"' };
+    }
+    return null;
+  }
+
+  // --- Verbernes bøjning ---
+  if (cat === 'Verbernes b\u00F8jning') {
+    if (hint.indexOf('-ede') >= 0 && word.indexOf('ede') > 0) {
+      var ms4 = word.replace(/ede([^a-z\u00E6\u00F8\u00E5]*)$/, 'te$1');
+      if (ms4 !== word) return { misspelled: ms4, explanation: 'Datid af dette verbum er med "-ede", ikke "-te"' };
+    }
+    if (hint.indexOf("'-te'") >= 0 || (hint.indexOf('-te') >= 0 && hint.indexOf('-ede') < 0)) {
+      var tePos = word.lastIndexOf('te');
+      if (tePos > 0 && word.indexOf('ede') < 0) {
+        var ms5 = word.substring(0, tePos) + 'ede';
+        return { misspelled: ms5, explanation: 'Datid af dette verbum er med "-te", ikke "-ede"' };
+      }
+    }
+    if ((hint.indexOf('-et') >= 0 || hint.indexOf('till\u00E6gsform') >= 0) && word.endsWith('et')) {
+      return { misspelled: word.slice(0, -2) + 't', explanation: 'Till\u00E6gsformen ender p\u00E5 "-et", ikke "-t"' };
+    }
+    return null;
+  }
+
+  // --- Navneordsendelser ---
+  if (cat === 'Navneordsendelser') {
+    if (word.endsWith('en') && hint.indexOf('-en') >= 0) {
+      return { misspelled: word.slice(0, -2) + 'et', explanation: 'Dette er et f\u00E6llesk\u00F8nsord \u2014 bestemt form er "-en"' };
+    }
+    if (word.endsWith('et') && hint.indexOf('-et') >= 0) {
+      return { misspelled: word.slice(0, -2) + 'en', explanation: 'Dette er et intetk\u00F8nsord \u2014 bestemt form er "-et"' };
+    }
+    if (word.endsWith('erne') && hint.indexOf('-erne') >= 0) {
+      return { misspelled: word.slice(0, -4) + 'ene', explanation: 'Bestemt flertal er her "-erne", ikke "-ene"' };
+    }
+    if (word.endsWith('ene') && hint.indexOf('-ene') >= 0) {
+      return { misspelled: word.slice(0, -3) + 'erne', explanation: 'Bestemt flertal er her "-ene", ikke "-erne"' };
+    }
+    return null;
+  }
+
+  // --- For- og efterstavelser ---
+  if (cat === 'For- og efterstavelser') {
+    if (hint.indexOf('-lig') >= 0 && word.indexOf('lig') > 0) {
+      return { misspelled: word.replace(/lig([^a-z\u00E6\u00F8\u00E5]*)$/, 'leg$1'), explanation: 'Efterstavelsen staves "-lig", ikke "-leg"' };
+    }
+    if (hint.indexOf('-hed') >= 0 && word.indexOf('hed') > 0) {
+      return { misspelled: word.replace(/hed([^a-z\u00E6\u00F8\u00E5]*)$/, 'het$1'), explanation: 'Efterstavelsen staves "-hed", ikke "-het"' };
+    }
+    if (hint.indexOf('-else') >= 0 && word.indexOf('else') > 0) {
+      return { misspelled: word.replace(/else([^a-z\u00E6\u00F8\u00E5]*)$/, '\u00E6lse$1'), explanation: 'Efterstavelsen staves "-else", ikke "-\u00E6lse"' };
+    }
+    return null;
+  }
+
+  // --- Sammensatte ord: fuge-s ---
+  if (cat === 'Sammensatte ord') {
+    if (hint.indexOf('fuge-s') >= 0 || hint.indexOf("'s'") >= 0) {
+      var parts = hint.match(/'([^']+)'/g);
+      if (parts && parts.length >= 2) {
+        var firstPart = parts[0].replace(/'/g, '').toLowerCase();
+        var fPos = word.toLowerCase().indexOf(firstPart);
+        if (fPos >= 0) {
+          var fugePos = fPos + firstPart.length;
+          if (word[fugePos] === 's') {
+            var ms6 = word.substring(0, fugePos) + word.substring(fugePos + 1);
+            return { misspelled: ms6, explanation: 'Her skal der fuge-s mellem orddelene' };
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  return null;
+}
+
+// Right or wrong state
+var rfItems = [], rfIndex = 0, rfResults = [];
+var rfTimerInterval = null;
+var rfCombo = 0, rfMaxCombo = 0;
+var rfAnswered = false;
+
+function startRightOrWrong() {
+  var profile = loadProfile();
+  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
+    startDiagnostic();
+    return;
+  }
+  gameMode = 'rightorwrong';
+  pendingBoss = null;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  pendingChest = false;
+
+  var targetLevel = profile.spellingLevel || 2;
+  var minLevel = Math.max(0, targetLevel - 2);
+  var pool = [];
+  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
+    var cat = profile.weakCategories[ci];
+    if (!WORD_BANK[cat]) continue;
+    var words = WORD_BANK[cat].filter(function(w) {
+      return w.level >= minLevel && w.level <= targetLevel;
+    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
+    pool = pool.concat(words);
+  }
+  if (pool.length === 0) {
+    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
+      var cat2 = profile.weakCategories[ci2];
+      if (!WORD_BANK[cat2]) continue;
+      pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
+    }
+  }
+  pool = shuffle(pool);
+
+  // Build items: ~50% correct, ~50% misspelled
+  rfItems = [];
+  for (var i = 0; i < pool.length && rfItems.length < 20; i++) {
+    var ms = generateMisspelling(pool[i]);
+    if (ms) {
+      // Randomly show correct or misspelled version
+      if (Math.random() < 0.5) {
+        rfItems.push({ word: pool[i].word, displayed: pool[i].word, isCorrect: true, explanation: '', category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
+      } else {
+        rfItems.push({ word: pool[i].word, displayed: ms.misspelled, isCorrect: false, explanation: ms.explanation, category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
+      }
+    }
+  }
+
+  if (rfItems.length < 5) {
+    alert('Ikke nok ord til denne \u00F8velse. Pr\u00F8v tr\u00E6ningsmodus i stedet.');
+    return;
+  }
+
+  rfItems = shuffle(rfItems);
+  rfIndex = 0;
+  rfResults = [];
+  results = [];
+  rfCombo = 0;
+  rfMaxCombo = 0;
+
+  document.getElementById('rfScoreCorrect').textContent = '0';
+  document.getElementById('rfScoreWrong').textContent = '0';
+
+  hide('phase-welcome');
+  show('phase-rightorwrong');
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  updateRewardBar();
+
+  var b = document.createElement('div');
+  b.className = 'session-badge';
+  b.innerHTML = '\u{1F441}\uFE0F Rigtigt eller forkert \u2014 er ordet stavet rigtigt?';
+  document.getElementById('phase-rightorwrong').appendChild(b);
+
+  renderRightOrWrongWord();
+}
+
+function renderRightOrWrongWord() {
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+
+  var item = rfItems[rfIndex];
+  var total = rfItems.length;
+
+  document.getElementById('rfWordNum').textContent = (rfResults.length + 1);
+  document.getElementById('rfProgressBar').style.width = ((rfResults.length / total) * 100) + '%';
+  document.getElementById('rfPatternBadge').textContent = (CATEGORY_ICONS[item.category] || '\u{1F520}') + ' ' + item.category;
+  document.getElementById('rfFeedbackBox').style.display = 'none';
+  document.getElementById('rfWordDisplay').textContent = item.displayed;
+  document.getElementById('rfHint').textContent = 'Er dette ord stavet rigtigt?';
+
+  // Reset flash
+  var card = document.getElementById('phase-rightorwrong');
+  card.classList.remove('rf-flash-correct', 'rf-flash-wrong');
+
+  // Enable buttons
+  rfAnswered = false;
+  var btns = document.querySelectorAll('.rf-btn');
+  btns.forEach(function(b) { b.classList.remove('disabled'); });
+
+  // Update combo display
+  updateRFCombo();
+
+  // Start timer (3s → 1.5s, decreasing by 0.08s per word)
+  var duration = Math.max(1.5, 3 - rfResults.length * 0.08);
+  var timerBar = document.getElementById('rfTimerBar');
+  timerBar.style.transition = 'none';
+  timerBar.style.width = '100%';
+  setTimeout(function() {
+    timerBar.style.transition = 'width ' + duration + 's linear';
+    timerBar.style.width = '0%';
+  }, 50);
+
+  if (rfTimerInterval) clearTimeout(rfTimerInterval);
+  rfTimerInterval = setTimeout(function() {
+    if (!rfAnswered) {
+      checkRightOrWrong(null); // timeout = wrong
+    }
+  }, duration * 1000);
+}
+
+function updateRFCombo() {
+  var el = document.getElementById('rfCombo');
+  if (rfCombo >= 2) {
+    el.textContent = '\u{1F525} ' + rfCombo + 'x combo!';
+    el.classList.remove('pop');
+    void el.offsetWidth; // force reflow
+    el.classList.add('pop');
+  } else {
+    el.textContent = '';
+  }
+}
+
+function checkRightOrWrong(answeredCorrect) {
+  if (rfAnswered) return;
+  rfAnswered = true;
+
+  if (rfTimerInterval) { clearTimeout(rfTimerInterval); rfTimerInterval = null; }
+
+  var item = rfItems[rfIndex];
+  var ok = (answeredCorrect === item.isCorrect);
+  var timedOut = (answeredCorrect === null);
+
+  // Disable buttons
+  var btns = document.querySelectorAll('.rf-btn');
+  btns.forEach(function(b) { b.classList.add('disabled'); });
+
+  // Flash feedback
+  var card = document.getElementById('phase-rightorwrong');
+  if (ok) {
+    card.classList.add('rf-flash-correct');
+  } else {
+    card.classList.add('rf-flash-wrong');
+  }
+
+  // Feedback
+  var box = document.getElementById('rfFeedbackBox');
+  box.style.display = 'block';
+  if (ok) {
+    if (item.isCorrect) {
+      box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! "' + item.word + '" er korrekt stavet</div>';
+    } else {
+      box.innerHTML = '<div class="feedback-correct">\u2705 Godt spottet! Det rigtige er: <strong>' + item.word + '</strong></div>';
+    }
+  } else if (timedOut) {
+    box.innerHTML = '<div class="feedback-wrong">\u23F0 Tiden l\u00F8b ud! Det rigtige svar: <strong>' + item.word + '</strong>' +
+      (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
+  } else {
+    if (item.isCorrect) {
+      box.innerHTML = '<div class="feedback-wrong">\u274C "' + item.word + '" er faktisk stavet rigtigt!</div>';
+    } else {
+      box.innerHTML = '<div class="feedback-wrong">\u274C Det er forkert stavet! Rigtigt: <strong>' + item.word + '</strong>' +
+        (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
+    }
+  }
+
+  // Record result
+  var result = {
+    word: item.word, correct: ok, selfCorrected: false,
+    userAnswer: timedOut ? '(tid)' : (answeredCorrect ? 'rigtigt' : 'forkert'),
+    category: item.category, patternHint: item.patternHint, level: item.level
+  };
+  rfResults.push(result);
+  results.push(result);
+
+  // SR update
+  updateSRWord(item.word, ok, item.category);
+
+  // Gamification
+  if (ok) {
+    sessionCorrectCount++;
+    sessionCorrectStreak++;
+    rfCombo++;
+    if (rfCombo > rfMaxCombo) rfMaxCombo = rfCombo;
+    if (sessionCorrectStreak >= 5) {
+      sessionCorrectStreak = 0;
+      var correctWords = rfResults.filter(function(r) { return r.correct; });
+      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: item.word, category: item.category };
+      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingChest = true;
+    }
+  } else {
+    sessionCorrectStreak = 0;
+    rfCombo = 0;
+  }
+
+  // Update scores
+  document.getElementById('rfScoreCorrect').textContent = rfResults.filter(function(r) { return r.correct; }).length;
+  document.getElementById('rfScoreWrong').textContent = rfResults.filter(function(r) { return !r.correct; }).length;
+
+  // Auto-advance
+  var delay = ok ? 600 : 1200;
+  setTimeout(function() { nextRightOrWrongWord(); }, delay);
+}
+
+function nextRightOrWrongWord() {
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+
+  // Boss first
+  if (pendingBoss) {
+    pendingInterruptAction = (rfIndex + 1) >= rfItems.length ? 'finish' : 'continue';
+    rfIndex++;
+    showBossMinigame(pendingBoss);
+    return;
+  }
+
+  // Chest
+  if (pendingChest) {
+    pendingChest = false;
+    pendingInterruptAction = (rfIndex + 1) >= rfItems.length ? 'finish' : 'continue';
+    rfIndex++;
+    showTreasureChest();
+    return;
+  }
+
+  rfIndex++;
+
+  if (rfIndex >= rfItems.length) {
+    finishRightOrWrong();
+  } else {
+    renderRightOrWrongWord();
+  }
+}
+
+function finishRightOrWrong() {
+  hide('phase-rightorwrong');
+  if (rfTimerInterval) { clearTimeout(rfTimerInterval); rfTimerInterval = null; }
+
+  var correctCount = rfResults.filter(function(r) { return r.correct; }).length;
+  var totalCount = rfResults.length;
+  var prevXP = loadRewardData().totalXP || 0;
+  var rewardResult = awardSessionXP(correctCount, totalCount);
+  var rewardData = loadRewardData();
+  var newXP = rewardData.totalXP || 0;
+  var prevLevel = getAvatarLevel(prevXP);
+  var newLevel = getAvatarLevel(newXP);
+  var milestone = checkMilestone(rewardData);
+  updateRewardBar();
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  if (rewardResult.dailyGoalReached) {
+    setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
+  }
+  if (milestone) {
+    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
+  }
+  if (newLevel.index > prevLevel.index) {
+    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
+  }
+  show('rewardBar');
+  show('rewardXPBarWrap');
+
+  renderRightOrWrongResults();
+}
+
+function renderRightOrWrongResults() {
+  show('phase-results');
+  var correct = rfResults.filter(function(r) { return r.correct; }).length;
+  var wrong = rfResults.filter(function(r) { return !r.correct; });
+
+  var html = '';
+  html += '<div class="ai-bubble"><p><strong>';
+  if (correct / rfResults.length >= 0.8) html += 'Skarpt \u00F8je! Du er god til at se fejl! \u{1F31F}';
+  else if (correct / rfResults.length >= 0.5) html += 'Godt g\u00E5et! \u00D8velse g\u00F8r mester \u{1F4AA}';
+  else html += 'Bliv ved! Det bliver lettere med \u00F8velse \u{1F680}';
+  html += '</strong></p>';
+  html += '<p style="margin-top:8px">' + correct + ' ud af ' + rfResults.length + ' rigtige.';
+  if (rfMaxCombo >= 3) html += ' Bedste combo: <strong>' + rfMaxCombo + 'x</strong> \u{1F525}';
+  html += '</p></div>';
+
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / rfResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  if (wrong.length > 0) {
+    html += '<h2 style="margin-bottom:12px;font-size:1.2rem">\u{1F4D6} Ord at \u00F8ve</h2>';
+    html += '<div style="margin-bottom:18px">';
+    wrong.forEach(function(r) {
+      html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+      html += '<span class="wrong-mark">\u2717</span></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-primary btn-full" onclick="startRightOrWrong()">\u{1F441}\uFE0F Ny runde</button>';
+  html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F4CA} Forts\u00E6t tr\u00E6ning</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
 // Welcome buttons
 function refreshWelcomeButtons() {
   var profile = loadProfile();
@@ -4763,21 +5298,25 @@ function refreshWelcomeButtons() {
   var reviewBtn = document.getElementById('reviewBtn');
 
   var fillInBtn = document.getElementById('fillInBtn');
+  var rfBtn = document.getElementById('rightOrWrongBtn');
 
   if (profile) {
     startBtn.classList.add('hidden');
     if (profile.weakCategories && profile.weakCategories.length > 0) {
       continueBtn.classList.remove('hidden');
       fillInBtn.classList.remove('hidden');
+      rfBtn.classList.remove('hidden');
     } else {
       continueBtn.classList.add('hidden');
       fillInBtn.classList.add('hidden');
+      rfBtn.classList.add('hidden');
     }
     newDiagBtn.classList.remove('hidden');
   } else {
     startBtn.classList.remove('hidden');
     continueBtn.classList.add('hidden');
     fillInBtn.classList.add('hidden');
+    rfBtn.classList.add('hidden');
     newDiagBtn.classList.add('hidden');
   }
 

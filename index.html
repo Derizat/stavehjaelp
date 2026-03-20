@@ -709,47 +709,66 @@
     pointer-events: none;
   }
   .sp-sentence {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
     min-height: 3rem; position: relative; z-index: 1;
+    padding: 8px 0;
   }
   .sp-word {
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-    padding: 8px 12px; border-radius: 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 10px 10px; border-radius: 12px;
     cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='24'>🔍</text></svg>") 4 4, pointer;
-    transition: all 0.15s; border: 2px solid rgba(61,66,112,0.5);
-    background: rgba(26,29,46,0.6);
+    transition: all 0.2s; border: 2px solid rgba(61,66,112,0.5);
+    background: rgba(26,29,46,0.6); min-width: 60px;
+  }
+  .sp-suspect {
+    font-size: 1.8rem; line-height: 1; transition: transform 0.2s;
+  }
+  .sp-sign {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; padding: 4px 8px; margin-top: 2px; min-width: 40px; text-align: center;
+  }
+  .sp-sign .sp-text {
+    font-size: 1.05rem; font-weight: 800;
   }
   .sp-word .sp-number {
-    font-size: 0.65rem; color: var(--muted); font-weight: 700;
+    font-size: 0.6rem; color: var(--muted); font-weight: 700;
     letter-spacing: 1px;
   }
-  .sp-word .sp-text {
-    font-size: 1.15rem; font-weight: 800;
-  }
-  .sp-word:hover { border-color: var(--accent); background: rgba(245,166,35,0.08); transform: scale(1.05); }
-  .sp-word:active { transform: scale(0.97); }
+  .sp-word:hover { border-color: var(--accent); background: rgba(245,166,35,0.08); transform: scale(1.08); }
+  .sp-word:hover .sp-suspect { transform: scale(1.15); }
+  .sp-word:active { transform: scale(0.95); }
   .sp-word.selected-correct {
     border-color: var(--green); background: rgba(34,211,160,0.2);
     animation: sp-caught 0.5s ease;
   }
+  .sp-word.selected-correct .sp-suspect::after { content: '\u{1F6A8}'; font-size: 0.9rem; position: relative; top: -4px; }
   .sp-word.selected-correct .sp-text { color: var(--green); }
-  .sp-word.selected-correct .sp-number::after { content: ' \u2705 FANGET!'; color: var(--green); }
+  .sp-word.selected-correct .sp-number { color: var(--green); }
+  .sp-word.selected-correct .sp-number::after { content: ' FANGET!'; }
   .sp-word.selected-wrong {
     border-color: var(--red); background: rgba(244,63,94,0.1);
   }
+  .sp-word.selected-wrong .sp-suspect { opacity: 0.5; }
   .sp-word.selected-wrong .sp-text { color: var(--red); }
   .sp-word.selected-wrong .sp-number::after { content: ' Uskyldig'; color: var(--muted); }
   .sp-word.reveal-target {
     border-color: #f59e0b; background: rgba(245,158,11,0.15);
   }
+  .sp-word.reveal-target .sp-suspect { animation: sp-shake 0.4s ease; }
   .sp-word.reveal-target .sp-text { color: #f59e0b; text-decoration: line-through; }
-  .sp-word.reveal-target .sp-number::after { content: ' \u{1F6A8} SKYLDIG!'; color: #f59e0b; }
+  .sp-word.reveal-target .sp-number { color: #f59e0b; }
+  .sp-word.reveal-target .sp-number::after { content: ' SKYLDIG!'; }
   .sp-word.disabled { pointer-events: none; cursor: default; }
   @keyframes sp-caught {
     0% { transform: scale(1); }
-    30% { transform: scale(1.15) rotate(-2deg); }
-    60% { transform: scale(1.1) rotate(2deg); }
+    30% { transform: scale(1.15) rotate(-3deg); }
+    60% { transform: scale(1.1) rotate(3deg); }
     100% { transform: scale(1); }
+  }
+  @keyframes sp-shake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-8deg); }
+    75% { transform: rotate(8deg); }
   }
   .sp-correction {
     text-align: center; font-family: 'Fredoka One', cursive; font-size: 1.6rem;
@@ -805,7 +824,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.3.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.3.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -5593,12 +5612,16 @@ function renderSpellingPoliceWord() {
   document.getElementById('spNextBtn').classList.add('hidden');
   document.getElementById('spCorrection').classList.add('hidden');
 
-  // Render sentence as suspect line-up
+  // Render sentence as suspect line-up with animal characters
+  var suspects = ['\u{1F431}','\u{1F436}','\u{1F437}','\u{1F438}','\u{1F435}','\u{1F43B}','\u{1F428}','\u{1F981}','\u{1F42D}','\u{1F430}','\u{1F99D}','\u{1F994}','\u{1F98E}','\u{1F427}','\u{1F99C}','\u{1F98A}','\u{1F40D}','\u{1F422}'];
+  var shuffledSuspects = shuffle(suspects);
   var html = '';
   for (var i = 0; i < item.tokens.length; i++) {
+    var animal = shuffledSuspects[i % shuffledSuspects.length];
     html += '<span class="sp-word" data-index="' + i + '" onclick="checkSpellingPolice(' + i + ')">' +
+      '<span class="sp-suspect">' + animal + '</span>' +
+      '<span class="sp-sign"><span class="sp-text">' + item.tokens[i] + '</span></span>' +
       '<span class="sp-number">#' + (i + 1) + '</span>' +
-      '<span class="sp-text">' + item.tokens[i] + '</span>' +
       '</span>';
   }
   document.getElementById('spSentence').innerHTML = html;

@@ -881,7 +881,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.1.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.2.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1267,18 +1267,21 @@ function removePlayer(name) {
 function selectPlayer(name) {
   activePlayer = name;
   try { localStorage.setItem('last_player', name); } catch(e) {}
-  hide('phase-profile-picker');
-  show('phase-welcome');
-  var nameEl = document.getElementById('playerNameDisplay');
-  if (nameEl) nameEl.textContent = activePlayer;
-  refreshWelcomeButtons();
-  updateWelcomeStreak();
-  updateWelcomeAvatar();
-  restoreGradeSelection();
-  var rewardData = loadRewardData();
-  rewardData = checkStreak(rewardData);
-  saveRewardData(rewardData);
-  updateRewardBar();
+  // Sync from Supabase before showing welcome
+  syncFromSupabase(name, function() {
+    hide('phase-profile-picker');
+    show('phase-welcome');
+    var nameEl = document.getElementById('playerNameDisplay');
+    if (nameEl) nameEl.textContent = activePlayer;
+    refreshWelcomeButtons();
+    updateWelcomeStreak();
+    updateWelcomeAvatar();
+    restoreGradeSelection();
+    var rewardData = loadRewardData();
+    rewardData = checkStreak(rewardData);
+    saveRewardData(rewardData);
+    updateRewardBar();
+  });
 }
 
 function switchPlayer() {
@@ -1294,6 +1297,28 @@ function switchPlayer() {
 
 function renderProfilePicker() {
   var list = loadPlayersList();
+  var grid = document.getElementById('profilePickerGrid');
+
+  // Merge with Supabase players
+  if (supabaseClient) {
+    supabaseClient.from('profiles').select('player').then(function(res) {
+      if (res.data) {
+        var changed = false;
+        res.data.forEach(function(row) {
+          if (list.indexOf(row.player) === -1) {
+            list.push(row.player);
+            changed = true;
+          }
+        });
+        if (changed) { savePlayersList(list); renderProfilePickerGrid(list); }
+      }
+    }).catch(function() {});
+  }
+
+  renderProfilePickerGrid(list);
+}
+
+function renderProfilePickerGrid(list) {
   var grid = document.getElementById('profilePickerGrid');
   var html = '';
   for (var i = 0; i < list.length; i++) {
@@ -1365,6 +1390,38 @@ function logAnswer(word, answer, correct, attempt, category, level) {
   }).then(function(res) {
     if (res.error) console.warn('Supabase log fejl:', res.error.message);
   });
+}
+
+function syncToSupabase() {
+  if (!supabaseClient || !activePlayer) return;
+  var profileData = null, rewardData = null, srData = null, grade = 0;
+  try { profileData = JSON.parse(localStorage.getItem(playerKey('profile_data')) || 'null'); } catch(e) {}
+  try { rewardData = JSON.parse(localStorage.getItem(playerKey('reward_data')) || 'null'); } catch(e) {}
+  try { srData = JSON.parse(localStorage.getItem(playerKey('sr_data')) || 'null'); } catch(e) {}
+  try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
+  supabaseClient.from('profiles').upsert({
+    player: activePlayer,
+    profile_data: profileData,
+    reward_data: rewardData,
+    sr_data: srData,
+    student_grade: grade,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'player' }).then(function(res) {
+    if (res.error) console.warn('Supabase sync fejl:', res.error.message);
+  });
+}
+
+function syncFromSupabase(name, callback) {
+  if (!supabaseClient) { if (callback) callback(); return; }
+  supabaseClient.from('profiles').select('*').eq('player', name).single().then(function(res) {
+    if (res.data) {
+      if (res.data.profile_data) try { localStorage.setItem(name + '_profile_data', JSON.stringify(res.data.profile_data)); } catch(e) {}
+      if (res.data.reward_data) try { localStorage.setItem(name + '_reward_data', JSON.stringify(res.data.reward_data)); } catch(e) {}
+      if (res.data.sr_data) try { localStorage.setItem(name + '_sr_data', JSON.stringify(res.data.sr_data)); } catch(e) {}
+      if (res.data.student_grade !== null) try { localStorage.setItem(name + '_student_grade', res.data.student_grade.toString()); } catch(e) {}
+    }
+    if (callback) callback();
+  }).catch(function() { if (callback) callback(); });
 }
 
 // Word bank loaded from words.json
@@ -1620,6 +1677,7 @@ function goHome() {
 // Grade selector
 function selectGrade(g) {
   try { localStorage.setItem(playerKey('student_grade'), g.toString()); } catch(e) {}
+  syncToSupabase();
   var btns = document.querySelectorAll('.grade-btn');
   btns.forEach(function(b, i) {
     if (i === g) b.classList.add('active');
@@ -1662,6 +1720,7 @@ function loadSRData() {
 
 function saveSRData(data) {
   try { localStorage.setItem(playerKey('sr_data'), JSON.stringify(data)); } catch(e) {}
+  syncToSupabase();
 }
 
 function updateSRWord(word, correct, category) {
@@ -1698,6 +1757,7 @@ function loadProfile() {
 
 function saveProfile(data) {
   try { localStorage.setItem(playerKey('profile_data'), JSON.stringify(data)); } catch(e) {}
+  syncToSupabase();
 }
 
 function resetProfile() {
@@ -2850,6 +2910,7 @@ function loadRewardData() {
 
 function saveRewardData(data) {
   try { localStorage.setItem(playerKey('reward_data'), JSON.stringify(data)); } catch(e) {}
+  syncToSupabase();
 }
 
 function getTodayStr() {
@@ -5182,8 +5243,9 @@ function checkFillIn(chosenIndex) {
   fillinResults.push(result);
   results.push(result);
 
-  // SR update
+  // SR update + Supabase
   updateSRWord(w.word, ok, w.category);
+  logAnswer(w.word, chosen === '' ? '(intet)' : chosen, ok, 1, w.category, w.level || 0);
 
   // Gamification — boss + chest as reward for 5 correct streak
   if (ok) {
@@ -5639,8 +5701,9 @@ function checkRightOrWrong(answeredCorrect) {
   rfResults.push(result);
   results.push(result);
 
-  // SR update
+  // SR update + Supabase
   updateSRWord(item.word, ok, item.category);
+  logAnswer(item.word, timedOut ? '(tid)' : (answeredCorrect ? 'rigtigt' : 'forkert'), ok, 1, item.category, item.level || 0);
 
   // Gamification
   if (ok) {
@@ -5971,6 +6034,7 @@ function checkSpellingPolice(wordIndex) {
   results.push(result);
 
   updateSRWord(item.word, ok, item.category);
+  logAnswer(item.word, item.tokens[wordIndex] || '', ok, 1, item.category, item.level || 0);
 
   // Gamification
   if (ok) {
@@ -6351,6 +6415,7 @@ function wordBuilderComplete() {
   results.push(result);
 
   updateSRWord(w.word, ok, w.category);
+  logAnswer(w.word, ok ? w.word : wbMistakes + ' fejl', ok, 1, w.category, w.level || 0);
 
   // Gamification
   if (ok) {

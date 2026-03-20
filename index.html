@@ -848,7 +848,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.0.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.0.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2011,7 +2011,7 @@ function renderWord() {
 // Enter key handler
 document.getElementById('spellingInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') {
-    if (feedbackShown && !retryAttempt) nextWord();
+    if (feedbackShown) nextWord();
     else checkSpelling();
   }
 });
@@ -2038,30 +2038,10 @@ function checkSpelling() {
   var box = document.getElementById('feedbackBox');
   box.style.display = 'block';
 
-  // FIRST ATTEMPT: wrong — give a chance to retry with hint option
-  if (!ok && !retryAttempt) {
-    retryAttempt = true;
-    var hintLen = Math.max(1, Math.ceil(w.word.length / 2));
-    var hintText = w.word.substring(0, hintLen);
-    box.innerHTML = '<div class="feedback-retry">\u{1F504} Ikke helt rigtigt \u2014 pr\u00F8v igen!' +
-      '<div style="margin-top:12px"><button class="btn btn-accent" style="font-size:1rem;padding:12px 24px" ' +
-      'onclick="useHint()">\u{1F4A1} F\u00E5 et hint</button></div></div>';
-    inp.classList.add('input-retry');
-    inp.focus();
-    inp.select();
-    document.getElementById('checkBtn').innerHTML = '\u270F\uFE0F Tjek igen';
-    return;
-  }
-
-  // SECOND ATTEMPT (retry) or first-try correct
-  var selfCorrected = false;
-  if (retryAttempt && ok) {
-    selfCorrected = true;
-  }
-
-  var result = { word: w.word, correct: ok || selfCorrected, selfCorrected: selfCorrected, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
+  // Single attempt — no retry
+  var result = { word: w.word, correct: ok, selfCorrected: false, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
-  logAnswer(w.word, ans, ok || selfCorrected, retryAttempt ? 2 : 1, w.category, w.level || 0);
+  logAnswer(w.word, ans, ok, 1, w.category, w.level || 0);
 
   // Track adaptive state for diagnostic
   if (gameMode === 'diagnostic' && adaptiveState) {
@@ -2074,12 +2054,8 @@ function checkSpelling() {
     updateSRWord(w.word, ok, w.category);
   }
 
-  inp.classList.remove('input-retry');
-
-  if (ok && !selfCorrected) {
+  if (ok) {
     box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! Flot klaret! \u{1F389}</div>';
-  } else if (selfCorrected) {
-    box.innerHTML = '<div class="feedback-correct">\u{1F31F} Flot! Du rettede det selv! \u{1F31F}</div>';
   } else {
     var rule = PATTERN_RULES[w.category] || '';
     var feedbackHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + ans + '</strong><br>' +
@@ -2093,7 +2069,7 @@ function checkSpelling() {
   }
 
   // Streak and boss/chest trigger (reward-based)
-  if (ok || selfCorrected) {
+  if (ok) {
     sessionCorrectCount++;
     sessionCorrectStreak++;
     // Boss + chest triggered as reward after 5 correct in a row
@@ -2116,19 +2092,6 @@ function checkSpelling() {
   feedbackShown = true;
   retryAttempt = false;
   document.getElementById('nextBtn').focus();
-}
-
-function useHint() {
-  var w = currentWords[currentIndex];
-  var inp = document.getElementById('spellingInput');
-  var hintLen = Math.max(1, Math.ceil(w.word.length / 2));
-  var hintText = w.word.substring(0, hintLen);
-  inp.value = hintText;
-  inp.focus();
-  // Place cursor at end
-  inp.setSelectionRange(hintText.length, hintText.length);
-  var box = document.getElementById('feedbackBox');
-  box.innerHTML = '<div class="feedback-retry">\u{1F4A1} Her er de f\u00F8rste bogstaver: <strong>' + hintText + '</strong>... Skriv resten!</div>';
 }
 
 function nextWord() {

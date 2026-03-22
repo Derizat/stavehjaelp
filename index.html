@@ -884,7 +884,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.3.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.3.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -949,14 +949,14 @@
   <div style="text-align:center; margin-top:16px">
     <p style="font-weight:700; font-size:0.95rem; margin-bottom:6px">Hvilket klassetrin g&#xe5;r du i?</p>
     <div class="grade-selector" id="gradeSelector">
-      <button class="grade-btn" onclick="selectGrade(1)">1. kl</button>
-      <button class="grade-btn" onclick="selectGrade(2)">2. kl</button>
-      <button class="grade-btn" onclick="selectGrade(3)">3. kl</button>
-      <button class="grade-btn" onclick="selectGrade(4)">4. kl</button>
-      <button class="grade-btn" onclick="selectGrade(5)">5. kl</button>
-      <button class="grade-btn" onclick="selectGrade(6)">6. kl</button>
-      <button class="grade-btn" onclick="selectGrade(7)">7. kl</button>
-      <button class="grade-btn" onclick="selectGrade(8)">8. kl</button>
+      <button class="grade-btn" data-grade="1" onclick="selectGrade(1)">1. kl</button>
+      <button class="grade-btn" data-grade="2" onclick="selectGrade(2)">2. kl</button>
+      <button class="grade-btn" data-grade="3" onclick="selectGrade(3)">3. kl</button>
+      <button class="grade-btn" data-grade="4" onclick="selectGrade(4)">4. kl</button>
+      <button class="grade-btn" data-grade="5" onclick="selectGrade(5)">5. kl</button>
+      <button class="grade-btn" data-grade="6" onclick="selectGrade(6)">6. kl</button>
+      <button class="grade-btn" data-grade="7" onclick="selectGrade(7)">7. kl</button>
+      <button class="grade-btn" data-grade="8" onclick="selectGrade(8)">8. kl</button>
     </div>
   </div>
 
@@ -1688,8 +1688,8 @@ function selectGrade(g) {
   try { localStorage.setItem(playerKey('student_grade'), g.toString()); } catch(e) {}
   syncToSupabase();
   var btns = document.querySelectorAll('.grade-btn');
-  btns.forEach(function(b, i) {
-    if (i === g) b.classList.add('active');
+  btns.forEach(function(b) {
+    if (parseInt(b.getAttribute('data-grade')) === g) b.classList.add('active');
     else b.classList.remove('active');
   });
 }
@@ -1707,8 +1707,8 @@ function restoreGradeSelection() {
   var g = loadGrade();
   if (g >= 0 && g <= 8) {
     var btns = document.querySelectorAll('.grade-btn');
-    btns.forEach(function(b, i) {
-      if (i === g) b.classList.add('active');
+    btns.forEach(function(b) {
+      if (parseInt(b.getAttribute('data-grade')) === g) b.classList.add('active');
       else b.classList.remove('active');
     });
   }

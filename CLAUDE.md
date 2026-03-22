@@ -1,37 +1,43 @@
 # Stavehjælpen
 
-Dansk stavetrænings-app til børn (8-14 år). Single-page HTML app uden build-step.
-
-## Versioner
-
-- **v1** (`index.html` på main branch): Original version, uændret
-- **v2** (`v2/index.html` på main branch): Ny version med ændringer — deployed på `/v2/`
-- Begge serveres via GitHub Pages fra main branch
-- **Vigtig regel**: v1 skal ALDRIG ændres. Alle ændringer laves KUN i v2
-- v2 bruger `BASE_PATH = '../'` til at referere til delte assets (words.json, audio/)
+Dansk stavetrænings-app til børn (0-8. klasse). Single-page HTML app uden build-step.
 
 ## Arkitektur
 
-Alt ligger i én `index.html` — HTML, CSS og JavaScript (~4800 linjer i v2).
-Ordbanken ligger i `words.json` (454 ord, 8 kategorier, 5 niveauer).
+Alt ligger i `index.html` — HTML, CSS og JavaScript (~6500 linjer).
+Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 
-## v2-ændringer vs v1
+## Vigtige dele
 
-- **Multi-profil**: Spillere vælges ved navn. `playerKey(key)` prefixer localStorage-nøgler med spillernavn
-- **Supabase-integration**: Svar logges til `answers`-tabel, profiler synces via `profiles`-tabel
-- **Forenklet quiz**: Ingen retry/hint ved forkert svar — registreres direkte. Ingen "Tjek stavning"-knap (Enter submitter). Ingen kategori-badge under quiz. Ingen "Diagnostisk test" label
-- **Forenklet velkomstskærm**: Ingen avatar-titel, XP-bar, intro-tekst, stavevurdering-knap eller kategori-bokse
-- **Centrerede knapper**: Action-knapper er ikke fuld bredde, men centrerede med max-width
+- **Ordbank**: `WORD_BANK` objekt med 8 kategorier (lydrette ord, stumme bogstaver, dobbeltkonsonant, for-/efterstavelser, sammensatte ord, verbernes bøjning, navneordsendelser, nutids-r)
+- **Staveregler**: `PATTERN_RULES` objekt med børnevenlige forklaringer per kategori
+- **Kategori-lektioner**: `CATEGORY_LESSONS` — popup med regler, eksempler og tricks. Trigges efter 3 fejl i samme kategori
+- **TTS**: Pre-genererede MP3-filer i `audio/` med to stemmer (kvinde: Neural2-F, mand: Wavenet-G med `_m` suffix). `audio-manifest.json` mapper ord til filer. Browser SpeechSynthesis som fallback
+- **AI-analyse**: Anthropic API (Claude) til personlig feedback efter diagnostisk test — med fuld offline fallback
+- **Spaced repetition**: Fejlord gemmes i localStorage og kan øves igen næste gang
+- **Adaptiv diagnostik**: Starter let, bliver sværere baseret på korrekte svar. Estimerer staveniveau 0-4
+- **Gamification**: Boss-kampe (5 typer), skattekister (4 sjældenheder), avatar-progression (8 niveauer med XP)
+- **Stavevurdering**: Dysleksiscreening med 4 deltests (nonord, fonologisk, ordkæder, RAN)
+
+## Multi-profil system
+
+- `activePlayer` — den valgte spillers navn
+- `playerKey(key)` — returnerer `activePlayer + '_' + key` — bruges til ALLE localStorage-kald
+- Per-spiller nøgler: `profile_data`, `reward_data`, `sr_data`, `screening_data`, `student_grade`
+- Delte nøgler (ikke prefixed): `tts_voice`, `gcloud_tts_key`
+- `players_list` — JSON-array af spillernavne i localStorage
+- `last_player` — sidst valgte spiller (til auto-select)
+- Migration fra gammel data: `migrateOldData()` flytter uprefixede nøgler til "Spiller 1"
 
 ## Supabase
 
 - **Projekt**: `https://cfkddsiwwujbbxjuthie.supabase.co`
 - **Anon key**: `sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt`
-- **RLS**: Disabled på begge tabeller (grant til anon-rolle)
+- **RLS**: Disabled på begge tabeller
 
 ### Tabeller
 
-**answers** — logger hvert svar i quizzen:
+**answers** — logger hvert svar fra alle øvelsestyper:
 - id (uuid), player (text), word (text), answer (text), correct (boolean), attempt (int), category (text), level (int), grade (int), created_at (timestamptz)
 
 **profiles** — syncer spillerdata på tværs af enheder:
@@ -40,48 +46,73 @@ Ordbanken ligger i `words.json` (454 ord, 8 kategorier, 5 niveauer).
 ### Sync-flow
 - `syncToSupabase()` kaldes efter enhver save (profil, reward, SR, klassetrin)
 - `syncFromSupabase(name, callback)` kaldes i `selectPlayer()` — loader data fra Supabase før UI refreshes
-- `renderProfilePicker()` merger lokale spillere med Supabase-spillere så profiler fra andre enheder vises
+- `renderProfilePicker()` merger lokale spillere med Supabase-spillere
 
-## Vigtige dele
+## Øvelsestyper
 
-- **Ordbank**: `WORD_BANK` objekt med 8 kategorier (lydrette ord, stumme bogstaver, dobbeltkonsonant, for-/efterstavelser, sammensatte ord, verbernes bøjning, navneordsendelser, nutids-r)
-- **Staveregler**: `PATTERN_RULES` objekt med forklaringer per kategori
-- **TTS**: Pre-genererede MP3-filer i `audio/` med to stemmer (kvinde: Neural2-F, mand: Wavenet-G med `_m` suffix). `audio-manifest.json` mapper ord til filer. Browser SpeechSynthesis som fallback
-- **AI-analyse**: Anthropic API (Claude) til personlig feedback efter test — med fuld offline fallback
-- **Spaced repetition**: Fejlord gemmes i localStorage (`sr_data`) og kan øves igen næste gang
-- **Adaptiv diagnostik**: Starter let, bliver sværere baseret på korrekte svar. Estimerer staveniveau
-- **Gamification**: Boss-kampe (4 typer), skattekister (4 sjældenheder), avatar-progression (8 niveauer med XP)
-- **Stavevurdering**: Dysleksiscreening med 4 deltests (nonord, fonologisk, ordkæder, RAN) — fjernet fra v2 velkomstskærm
+### Blandet træning (startTrainingFromProfile)
+"Fortsæt træning"-knappen bygger en session med 10 ord hvor hver får tilfældig øvelsestype:
 
-## Multi-profil system (v2)
+| Mode | gameMode | Beskrivelse | Sandsynlighed |
+|---|---|---|---|
+| **Diktat** | training | Hør ord → skriv det | 20% + fallback |
+| **Udfyld bogstav** | fillin | Vælg rigtigt bogstav fra muligheder | Lige fordelt |
+| **Rigtigt/forkert** | rightorwrong | Speed-runde: er ordet stavet rigtigt? | Lige fordelt |
+| **Stavepolitiet** | spellingpolice | Find stavefejlen i dyr-lineup | Lige fordelt |
+| **Ordbyggeren** | wordbuilder | Byg ord af morfem-klodser | Lige fordelt |
 
-- `activePlayer` — den valgte spillers navn
-- `playerKey(key)` — returnerer `activePlayer + '_' + key`
-- Per-spiller nøgler: `profile_data`, `reward_data`, `sr_data`, `screening_data`, `student_grade`
-- Delte nøgler (ikke prefixed): `tts_voice`, `gcloud_tts_key`, `anthropic_api_key`
-- `players_list` — JSON-array af spillernavne i localStorage
-- `last_player` — sidst valgte spiller (til auto-select)
-- Migration fra v1-data: `migrateOldData()` flytter uprefixede nøgler til "Spiller 1"
+- `isMixedSession` flag styrer om vi er i blandet modus
+- `mixedQueue` holder alle 10 items med pre-beregnet data
+- `renderMixedItem()` skifter mellem phases baseret på type
+- Hver modes "next"-funktion redirecter til `nextMixedItem()` når `isMixedSession` er true
+
+### Standalone modes
+- **diagnostic** — Adaptiv stavetest, estimerer niveau
+- **review** — Spaced repetition gennemgang af øveord
+
+### Øvelsesspecifik logik
+
+- **generateBlanks(wordObj)** — udleder blanks fra patternHint for fillin-mode
+- **generateMisspelling(wordObj)** — laver realistiske stavefejl per kategori
+- **buildSpellingPoliceItem(wordObj)** — indsætter stavefejl i sætning
+- **parseMorphemes(hint, word)** — parser '+' notation i patternHint til morfem-klodser
 
 ## Gamification-flow
 
-- **Boss**: Trigges efter 5 rigtige i streg (reward-baseret). Bruger `pendingBoss` flag
-- **Skattekiste**: Trigges sammen med boss. Bruger `pendingChest` flag
-- **Interrupt-mønster**: `pendingInterruptAction` gemmer om testen skal 'finish' eller 'continue' efter boss/kiste
+- **Boss**: Trigges efter 5 rigtige i træk (belønning). Bruger `pendingBoss` flag
+- **Skattekiste**: Gives efter boss er besejret. Bruger `pendingChest` flag
+- **Kategori-lektion**: Trigges efter 3 fejl i samme kategori. Bruger `pendingLesson` flag
+- **Interrupt-mønster**: `pendingInterruptAction` gemmer 'finish' eller 'continue' efter boss/kiste. `proceedAfterInterrupt()` genoptager flowet
+
+### Boss-kampe (5 typer)
+1. **scramble** — saml bogstaverne i rækkefølge
+2. **rain** — fang faldende bogstaver (guided mode for niveau 0-2)
+3. **memory** — husk og stav ordet
+4. **reverse** — ordet er baglæns, skriv det rigtigt
+5. **pacman** — saml bogstaver i labyrint, undgå spøgelset
+
+### Belønninger
+- XP: 10 per rigtig, 5 per forkert, 15 bonus per boss
+- Gems: session-belønning + kiste-drops
+- Streak: daglig streak med freeze-system
+- Avatar: 8 niveauer (Baby Ræv → Stavedragen) baseret på total XP
+- Skattekister: 4 sjældenheder (60% almindelig → 5% episk)
+- Milestones: ved 3, 7, 14, 30, 50, 100 dages streak
 
 ## Audio
 
-- `generate-audio.js` — genererer MP3'er via Google Cloud TTS. Understøtter `--voice` og `--suffix` flags
-- `audio/` — ~1816 MP3-filer (908 kvinde + 908 mand)
+- `generate-audio.js` — genererer MP3'er via Google Cloud TTS
+- `audio/` — 2616 MP3-filer (653 ord × 2 stemmer × 2 typer)
 - `audio-manifest.json` — mapper hvert ord til 4 stier: `word`, `sentence`, `word_m`, `sentence_m`
+- Stemmer: kvinde (da-DK-Neural2-F), mand (da-DK-Wavenet-G med `_m` suffix)
 
-## localStorage-nøgler (v2, prefixed med spillernavn)
+## localStorage-nøgler (prefixed med spillernavn)
 
 - `{player}_profile_data` — staveniveau, svage kategorier, diagnostik-resultater
 - `{player}_reward_data` — XP, streak, gems, avatar-progression
 - `{player}_sr_data` — spaced repetition øveord
 - `{player}_screening_data` — stavevurdering-resultater
-- `{player}_student_grade` — valgt klassetrin
+- `{player}_student_grade` — valgt klassetrin (0-8)
 
 ## API-nøgler
 
@@ -90,13 +121,14 @@ Ordbanken ligger i `words.json` (454 ord, 8 kategorier, 5 niveauer).
 
 ## Ordbank-regler
 
-- **Hints** i `words.json` må ALDRIG indeholde ordet selv eller nogen bøjningsform/stamme af ordet. Hintet skal beskrive betydningen uden at afsløre stavningen.
+- **Hints** i `words.json` må ALDRIG indeholde ordet selv eller nogen bøjningsform/stamme af ordet
+- Hver ord har: word, hint, patternHint, sentence, level (0-4), category
 
 ## Udvikling
 
-- v1 forbliver uændret — alle nye features laves i v2
-- Ændringer i v2 skal laves i BÅDE `v2/index.html` (main branch, til GitHub Pages) — v2 branch bruges ikke længere til deployment
+- Versionsnummer vises i header (hardcodet i HTML). Bump ved HVER ændring
 - Alle ændringer committes og pushes til GitHub (Pages)
+- Deploy via GitHub Pages fra main branch
 
 ## Sprog
 

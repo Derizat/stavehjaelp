@@ -783,11 +783,12 @@
     font-size: 1.8rem; line-height: 1; transition: transform 0.2s;
   }
   .sp-sign {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px; padding: 4px 8px; margin-top: 2px; min-width: 40px; text-align: center;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 6px 12px; margin-top: 4px; min-width: 44px; text-align: center;
   }
   .sp-sign .sp-text {
-    font-size: 1.05rem; font-weight: 800;
+    font-family: 'Fredoka One', cursive; font-size: 1.25rem; font-weight: 800;
+    color: #fff;
   }
   .sp-word .sp-number {
     font-size: 0.6rem; color: var(--muted); font-weight: 700;
@@ -883,7 +884,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.3.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.3.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1130,7 +1131,7 @@
   </div>
   <div class="pattern-badge" id="spPatternBadge">&#x1F520; M&#xf8;nster</div>
   <div class="listen-box">
-    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:10px">&#x1F50D; Mist&#xe6;nkt line-up! Find forbrydelsen!</p>
+    <p style="color:var(--accent);font-size:1.1rem;font-weight:800;margin-bottom:10px">&#x1F50D; Hvilket ord er stavet forkert? Tryk p&#xe5; det!</p>
     <div class="sp-lineup">
       <div class="sp-sentence" id="spSentence"></div>
     </div>

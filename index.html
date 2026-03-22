@@ -884,7 +884,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.3.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.3.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2142,7 +2142,7 @@ function startTrainingFromProfile() {
     var morphemes = parseMorphemes(w.patternHint, w.word);
     if (morphemes) types.push('wordbuilder');
 
-    if (types.length === 0) types.push('diktat'); // fallback only
+    if (types.length === 0 || Math.random() < 0.2) types = ['diktat']; // 20% chance + fallback
 
     var chosenType = types[Math.floor(Math.random() * types.length)];
 

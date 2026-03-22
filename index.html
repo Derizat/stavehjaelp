@@ -884,7 +884,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.3.5</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.3.6</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -5812,7 +5812,7 @@ function renderRightOrWrongWord() {
   updateRFCombo();
 
   // Start timer (3s → 1.5s, decreasing by 0.08s per word)
-  var duration = Math.max(1.5, 3 - rfResults.length * 0.08);
+  var duration = Math.max(2.5, 5 - rfResults.length * 0.1);
   var timerBar = document.getElementById('rfTimerBar');
   timerBar.style.transition = 'none';
   timerBar.style.width = '100%';

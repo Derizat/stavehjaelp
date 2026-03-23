@@ -222,6 +222,31 @@
     font-size: 0.9rem; color: #c4b5fd;
   }
 
+  /* Level up animation */
+  @keyframes levelup-shake {
+    0%, 100% { transform: rotate(0) scale(1); }
+    10% { transform: rotate(-10deg) scale(1.1); }
+    20% { transform: rotate(10deg) scale(1.2); }
+    30% { transform: rotate(-15deg) scale(1.3); }
+    40% { transform: rotate(15deg) scale(1.4); }
+    50% { transform: rotate(0) scale(1.5); opacity: 0; }
+  }
+  @keyframes levelup-appear {
+    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+    50% { transform: scale(1.3) rotate(10deg); opacity: 1; }
+    70% { transform: scale(0.9) rotate(-5deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  @keyframes levelup-sparkle {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+  }
+  .levelup-sparkle {
+    position: absolute; font-size: 1.5rem; pointer-events: none;
+    animation: levelup-sparkle 0.8s ease-out forwards;
+  }
+  #levelUpBtn { animation: fillin-pop 0.5s ease infinite alternate; }
+
   /* Profile picker */
   .profile-picker-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -884,7 +909,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.4</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.6.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -930,12 +955,15 @@
 <!-- WELCOME -->
 <div id="phase-welcome" class="card hidden">
   <div id="welcomeAvatarSection" style="text-align:center;margin-bottom:16px">
-    <div id="avatarEmoji" style="font-size:4rem;line-height:1.2"></div>
+    <div id="avatarEmoji" style="font-size:4rem;line-height:1.2;transition:all 0.3s"></div>
     <div id="playerNameDisplay" class="player-name-display"></div>
     <div id="avatarTitle" class="hidden"></div>
     <div id="avatarDesc" style="font-size:0.85rem;color:var(--muted);margin-top:2px"></div>
-    <div class="hidden"><div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%"></div></div></div>
-    <div id="avatarProgressLabel" class="hidden"></div>
+    <div style="max-width:220px;margin:10px auto 4px">
+      <div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%;background:linear-gradient(90deg,var(--green),var(--accent))"></div></div>
+    </div>
+    <div id="avatarProgressLabel" style="font-size:0.75rem;color:var(--muted)"></div>
+    <button class="btn btn-accent hidden" id="levelUpBtn" onclick="doLevelUp()" style="margin-top:10px;padding:12px 28px;font-size:1.1rem">&#x2B50; Level Up!</button>
   </div>
 
   <!-- Welcome streak section (dynamic) -->
@@ -3049,7 +3077,8 @@ function loadRewardData() {
     todayXP: 0,
     todayDate: '',
     streakFreezes: 0,
-    milestonesSeen: []
+    milestonesSeen: [],
+    displayedLevel: 0
   };
 }
 
@@ -4345,42 +4374,124 @@ function getAvatarLevel(totalXP) {
 
 function updateWelcomeAvatar() {
   var data = loadRewardData();
-  var level = getAvatarLevel(data.totalXP || 0);
+  var displayedIdx = data.displayedLevel || 0;
+  var displayedLevel = AVATAR_LEVELS[displayedIdx] || AVATAR_LEVELS[0];
+  var actualLevel = getAvatarLevel(data.totalXP || 0);
+  var canLevelUp = actualLevel.index > displayedIdx;
 
+  // Show the displayed level (not the actual earned one)
   var el = document.getElementById('avatarEmoji');
-  if (el) el.textContent = level.emoji;
+  if (el) el.textContent = displayedLevel.emoji;
   var titleEl = document.getElementById('avatarTitle');
   if (titleEl) {
-    titleEl.textContent = level.title;
-    titleEl.setAttribute('style', 'font-family:Fredoka One,cursive;font-size:1.3rem;margin-top:4px;' + level.titleStyle);
+    titleEl.textContent = displayedLevel.title;
+    titleEl.setAttribute('style', 'font-family:Fredoka One,cursive;font-size:1.3rem;margin-top:4px;' + (displayedLevel.titleStyle || ''));
     titleEl.classList.remove('hidden');
   }
   var descEl = document.getElementById('avatarDesc');
-  if (descEl) descEl.textContent = level.desc;
+  if (descEl) descEl.textContent = displayedLevel.desc;
+
+  // Progress bar shows XP toward next level-up
+  var nextIdx = displayedIdx + 1;
+  var nextLevel = nextIdx < AVATAR_LEVELS.length ? AVATAR_LEVELS[nextIdx] : null;
   var bar = document.getElementById('avatarProgressBar');
-  if (bar) bar.style.width = (level.progress * 100) + '%';
   var label = document.getElementById('avatarProgressLabel');
-  if (label) {
-    if (level.nextXP) {
-      label.textContent = (data.totalXP || 0) + ' / ' + level.nextXP + ' XP til n\u00E6ste form';
+  if (bar && label) {
+    if (canLevelUp) {
+      bar.style.width = '100%';
+      label.textContent = '\u2B50 Klar til level up!';
+      label.style.color = 'var(--accent)';
+    } else if (nextLevel) {
+      var progress = (data.totalXP - displayedLevel.minXP) / (nextLevel.minXP - displayedLevel.minXP);
+      bar.style.width = Math.min(progress * 100, 100) + '%';
+      label.textContent = (data.totalXP || 0) + ' / ' + nextLevel.minXP + ' XP';
+      label.style.color = 'var(--muted)';
     } else {
+      bar.style.width = '100%';
       label.textContent = 'Maksimalt niveau! ' + (data.totalXP || 0) + ' XP';
+      label.style.color = 'var(--green)';
     }
+  }
+
+  // Level Up button
+  var btn = document.getElementById('levelUpBtn');
+  if (btn) {
+    if (canLevelUp) btn.classList.remove('hidden');
+    else btn.classList.add('hidden');
   }
 }
 
+function doLevelUp() {
+  var data = loadRewardData();
+  var oldIdx = data.displayedLevel || 0;
+  var actualLevel = getAvatarLevel(data.totalXP || 0);
+  var newIdx = oldIdx + 1; // level up one step at a time
+  if (newIdx > actualLevel.index) return;
+  var oldLevel = AVATAR_LEVELS[oldIdx];
+  var newLevel = AVATAR_LEVELS[newIdx];
+
+  // Hide level up button during animation
+  var btn = document.getElementById('levelUpBtn');
+  if (btn) btn.classList.add('hidden');
+
+  var emojiEl = document.getElementById('avatarEmoji');
+  var titleEl = document.getElementById('avatarTitle');
+  var descEl = document.getElementById('avatarDesc');
+  var section = document.getElementById('welcomeAvatarSection');
+
+  // Phase 1: Old avatar shakes and disappears
+  emojiEl.style.animation = 'levelup-shake 1s ease forwards';
+
+  // Spawn sparkles around the avatar
+  var sparkles = ['\u2728', '\u{1F31F}', '\u{1F4AB}', '\u26A1', '\u{1F525}'];
+  for (var si = 0; si < 8; si++) {
+    var spark = document.createElement('div');
+    spark.className = 'levelup-sparkle';
+    spark.textContent = sparkles[si % sparkles.length];
+    spark.style.setProperty('--tx', (Math.random() * 120 - 60) + 'px');
+    spark.style.setProperty('--ty', (Math.random() * 120 - 60) + 'px');
+    spark.style.left = '50%';
+    spark.style.top = '50%';
+    section.style.position = 'relative';
+    section.appendChild(spark);
+    setTimeout(function(s) { return function() { if (s.parentNode) s.parentNode.removeChild(s); }; }(spark), 1000);
+  }
+
+  // Phase 2: New avatar appears
+  setTimeout(function() {
+    emojiEl.textContent = newLevel.emoji;
+    emojiEl.style.animation = 'levelup-appear 0.8s ease forwards';
+
+    titleEl.textContent = newLevel.title;
+    titleEl.setAttribute('style', 'font-family:Fredoka One,cursive;font-size:1.3rem;margin-top:4px;' + (newLevel.titleStyle || ''));
+    descEl.textContent = newLevel.desc;
+
+    // More sparkles!
+    for (var si2 = 0; si2 < 10; si2++) {
+      var spark2 = document.createElement('div');
+      spark2.className = 'levelup-sparkle';
+      spark2.textContent = sparkles[si2 % sparkles.length];
+      spark2.style.setProperty('--tx', (Math.random() * 160 - 80) + 'px');
+      spark2.style.setProperty('--ty', (Math.random() * 160 - 80) + 'px');
+      spark2.style.left = '50%';
+      spark2.style.top = '50%';
+      section.appendChild(spark2);
+      setTimeout(function(s) { return function() { if (s.parentNode) s.parentNode.removeChild(s); }; }(spark2), 1200);
+    }
+  }, 1000);
+
+  // Phase 3: Save and update
+  setTimeout(function() {
+    emojiEl.style.animation = '';
+    data.displayedLevel = newIdx;
+    saveRewardData(data);
+    updateWelcomeAvatar(); // refresh bar and check if more level-ups available
+  }, 2000);
+}
+
+// Legacy — no longer auto-shows, kept for compatibility
 function showLevelUpPopup(newLevel) {
-  var overlay = document.createElement('div');
-  overlay.className = 'milestone-overlay';
-  overlay.id = 'levelUpOverlay';
-  overlay.innerHTML = '<div class="milestone-card">' +
-    '<div style="font-size:4rem;margin-bottom:10px">' + newLevel.emoji + '</div>' +
-    '<div style="font-family:Fredoka One,cursive;font-size:1.5rem;color:var(--accent);margin-bottom:6px">Nyt Niveau!</div>' +
-    '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;font-weight:700;margin-bottom:4px;' + (newLevel.titleStyle || 'color:var(--text)') + '">' + newLevel.title + '</div>' +
-    '<div style="font-size:0.9rem;color:var(--muted);margin-bottom:16px">' + newLevel.desc + '</div>' +
-    '<button class="btn btn-accent" onclick="document.getElementById(\'levelUpOverlay\').remove()">\uD83C\uDF89 Sejt!</button>' +
-    '</div>';
-  document.body.appendChild(overlay);
+  // Level-ups are now manual via the Level Up button on welcome screen
 }
 
 // ===== END GAMIFICATION =====

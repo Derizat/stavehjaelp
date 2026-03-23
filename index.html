@@ -884,7 +884,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3362,6 +3362,22 @@ var bossRainInterval = null;
 
 function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+var BOSS_INSTRUCTIONS = {
+  scramble: { emoji: '\u{1F500}', text: 'Tryk p\u00E5 bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' },
+  rain: { emoji: '\u{1F327}\uFE0F', text: 'Fang det rigtige bogstav n\u00E5r det falder ned!' },
+  memory: { emoji: '\u{1F9E0}', text: 'Husk ordet \u2014 du skal stave det bagefter!' },
+  reverse: { emoji: '\u{1F500}', text: 'Ordet er bagl\u00E6ns \u2014 skriv det rigtigt!' },
+  pacman: { emoji: '\u{1F3AE}', text: 'Saml bogstaverne i r\u00E6kkef\u00F8lge \u2014 undg\u00E5 sp\u00F8gelset!' }
+};
+
+function loadBossSeen() {
+  try { var raw = localStorage.getItem(playerKey('boss_seen')); return raw ? JSON.parse(raw) : {}; } catch(e) { return {}; }
+}
+
+function saveBossSeen(data) {
+  try { localStorage.setItem(playerKey('boss_seen'), JSON.stringify(data)); } catch(e) {}
+}
+
 function showBossMinigame(bossData) {
   hide('phase-test');
   hide('phase-fillin');
@@ -3381,11 +3397,33 @@ function showBossMinigame(bossData) {
     deathAnim: pickRandom(BOSS_DEATH_ANIMS)
   };
 
-  if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
-  else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
-  else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
-  else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
-  else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+  // Show instruction first time per boss type
+  var seen = loadBossSeen();
+  if (!seen[battleType]) {
+    seen[battleType] = true;
+    saveBossSeen(seen);
+    var instr = BOSS_INSTRUCTIONS[battleType];
+    var content = document.getElementById('bossContent');
+    content.innerHTML = '<div style="text-align:center;padding:40px 20px">' +
+      '<div style="font-size:4rem;margin-bottom:16px">' + instr.emoji + '</div>' +
+      '<div style="font-size:3rem;margin-bottom:12px">' + boss.emoji + '</div>' +
+      '<h2 style="color:var(--accent);margin-bottom:12px">' + boss.name + '</h2>' +
+      '<p style="font-size:1.15rem;font-weight:700;color:var(--text);line-height:1.6">' + instr.text + '</p>' +
+      '</div>';
+    setTimeout(function() {
+      if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
+      else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
+      else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
+      else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
+      else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+    }, 3000);
+  } else {
+    if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
+    else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
+    else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
+    else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
+    else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+  }
 }
 
 // --- Shared boss UI helpers ---

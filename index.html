@@ -884,7 +884,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3592,20 +3592,31 @@ function catchRainLetter(dropId, letter) {
 
 // --- Type 3: MEMORY (see word, then spell from memory) ---
 function renderBossMemory(word, boss, idleAnim) {
+  // Find the word's hint
+  var wordHint = '';
+  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+    var found = WORD_BANK[ALL_CATEGORIES[ci]].find(function(w) { return w.word === word; });
+    if (found) { wordHint = found.hint || ''; break; }
+  }
+
   var html = renderBossHeader(boss, idleAnim, word.length, word.length);
   html += '<div style="text-align:center;margin:20px 0">';
-  html += '<p style="color:var(--muted);font-size:0.95rem;margin-bottom:12px">\u{1F9E0} Husk ordet!</p>';
+  html += '<p style="color:var(--accent);font-size:1.1rem;font-weight:800;margin-bottom:12px">\u{1F9E0} Husk dette ord!</p>';
   html += '<div class="boss-memory-word" id="bossMemoryWord">' + word + '</div>';
   html += '</div>';
   html += '<div id="bossMemoryInput" style="display:none">';
   html += renderBossWordSlots(word);
-  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:12px 0">\u270F\uFE0F Stav ordet fra hukommelsen!</p>';
+  if (wordHint) html += '<p style="text-align:center;color:var(--accent);font-size:0.95rem;margin:8px 0">\u{1F4A1} ' + wordHint + '</p>';
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:8px 0">\u270F\uFE0F Stav ordet fra hukommelsen!</p>';
   html += '<input type="text" id="bossMemInput" placeholder="Skriv ordet her..." style="margin-bottom:12px" autocomplete="off" autocapitalize="off" />';
   html += '<button class="btn btn-primary btn-full" onclick="checkBossMemory()">\u2714\uFE0F Tjek</button>';
   html += '</div>';
   document.getElementById('bossContent').innerHTML = html;
 
-  // Show word for 2.5 seconds then hide
+  // Play the word aloud
+  speakWord(word, null);
+
+  // Show word for 4 seconds then hide
   setTimeout(function() {
     var wordEl = document.getElementById('bossMemoryWord');
     if (wordEl) wordEl.style.opacity = '0';
@@ -3617,7 +3628,7 @@ function renderBossMemory(word, boss, idleAnim) {
       var inp = document.getElementById('bossMemInput');
       if (inp) inp.focus();
     }, 500);
-  }, 2500);
+  }, 4000);
 }
 
 function checkBossMemory() {

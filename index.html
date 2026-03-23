@@ -909,7 +909,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.6.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.6.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1648,19 +1648,19 @@ var CATEGORY_ICONS = {
 var ALL_CATEGORIES = [];
 
 var LEVEL_LABELS = {
-  0: { text: "\u26AA Niveau 0 (0. klasse)", bg: "rgba(255,255,255,0.1)", color: "#ccc" },
-  1: { text: "\u{1F7E2} Niveau 1 (1.-2. klasse)", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
-  2: { text: "\u{1F7E1} Niveau 2 (3.-4. klasse)", bg: "rgba(245,166,35,0.15)", color: "var(--accent)" },
-  3: { text: "\u{1F7E0} Niveau 3 (5.-6. klasse)", bg: "rgba(249,115,22,0.15)", color: "#f97316" },
-  4: { text: "\u{1F534} Niveau 4 (7.-8. klasse)", bg: "rgba(244,63,94,0.15)", color: "var(--red)" }
+  0: { text: "\u26AA Niveau 0", bg: "rgba(255,255,255,0.1)", color: "#ccc" },
+  1: { text: "\u{1F7E2} Niveau 1", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
+  2: { text: "\u{1F7E1} Niveau 2", bg: "rgba(245,166,35,0.15)", color: "var(--accent)" },
+  3: { text: "\u{1F7E0} Niveau 3", bg: "rgba(249,115,22,0.15)", color: "#f97316" },
+  4: { text: "\u{1F534} Niveau 4", bg: "rgba(244,63,94,0.15)", color: "var(--red)" }
 };
 
 var LEVEL_GRADE_MAP = {
-  0: "0. klasse niveau",
-  1: "1.-2. klasse niveau",
-  2: "3.-4. klasse niveau",
-  3: "5.-6. klasse niveau",
-  4: "7.-8. klasse niveau"
+  0: "Niveau 0",
+  1: "Niveau 1",
+  2: "Niveau 2",
+  3: "Niveau 3",
+  4: "Niveau 4"
 };
 
 // State
@@ -2711,13 +2711,11 @@ async function analyzeWithAI(profile) {
   var wrong = results.filter(function(r) { return !r.correct; });
   var cats = [];
   wrong.forEach(function(r) { if (cats.indexOf(r.category) === -1) cats.push(r.category); });
-  var grade = profile.grade || 0;
   var spellingLevel = profile.spellingLevel || 1;
-  var gradeInfo = grade >= 0 ? ('Eleven går i ' + grade + '. klasse. ') : '';
   var levelInfo = 'Estimeret stave-niveau: ' + LEVEL_GRADE_MAP[spellingLevel] + ' (niveau ' + spellingLevel + '/4).';
 
   var prompt = 'Du er en dansk stavningstutor for et barn.\n\n' +
-    gradeInfo + levelInfo + '\n\n' +
+    levelInfo + '\n\n' +
     'Diagnostisk test med adaptivt niveau (starter let, bliver sværere).\n\n' +
     'Testresultater:\n' +
     results.map(function(r) { return '- "' + r.word + '" (kategori: ' + r.category + ', niveau: ' + r.level + '): ' + (r.correct ? 'RIGTIGT' : 'FORKERT — eleven skrev "' + r.userAnswer + '"'); }).join('\n') +
@@ -2801,7 +2799,7 @@ function renderProfile(profile, aiData) {
   var meterColors = { 0: '#ccc', 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
   html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + Math.max(meterPct, 5) + '%;background:' + (meterColors[spellingLevel] || '#ccc') + '"></div></div>';
   html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
-  html += '<span>0. kl</span><span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
+  html += '<span>Niv. 0</span><span>Niv. 1</span><span>Niv. 2</span><span>Niv. 3</span><span>Niv. 4</span></div>';
 
   // Per-category breakdown
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
@@ -2914,7 +2912,7 @@ function renderProfileFallback(profile) {
   var meterColors = { 0: '#ccc', 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
   html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + Math.max(meterPct, 5) + '%;background:' + (meterColors[spellingLevel] || '#ccc') + '"></div></div>';
   html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
-  html += '<span>0. kl</span><span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
+  html += '<span>Niv. 0</span><span>Niv. 1</span><span>Niv. 2</span><span>Niv. 3</span><span>Niv. 4</span></div>';
 
   // Per-category breakdown
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';

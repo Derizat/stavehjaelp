@@ -884,7 +884,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1310,13 +1310,14 @@ function renderProfilePickerGrid(list) {
   for (var i = 0; i < list.length; i++) {
     var name = list[i];
     var emoji = '\u{1F98A}';
+    var nameStyle = '';
     try {
       var raw = localStorage.getItem(name + '_reward_data');
-      if (raw) { var rd = JSON.parse(raw); emoji = getAvatarLevel(rd.totalXP || 0).emoji; }
+      if (raw) { var rd = JSON.parse(raw); var lvl = getAvatarLevel(rd.totalXP || 0); emoji = lvl.emoji; nameStyle = lvl.titleStyle || ''; }
     } catch(e) {}
     html += '<button class="profile-picker-btn" onclick="selectPlayer(\'' + name.replace(/'/g, "\\'") + '\')">';
     html += '<span class="pp-emoji">' + emoji + '</span>';
-    html += '<span class="pp-name">' + name + '</span>';
+    html += '<span class="pp-name" style="' + nameStyle + '">' + name + '</span>';
     html += '<span class="pp-delete" onclick="event.stopPropagation();removePlayer(\'' + name.replace(/'/g, "\\'") + '\')">\u2717 slet</span>';
     html += '</button>';
   }
@@ -4317,14 +4318,14 @@ function openChest() {
 // ===== AVATAR PROGRESSION =====
 
 var AVATAR_LEVELS = [
-  { minXP: 0,    emoji: '\uD83E\uDD8A', title: 'Baby R\u00E6v', desc: 'Stavesp\u00E6d' },
-  { minXP: 100,  emoji: '\uD83E\uDD8A\uD83C\uDFA9', title: 'R\u00E6v med Hat', desc: 'Stavebegynder' },
-  { minXP: 300,  emoji: '\uD83E\uDD8A\uD83E\uDDB8', title: 'Super-R\u00E6v', desc: 'Bogstavhelt' },
-  { minXP: 600,  emoji: '\uD83E\uDD8A\u2694\uFE0F', title: 'R\u00E6v-Kriger', desc: 'Bogstavkriger' },
-  { minXP: 1000, emoji: '\uD83E\uDD8A\uD83D\uDC51', title: 'R\u00E6v-Dronning', desc: 'Ordmester' },
-  { minXP: 2000, emoji: '\uD83D\uDC3A', title: 'Ulven', desc: 'Stave-Champion' },
-  { minXP: 3500, emoji: '\uD83D\uDC3A\uD83D\uDEE1\uFE0F', title: 'Pansret Ulv', desc: 'Ordgeneral' },
-  { minXP: 5000, emoji: '\uD83D\uDC32', title: 'Stavedragen', desc: 'Den Legendariske' }
+  { minXP: 0,    emoji: '\uD83E\uDD8A', title: 'Baby R\u00E6v', desc: 'Stavesp\u00E6d', titleStyle: 'color:var(--muted)' },
+  { minXP: 100,  emoji: '\uD83E\uDD8A\uD83C\uDFA9', title: 'R\u00E6v med Hat', desc: 'Stavebegynder', titleStyle: 'color:var(--text)' },
+  { minXP: 300,  emoji: '\uD83E\uDD8A\uD83E\uDDB8', title: 'Super-R\u00E6v', desc: 'Bogstavhelt', titleStyle: 'color:var(--green)' },
+  { minXP: 600,  emoji: '\uD83E\uDD8A\u2694\uFE0F', title: 'R\u00E6v-Kriger', desc: 'Bogstavkriger', titleStyle: 'color:var(--blue)' },
+  { minXP: 1000, emoji: '\uD83E\uDD8A\uD83D\uDC51', title: 'R\u00E6v-Dronning', desc: 'Ordmester', titleStyle: 'color:var(--accent2)' },
+  { minXP: 2000, emoji: '\uD83D\uDC3A', title: 'Ulven', desc: 'Stave-Champion', titleStyle: 'color:#f97316' },
+  { minXP: 3500, emoji: '\uD83D\uDC3A\uD83D\uDEE1\uFE0F', title: 'Pansret Ulv', desc: 'Ordgeneral', titleStyle: 'background:linear-gradient(135deg,#f5a623,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 5000, emoji: '\uD83D\uDC32', title: 'Stavedragen', desc: 'Den Legendariske', titleStyle: 'background:linear-gradient(90deg,#f43f5e,#f5a623,#22d3a0,#0ea5e9,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' }
 ];
 
 function getAvatarLevel(totalXP) {
@@ -4339,7 +4340,7 @@ function getAvatarLevel(totalXP) {
   }
   var nextLevel = idx < AVATAR_LEVELS.length - 1 ? AVATAR_LEVELS[idx + 1] : null;
   var progress = nextLevel ? (totalXP - level.minXP) / (nextLevel.minXP - level.minXP) : 1;
-  return { emoji: level.emoji, title: level.title, desc: level.desc, index: idx, progress: progress, nextXP: nextLevel ? nextLevel.minXP : null, currentXP: totalXP };
+  return { emoji: level.emoji, title: level.title, desc: level.desc, titleStyle: level.titleStyle || '', index: idx, progress: progress, nextXP: nextLevel ? nextLevel.minXP : null, currentXP: totalXP };
 }
 
 function updateWelcomeAvatar() {
@@ -4349,7 +4350,11 @@ function updateWelcomeAvatar() {
   var el = document.getElementById('avatarEmoji');
   if (el) el.textContent = level.emoji;
   var titleEl = document.getElementById('avatarTitle');
-  if (titleEl) titleEl.textContent = level.title;
+  if (titleEl) {
+    titleEl.textContent = level.title;
+    titleEl.setAttribute('style', 'font-family:Fredoka One,cursive;font-size:1.3rem;margin-top:4px;' + level.titleStyle);
+    titleEl.classList.remove('hidden');
+  }
   var descEl = document.getElementById('avatarDesc');
   if (descEl) descEl.textContent = level.desc;
   var bar = document.getElementById('avatarProgressBar');
@@ -4371,7 +4376,7 @@ function showLevelUpPopup(newLevel) {
   overlay.innerHTML = '<div class="milestone-card">' +
     '<div style="font-size:4rem;margin-bottom:10px">' + newLevel.emoji + '</div>' +
     '<div style="font-family:Fredoka One,cursive;font-size:1.5rem;color:var(--accent);margin-bottom:6px">Nyt Niveau!</div>' +
-    '<div style="font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px">' + newLevel.title + '</div>' +
+    '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;font-weight:700;margin-bottom:4px;' + (newLevel.titleStyle || 'color:var(--text)') + '">' + newLevel.title + '</div>' +
     '<div style="font-size:0.9rem;color:var(--muted);margin-bottom:16px">' + newLevel.desc + '</div>' +
     '<button class="btn btn-accent" onclick="document.getElementById(\'levelUpOverlay\').remove()">\uD83C\uDF89 Sejt!</button>' +
     '</div>';

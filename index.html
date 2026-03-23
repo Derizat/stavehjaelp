@@ -423,6 +423,60 @@
     .pac-letter { font-size: 1rem; }
   }
 
+  /* Boss highway minigame */
+  .highway-area {
+    position: relative; height: 260px; overflow: hidden; border-radius: 14px;
+    margin: 12px 0; background: linear-gradient(180deg, #1a1520, #12101a);
+    border: 2px solid #3d4270;
+  }
+  .highway-lanes {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+  }
+  .highway-lane { border-right: 2px dashed rgba(255,255,255,0.08); position: relative; }
+  .highway-lane:last-child { border-right: none; }
+  .highway-car {
+    position: absolute; bottom: 20px; font-size: 2rem; transition: left 0.15s ease;
+    width: 33.33%; text-align: center; z-index: 5;
+  }
+  .highway-letter {
+    position: absolute; font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; border: 2px solid #3d4270; background: var(--card2); color: var(--text);
+    z-index: 3;
+  }
+  .highway-letter.target { border-color: var(--accent); color: var(--accent); }
+  .highway-letter.caught { background: rgba(34,211,160,0.3); border-color: var(--green); color: var(--green); }
+
+  /* Boss cardcast (slay the spire) minigame */
+  .cardcast-hearts {
+    display: flex; justify-content: center; gap: 4px; margin: 10px 0;
+    font-size: 1.6rem; min-height: 2.2rem;
+  }
+  .cardcast-heart { transition: all 0.3s; display: inline-block; }
+  .cardcast-heart.revealed {
+    font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+    color: var(--green); animation: fillin-pop 0.3s ease;
+  }
+  .cardcast-hand {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 16px 0;
+  }
+  .cardcast-card {
+    font-family: 'Fredoka One', cursive; font-size: 1.5rem; padding: 16px 12px;
+    border-radius: 14px; border: 3px solid #3d4270; background: var(--card2); color: var(--text);
+    cursor: pointer; transition: all 0.2s; min-width: 50px; text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .cardcast-card:hover { border-color: var(--accent); transform: translateY(-6px); }
+  .cardcast-card:active { transform: translateY(-2px); }
+  .cardcast-card.played {
+    opacity: 0.2; pointer-events: none; transform: translateY(-20px) scale(0.8);
+  }
+  .cardcast-card.wrong-cast {
+    border-color: var(--red); background: rgba(244,63,94,0.15);
+    animation: boss-shake 0.3s ease;
+  }
+
   /* Treasure chest */
   .chest-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000;
@@ -909,7 +963,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.6.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.7.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1689,7 +1743,9 @@ function goHome() {
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
+  cleanupHighway();
   if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
+  if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
   show('phase-welcome');
   refreshWelcomeButtons();
   updateWelcomeStreak();
@@ -3377,7 +3433,7 @@ var BOSS_MONSTERS = {
   "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex" }
 };
 
-var BOSS_BATTLE_TYPES = ['scramble', 'rain', 'memory', 'reverse', 'pacman'];
+var BOSS_BATTLE_TYPES = ['scramble', 'rain', 'memory', 'reverse', 'pacman', 'highway', 'cardcast'];
 var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];
 var BOSS_IDLE_ANIMS = ['boss-idle-float', 'boss-idle-pulse', 'boss-idle-wobble'];
 var BOSS_VICTORY_MSGS = [
@@ -3395,7 +3451,9 @@ var BOSS_INSTRUCTIONS = {
   rain: { emoji: '\u{1F327}\uFE0F', text: 'Fang det rigtige bogstav n\u00E5r det falder ned!' },
   memory: { emoji: '\u{1F9E0}', text: 'Husk ordet \u2014 du skal stave det bagefter!' },
   reverse: { emoji: '\u{1F500}', text: 'Ordet er bagl\u00E6ns \u2014 skriv det rigtigt!' },
-  pacman: { emoji: '\u{1F3AE}', text: 'Saml bogstaverne i r\u00E6kkef\u00F8lge \u2014 undg\u00E5 sp\u00F8gelset!' }
+  pacman: { emoji: '\u{1F3AE}', text: 'Saml bogstaverne i r\u00E6kkef\u00F8lge \u2014 undg\u00E5 sp\u00F8gelset!' },
+  highway: { emoji: '\u{1F697}', text: 'K\u00F8r bilen fra bane til bane og fang de rigtige bogstaver!' },
+  cardcast: { emoji: '\u{1F0CF}', text: 'Lyt til ordet og kast de rigtige bogstav-kort mod bossen!' }
 };
 
 function loadBossSeen() {
@@ -3444,6 +3502,8 @@ function showBossMinigame(bossData) {
       else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
       else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
       else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+      else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
+      else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
     }, 3000);
   } else {
     if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
@@ -4129,12 +4189,227 @@ function cleanupPacman() {
   }
 }
 
+// --- Type 6: HIGHWAY (3-lane car catching letters) ---
+var highwayInterval = null;
+var highwayState = null;
+
+function renderBossHighway(word, boss, idleAnim) {
+  var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+
+  // Word guide
+  html += '<div style="text-align:center;margin:8px 0">';
+  html += '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;letter-spacing:4px">';
+  for (var i = 0; i < word.length; i++) {
+    var cls = i === 0 ? 'boss-rain-guide-letter active' : 'boss-rain-guide-letter';
+    html += '<span class="' + cls + '" id="hwGuide' + i + '">' + word[i] + '</span>';
+  }
+  html += '</div></div>';
+
+  html += '<div class="boss-rain-target" id="hwTarget">\u{1F3AF} Fang: <strong>' + word[0] + '</strong></div>';
+  html += '<div class="highway-area" id="hwArea"><div class="highway-lanes">';
+  html += '<div class="highway-lane"></div><div class="highway-lane"></div><div class="highway-lane"></div>';
+  html += '</div><div class="highway-car" id="hwCar" style="left:33.33%">\u{1F697}</div></div>';
+
+  // D-pad (left/right only)
+  html += '<div style="display:flex;justify-content:center;gap:16px;margin-top:10px">';
+  html += '<div class="dpad-btn" onpointerdown="hwMove(-1)" style="width:70px;height:50px">\u2B05\uFE0F</div>';
+  html += '<div class="dpad-btn" onpointerdown="hwMove(1)" style="width:70px;height:50px">\u27A1\uFE0F</div>';
+  html += '</div>';
+
+  document.getElementById('bossContent').innerHTML = html;
+
+  highwayState = {
+    lane: 1, // 0=left, 1=center, 2=right
+    letterIndex: 0,
+    spawnCount: 0
+  };
+
+  // Keyboard controls
+  highwayState._keyHandler = function(e) {
+    if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); hwMove(-1); }
+    if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); hwMove(1); }
+  };
+  document.addEventListener('keydown', highwayState._keyHandler);
+
+  highwayInterval = setInterval(function() { hwSpawnLetter(); }, 1000);
+  setTimeout(function() { hwSpawnLetter(); }, 300);
+}
+
+function hwMove(dir) {
+  if (!highwayState || !bossState) return;
+  highwayState.lane = Math.max(0, Math.min(2, highwayState.lane + dir));
+  var car = document.getElementById('hwCar');
+  if (car) car.style.left = (highwayState.lane * 33.33) + '%';
+}
+
+function hwSpawnLetter() {
+  if (!bossState || bossState.battleType !== 'highway') { clearInterval(highwayInterval); return; }
+  var area = document.getElementById('hwArea');
+  if (!area) { clearInterval(highwayInterval); return; }
+
+  var target = bossState.word[bossState.letterIndex];
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
+  var letter;
+  highwayState.spawnCount++;
+  if (Math.random() < 0.4 || highwayState.spawnCount % 3 === 0) {
+    letter = target;
+  } else {
+    letter = alphabet[Math.floor(Math.random() * alphabet.length)];
+  }
+
+  var lane = Math.floor(Math.random() * 3);
+  var el = document.createElement('div');
+  el.className = 'highway-letter' + (letter === target ? ' target' : '');
+  el.textContent = letter;
+  var laneWidth = area.offsetWidth / 3;
+  el.style.left = (lane * laneWidth + laneWidth / 2 - 20) + 'px';
+  el.style.top = '-44px';
+  var dropId = 'hwDrop' + highwayState.spawnCount;
+  el.id = dropId;
+  el.dataset.lane = lane;
+  el.dataset.letter = letter;
+  area.appendChild(el);
+
+  var startTime = Date.now();
+  var duration = 2500 + Math.random() * 1000;
+  var areaHeight = area.offsetHeight;
+  function animate() {
+    var elRef = document.getElementById(dropId);
+    if (!elRef) return;
+    var progress = (Date.now() - startTime) / duration;
+    if (progress >= 1) {
+      if (elRef.parentNode) elRef.parentNode.removeChild(elRef);
+      return;
+    }
+    var yPos = progress * (areaHeight - 44);
+    elRef.style.top = yPos + 'px';
+
+    // Check collision with car
+    if (yPos > areaHeight - 80 && yPos < areaHeight - 20 && parseInt(elRef.dataset.lane) === highwayState.lane) {
+      var l = elRef.dataset.letter;
+      if (l === bossState.word[bossState.letterIndex]) {
+        elRef.classList.add('caught');
+        setTimeout(function() { if (elRef.parentNode) elRef.parentNode.removeChild(elRef); }, 200);
+        bossState.hp--; bossState.letterIndex++;
+        var prev = document.getElementById('hwGuide' + (bossState.letterIndex - 1));
+        if (prev) { prev.classList.remove('active'); prev.classList.add('caught'); }
+        var next = document.getElementById('hwGuide' + bossState.letterIndex);
+        if (next) next.classList.add('active');
+        updateBossHP(); bossHitAnim();
+        if (bossState.hp <= 0) {
+          clearInterval(highwayInterval);
+          cleanupHighway();
+          bossDefeated();
+          return;
+        }
+        var targetEl = document.getElementById('hwTarget');
+        if (targetEl) targetEl.innerHTML = '\u{1F3AF} Fang: <strong>' + bossState.word[bossState.letterIndex] + '</strong>';
+      } else {
+        elRef.style.borderColor = 'var(--red)';
+        if (elRef.parentNode) elRef.parentNode.removeChild(elRef);
+        bossAttackAnim();
+      }
+      return;
+    }
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+}
+
+function cleanupHighway() {
+  if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
+  if (highwayState && highwayState._keyHandler) {
+    document.removeEventListener('keydown', highwayState._keyHandler);
+  }
+  highwayState = null;
+}
+
+// --- Type 7: CARDCAST (Slay the Spire style) ---
+function renderBossCardcast(word, boss, idleAnim) {
+  var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+
+  // Hearts that become letters
+  html += '<div class="cardcast-hearts" id="ccHearts">';
+  for (var i = 0; i < word.length; i++) {
+    html += '<span class="cardcast-heart" id="ccHeart' + i + '">\u2764\uFE0F</span>';
+  }
+  html += '</div>';
+
+  html += '<button class="btn-listen" onclick="speakWord(bossState.word, null)" style="margin:8px auto;display:block">\u{1F508} H\u00F8r ordet igen</button>';
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:8px 0">Kast det rigtige bogstav-kort!</p>';
+
+  // Build hand: correct letters + distractors
+  var handLetters = word.split('');
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
+  var distractorCount = Math.min(3, Math.max(1, 6 - word.length));
+  for (var d = 0; d < distractorCount; d++) {
+    var distractor;
+    do {
+      distractor = alphabet[Math.floor(Math.random() * alphabet.length)];
+    } while (handLetters.indexOf(distractor) >= 0);
+    handLetters.push(distractor);
+  }
+  // Shuffle hand
+  for (var si = handLetters.length - 1; si > 0; si--) {
+    var sj = Math.floor(Math.random() * (si + 1));
+    var tmp = handLetters[si]; handLetters[si] = handLetters[sj]; handLetters[sj] = tmp;
+  }
+
+  html += '<div class="cardcast-hand" id="ccHand">';
+  for (var ci = 0; ci < handLetters.length; ci++) {
+    html += '<button class="cardcast-card" data-index="' + ci + '" data-letter="' + handLetters[ci] + '" onclick="castCard(' + ci + ')">' + handLetters[ci] + '</button>';
+  }
+  html += '</div>';
+
+  document.getElementById('bossContent').innerHTML = html;
+
+  bossState.ccLetterIndex = 0;
+
+  // Play the word
+  speakWord(word, null);
+}
+
+function castCard(cardIndex) {
+  if (!bossState) return;
+  var card = document.querySelector('.cardcast-card[data-index="' + cardIndex + '"]');
+  if (!card || card.classList.contains('played')) return;
+
+  var letter = card.dataset.letter;
+  var expected = bossState.word[bossState.ccLetterIndex];
+
+  if (letter === expected) {
+    // Correct cast!
+    card.classList.add('played');
+    bossState.ccLetterIndex++;
+    bossState.hp--;
+
+    // Reveal heart → letter
+    var heart = document.getElementById('ccHeart' + (bossState.ccLetterIndex - 1));
+    if (heart) {
+      heart.textContent = letter;
+      heart.classList.add('revealed');
+    }
+
+    updateBossHP(); bossHitAnim();
+
+    if (bossState.hp <= 0) {
+      bossDefeated();
+    }
+  } else {
+    // Wrong cast
+    card.classList.add('wrong-cast');
+    setTimeout(function() { card.classList.remove('wrong-cast'); }, 400);
+    bossAttackAnim();
+  }
+}
+
 // --- Boss defeated (shared) ---
 function bossDefeated() {
   var defeatedWord = bossState ? bossState.word : '';
   var deathAnim = bossState ? bossState.deathAnim : 'boss-death-spin';
   if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
   cleanupPacman();
+  cleanupHighway();
   bossState = null;
 
   var monster = document.getElementById('bossMonster');

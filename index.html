@@ -884,7 +884,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.5.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2004,10 +2004,10 @@ function gradeToExpectedLevel(grade) {
 
 // Adaptive diagnostic builder
 function buildAdaptiveDiagnosticWords(level) {
-  // Pick 3 words from given level, each from a different random category
+  // Pick 5 words from given level, each from a different random category
   var cats = shuffle(ALL_CATEGORIES);
   var picked = [];
-  for (var ci = 0; ci < cats.length && picked.length < 3; ci++) {
+  for (var ci = 0; ci < cats.length && picked.length < 5; ci++) {
     var cat = cats[ci];
     var pool = WORD_BANK[cat].filter(function(w) {
       return w.level === level && !diagnosticWordsList.find(function(d) { return d.word === w.word; });
@@ -2018,8 +2018,8 @@ function buildAdaptiveDiagnosticWords(level) {
     }
   }
   // If not enough from unique categories, fill from any category
-  if (picked.length < 3) {
-    for (var ci2 = 0; ci2 < ALL_CATEGORIES.length && picked.length < 3; ci2++) {
+  if (picked.length < 5) {
+    for (var ci2 = 0; ci2 < ALL_CATEGORIES.length && picked.length < 5; ci2++) {
       var cat2 = ALL_CATEGORIES[ci2];
       var pool2 = WORD_BANK[cat2].filter(function(w) {
         return w.level === level && !diagnosticWordsList.find(function(d) { return d.word === w.word; }) && !picked.find(function(p) { return p.word === w.word; });
@@ -2539,8 +2539,8 @@ function nextWord() {
         return;
       }
 
-      if (levelCorrect >= 2 && adaptiveState.currentLevel < 4) {
-        // Advance to next level
+      if (levelCorrect >= 3 && adaptiveState.currentLevel < 4) {
+        // Advance to next level (3/5 = 60% correct)
         adaptiveState.currentLevel++;
         adaptiveState.levelResults = [];
         adaptiveState.phase = 'testing';
@@ -2554,12 +2554,12 @@ function nextWord() {
         currentWords = nextBatch;
         currentIndex = 0;
         renderWord();
-      } else if (levelCorrect >= 2 && adaptiveState.currentLevel === 4) {
+      } else if (levelCorrect >= 3 && adaptiveState.currentLevel === 4) {
         // At max level and passed, finish
         adaptiveState.finished = true;
         finishTest();
       } else {
-        // Got 2+ wrong, pick 3 more at this level to confirm
+        // Got 3+ wrong, pick 5 more at this level to confirm
         adaptiveState.levelResults = [];
         adaptiveState.phase = 'confirming';
         var confirmBatch = buildAdaptiveDiagnosticWords(adaptiveState.currentLevel);

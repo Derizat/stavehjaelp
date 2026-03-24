@@ -5,7 +5,7 @@
       "hint": "Hold en pause",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Nu skal du hvile dig lidt.",
-      "level": 0,
+      "level": 1,
       "category": "Stumme bogstaver"
     },
     {
@@ -13,7 +13,7 @@
       "hint": "Lyden en slange laver",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Slangen sagde hvæs!",
-      "level": 0,
+      "level": 1,
       "category": "Stumme bogstaver"
     },
     {
@@ -557,7 +557,7 @@
       "hint": "Skinger lyd fra bremser",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Der kom et højt hvin fra bremserne.",
-      "level": 0,
+      "level": 1,
       "category": "Stumme bogstaver"
     },
     {
@@ -565,7 +565,7 @@
       "hint": "Skarp og kold som vinden",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Vinden var hvas ude ved stranden.",
-      "level": 0,
+      "level": 1,
       "category": "Stumme bogstaver"
     },
     {
@@ -573,7 +573,7 @@
       "hint": "En meget stille lyd",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Hun sagde det med et hvisk.",
-      "level": 0,
+      "level": 1,
       "category": "Stumme bogstaver"
     },
     {
@@ -581,7 +581,7 @@
       "hint": "En flok køer eller får",
       "patternHint": "stumt 'h' i 'hj'",
       "sentence": "En hjord af køer stod på marken.",
-      "level": 0,
+      "level": 1,
       "category": "Stumme bogstaver"
     },
     {
@@ -589,7 +589,7 @@
       "hint": "Buet tag i en kælder",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Kælderen har et gammelt hvælv.",
-      "level": 0,
+      "level": 1,
       "category": "Stumme bogstaver"
     },
     {
@@ -759,7 +759,7 @@
       "hint": "Person der laver mad",
       "patternHint": "enkelt konsonant, kort ord",
       "sentence": "Kokken laver mad i køkkenet.",
-      "level": 0,
+      "level": 1,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -767,7 +767,7 @@
       "hint": "Man åbner for vand",
       "patternHint": "enkelt konsonant, kort ord",
       "sentence": "Vandet løber fra tappen.",
-      "level": 0,
+      "level": 1,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1303,7 +1303,7 @@
       "hint": "Et lille snit",
       "patternHint": "enkelt konsonant, kort ord",
       "sentence": "Der er et hak i kanten.",
-      "level": 0,
+      "level": 1,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1311,7 +1311,7 @@
       "hint": "Et lille skub",
       "patternHint": "enkelt konsonant, kort ord",
       "sentence": "Hun gav ham et puf i siden.",
-      "level": 0,
+      "level": 1,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1319,7 +1319,7 @@
       "hint": "Sovs man dypper i",
       "patternHint": "enkelt konsonant, kort ord",
       "sentence": "Vil du have dip til dine gulerødder?",
-      "level": 0,
+      "level": 1,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1327,7 +1327,7 @@
       "hint": "En dyb hilsen",
       "patternHint": "enkelt konsonant, kort ord",
       "sentence": "Han lavede et fint buk efter showet.",
-      "level": 0,
+      "level": 1,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1335,7 +1335,7 @@
       "hint": "Bevæge hovedet op og ned",
       "patternHint": "enkelt konsonant, kort ord",
       "sentence": "Han gav et nik med hovedet.",
-      "level": 0,
+      "level": 1,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1505,7 +1505,7 @@
       "hint": "Ikke sød, lidt ond",
       "patternHint": "enkelt kort ord — bruges som basis",
       "sentence": "Trolden i eventyret er slem.",
-      "level": 0,
+      "level": 1,
       "category": "For- og efterstavelser"
     },
     {
@@ -2049,7 +2049,7 @@
       "hint": "Ikke gammel",
       "patternHint": "enkelt kort ord — bruges som basis",
       "sentence": "Jeg fik en ny taske i går.",
-      "level": 0,
+      "level": 1,
       "category": "For- og efterstavelser"
     },
     {
@@ -2057,7 +2057,7 @@
       "hint": "Behagelig som sukker",
       "patternHint": "enkelt kort ord — bruges som basis",
       "sentence": "Kagen smager rigtig sød.",
-      "level": 0,
+      "level": 1,
       "category": "For- og efterstavelser"
     },
     {
@@ -2065,7 +2065,7 @@
       "hint": "En god følelse indeni",
       "patternHint": "enkelt kort ord — bruges som basis",
       "sentence": "Hun blev meget glad for gaven.",
-      "level": 0,
+      "level": 1,
       "category": "For- og efterstavelser"
     },
     {
@@ -2073,7 +2073,7 @@
       "hint": "Ikke stor",
       "patternHint": "enkelt kort ord — bruges som basis",
       "sentence": "Den lille kat sov i kurven.",
-      "level": 0,
+      "level": 1,
       "category": "For- og efterstavelser"
     },
     {
@@ -2081,7 +2081,7 @@
       "hint": "Det modsatte af kold",
       "patternHint": "enkelt kort ord — bruges som basis",
       "sentence": "Suppen er dejlig varm.",
-      "level": 0,
+      "level": 1,
       "category": "For- og efterstavelser"
     },
     {
@@ -2787,7 +2787,7 @@
       "hint": "Beskytter hovedet mod stråler",
       "patternHint": "'sol' + 'hat'",
       "sentence": "Tag din solhat med på stranden.",
-      "level": 0,
+      "level": 1,
       "category": "Sammensatte ord"
     },
     {
@@ -2795,7 +2795,7 @@
       "hint": "Ting man leger med",
       "patternHint": "'lege' + 'tøj'",
       "sentence": "Rummet var fyldt med legetøj.",
-      "level": 0,
+      "level": 1,
       "category": "Sammensatte ord"
     },
     {
@@ -2803,7 +2803,7 @@
       "hint": "Klokken hvor man sover",
       "patternHint": "'senge' + 'tid'",
       "sentence": "Klokken otte er det sengetid.",
-      "level": 0,
+      "level": 1,
       "category": "Sammensatte ord"
     },
     {
@@ -2811,7 +2811,7 @@
       "hint": "Tørrer sig med efter bad",
       "patternHint": "'hånd' + 'klæde'",
       "sentence": "Husk at tage et håndklæde med.",
-      "level": 0,
+      "level": 1,
       "category": "Sammensatte ord"
     },
     {
@@ -2819,7 +2819,7 @@
       "hint": "Låser køretøjet op",
       "patternHint": "'bil' + 'nøgle'",
       "sentence": "Far ledte efter sin bilnøgle.",
-      "level": 0,
+      "level": 1,
       "category": "Sammensatte ord"
     },
     {
@@ -3517,7 +3517,7 @@
       "hint": "Sprang op fra jorden (førnutid)",
       "patternHint": "tillægsform: '-et'",
       "sentence": "Kaninen har hoppet over hegnet.",
-      "level": 0,
+      "level": 1,
       "category": "Verbernes bøjning"
     },
     {
@@ -3525,7 +3525,7 @@
       "hint": "Har indtaget mad (førnutid)",
       "patternHint": "tillægsform: '-t'",
       "sentence": "Vi har spist al maden.",
-      "level": 0,
+      "level": 1,
       "category": "Verbernes bøjning"
     },
     {
@@ -3533,7 +3533,7 @@
       "hint": "Har haft det sjovt (førnutid)",
       "patternHint": "tillægsform: '-et'",
       "sentence": "Børnene har leget hele dagen.",
-      "level": 0,
+      "level": 1,
       "category": "Verbernes bøjning"
     },
     {
@@ -3541,7 +3541,7 @@
       "hint": "Har ligget og drømt (førnutid)",
       "patternHint": "tillægsform: '-et'",
       "sentence": "Katten har sovet på sofaen.",
-      "level": 0,
+      "level": 1,
       "category": "Verbernes bøjning"
     },
     {
@@ -3549,7 +3549,7 @@
       "hint": "Har lavet kunst med farver (førnutid)",
       "patternHint": "tillægsform: '-et'",
       "sentence": "Hun har malet et smukt billede.",
-      "level": 0,
+      "level": 1,
       "category": "Verbernes bøjning"
     },
     {
@@ -4247,7 +4247,7 @@
       "hint": "Køretøj med fire hjul (bestemt form)",
       "patternHint": "bestemt: '-en'",
       "sentence": "Bilen holder parkeret udenfor.",
-      "level": 0,
+      "level": 1,
       "category": "Navneordsendelser"
     },
     {
@@ -4255,7 +4255,7 @@
       "hint": "Dyr der giver mælk (bestemt form)",
       "patternHint": "bestemt: '-en'",
       "sentence": "Koen stod og spiste græs.",
-      "level": 0,
+      "level": 1,
       "category": "Navneordsendelser"
     },
     {
@@ -4263,7 +4263,7 @@
       "hint": "Vand i naturen (bestemt form)",
       "patternHint": "bestemt: '-en'",
       "sentence": "Søen var helt stille.",
-      "level": 0,
+      "level": 1,
       "category": "Navneordsendelser"
     },
     {
@@ -4271,7 +4271,7 @@
       "hint": "Lille dyr med lang hale (bestemt form)",
       "patternHint": "bestemt: '-en'",
       "sentence": "Musen løb ind under skabet.",
-      "level": 0,
+      "level": 1,
       "category": "Navneordsendelser"
     },
     {
@@ -4279,7 +4279,7 @@
       "hint": "Ungt får (bestemt form)",
       "patternHint": "bestemt: '-et'",
       "sentence": "Lammet løb rundt på marken.",
-      "level": 0,
+      "level": 1,
       "category": "Navneordsendelser"
     },
     {
@@ -4883,6 +4883,118 @@
       "sentence": "Kapelmesteren dirigerede symfonien.",
       "level": 4,
       "category": "Lydrette ord"
+    },
+    {
+      "word": "bi",
+      "hint": "Lille insekt der laver honning",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Bien fløj hen til blomsten.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "by",
+      "hint": "Et sted med mange huse",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi bor i en stor by.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "se",
+      "hint": "Bruge øjnene",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Kom og se hvad jeg fandt!",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "ti",
+      "hint": "Tallet efter ni",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Hun kan tælle til ti.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "to",
+      "hint": "Tallet efter et",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Der er to fugle i træet.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "nu",
+      "hint": "Lige i dette øjeblik",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi går nu!",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "op",
+      "hint": "Den modsatte retning af ned",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Hop op på stolen.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "af",
+      "hint": "Ned fra noget",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Hop af cyklen.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "ned",
+      "hint": "Den modsatte retning af op",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi løb ned ad bakken.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "ben",
+      "hint": "Man går på dem",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Hunden har fire ben.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "ven",
+      "hint": "En man leger med",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Min ven bor lige ved siden af.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "lys",
+      "hint": "Det skinner i mørket",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Tænd lyset i stuen.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "ild",
+      "hint": "Det brænder og er varmt",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Der er ild i pejsen.",
+      "level": 0,
+      "category": "Lydrette ord"
+    },
+    {
+      "word": "top",
+      "hint": "Det allerhøjeste punkt",
+      "patternHint": "lydrette ord — staves som det lyder",
+      "sentence": "Vi nåede op til toppen.",
+      "level": 0,
+      "category": "Lydrette ord"
     }
   ],
   "Nutids-r": [
@@ -5043,7 +5155,7 @@
       "hint": "Bruger øjnene (nutid)",
       "patternHint": "nutids-r: verbet ender på '-r' i nutid (hun ser)",
       "sentence": "Hun ser en fugl i træet.",
-      "level": 0,
+      "level": 1,
       "category": "Nutids-r"
     },
     {
@@ -5051,7 +5163,7 @@
       "hint": "Opfanger lyd med ørerne (nutid)",
       "patternHint": "nutids-r: verbet ender på '-r' i nutid (han hører)",
       "sentence": "Han hører musik i sine høretelefoner.",
-      "level": 0,
+      "level": 1,
       "category": "Nutids-r"
     },
     {
@@ -5059,7 +5171,7 @@
       "hint": "Griber fat i noget (nutid)",
       "patternHint": "nutids-r: verbet ender på '-r' i nutid (hun tager)",
       "sentence": "Hun tager sin jakke på.",
-      "level": 0,
+      "level": 1,
       "category": "Nutids-r"
     },
     {
@@ -5067,7 +5179,7 @@
       "hint": "Rækker noget til en anden (nutid)",
       "patternHint": "nutids-r: verbet ender på '-r' i nutid (han giver)",
       "sentence": "Han giver hende en gave.",
-      "level": 0,
+      "level": 1,
       "category": "Nutids-r"
     },
     {
@@ -5075,7 +5187,7 @@
       "hint": "Er på vej hen til et sted (nutid)",
       "patternHint": "nutids-r: verbet ender på '-r' i nutid (hun kommer)",
       "sentence": "Hun kommer hjem fra skole klokken to.",
-      "level": 0,
+      "level": 1,
       "category": "Nutids-r"
     },
     {

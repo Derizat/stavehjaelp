@@ -477,6 +477,21 @@
     animation: boss-shake 0.3s ease;
   }
 
+  /* Sentence writing exercise */
+  .sw-target-word {
+    font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--accent);
+    text-align: center; margin: 8px 0; letter-spacing: 3px;
+  }
+  .sw-input {
+    width: 100%; background: var(--card2); border: 2px solid #3d4270; border-radius: 10px;
+    color: var(--text); font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 600;
+    padding: 14px 18px; outline: none; transition: border-color 0.2s; text-align: left;
+    letter-spacing: 0; line-height: 1.5;
+  }
+  .sw-input:focus { border-color: var(--accent2); }
+  .sw-input::placeholder { color: #555; font-weight: 400; }
+  .sw-highlight { color: var(--green); font-weight: 800; text-decoration: underline; }
+
   /* Boss snake minigame */
   .snake-area {
     position: relative; display: inline-grid; gap: 0; border-radius: 10px;
@@ -985,7 +1000,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.8.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.9.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1189,6 +1204,28 @@
   <div class="fillin-choices" id="fillinChoices"></div>
   <div id="fillinFeedbackBox" style="display:none; margin-top:12px;"></div>
   <button class="btn btn-green btn-full hidden" id="fillinNextBtn" onclick="nextFillInWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
+</div>
+
+<!-- SENTENCE WRITING EXERCISE -->
+<div id="phase-sentence" class="card hidden">
+  <div class="phase-label">&#x270D;&#xFE0F; Skriv en s&#xe6;tning</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="swProgressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="swWordNum">1</div><div class="lbl">Ord nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="swScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="swScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
+  </div>
+  <div class="pattern-badge" id="swPatternBadge">&#x1F520; M&#xf8;nster</div>
+  <div class="listen-box">
+    <div class="sw-target-word" id="swTargetWord"></div>
+    <p class="hint-text" id="swHint"></p>
+    <button class="btn-listen" id="swListenBtn" onclick="speakSWWord()">&#x1F508; H&#xf8;r ordet</button>
+  </div>
+  <p style="color:var(--accent);font-weight:700;font-size:0.95rem;margin:12px 0;text-align:center">Skriv en s&#xe6;tning med ordet!</p>
+  <input type="text" class="sw-input" id="swInput" placeholder="Skriv din s&#xe6;tning her..." autocomplete="off" autocorrect="off" spellcheck="false" />
+  <div id="swFeedbackBox" style="display:none; margin-top:12px;"></div>
+  <button class="btn btn-primary" style="width:100%;margin-top:12px" id="swCheckBtn" onclick="checkSentence()">&#x2714;&#xFE0F; Tjek</button>
+  <button class="btn btn-green btn-full hidden" id="swNextBtn" onclick="nextSentenceWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
 <!-- WORD BUILDER EXERCISE -->
@@ -1761,7 +1798,7 @@ function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
@@ -2235,6 +2272,9 @@ function startTrainingFromProfile() {
     var morphemes = parseMorphemes(w.patternHint, w.word);
     if (morphemes) types.push('wordbuilder');
 
+    // Sentence writing works for all words with hints
+    if (w.hint) types.push('sentence');
+
     if (types.length === 0 || Math.random() < 0.2) types = ['diktat']; // 20% chance + fallback
 
     var chosenType = types[Math.floor(Math.random() * types.length)];
@@ -2351,6 +2391,16 @@ function renderMixedItem() {
       document.getElementById('wbProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
       show('phase-wordbuilder');
       renderWBWord();
+      break;
+
+    case 'sentence':
+      gameMode = 'sentence';
+      document.getElementById('swScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+      document.getElementById('swScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+      document.getElementById('swWordNum').textContent = (mixedIndex + 1);
+      document.getElementById('swProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
+      show('phase-sentence');
+      renderSentenceWord(item.wordObj);
       break;
   }
 }
@@ -3494,6 +3544,7 @@ function showBossMinigame(bossData) {
   hide('phase-rightorwrong');
   hide('phase-spellingpolice');
   hide('phase-wordbuilder');
+  hide('phase-sentence');
   show('phase-boss');
 
   var word = bossData.word.toLowerCase();
@@ -4711,6 +4762,7 @@ function continueAfterBoss() {
     else if (gameMode === 'rightorwrong') show('phase-rightorwrong');
     else if (gameMode === 'spellingpolice') show('phase-spellingpolice');
     else if (gameMode === 'wordbuilder') show('phase-wordbuilder');
+    else if (gameMode === 'sentence') show('phase-sentence');
     else show('phase-test');
   }
   proceedAfterInterrupt();
@@ -4765,6 +4817,16 @@ function proceedAfterInterrupt() {
     } else {
       show('phase-wordbuilder');
       renderWBWord();
+    }
+    return;
+  }
+
+  if (gameMode === 'sentence') {
+    if (action === 'finish') {
+      finishMixedTraining();
+    } else {
+      show('phase-sentence');
+      renderSentenceWord();
     }
     return;
   }
@@ -7376,6 +7438,123 @@ function renderWBResults() {
 
   document.getElementById('resultsContent').innerHTML = html;
 }
+
+// ===== SENTENCE WRITING EXERCISE =====
+
+var swCurrentWord = null;
+
+function renderSentenceWord(wordObj) {
+  swCurrentWord = wordObj || mixedQueue[mixedIndex].wordObj;
+  var w = swCurrentWord;
+
+  document.getElementById('swPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  document.getElementById('swFeedbackBox').style.display = 'none';
+  document.getElementById('swCheckBtn').classList.remove('hidden');
+  document.getElementById('swNextBtn').classList.add('hidden');
+  document.getElementById('swInput').value = '';
+
+  // Show word + hint
+  var emoji = WORD_EMOJIS[w.word] || '';
+  document.getElementById('swTargetWord').textContent = w.word;
+  if (emoji) {
+    document.getElementById('swHint').innerHTML = '<span style="font-size:2rem;display:block;margin-bottom:4px">' + emoji + '</span>' + (w.hint || '');
+  } else {
+    document.getElementById('swHint').textContent = w.hint || '';
+  }
+
+  // Play audio
+  speakWord(w.word, null);
+
+  setTimeout(function() { document.getElementById('swInput').focus(); }, 300);
+}
+
+function speakSWWord() {
+  if (swCurrentWord) speakWord(swCurrentWord.word, swCurrentWord.sentence || null);
+}
+
+function checkSentence() {
+  if (!swCurrentWord) return;
+  var input = document.getElementById('swInput').value.trim();
+  if (!input) return;
+
+  var word = swCurrentWord.word.toLowerCase();
+  var inputLower = input.toLowerCase();
+
+  // Check if the word appears in the sentence (word boundary match)
+  var regex = new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+  var ok = regex.test(inputLower);
+
+  // Also check for common inflected forms (word + s, word + e, word + r, word + n, word + t, word + de, word + ede, word + er, word + en, word + et)
+  if (!ok) {
+    var inflections = [word + 's', word + 'e', word + 'r', word + 'n', word + 't', word + 'ne', word + 'en', word + 'et', word + 'er'];
+    for (var ii = 0; ii < inflections.length; ii++) {
+      var inflRegex = new RegExp('\\b' + inflections[ii].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+      if (inflRegex.test(inputLower)) { ok = true; break; }
+    }
+  }
+
+  var box = document.getElementById('swFeedbackBox');
+  box.style.display = 'block';
+
+  if (ok) {
+    // Highlight the word in the sentence
+    var highlighted = input.replace(new RegExp('(' + word + '\\w*)', 'gi'), '<span class="sw-highlight">$1</span>');
+    box.innerHTML = '<div class="feedback-correct">\u2705 Flot s\u00E6tning! ' + highlighted + '</div>';
+  } else {
+    box.innerHTML = '<div class="feedback-wrong">\u274C Hmm, jeg kan ikke finde "<strong>' + swCurrentWord.word + '</strong>" i din s\u00E6tning.<br>' +
+      '<span style="font-size:0.9rem;color:var(--muted)">Eksempel: ' + swCurrentWord.sentence + '</span></div>';
+  }
+
+  // Record result
+  var result = {
+    word: swCurrentWord.word, correct: ok, selfCorrected: false,
+    userAnswer: input, category: swCurrentWord.category,
+    patternHint: swCurrentWord.patternHint || '', level: swCurrentWord.level || 0
+  };
+  results.push(result);
+  logAnswer(swCurrentWord.word, input, ok, 1, swCurrentWord.category, swCurrentWord.level || 0);
+  updateSRWord(swCurrentWord.word, ok, swCurrentWord.category);
+
+  // Gamification
+  if (ok) {
+    sessionCorrectCount++;
+    sessionCorrectStreak++;
+    if (sessionCorrectStreak >= 5) {
+      sessionCorrectStreak = 0;
+      var correctWords = results.filter(function(r) { return r.correct; });
+      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: swCurrentWord.word, category: swCurrentWord.category };
+      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingChest = true;
+    }
+  } else {
+    sessionCorrectStreak = 0;
+    trackCategoryError(swCurrentWord.category);
+  }
+
+  document.getElementById('swScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+  document.getElementById('swScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+  document.getElementById('swCheckBtn').classList.add('hidden');
+  document.getElementById('swNextBtn').classList.remove('hidden');
+  document.getElementById('swNextBtn').focus();
+}
+
+function nextSentenceWord() {
+  if (isMixedSession) { nextMixedItem(); return; }
+}
+
+// Enter key for sentence input
+document.addEventListener('DOMContentLoaded', function() {
+  var swInput = document.getElementById('swInput');
+  if (swInput) {
+    swInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var nextBtn = document.getElementById('swNextBtn');
+        if (nextBtn && !nextBtn.classList.contains('hidden')) nextSentenceWord();
+        else checkSentence();
+      }
+    });
+  }
+});
 
 // Welcome buttons
 function refreshWelcomeButtons() {

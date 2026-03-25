@@ -1000,7 +1000,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.9.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.9.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -4517,24 +4517,13 @@ function renderBossSnake(word, boss, idleAnim) {
   var dir = { dc: 1, dr: 0 };
   var nextDir = { dc: 1, dr: 0 };
 
-  // Place letters on random empty cells
-  var letters = [];
-  var wordLetters = word.split('');
-  var occupied = {};
-  snake.forEach(function(s) { occupied[s.r + ',' + s.c] = true; });
-  for (var li = 0; li < wordLetters.length; li++) {
-    var pos;
-    do {
-      pos = { r: Math.floor(Math.random() * rows), c: Math.floor(Math.random() * cols) };
-    } while (occupied[pos.r + ',' + pos.c]);
-    occupied[pos.r + ',' + pos.c] = true;
-    letters.push({ r: pos.r, c: pos.c, letter: wordLetters[li], eaten: false });
-  }
-
   snakeState = {
     cols: cols, rows: rows, snake: snake, dir: dir, nextDir: nextDir,
-    letters: letters, letterIndex: 0, alive: true
+    letters: [], letterIndex: 0, alive: true, word: word
   };
+
+  // Spawn first pair (correct + distractor)
+  snakeSpawnPair();
 
   renderSnakeGrid();
 
@@ -4565,6 +4554,35 @@ function renderBossSnake(word, boss, idleAnim) {
   }, { passive: true });
 
   snakeInterval = setInterval(function() { snakeTick(); }, 200);
+}
+
+function snakeSpawnPair() {
+  var s = snakeState;
+  if (s.letterIndex >= s.word.length) return;
+  var target = s.word[s.letterIndex];
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
+  var distractor;
+  do {
+    distractor = alphabet[Math.floor(Math.random() * alphabet.length)];
+  } while (distractor === target);
+
+  // Clear old letters
+  s.letters = [];
+  var occupied = {};
+  s.snake.forEach(function(seg) { occupied[seg.r + ',' + seg.c] = true; });
+
+  // Place correct letter
+  var pos1;
+  do { pos1 = { r: Math.floor(Math.random() * s.rows), c: Math.floor(Math.random() * s.cols) }; }
+  while (occupied[pos1.r + ',' + pos1.c]);
+  occupied[pos1.r + ',' + pos1.c] = true;
+  s.letters.push({ r: pos1.r, c: pos1.c, letter: target, isCorrect: true });
+
+  // Place distractor
+  var pos2;
+  do { pos2 = { r: Math.floor(Math.random() * s.rows), c: Math.floor(Math.random() * s.cols) }; }
+  while (occupied[pos2.r + ',' + pos2.c]);
+  s.letters.push({ r: pos2.r, c: pos2.c, letter: distractor, isCorrect: false });
 }
 
 function snakeDir(dc, dr) {
@@ -4603,10 +4621,9 @@ function snakeTick() {
   // Check letter collision
   var ate = false;
   for (var li = 0; li < s.letters.length; li++) {
-    if (!s.letters[li].eaten && s.letters[li].r === newR && s.letters[li].c === newC) {
-      if (li === s.letterIndex) {
+    if (s.letters[li].r === newR && s.letters[li].c === newC) {
+      if (s.letters[li].isCorrect) {
         // Correct letter!
-        s.letters[li].eaten = true;
         s.letterIndex++;
         ate = true;
 
@@ -4625,8 +4642,13 @@ function snakeTick() {
           bossDefeated();
           return;
         }
+        // Spawn next pair
+        snakeSpawnPair();
+      } else {
+        // Wrong letter — death!
+        snakeDeath();
+        return;
       }
-      // Wrong order: just ignore, snake passes through
       break;
     }
   }
@@ -4659,15 +4681,13 @@ function renderSnakeGrid() {
       } else {
         var letterHere = null;
         for (var li = 0; li < s.letters.length; li++) {
-          if (!s.letters[li].eaten && s.letters[li].r === r && s.letters[li].c === c) {
+          if (s.letters[li].r === r && s.letters[li].c === c) {
             letterHere = s.letters[li];
-            letterHere._idx = li;
             break;
           }
         }
         if (letterHere) {
-          var isCurrent = (letterHere._idx === s.letterIndex);
-          html += '<div class="snake-cell snake-letter' + (isCurrent ? ' next-target' : '') + '">' + letterHere.letter.toUpperCase() + '</div>';
+          html += '<div class="snake-cell snake-letter' + (letterHere.isCorrect ? ' next-target' : '') + '">' + letterHere.letter.toUpperCase() + '</div>';
         } else {
           html += '<div class="snake-cell"></div>';
         }

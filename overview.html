@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stavehjælpen — Projektoverblik</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  :root { --bg: #0f1117; --card: #1a1d2e; --accent: #f5a623; --green: #22d3a0; --red: #f43f5e; --blue: #0ea5e9; --purple: #7c3aed; --text: #e8eaf6; --muted: #8892b0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); padding: 24px 16px; }
+  .slide { max-width: 900px; margin: 0 auto 40px; background: var(--card); border-radius: 20px; padding: 32px; border: 1px solid #2d3158; }
+  .slide-title { font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 4px; }
+  .slide-sub { color: var(--muted); margin-bottom: 20px; font-size: 0.95rem; }
+  h2 { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--accent); margin: 24px 0 12px; }
+  h3 { font-size: 1.05rem; color: var(--green); margin: 16px 0 8px; }
+
+  /* Hero */
+  .hero { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #1e1060, #0d2a1a); border-radius: 20px; margin-bottom: 40px; max-width: 900px; margin-left: auto; margin-right: auto; }
+  .hero-logo { font-family: 'Fredoka One', cursive; font-size: 3.5rem; background: linear-gradient(135deg, var(--accent), #f97316, var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { color: var(--muted); font-size: 1.2rem; margin-top: 8px; }
+  .hero-stats { display: flex; justify-content: center; gap: 32px; margin-top: 20px; flex-wrap: wrap; }
+  .hero-stat { text-align: center; }
+  .hero-stat .num { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--accent); }
+  .hero-stat .lbl { font-size: 0.8rem; color: var(--muted); }
+
+  /* Flow diagram */
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .flow-node { background: var(--card); border: 2px solid #3d4270; border-radius: 14px; padding: 14px 20px; text-align: center; max-width: 340px; width: 100%; position: relative; }
+  .flow-node.primary { border-color: var(--accent); background: rgba(245,166,35,0.08); }
+  .flow-node.green { border-color: var(--green); background: rgba(34,211,160,0.08); }
+  .flow-node.purple { border-color: var(--purple); background: rgba(124,58,237,0.08); }
+  .flow-node.red { border-color: var(--red); background: rgba(244,63,94,0.08); }
+  .flow-node .emoji { font-size: 1.8rem; }
+  .flow-node .name { font-weight: 800; font-size: 1.05rem; margin-top: 4px; }
+  .flow-node .desc { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+  .flow-arrow { font-size: 1.5rem; color: var(--muted); margin: 4px 0; }
+  .flow-branch { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 8px 0; }
+  .flow-branch .flow-node { max-width: 160px; font-size: 0.9rem; padding: 10px 14px; }
+
+  /* Grid cards */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .grid-card { background: rgba(45,49,88,0.3); border: 1px solid #3d4270; border-radius: 12px; padding: 16px; text-align: center; }
+  .grid-card .emoji { font-size: 2rem; margin-bottom: 6px; }
+  .grid-card .name { font-weight: 800; font-size: 0.95rem; }
+  .grid-card .desc { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+  /* Reward table */
+  .reward-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; margin-bottom: 6px; background: rgba(45,49,88,0.2); }
+  .reward-row .emoji { font-size: 1.5rem; min-width: 2em; text-align: center; }
+  .reward-row .info { flex: 1; }
+  .reward-row .name { font-weight: 700; font-size: 0.95rem; }
+  .reward-row .desc { font-size: 0.8rem; color: var(--muted); }
+
+  /* Avatar progression */
+  .avatar-track { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 12px 0; }
+  .avatar-step { text-align: center; padding: 8px; border-radius: 10px; background: rgba(45,49,88,0.3); min-width: 80px; }
+  .avatar-step .emoji { font-size: 1.6rem; }
+  .avatar-step .title { font-size: 0.7rem; font-weight: 700; margin-top: 2px; }
+  .avatar-step .xp { font-size: 0.65rem; color: var(--muted); }
+
+  /* Boss gallery */
+  .boss-gallery { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .boss-card { text-align: center; padding: 10px; border-radius: 12px; border: 1px solid #3d4270; background: rgba(45,49,88,0.3); min-width: 90px; }
+  .boss-card .emoji { font-size: 2rem; }
+  .boss-card .name { font-size: 0.7rem; font-weight: 700; color: var(--red); margin-top: 4px; }
+
+  /* Difficulty ladder */
+  .ladder { display: flex; flex-direction: column; gap: 6px; max-width: 440px; margin: 0 auto; }
+  .ladder-step { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 10px; }
+  .ladder-step .level { font-family: 'Fredoka One', cursive; font-size: 1.1rem; min-width: 2em; text-align: center; }
+  .ladder-step .name { font-weight: 700; flex: 1; }
+  .ladder-step .type { font-size: 0.78rem; color: var(--muted); }
+
+  /* Chest rarity */
+  .chest-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 12px 0; }
+  .chest-card { text-align: center; padding: 12px; border-radius: 12px; min-width: 120px; }
+  .chest-card .pct { font-family: 'Fredoka One', cursive; font-size: 1.3rem; }
+  .chest-card .name { font-size: 0.8rem; font-weight: 700; margin-top: 4px; }
+  .chest-card .rewards { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-logo">&#x1F98A; Stavehjælpen</div>
+  <div class="hero-sub">Evidensbaseret stavetræning med gamification &mdash; v2.9.6</div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">667</div><div class="lbl">Ord</div></div>
+    <div class="hero-stat"><div class="num">8</div><div class="lbl">Kategorier</div></div>
+    <div class="hero-stat"><div class="num">7</div><div class="lbl">&Oslash;velsestyper</div></div>
+    <div class="hero-stat"><div class="num">8</div><div class="lbl">Boss-kampe</div></div>
+    <div class="hero-stat"><div class="num">5</div><div class="lbl">Niveauer</div></div>
+    <div class="hero-stat"><div class="num">2616</div><div class="lbl">Lydfiler</div></div>
+  </div>
+</div>
+
+<!-- SLIDE 1: USER FLOW -->
+<div class="slide">
+  <div class="slide-title" style="color:var(--accent)">&#x1F4CB; Brugerflow</div>
+  <div class="slide-sub">Fra f&oslash;rste bes&oslash;g til daglig tr&aelig;ning</div>
+
+  <div class="flow">
+    <div class="flow-node primary">
+      <div class="emoji">&#x1F465;</div>
+      <div class="name">Spillerv&aelig;lger</div>
+      <div class="desc">Multi-profil: v&aelig;lg eller opret spiller. Synces via Supabase.</div>
+    </div>
+    <div class="flow-arrow">&#x2B07;&#xFE0F;</div>
+    <div class="flow-node primary">
+      <div class="emoji">&#x1F680;</div>
+      <div class="name">Stavespil (Diagnostik)</div>
+      <div class="desc">Adaptiv test: 5 ord per niveau, starter fra 0, tilpasser opad.</div>
+    </div>
+    <div class="flow-arrow">&#x2B07;&#xFE0F;</div>
+    <div class="flow-node purple">
+      <div class="emoji">&#x1F916;</div>
+      <div class="name">AI-analyse (Claude)</div>
+      <div class="desc">Personlig feedback, m&oslash;nstre, &oslash;velser. Offline fallback.</div>
+    </div>
+    <div class="flow-arrow">&#x2B07;&#xFE0F;</div>
+    <div class="flow-node green">
+      <div class="emoji">&#x1F4CA;</div>
+      <div class="name">Profil + Svage kategorier</div>
+      <div class="desc">Niveau 0-4, st&aelig;rke/svage sider.</div>
+    </div>
+    <div class="flow-arrow">&#x2B07;&#xFE0F;</div>
+    <div class="flow-node primary">
+      <div class="emoji">&#x1F3AF;</div>
+      <div class="name">Forts&aelig;t tr&aelig;ning (blandet)</div>
+      <div class="desc">10 ord &mdash; tilf&aelig;ldig &oslash;velsestype per ord:</div>
+    </div>
+    <div class="flow-branch">
+      <div class="flow-node" style="border-color:var(--green)">
+        <div class="emoji">&#x1F4CA;</div>
+        <div class="name">Diktat</div>
+        <div class="desc">H&oslash;r &rarr; skriv</div>
+      </div>
+      <div class="flow-node" style="border-color:var(--accent)">
+        <div class="emoji">&#x270D;&#xFE0F;</div>
+        <div class="name">Udfyld bogstav</div>
+        <div class="desc">V&aelig;lg rigtigt</div>
+      </div>
+      <div class="flow-node" style="border-color:var(--purple)">
+        <div class="emoji">&#x1F441;&#xFE0F;</div>
+        <div class="name">Rigtigt/forkert</div>
+        <div class="desc">Speed + combo</div>
+      </div>
+      <div class="flow-node" style="border-color:var(--blue)">
+        <div class="emoji">&#x1F50D;</div>
+        <div class="name">Stavepolitiet</div>
+        <div class="desc">Dyr-lineup</div>
+      </div>
+      <div class="flow-node" style="border-color:var(--green)">
+        <div class="emoji">&#x1F9E9;</div>
+        <div class="name">Ordbyggeren</div>
+        <div class="desc">Morfem-klodser</div>
+      </div>
+      <div class="flow-node" style="border-color:#f97316">
+        <div class="emoji">&#x270D;&#xFE0F;</div>
+        <div class="name">Skriv s&aelig;tning</div>
+        <div class="desc">Brug ordet (niv 1+)</div>
+      </div>
+    </div>
+    <div class="flow-arrow">&#x2B07;&#xFE0F;</div>
+    <div style="text-align:center;color:var(--muted);font-size:0.9rem;margin:4px 0">Under tr&aelig;ning:</div>
+    <div class="flow-branch">
+      <div class="flow-node" style="border-color:var(--accent)">
+        <div class="emoji">&#x1F4D6;</div>
+        <div class="name">Kategori-lektion</div>
+        <div class="desc">3 fejl i samme kategori</div>
+      </div>
+      <div class="flow-node red">
+        <div class="emoji">&#x1F47E;</div>
+        <div class="name">Boss-kamp!</div>
+        <div class="desc">5 rigtige i tr&aelig;k</div>
+      </div>
+      <div class="flow-node" style="border-color:#f59e0b; background:rgba(245,158,11,0.08)">
+        <div class="emoji">&#x1F381;</div>
+        <div class="name">Skattekiste</div>
+        <div class="desc">Efter boss</div>
+      </div>
+    </div>
+    <div class="flow-arrow">&#x2B07;&#xFE0F;</div>
+    <div class="flow-node green">
+      <div class="emoji">&#x1F3C6;</div>
+      <div class="name">Resultater + XP + Level Up</div>
+      <div class="desc">Manuel level-up med animation, avatar-progression, streaks</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: EXERCISE MODES -->
+<div class="slide">
+  <div class="slide-title" style="color:var(--green)">&#x1F3AE; &Oslash;velsestyper</div>
+  <div class="slide-sub">Blandes automatisk i tr&aelig;ningen &mdash; fra let genkendelse til fuld produktion</div>
+
+  <div class="ladder">
+    <div class="ladder-step" style="background:rgba(34,211,160,0.1)">
+      <div class="level" style="color:var(--green)">1</div>
+      <div class="name">&#x1F441;&#xFE0F; Rigtigt eller forkert?</div>
+      <div class="type">Genkendelse &middot; Speed &middot; Combo</div>
+    </div>
+    <div class="ladder-step" style="background:rgba(14,165,233,0.1)">
+      <div class="level" style="color:var(--blue)">2</div>
+      <div class="name">&#x270D;&#xFE0F; Udfyld bogstav</div>
+      <div class="type">Fokuseret valg &middot; Emojis</div>
+    </div>
+    <div class="ladder-step" style="background:rgba(124,58,237,0.1)">
+      <div class="level" style="color:var(--purple)">3</div>
+      <div class="name">&#x1F50D; Stavepolitiet</div>
+      <div class="type">Fejlgenkendelse &middot; Dyr-lineup</div>
+    </div>
+    <div class="ladder-step" style="background:rgba(245,166,35,0.1)">
+      <div class="level" style="color:var(--accent)">4</div>
+      <div class="name">&#x1F9E9; Ordbyggeren</div>
+      <div class="type">Morfologi &middot; Klodser</div>
+    </div>
+    <div class="ladder-step" style="background:rgba(249,115,22,0.1)">
+      <div class="level" style="color:#f97316">5</div>
+      <div class="name">&#x1F4CA; Diktat</div>
+      <div class="type">Fuld produktion &middot; H&oslash;r+skriv</div>
+    </div>
+    <div class="ladder-step" style="background:rgba(244,63,94,0.1)">
+      <div class="level" style="color:var(--red)">6</div>
+      <div class="name">&#x270D;&#xFE0F; Skriv en s&aelig;tning</div>
+      <div class="type">Kontekst &middot; Kreativ (niv 1+)</div>
+    </div>
+  </div>
+  <p style="text-align:center;color:var(--muted);font-size:0.82rem;margin-top:12px">&#x2B06;&#xFE0F; Stigende kognitiv belastning &mdash; diktat 20% chance, resten lige fordelt</p>
+</div>
+
+<!-- SLIDE 3: CATEGORIES -->
+<div class="slide">
+  <div class="slide-title" style="color:var(--purple)">&#x1F4DA; 8 Stavekategorier</div>
+  <div class="slide-sub">Hver kategori har sin egen boss, regler, lektion og &oslash;velser</div>
+  <div class="grid">
+    <div class="grid-card"><div class="emoji">&#x1F524;</div><div class="name">Lydrette ord</div><div class="desc">Staves som de lyder</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F507;</div><div class="name">Stumme bogstaver</div><div class="desc">hv-, hj-, stumt d/g/l</div></div>
+    <div class="grid-card"><div class="emoji">&#x270C;&#xFE0F;</div><div class="name">Dobbeltkonsonant</div><div class="desc">Kort vokal = dobbelt</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F9E9;</div><div class="name">For-/efterstavelser</div><div class="desc">be-, for-, -hed, -else</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F517;</div><div class="name">Sammensatte ord</div><div class="desc">skole+arbejde, fuge-s</div></div>
+    <div class="grid-card"><div class="emoji">&#x270F;&#xFE0F;</div><div class="name">Verbernes b&oslash;jning</div><div class="desc">-ede/-te, -et/-t</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F4DD;</div><div class="name">Navneordsendelser</div><div class="desc">-en/-et, -er/-e</div></div>
+    <div class="grid-card"><div class="emoji">&#xAE;&#xFE0F;</div><div class="name">Nutids-r</div><div class="desc">han hoppe-r</div></div>
+  </div>
+  <h3 style="margin-top:20px">&#x1F4D6; Kategori-lektioner</h3>
+  <p style="color:var(--muted);font-size:0.9rem">Trigges efter 3 fejl i samme kategori. Popup med regel, eksempler og trick. 8 unikke lektioner.</p>
+</div>
+
+<!-- SLIDE 4: BOSS BATTLES -->
+<div class="slide">
+  <div class="slide-title" style="color:var(--red)">&#x1F47E; Boss-kampe</div>
+  <div class="slide-sub">5 rigtige i tr&aelig;k &rarr; boss-kamp som bel&oslash;nning &rarr; skattekiste</div>
+
+  <h3>Boss-monstre (&#xe9;t per kategori)</h3>
+  <div class="boss-gallery">
+    <div class="boss-card"><div class="emoji">&#x1F43B;</div><div class="name">Lydb&oslash;rnen</div></div>
+    <div class="boss-card"><div class="emoji">&#x1F47B;</div><div class="name">Sp&oslash;gelses&shy;bossen</div></div>
+    <div class="boss-card"><div class="emoji">&#x1F409;</div><div class="name">Dobbelt&shy;dragen</div></div>
+    <div class="boss-card"><div class="emoji">&#x1F9D9;</div><div class="name">Troldmanden</div></div>
+    <div class="boss-card"><div class="emoji">&#x1F479;</div><div class="name">Samle&shy;monsteret</div></div>
+    <div class="boss-card"><div class="emoji">&#x1F9DF;</div><div class="name">B&oslash;jnings&shy;zombien</div></div>
+    <div class="boss-card"><div class="emoji">&#x1F47E;</div><div class="name">Endelses&shy;alienen</div></div>
+    <div class="boss-card"><div class="emoji">&#x1F996;</div><div class="name">R-Rex</div></div>
+  </div>
+
+  <h3>8 Kamptyper</h3>
+  <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+    <div class="grid-card"><div class="emoji">&#x1F500;</div><div class="name">Scramble</div><div class="desc">Saml bogstaverne</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F327;&#xFE0F;</div><div class="name">Bogstavregn</div><div class="desc">Fang faldende bogstaver</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F9E0;</div><div class="name">Memory</div><div class="desc">Husk og stav (med lyd)</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F500;</div><div class="name">Bagl&aelig;ns</div><div class="desc">Ordet er spejlvendt</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F3AE;</div><div class="name">Pacman</div><div class="desc">Labyrint, undg&aring; sp&oslash;gelse</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F697;</div><div class="name">Highway</div><div class="desc">3-baners bilk&oslash;rsel</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F0CF;</div><div class="name">Cardcast</div><div class="desc">Kast bogstav-kort (lyd)</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F40D;</div><div class="name">Snake</div><div class="desc">Spis bogstaver, voks!</div></div>
+  </div>
+  <p style="color:var(--muted);font-size:0.82rem;margin-top:12px">F&oslash;rste gang per kamptype vises en 3-sekunders instruktion.</p>
+</div>
+
+<!-- SLIDE 5: REWARD SYSTEM -->
+<div class="slide">
+  <div class="slide-title" style="color:#f59e0b">&#x1F3C6; Bel&oslash;nningssystem</div>
+  <div class="slide-sub">XP, gems, streaks, avatarer, kister og milestones</div>
+
+  <h3>&#x26A1; XP-system + Level Up</h3>
+  <div class="reward-row"><div class="emoji">&#x2705;</div><div class="info"><div class="name">Rigtigt svar</div><div class="desc">+10 XP</div></div></div>
+  <div class="reward-row"><div class="emoji">&#x274C;</div><div class="info"><div class="name">Forkert svar</div><div class="desc">+5 XP (man l&aelig;rer altid)</div></div></div>
+  <div class="reward-row"><div class="emoji">&#x1F47E;</div><div class="info"><div class="name">Boss besejret</div><div class="desc">+15 XP bonus</div></div></div>
+  <div class="reward-row"><div class="emoji">&#x2B50;</div><div class="info"><div class="name">Level Up</div><div class="desc">Manuel knap + transformation-animation</div></div></div>
+
+  <h3>&#x1F381; Skattekister (4 sj&aelig;ldenheder)</h3>
+  <div class="chest-row">
+    <div class="chest-card" style="background:rgba(136,146,176,0.1);border:1px solid #8892b0"><div class="pct" style="color:#8892b0">60%</div><div class="name">Almindelig</div><div class="rewards">10-15 XP</div></div>
+    <div class="chest-card" style="background:rgba(34,211,160,0.1);border:1px solid var(--green)"><div class="pct" style="color:var(--green)">25%</div><div class="name">Ualmindelig</div><div class="rewards">25 XP / 2-3 &#x1F48E;</div></div>
+    <div class="chest-card" style="background:rgba(14,165,233,0.1);border:1px solid var(--blue)"><div class="pct" style="color:var(--blue)">10%</div><div class="name">Sj&aelig;lden</div><div class="rewards">40 XP / 5 &#x1F48E; / &#x2744;&#xFE0F;</div></div>
+    <div class="chest-card" style="background:rgba(168,85,247,0.15);border:1px solid #a855f7"><div class="pct" style="color:#a855f7">5%</div><div class="name">Episk</div><div class="rewards">75 XP / 8 &#x1F48E;</div></div>
+  </div>
+
+  <h3>&#x1F98A; Avatar-progression (8 niveauer)</h3>
+  <div class="avatar-track">
+    <div class="avatar-step"><div class="emoji">&#x1F98A;</div><div class="title" style="color:var(--muted)">Baby R&aelig;v</div><div class="xp">0 XP</div></div>
+    <div class="avatar-step"><div class="emoji">&#x1F98A;&#x1F3A9;</div><div class="title" style="color:var(--text)">R&aelig;v m. Hat</div><div class="xp">100 XP</div></div>
+    <div class="avatar-step"><div class="emoji">&#x1F98A;&#x1F4AA;</div><div class="title" style="color:var(--green)">Super-R&aelig;v</div><div class="xp">300 XP</div></div>
+    <div class="avatar-step"><div class="emoji">&#x1F98A;&#x2694;&#xFE0F;</div><div class="title" style="color:var(--blue)">R&aelig;v-Kriger</div><div class="xp">600 XP</div></div>
+    <div class="avatar-step"><div class="emoji">&#x1F98A;&#x1F451;</div><div class="title" style="color:var(--purple)">R&aelig;v-Dronning</div><div class="xp">1000 XP</div></div>
+    <div class="avatar-step"><div class="emoji">&#x1F43A;</div><div class="title" style="color:#f97316">Ulven</div><div class="xp">2000 XP</div></div>
+    <div class="avatar-step"><div class="emoji">&#x1F43A;&#x1F6E1;&#xFE0F;</div><div class="title" style="background:linear-gradient(135deg,#f5a623,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Pansret Ulv</div><div class="xp">3500 XP</div></div>
+    <div class="avatar-step"><div class="emoji">&#x1F432;</div><div class="title" style="background:linear-gradient(90deg,#f43f5e,#f5a623,#22d3a0,#0ea5e9,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Stavedragen</div><div class="xp">5000 XP</div></div>
+  </div>
+
+  <h3>&#x1F525; Streaks + Milestones</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+    <span style="background:rgba(245,166,35,0.1);border:1px solid var(--accent);padding:6px 12px;border-radius:99px;font-size:0.82rem;font-weight:700">3 dage &rarr; God start!</span>
+    <span style="background:rgba(245,166,35,0.1);border:1px solid var(--accent);padding:6px 12px;border-radius:99px;font-size:0.82rem;font-weight:700">7 dage &rarr; +10 &#x1F48E;</span>
+    <span style="background:rgba(245,166,35,0.1);border:1px solid var(--accent);padding:6px 12px;border-radius:99px;font-size:0.82rem;font-weight:700">14 dage &rarr; +15 &#x1F48E;</span>
+    <span style="background:rgba(245,166,35,0.1);border:1px solid var(--accent);padding:6px 12px;border-radius:99px;font-size:0.82rem;font-weight:700">30 dage &rarr; +25 &#x1F48E;</span>
+    <span style="background:rgba(245,166,35,0.1);border:1px solid var(--accent);padding:6px 12px;border-radius:99px;font-size:0.82rem;font-weight:700">100 dage &rarr; Legend&aelig;risk!</span>
+  </div>
+</div>
+
+<!-- SLIDE 6: TECH -->
+<div class="slide">
+  <div class="slide-title" style="color:var(--blue)">&#x1F527; Teknisk overblik</div>
+  <div class="slide-sub">Single-page HTML app &mdash; ingen build-step, ingen server</div>
+  <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+    <div class="grid-card"><div class="emoji">&#x1F4C4;</div><div class="name">&Eacute;n HTML-fil</div><div class="desc">~7500 linjer: HTML + CSS + JS</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F4E6;</div><div class="name">words.json</div><div class="desc">667 ord, 8 kategorier, 5 niveauer</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F50A;</div><div class="name">Pre-gen audio</div><div class="desc">2616 MP3-filer, 2 stemmer</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F916;</div><div class="name">Claude AI</div><div class="desc">Personlig feedback efter test</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F4BE;</div><div class="name">Supabase</div><div class="desc">Svar-log + profil-sync cross-device</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F465;</div><div class="name">Multi-profil</div><div class="desc">Per-spiller data via playerKey()</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F4F1;</div><div class="name">Responsivt</div><div class="desc">Mobil + desktop + touch + swipe</div></div>
+    <div class="grid-card"><div class="emoji">&#x1F501;</div><div class="name">Spaced Repetition</div><div class="desc">Fejlord &oslash;ves automatisk igen</div></div>
+  </div>
+</div>
+
+<div style="text-align:center;color:var(--muted);font-size:0.8rem;padding:20px">
+  Stavehjælpen v2.9.6 &middot; M&aring;lgruppe: 0-8. klasse &middot; Dansk &middot; <a href="https://derizat.github.io/stavehjaelp/" style="color:var(--blue)">derizat.github.io/stavehjaelp</a>
+</div>
+
+</body>
+</html>

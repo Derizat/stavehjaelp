@@ -1000,7 +1000,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.9.6</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.9.7</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2438,9 +2438,25 @@ function nextMixedItem() {
   }
 }
 
+var finalBossDone = false;
+
 function finishMixedTraining() {
   hideAllExercisePhases();
+
+  // Final boss fight before results
+  if (!finalBossDone && results.length > 0) {
+    finalBossDone = true;
+    var allWords = results.map(function(r) { return { word: r.word, category: r.category }; });
+    var bossWord = allWords[Math.floor(Math.random() * allWords.length)];
+    pendingInterruptAction = 'finish-final';
+    isMixedSession = true; // keep mixed so proceedAfterInterrupt routes back
+    pendingChest = true; // chest after final boss too
+    showBossMinigame(bossWord);
+    return;
+  }
+
   isMixedSession = false;
+  finalBossDone = false;
 
   var correctCount = results.filter(function(r) { return r.correct; }).length;
   var totalCount = results.length;
@@ -4795,7 +4811,7 @@ function proceedAfterInterrupt() {
   pendingInterruptAction = null;
 
   if (isMixedSession) {
-    if (action === 'finish') {
+    if (action === 'finish' || action === 'finish-final') {
       finishMixedTraining();
     } else {
       renderMixedItem();

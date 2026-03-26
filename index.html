@@ -2651,18 +2651,12 @@ function renderWord() {
   if (sentEl) sentEl.textContent = '';
 
   if (gameMode === 'training') {
-    // TRAINING: Show word for 3 seconds
-    flashEl.style.fontSize = '2.8rem';
-    flashEl.textContent = w.word; flashEl.style.opacity = '1';
-    wrap.style.display = 'block';
-    bar.style.transition = 'none'; bar.style.width = '100%';
-    setTimeout(function() { bar.style.transition = 'width 3s linear'; bar.style.width = '0%'; }, 50);
-    setTimeout(function() {
-      flashEl.style.opacity = '0';
-      setTimeout(function() { flashEl.textContent = ''; wrap.style.display = 'none'; }, 500);
-    }, 3000);
-    setTimeout(function() { speakWord(w.word, w.sentence || null); }, 200);
-    setTimeout(function() { document.getElementById('spellingInput').focus(); }, 3600);
+    // TRAINING: Pure dictation — hear the word, spell it
+    flashEl.textContent = '';
+    flashEl.style.opacity = '0';
+    wrap.style.display = 'none';
+    speakWord(w.word, w.sentence || null);
+    setTimeout(function() { document.getElementById('spellingInput').focus(); }, 300);
   } else if (gameMode === 'review') {
     // REVIEW: Show word for 2 seconds
     flashEl.style.fontSize = '2.8rem';

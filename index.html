@@ -2372,13 +2372,13 @@ function startTrainingFromProfile() {
   }
   pool = shuffle(pool);
 
-  words = pool.slice(0, 10);
-  if (words.length === 0) {
+  currentWords = pool.slice(0, 10);
+  if (currentWords.length === 0) {
     alert('Ingen ord fundet til tr\u00E6ning.');
     return;
   }
 
-  currentWordIndex = 0;
+  currentIndex = 0;
   gameMode = 'training';
   hide('phase-welcome');
   show('rewardBar');
@@ -2386,7 +2386,12 @@ function startTrainingFromProfile() {
   updateRewardBar();
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
 
-  showWord();
+  document.getElementById('scoreCorrect').textContent = '0';
+  document.getElementById('scoreWrong').textContent = '0';
+  document.getElementById('testPhaseLabel').style.display = '';
+  document.getElementById('testPhaseLabel').textContent = '\u{1F3AF} Tr\u00E6ning';
+  show('phase-test');
+  renderWord();
 }
 
 function hideAllExercisePhases() {

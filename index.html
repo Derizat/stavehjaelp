@@ -5062,25 +5062,44 @@ function snakeDeath() {
 
 // --- Type 9: SPELLPICK (multiple choice) ---
 function renderBossSpellpick(word, boss, idleAnim) {
-  var hp = 3; // 3 rounds to win
+  var hp = 3;
   bossState.hp = hp;
   bossState.maxHP = hp;
   bossState.spRound = 0;
 
+  // Pick 3 different words from the same category
+  var cat = bossState.wordObj.category;
+  var catWords = (WORD_BANK[cat] || []).slice();
+  // Shuffle
+  for (var i = catWords.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = catWords[i]; catWords[i] = catWords[j]; catWords[j] = t;
+  }
+  var spWords = [];
+  for (var wi = 0; wi < catWords.length && spWords.length < 3; wi++) {
+    var wo = catWords[wi];
+    var mis = generateMisspelling(wo);
+    if (mis && mis.misspelled && mis.misspelled.toLowerCase() !== wo.word.toLowerCase()) {
+      spWords.push({ word: wo.word.toLowerCase(), category: cat, patternHint: wo.patternHint || '', wordObj: wo });
+    }
+  }
+  // Fallback: if not enough, use the original word
+  while (spWords.length < 3) {
+    spWords.push({ word: word, category: cat, patternHint: bossState.wordObj.patternHint || '', wordObj: bossState.wordObj });
+  }
+  bossState.spWords = spWords;
+
   var content = document.getElementById('bossContent');
   content.innerHTML = renderBossHeader(boss, idleAnim, hp, hp);
 
-  // Play audio
-  speakWord(word, null);
-
-  // Build rounds
   buildSpellpickRound();
 }
 
 function buildSpellpickRound() {
   if (!bossState || bossState.hp <= 0) return;
-  var wordObj = bossState.wordObj;
-  var word = bossState.word;
+  var spWord = bossState.spWords[bossState.spRound];
+  var wordObj = spWord.wordObj || spWord;
+  var word = spWord.word;
 
   // Generate misspellings
   var options = [word];
@@ -5130,7 +5149,7 @@ function buildSpellpickRound() {
 
   var content = document.getElementById('bossContent');
   var html = renderBossHeader(bossState.boss, bossState.idleAnim, bossState.hp, bossState.maxHP);
-  html += '<button class="btn-listen" onclick="speakWord(bossState.word, null)" style="margin:8px auto;display:block">\u{1F508} H\u00F8r ordet igen</button>';
+  html += '<button class="btn-listen" onclick="speakWord(bossState.spWords[bossState.spRound].word, null)" style="margin:8px auto;display:block">\u{1F508} H\u00F8r ordet igen</button>';
   html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:10px 0">Hvilken stavem\u00E5de er rigtig?</p>';
   html += '<div style="display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto">';
   for (var oi = 0; oi < options.length; oi++) {
@@ -5144,13 +5163,14 @@ function buildSpellpickRound() {
 
 function pickSpellOption(btn, picked) {
   if (!bossState) return;
-  var correct = picked === bossState.word;
+  var currentWord = bossState.spWords[bossState.spRound].word;
+  var correct = picked === currentWord;
   var buttons = btn.parentNode.querySelectorAll('button');
 
   // Highlight correct/wrong
   for (var i = 0; i < buttons.length; i++) {
     buttons[i].disabled = true;
-    if (buttons[i].textContent === bossState.word) {
+    if (buttons[i].textContent === currentWord) {
       buttons[i].style.background = 'var(--green)';
       buttons[i].style.color = '#fff';
     } else if (buttons[i] === btn && !correct) {

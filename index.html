@@ -2413,8 +2413,7 @@ function startTrainingFromProfile() {
 
   document.getElementById('scoreCorrect').textContent = '0';
   document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').style.display = '';
-  document.getElementById('testPhaseLabel').textContent = '\u{1F3AF} Tr\u00E6ning';
+  document.getElementById('testPhaseLabel').style.display = 'none';
   document.getElementById('wordNum').textContent = '1';
   document.getElementById('progressBar').style.width = '0%';
   show('phase-test');
@@ -2439,8 +2438,7 @@ function renderMixedItem() {
       currentIndex = 0;
       document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
       document.getElementById('scoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
-      document.getElementById('testPhaseLabel').style.display = '';
-      document.getElementById('testPhaseLabel').textContent = '\u{1F3AF} Tr\u00E6ning';
+      document.getElementById('testPhaseLabel').style.display = 'none';
       document.getElementById('difficultyLabel').innerHTML = '';
       document.getElementById('wordNum').textContent = (mixedIndex + 1);
       document.getElementById('progressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
@@ -2616,8 +2614,7 @@ function startReview() {
   currentIndex = 0; results = [];
   document.getElementById('scoreCorrect').textContent = '0';
   document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').style.display = '';
-  document.getElementById('testPhaseLabel').textContent = '\u{1F4D6} Gennemgang';
+  document.getElementById('testPhaseLabel').style.display = 'none';
   document.getElementById('difficultyLabel').innerHTML = '';
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   hide('phase-welcome');

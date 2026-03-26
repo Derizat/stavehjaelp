@@ -3239,8 +3239,8 @@ var BOSS_BATTLE_TYPES = ['scramble', 'memory', 'cardcast', 'spellpick', 'silents
 var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];
 var BOSS_IDLE_ANIMS = ['boss-idle-float', 'boss-idle-pulse', 'boss-idle-wobble'];
 var BOSS_VICTORY_MSGS = [
-  'Boss besejret!', 'Knust!', 'Totalt smadret!', 'Udslettet!',
-  'Du vandt!', 'Ingen chance!', 'Ordmester!', 'Fantastisk!'
+  'Du vandt!', 'Flot klaret!', 'Ordmester!', 'Fantastisk!',
+  'Godt g\u00E5et!', 'Sejt!', 'St\u00E6rkt!', 'Perfekt!'
 ];
 
 var bossState = null;
@@ -5040,7 +5040,6 @@ function bossDefeated() {
     content.innerHTML = '<div style="text-align:center;padding:30px">' +
       '<div style="font-size:4rem;margin-bottom:12px">\uD83C\uDF89</div>' +
       '<h2 style="color:var(--green);margin-bottom:8px">' + victoryMsg + '</h2>' +
-      '<p style="font-family:Fredoka One,cursive;font-size:1.6rem;color:var(--green);margin:10px 0;letter-spacing:3px">' + defeatedWord + '</p>' +
       '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">+15 XP bonus!</p>' +
       '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
       '</div>';

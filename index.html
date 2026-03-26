@@ -3729,7 +3729,6 @@ function showBossMinigame(bossData) {
     content.innerHTML = '<div style="text-align:center;padding:40px 20px">' +
       '<div style="font-size:4rem;margin-bottom:16px">' + instr.emoji + '</div>' +
       '<div style="font-size:3rem;margin-bottom:12px">' + boss.emoji + '</div>' +
-      '<h2 style="color:var(--accent);margin-bottom:12px">' + boss.name + '</h2>' +
       '<p style="font-size:1.15rem;font-weight:700;color:var(--text);line-height:1.6">' + instr.text + '</p>' +
       '</div>';
     setTimeout(function() {
@@ -3755,7 +3754,6 @@ function showBossMinigame(bossData) {
 function renderBossHeader(boss, idleAnim, hp, maxHP) {
   return '<div style="text-align:center">' +
     '<div id="bossMonster" class="boss-monster ' + idleAnim + '">' + boss.emoji + '</div>' +
-    '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;color:var(--red);margin:8px 0">' + boss.name + '</div>' +
     '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>' +
     '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:14px" id="bossHPText">HP: ' + hp + '/' + maxHP + '</div>' +
     '</div>';

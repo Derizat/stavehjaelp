@@ -3810,13 +3810,15 @@ function renderBossScramble(word, boss, idleAnim) {
 
   var html = renderBossHeader(boss, idleAnim, letters.length, letters.length);
   html += renderBossWordSlots(word);
-  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:12px 0">\u2694\uFE0F Tryk bogstaverne i den rigtige r\u00E6kkef\u00F8lge!</p>';
+  html += '<button class="btn-listen" onclick="speakWord(bossState.word, null)" style="margin:8px auto;display:block">\u{1F508} H\u00F8r ordet</button>';
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:8px 0">\u2694\uFE0F Tryk bogstaverne i den rigtige r\u00E6kkef\u00F8lge!</p>';
   html += '<div class="boss-letters" id="bossLetters">';
   for (var j = 0; j < allLetters.length; j++) {
     html += '<button class="boss-letter" id="bossLetter' + j + '" onclick="bossScrambleTap(\'' + allLetters[j].replace(/'/g, "\\'") + '\', ' + j + ')">' + allLetters[j] + '</button>';
   }
   html += '</div>';
   document.getElementById('bossContent').innerHTML = html;
+  speakWord(word, null);
 }
 
 function bossScrambleTap(letter, btnIdx) {
@@ -4040,11 +4042,13 @@ function renderBossReverse(word, boss, idleAnim) {
   html += '<div style="text-align:center;margin:16px 0">';
   html += '<p style="color:var(--muted);font-size:0.95rem;margin-bottom:8px">\u{1F500} Ordet er bagl\u00E6ns! Skriv det rigtigt:</p>';
   html += '<div style="font-family:Fredoka One,cursive;font-size:2.2rem;color:var(--red);letter-spacing:6px;margin:10px 0">' + reversed + '</div>';
+  html += '<button class="btn-listen" onclick="speakWord(bossState.word, null)" style="margin:8px auto;display:block">\u{1F508} H\u00F8r ordet</button>';
   html += '</div>';
   html += renderBossWordSlots(word);
   html += '<input type="text" id="bossReverseInput" placeholder="Skriv ordet rigtigt..." style="margin:12px 0" autocomplete="off" autocapitalize="off" />';
   html += '<button class="btn btn-primary btn-full" onclick="checkBossReverse()">\u2714\uFE0F Tjek</button>';
   document.getElementById('bossContent').innerHTML = html;
+  speakWord(word, null);
   setTimeout(function() {
     var inp = document.getElementById('bossReverseInput');
     if (inp) inp.focus();

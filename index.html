@@ -2675,6 +2675,7 @@ function renderWord() {
 }
 
 // Enter key handler
+var lastSpaceTime = 0;
 document.addEventListener('keydown', function(e) {
   var testPhase = document.getElementById('phase-test');
   if (!testPhase || testPhase.classList.contains('hidden')) return;
@@ -2682,9 +2683,15 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault();
     if (feedbackShown) nextWord();
     else checkSpelling();
-  } else if (e.key === ' ' && document.activeElement !== document.getElementById('spellingInput')) {
-    e.preventDefault();
-    speakCurrentWord();
+  } else if (e.key === ' ' && document.activeElement === document.getElementById('spellingInput')) {
+    var now = Date.now();
+    if (now - lastSpaceTime < 400) {
+      e.preventDefault();
+      var inp = document.getElementById('spellingInput');
+      inp.value = inp.value.replace(/\s+$/, '');
+      speakCurrentWord();
+    }
+    lastSpaceTime = now;
   }
 });
 

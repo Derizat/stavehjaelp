@@ -5793,14 +5793,35 @@ function openChest() {
 // ===== AVATAR PROGRESSION =====
 
 var AVATAR_LEVELS = [
-  { minXP: 0,    emoji: '\uD83E\uDD8A', title: 'Baby R\u00E6v', desc: 'Stavesp\u00E6d', titleStyle: 'color:var(--muted)' },
-  { minXP: 100,  emoji: '\uD83E\uDD8A\uD83C\uDFA9', image: 'images/foxhat.png', title: 'R\u00E6v med Hat', desc: 'Stavebegynder', titleStyle: 'color:var(--text)' },
-  { minXP: 300,  emoji: '\uD83E\uDD8A\uD83E\uDDB8', image: 'images/superfox.png', title: 'Super-R\u00E6v', desc: 'Bogstavhelt', titleStyle: 'color:var(--green)' },
-  { minXP: 600,  emoji: '\uD83E\uDD8A\u2694\uFE0F', title: 'R\u00E6v-Kriger', desc: 'Bogstavkriger', titleStyle: 'color:var(--blue)' },
-  { minXP: 1000, emoji: '\uD83E\uDD8A\uD83D\uDC51', title: 'R\u00E6v-Dronning', desc: 'Ordmester', titleStyle: 'color:var(--accent2)' },
-  { minXP: 2000, emoji: '\uD83D\uDC3A', title: 'Ulven', desc: 'Stave-Champion', titleStyle: 'color:#f97316' },
-  { minXP: 3500, emoji: '\uD83D\uDC3A\uD83D\uDEE1\uFE0F', title: 'Pansret Ulv', desc: 'Ordgeneral', titleStyle: 'background:linear-gradient(135deg,#f5a623,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
-  { minXP: 5000, emoji: '\uD83D\uDC32', title: 'Stavedragen', desc: 'Den Legendariske', titleStyle: 'background:linear-gradient(90deg,#f43f5e,#f5a623,#22d3a0,#0ea5e9,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' }
+  { minXP: 0,     image: 'images/animal_levels/level_1.png', title: 'Kylling', desc: 'Helt ny', titleStyle: 'color:var(--muted)' },
+  { minXP: 30,    image: 'images/animal_levels/level_2.png', title: 'Fr\u00F8', desc: 'F\u00F8rste hop', titleStyle: 'color:var(--muted)' },
+  { minXP: 75,    image: 'images/animal_levels/level_3.png', title: '\u00C6lling', desc: 'P\u00E5 vej', titleStyle: 'color:var(--text)' },
+  { minXP: 150,   image: 'images/animal_levels/level_4.png', title: 'Egern', desc: 'Samler bogstaver', titleStyle: 'color:var(--text)' },
+  { minXP: 250,   image: 'images/animal_levels/level_5.png', title: 'R\u00E6v', desc: 'Klar til eventyr', titleStyle: 'color:var(--text)' },
+  { minXP: 400,   image: 'images/animal_levels/level_6.png', title: 'Professor R\u00E6v', desc: 'Bogstavklog', titleStyle: 'color:var(--green)' },
+  { minXP: 600,   image: 'images/animal_levels/level_7.png', title: 'Detektiv', desc: 'Finder stavefejl', titleStyle: 'color:var(--green)' },
+  { minXP: 850,   image: 'images/animal_levels/level_8.png', title: 'L\u00E6se-Pingvin', desc: 'Bogorm', titleStyle: 'color:var(--green)' },
+  { minXP: 1150,  image: 'images/animal_levels/level_9.png', title: 'Ugle', desc: 'Vis og klog', titleStyle: 'color:var(--blue)' },
+  { minXP: 1500,  image: 'images/animal_levels/level_10.png', title: 'Bog-Kat', desc: 'L\u00E6rd', titleStyle: 'color:var(--blue)' },
+  { minXP: 1900,  image: 'images/animal_levels/level_12.png', title: 'Spor-Hund', desc: 'P\u00E5 sporet', titleStyle: 'color:var(--blue)' },
+  { minXP: 2400,  image: 'images/animal_levels/level_13.png', title: 'Agent Ulv', desc: 'Ordagent', titleStyle: 'color:var(--accent2)' },
+  { minXP: 3000,  image: 'images/animal_levels/level_14.png', title: 'Viking', desc: 'Stavekriger', titleStyle: 'color:var(--accent2)' },
+  { minXP: 3700,  image: 'images/animal_levels/level_15.png', title: 'Viking-H\u00F8vding', desc: 'Anf\u00F8rer', titleStyle: 'color:var(--accent2)' },
+  { minXP: 4500,  image: 'images/animal_levels/level_16.png', title: 'Troldmand', desc: 'Stavemagi', titleStyle: 'color:#7c3aed' },
+  { minXP: 5400,  image: 'images/animal_levels/level_17.png', title: 'L\u00F8ve-Kongen', desc: 'Majest\u00E6tisk', titleStyle: 'color:#f97316' },
+  { minXP: 6500,  image: 'images/animal_levels/level_18.png', title: 'Reporter', desc: 'Ordj\u00E6ger', titleStyle: 'color:#f97316' },
+  { minXP: 7700,  image: 'images/animal_levels/level_19.png', title: 'Rensdyr', desc: 'Vinterklar', titleStyle: 'color:#f97316' },
+  { minXP: 9000,  image: 'images/animal_levels/level_20.png', title: 'Super-R\u00E6v', desc: 'Bogstavhelt', titleStyle: 'color:var(--red)' },
+  { minXP: 10500, image: 'images/animal_levels/level_21.png', title: 'Panda', desc: 'Kalligraf', titleStyle: 'color:var(--red)' },
+  { minXP: 12000, image: 'images/animal_levels/level_22.png', title: 'Pingvin i Smoking', desc: 'Elegant', titleStyle: 'color:var(--red)' },
+  { minXP: 13700, image: 'images/animal_levels/level_23.png', title: 'Professor Koala', desc: 'Forsker', titleStyle: 'background:linear-gradient(135deg,#22d3a0,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 15500, image: 'images/animal_levels/level_24.png', title: 'Vandre-Kat', desc: 'Eventyrer', titleStyle: 'background:linear-gradient(135deg,#22d3a0,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 17500, image: 'images/animal_levels/level_25.png', title: 'Astronaut', desc: 'Stjernestaver', titleStyle: 'background:linear-gradient(135deg,#0ea5e9,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 19500, image: 'images/animal_levels/level_26.png', title: 'Tiger-Samurai', desc: 'Sværdmester', titleStyle: 'background:linear-gradient(135deg,#f97316,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 22000, image: 'images/animal_levels/level_27.png', title: 'Opdageren', desc: 'Skattesamler', titleStyle: 'background:linear-gradient(135deg,#f5a623,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 25000, image: 'images/animal_levels/level_28.png', title: 'Vismand', desc: 'Ordenes vogter', titleStyle: 'background:linear-gradient(135deg,#7c3aed,#f5a623);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 28000, image: 'images/animal_levels/level_29.png', title: 'Elefant-Kejser', desc: 'Hersker', titleStyle: 'background:linear-gradient(135deg,#f43f5e,#f5a623);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 32000, image: 'images/animal_levels/level_30.png', title: 'R\u00E6ve-Kongen', desc: 'Den Legendariske', titleStyle: 'background:linear-gradient(90deg,#f43f5e,#f5a623,#22d3a0,#0ea5e9,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' }
 ];
 
 function getAvatarLevel(totalXP) {

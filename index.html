@@ -1163,6 +1163,9 @@
     <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Nyt stavespil</button>
   </div>
 
+  <!-- Dev: category levels display -->
+  <div id="categoryLevelsDisplay" style="margin-top:12px;width:100%;max-width:360px;margin-left:auto;margin-right:auto"></div>
+
   <button class="settings-toggle" onclick="showExercisePicker()">&#x1F4DD; &#xD8;velser</button>
   <button class="settings-toggle" onclick="showBossPicker()">&#x1F47E; Boss-kampe</button>
   <button class="settings-toggle" onclick="switchPlayer()">&#x1F465; Skift spiller</button>
@@ -1530,6 +1533,7 @@ function selectPlayer(name) {
     refreshWelcomeButtons();
     updateWelcomeStreak();
     updateWelcomeAvatar();
+    renderCategoryLevels();
     restoreGradeSelection();
     var rewardData = loadRewardData();
     rewardData = checkStreak(rewardData);
@@ -1964,6 +1968,7 @@ function goHome() {
   refreshWelcomeButtons();
   updateWelcomeStreak();
   updateWelcomeAvatar();
+  renderCategoryLevels();
   // Hide reward bar on welcome (welcome has its own streak display)
   hide('rewardBar');
   hide('rewardXPBarWrap');
@@ -2059,6 +2064,78 @@ function resetProfile() {
   if (!confirm('Er du sikker? Dit stavespil-resultat og niveau bliver slettet.')) return;
   localStorage.removeItem(playerKey('profile_data'));
   goHome();
+}
+
+// Per-category level system
+function loadCategoryLevels() {
+  var profile = loadProfile();
+  if (profile && profile.categoryLevels) return profile.categoryLevels;
+  var levels = {};
+  for (var i = 0; i < ALL_CATEGORIES.length; i++) {
+    levels[ALL_CATEGORIES[i]] = { level: 1, history: [] };
+  }
+  return levels;
+}
+
+function saveCategoryLevels(levels) {
+  var profile = loadProfile() || {};
+  profile.categoryLevels = levels;
+  try { localStorage.setItem(playerKey('profile_data'), JSON.stringify(profile)); } catch(e) {}
+  syncToSupabase();
+}
+
+function updateCategoryLevel(category, correct) {
+  if (!category || ALL_CATEGORIES.indexOf(category) === -1) return;
+  var levels = loadCategoryLevels();
+  if (!levels[category]) levels[category] = { level: 1, history: [] };
+  var cat = levels[category];
+
+  cat.history.push(correct);
+  if (cat.history.length > 10) cat.history = cat.history.slice(-10);
+
+  var total = cat.history.length;
+  var correctCount = cat.history.filter(function(h) { return h; }).length;
+
+  // New player fast-track: level up after 2 correct when <5 total answers
+  if (total < 5 && correctCount >= 2 && cat.level < 4) {
+    cat.level++;
+    cat.history = [];
+  }
+  // Normal: level up at ≥80% correct
+  else if (total >= 5 && correctCount / total >= 0.8 && cat.level < 4) {
+    cat.level++;
+    cat.history = [];
+  }
+  // Level down at <50% correct
+  else if (total >= 5 && correctCount / total < 0.5 && cat.level > 0) {
+    cat.level--;
+    cat.history = [];
+  }
+
+  levels[category] = cat;
+  saveCategoryLevels(levels);
+}
+
+function buildPoolForCategory(cat, catLevel) {
+  var pool = (WORD_BANK[cat] || []).filter(function(w) { return w.level === catLevel; });
+  if (pool.length < 3) {
+    pool = (WORD_BANK[cat] || []).filter(function(w) {
+      return w.level >= Math.max(0, catLevel - 1) && w.level <= Math.min(4, catLevel + 1);
+    });
+  }
+  return pool.map(function(w) { return Object.assign({}, w, { category: cat }); });
+}
+
+function buildPoolWithCategoryLevels(categories) {
+  var levels = loadCategoryLevels();
+  var pool = [];
+  for (var i = 0; i < categories.length; i++) {
+    var cat = categories[i];
+    if (!WORD_BANK[cat]) continue;
+    var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
+    pool = pool.concat(buildPoolForCategory(cat, catLevel));
+  }
+  return pool;
 }
 
 function resetAll() {
@@ -2388,17 +2465,7 @@ function startTrainingFromProfile() {
   wrongCountPerWord = {};
   results = [];
 
-  var targetLevel = profile.spellingLevel || 2;
-  var minLevel = Math.max(0, targetLevel - 2);
-  var pool = [];
-  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
-    var cat = profile.weakCategories[ci];
-    if (!WORD_BANK[cat]) continue;
-    var words = WORD_BANK[cat].filter(function(w) {
-      return w.level >= minLevel && w.level <= targetLevel;
-    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
-    pool = pool.concat(words);
-  }
+  var pool = buildPoolWithCategoryLevels(profile.weakCategories);
   if (pool.length === 0) {
     for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
       var cat2 = profile.weakCategories[ci2];
@@ -2804,6 +2871,7 @@ function checkSpelling() {
   var result = { word: w.word, correct: ok, selfCorrected: false, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
   logAnswer(w.word, ans, ok, 1, w.category, w.level || 0);
+  updateCategoryLevel(w.category, ok);
 
   // Track adaptive state for diagnostic
   if (gameMode === 'diagnostic' && adaptiveState) {
@@ -3010,14 +3078,13 @@ function finishTest() {
       }
     }
 
-    var profile = {
-      lastDiagnostic: Date.now(),
-      grade: grade,
-      spellingLevel: spellingLevel,
-      categoryScores: categoryScores,
-      weakCategories: weakCategories,
-      diagnosticResults: results.map(function(r) { return { word: r.word, correct: r.correct, userAnswer: r.userAnswer, category: r.category, level: r.level }; })
-    };
+    var profile = loadProfile() || {};
+    profile.lastDiagnostic = Date.now();
+    profile.grade = grade;
+    profile.spellingLevel = spellingLevel;
+    profile.categoryScores = categoryScores;
+    profile.weakCategories = weakCategories;
+    profile.diagnosticResults = results.map(function(r) { return { word: r.word, correct: r.correct, userAnswer: r.userAnswer, category: r.category, level: r.level }; });
     saveProfile(profile);
 
     show('phase-analyzing');
@@ -6757,18 +6824,7 @@ function startFillIn() {
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
-  var targetLevel = profile.spellingLevel || 2;
-  var minLevel = Math.max(0, targetLevel - 2);
-  var pool = [];
-  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
-    var cat = profile.weakCategories[ci];
-    if (!WORD_BANK[cat]) continue;
-    var words = WORD_BANK[cat].filter(function(w) {
-      return w.level >= minLevel && w.level <= targetLevel;
-    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
-    pool = pool.concat(words);
-  }
-  // Fallback: all words from weak categories
+  var pool = buildPoolWithCategoryLevels(profile.weakCategories);
   if (pool.length === 0) {
     for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
       var cat2 = profile.weakCategories[ci2];
@@ -6949,6 +7005,7 @@ function checkFillIn(chosenIndex) {
   // SR update + Supabase
   updateSRWord(w.word, ok, w.category);
   logAnswer(w.word, chosen === '' ? '(intet)' : chosen, ok, 1, w.category, w.level || 0);
+  updateCategoryLevel(w.category, ok);
 
   // Gamification — boss + chest as reward for 5 correct streak
   if (ok) {
@@ -7233,17 +7290,7 @@ function startRightOrWrong() {
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
-  var targetLevel = profile.spellingLevel || 2;
-  var minLevel = Math.max(0, targetLevel - 2);
-  var pool = [];
-  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
-    var cat = profile.weakCategories[ci];
-    if (!WORD_BANK[cat]) continue;
-    var words = WORD_BANK[cat].filter(function(w) {
-      return w.level >= minLevel && w.level <= targetLevel;
-    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
-    pool = pool.concat(words);
-  }
+  var pool = buildPoolWithCategoryLevels(profile.weakCategories);
   if (pool.length === 0) {
     for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
       var cat2 = profile.weakCategories[ci2];
@@ -7408,6 +7455,7 @@ function checkRightOrWrong(answeredCorrect) {
   // SR update + Supabase
   updateSRWord(item.word, ok, item.category);
   logAnswer(item.word, timedOut ? '(tid)' : (answeredCorrect ? 'rigtigt' : 'forkert'), ok, 1, item.category, item.level || 0);
+  updateCategoryLevel(item.category, ok);
 
   // Gamification
   if (ok) {
@@ -7613,17 +7661,7 @@ function startSpellingPolice() {
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
-  var targetLevel = profile.spellingLevel || 2;
-  var minLevel = Math.max(0, targetLevel - 2);
-  var pool = [];
-  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
-    var cat = profile.weakCategories[ci];
-    if (!WORD_BANK[cat]) continue;
-    var words = WORD_BANK[cat].filter(function(w) {
-      return w.level >= minLevel && w.level <= targetLevel;
-    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
-    pool = pool.concat(words);
-  }
+  var pool = buildPoolWithCategoryLevels(profile.weakCategories);
   if (pool.length === 0) {
     for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
       var cat2 = profile.weakCategories[ci2];
@@ -7740,6 +7778,7 @@ function checkSpellingPolice(wordIndex) {
 
   updateSRWord(item.word, ok, item.category);
   logAnswer(item.word, item.tokens[wordIndex] || '', ok, 1, item.category, item.level || 0);
+  updateCategoryLevel(item.category, ok);
 
   // Gamification
   if (ok) {
@@ -7941,19 +7980,8 @@ function startWordBuilder() {
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
-  var targetLevel = profile.spellingLevel || 2;
-  var minLevel = Math.max(0, targetLevel - 2);
-
   // Build pool from ALL categories (morphemes work best across categories)
-  var pool = [];
-  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
-    var cat = ALL_CATEGORIES[ci];
-    if (!WORD_BANK[cat]) continue;
-    var words = WORD_BANK[cat].filter(function(w) {
-      return w.level >= minLevel && w.level <= targetLevel;
-    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
-    pool = pool.concat(words);
-  }
+  var pool = buildPoolWithCategoryLevels(ALL_CATEGORIES);
   pool = shuffle(pool);
 
   // Filter to words with parseable morphemes, prioritize weak categories
@@ -8122,6 +8150,7 @@ function wordBuilderComplete() {
 
   updateSRWord(w.word, ok, w.category);
   logAnswer(w.word, ok ? w.word : wbMistakes + ' fejl', ok, 1, w.category, w.level || 0);
+  updateCategoryLevel(w.category, ok);
 
   // Gamification
   if (ok) {
@@ -8309,6 +8338,7 @@ function checkSentence() {
   results.push(result);
   logAnswer(swCurrentWord.word, input, ok, 1, swCurrentWord.category, swCurrentWord.level || 0);
   updateSRWord(swCurrentWord.word, ok, swCurrentWord.category);
+  updateCategoryLevel(swCurrentWord.category, ok);
 
   // Gamification
   if (ok) {
@@ -8355,6 +8385,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Welcome buttons
+function renderCategoryLevels() {
+  var el = document.getElementById('categoryLevelsDisplay');
+  if (!el || ALL_CATEGORIES.length === 0) return;
+  var levels = loadCategoryLevels();
+  var levelColors = ['#9ca3af', '#22d3a0', '#f5a623', '#f97316', '#f43f5e'];
+  var html = '<div style="background:var(--card2);border-radius:12px;padding:12px 14px;border:1px solid #3d4270">' +
+    '<div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:8px">Kategoriniveauer (dev)</div>';
+  for (var i = 0; i < ALL_CATEGORIES.length; i++) {
+    var cat = ALL_CATEGORIES[i];
+    var icon = CATEGORY_ICONS[cat] || '';
+    var catData = levels[cat] || { level: 1, history: [] };
+    var lvl = catData.level;
+    var hist = catData.history || [];
+    var correct = hist.filter(function(h) { return h; }).length;
+    var histStr = hist.length > 0 ? ' (' + correct + '/' + hist.length + ')' : '';
+    html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem">' +
+      '<span style="width:20px;text-align:center">' + icon + '</span>' +
+      '<span style="flex:1;color:var(--text)">' + cat + '</span>' +
+      '<span style="font-weight:700;color:' + levelColors[lvl] + '">Niv ' + lvl + '</span>' +
+      '<span style="color:var(--muted);font-size:0.7rem;min-width:40px;text-align:right">' + histStr + '</span>' +
+      '</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
 function refreshWelcomeButtons() {
   var profile = loadProfile();
 

@@ -1093,7 +1093,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3462,6 +3462,7 @@ function showBossMinigame(bossData) {
   hide('phase-spellingpolice');
   hide('phase-wordbuilder');
   hide('phase-sentence');
+  hide('phase-spellpick');
   show('phase-boss');
 
   var word = bossData.word.toLowerCase();
@@ -3503,7 +3504,6 @@ function showBossMinigame(bossData) {
       else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
       else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
       else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
-      else if (battleType === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
       else if (battleType === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
       else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
     }, 3000);
@@ -3513,6 +3513,10 @@ function showBossMinigame(bossData) {
     else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
     else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
     else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+    else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
+    else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
+    else if (battleType === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
+    else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
   }
 }
 

@@ -3666,7 +3666,7 @@ var BOSS_MONSTERS = {
   "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex" }
 };
 
-var BOSS_BATTLE_TYPES = ['scramble', 'memory', 'cardcast', 'spellpick'];
+var BOSS_BATTLE_TYPES = ['scramble', 'memory', 'cardcast', 'spellpick', 'silentservant'];
 var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];
 var BOSS_IDLE_ANIMS = ['boss-idle-float', 'boss-idle-pulse', 'boss-idle-wobble'];
 var BOSS_VICTORY_MSGS = [
@@ -3688,6 +3688,7 @@ var BOSS_INSTRUCTIONS = {
   highway: { emoji: '\u{1F697}', text: 'K\u00F8r bilen fra bane til bane og fang de rigtige bogstaver!' },
   cardcast: { emoji: '\u{1F0CF}', text: 'Lyt til ordet og kast de rigtige bogstav-kort mod bossen!' },
   spellpick: { emoji: '\u{1F3AF}', text: 'V\u00E6lg den rigtige stavem\u00E5de!' },
+  silentservant: { emoji: '\u{1F507}', text: 'Skal det stumme bogstav med eller ej?' },
   snake: { emoji: '\u{1F40D}', text: 'Styr slangen og spis bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' }
 };
 
@@ -3754,6 +3755,7 @@ function startBossPractice(battleType) {
   else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
   else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
   else if (battleType === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
+  else if (battleType === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
   else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
 }
 
@@ -3797,6 +3799,7 @@ function testBoss(type) {
   else if (type === 'highway') renderBossHighway(word, boss, idleAnim);
   else if (type === 'cardcast') renderBossCardcast(word, boss, idleAnim);
   else if (type === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
+  else if (type === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
   else if (type === 'snake') renderBossSnake(word, boss, idleAnim);
 }
 
@@ -3849,6 +3852,7 @@ function showBossMinigame(bossData) {
       else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
       else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
       else if (battleType === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
+      else if (battleType === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
       else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
     }, 3000);
   } else {
@@ -5075,15 +5079,13 @@ function renderBossSpellpick(word, boss, idleAnim) {
     var t = catWords[i]; catWords[i] = catWords[j]; catWords[j] = t;
   }
   var spWords = [];
+  var usedWords = {};
   for (var wi = 0; wi < catWords.length && spWords.length < 3; wi++) {
     var wo = catWords[wi];
-    var mis = generateMisspelling(wo);
-    if (mis && mis.misspelled && mis.misspelled.toLowerCase() !== wo.word.toLowerCase()) {
-      spWords.push({ word: wo.word.toLowerCase(), category: cat, patternHint: wo.patternHint || '', wordObj: wo, dbMisspellings: [] });
-    }
-  }
-  while (spWords.length < 3) {
-    spWords.push({ word: word, category: cat, patternHint: bossState.wordObj.patternHint || '', wordObj: bossState.wordObj, dbMisspellings: [] });
+    var wl = wo.word.toLowerCase();
+    if (usedWords[wl]) continue;
+    usedWords[wl] = true;
+    spWords.push({ word: wl, category: cat, patternHint: wo.patternHint || '', wordObj: wo, dbMisspellings: [] });
   }
   bossState.spWords = spWords;
 
@@ -5241,6 +5243,166 @@ function pickSpellOption(btn, picked) {
   setTimeout(function() {
     bossState.spRound++;
     buildSpellpickRound();
+  }, 1200);
+}
+
+// --- Type 10: SILENT SERVANT (stumtjeneren) ---
+function renderBossSilentServant(word, boss, idleAnim) {
+  bossState.hp = 5;
+  bossState.maxHP = 5;
+  bossState.ssRound = 0;
+
+  // Build 5 rounds: mix of stumme bogstaver words (correct=with silent letter)
+  // and non-stumme words (correct=without silent letter)
+  var stummeWords = (WORD_BANK['Stumme bogstaver'] || []).slice();
+  // Shuffle
+  for (var i = stummeWords.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = stummeWords[i]; stummeWords[i] = stummeWords[j]; stummeWords[j] = t;
+  }
+
+  var rounds = [];
+  var usedWords = {};
+
+  // Pick stumme words (answer = with silent letter)
+  for (var si = 0; si < stummeWords.length && rounds.length < 3; si++) {
+    var sw = stummeWords[si];
+    var mis = generateMisspelling(sw);
+    if (mis && mis.misspelled && mis.misspelled.toLowerCase() !== sw.word.toLowerCase()) {
+      if (usedWords[sw.word.toLowerCase()]) continue;
+      usedWords[sw.word.toLowerCase()] = true;
+      rounds.push({
+        correct: sw.word.toLowerCase(),
+        wrong: mis.misspelled.toLowerCase(),
+        hasSilent: true
+      });
+    }
+  }
+
+  // Pick non-stumme words that look like they could have silent letters
+  // Create fake "silent letter" versions of normal words
+  var otherCats = Object.keys(WORD_BANK).filter(function(c) { return c !== 'Stumme bogstaver'; });
+  var otherWords = [];
+  otherCats.forEach(function(cat) {
+    WORD_BANK[cat].forEach(function(w) { otherWords.push(w); });
+  });
+  for (var oi = otherWords.length - 1; oi > 0; oi--) {
+    var oj = Math.floor(Math.random() * (oi + 1));
+    var ot = otherWords[oi]; otherWords[oi] = otherWords[oj]; otherWords[oj] = ot;
+  }
+
+  for (var ni = 0; ni < otherWords.length && rounds.length < 5; ni++) {
+    var nw = otherWords[ni].word.toLowerCase();
+    if (usedWords[nw]) continue;
+    // Add a fake silent letter
+    var fakeVersion = null;
+    if (nw.match(/^v/) && !nw.match(/^hv/)) {
+      fakeVersion = 'h' + nw; // add h before v
+    } else if (nw.match(/^j/) && !nw.match(/^hj/)) {
+      fakeVersion = 'h' + nw; // add h before j
+    } else if (nw.indexOf('lv') >= 0) {
+      // word already has lv, could add silent letter elsewhere — skip
+      continue;
+    } else {
+      continue;
+    }
+    if (fakeVersion && fakeVersion !== nw) {
+      usedWords[nw] = true;
+      rounds.push({
+        correct: nw,
+        wrong: fakeVersion,
+        hasSilent: false
+      });
+    }
+  }
+
+  // If not enough non-stumme, fill with more stumme
+  for (var si2 = 0; si2 < stummeWords.length && rounds.length < 5; si2++) {
+    var sw2 = stummeWords[si2];
+    if (usedWords[sw2.word.toLowerCase()]) continue;
+    var mis2 = generateMisspelling(sw2);
+    if (mis2 && mis2.misspelled) {
+      usedWords[sw2.word.toLowerCase()] = true;
+      rounds.push({
+        correct: sw2.word.toLowerCase(),
+        wrong: mis2.misspelled.toLowerCase(),
+        hasSilent: true
+      });
+    }
+  }
+
+  // Shuffle rounds
+  for (var ri = rounds.length - 1; ri > 0; ri--) {
+    var rj = Math.floor(Math.random() * (ri + 1));
+    var rt = rounds[ri]; rounds[ri] = rounds[rj]; rounds[rj] = rt;
+  }
+
+  bossState.ssRounds = rounds;
+  bossState.boss = { emoji: '\u{1F9CF}', name: 'Stumtjeneren' };
+
+  var content = document.getElementById('bossContent');
+  content.innerHTML = renderBossHeader(bossState.boss, idleAnim, 5, 5);
+  buildSilentServantRound();
+}
+
+function buildSilentServantRound() {
+  if (!bossState || bossState.hp <= 0) return;
+  var round = bossState.ssRounds[bossState.ssRound];
+  if (!round) { bossDefeated(); return; }
+
+  var content = document.getElementById('bossContent');
+  var html = renderBossHeader(bossState.boss, bossState.idleAnim, bossState.hp, bossState.maxHP);
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:10px 0">Hvilken stavem\u00E5de er rigtig?</p>';
+
+  // Show two options: correct and wrong, shuffled
+  var opts = [round.correct, round.wrong];
+  if (Math.random() > 0.5) { opts = [round.wrong, round.correct]; }
+
+  html += '<div style="display:flex;flex-direction:column;gap:12px;max-width:320px;margin:0 auto">';
+  for (var i = 0; i < opts.length; i++) {
+    html += '<button class="btn btn-primary" style="font-size:1.3rem;letter-spacing:3px;padding:16px 24px" onclick="pickSilentOption(this, \'' + opts[i].replace(/'/g, "\\'") + '\')">' + opts[i] + '</button>';
+  }
+  html += '</div>';
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.8rem;margin-top:12px">Runde ' + (bossState.ssRound + 1) + ' / ' + bossState.ssRounds.length + '</p>';
+  content.innerHTML = html;
+}
+
+function pickSilentOption(btn, picked) {
+  if (!bossState) return;
+  var round = bossState.ssRounds[bossState.ssRound];
+  var correct = picked === round.correct;
+  var buttons = btn.parentNode.querySelectorAll('button');
+
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+    if (buttons[i].textContent === round.correct) {
+      buttons[i].style.background = 'var(--green)';
+      buttons[i].style.color = '#fff';
+    } else if (buttons[i] === btn && !correct) {
+      buttons[i].style.background = 'var(--red)';
+      buttons[i].style.color = '#fff';
+    }
+  }
+
+  if (correct) {
+    bossState.hp--;
+    updateBossHP();
+    bossHitAnim();
+    if (bossState.hp <= 0) {
+      setTimeout(function() { bossDefeated(); }, 800);
+      return;
+    }
+  } else {
+    bossAttackAnim();
+  }
+
+  setTimeout(function() {
+    bossState.ssRound++;
+    if (bossState.ssRound >= bossState.ssRounds.length) {
+      // Ran out of rounds without defeating boss — refill
+      bossState.ssRound = 0;
+    }
+    buildSilentServantRound();
   }, 1200);
 }
 

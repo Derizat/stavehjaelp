@@ -2676,12 +2676,16 @@ function renderWord() {
 
 // Enter key handler
 document.addEventListener('keydown', function(e) {
-  if (e.key !== 'Enter') return;
   var testPhase = document.getElementById('phase-test');
   if (!testPhase || testPhase.classList.contains('hidden')) return;
-  e.preventDefault();
-  if (feedbackShown) nextWord();
-  else checkSpelling();
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (feedbackShown) nextWord();
+    else checkSpelling();
+  } else if (e.key === ' ' && document.activeElement !== document.getElementById('spellingInput')) {
+    e.preventDefault();
+    speakCurrentWord();
+  }
 });
 
 // Diff highlight

@@ -423,29 +423,47 @@
     .pac-letter { font-size: 1rem; }
   }
 
-  /* Boss highway minigame */
+  /* Boss highway minigame (Outrun style) */
   .highway-area {
-    position: relative; height: 260px; overflow: hidden; border-radius: 14px;
-    margin: 12px 0; background: linear-gradient(180deg, #1a1520, #12101a);
+    position: relative; height: 280px; overflow: hidden; border-radius: 14px;
+    margin: 12px 0; perspective: 400px;
     border: 2px solid #3d4270;
+    background: linear-gradient(180deg, #1a0a2e 0%, #0d1a0d 40%, #1a1520 100%);
   }
-  .highway-lanes {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
+  .highway-road {
+    position: absolute; bottom: 0; left: 50%; width: 100%; height: 100%;
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotateX(45deg);
+    background: #222;
+    border-left: 4px solid #888; border-right: 4px solid #888;
   }
-  .highway-lane { border-right: 2px dashed rgba(255,255,255,0.08); position: relative; }
-  .highway-lane:last-child { border-right: none; }
+  .highway-stripe {
+    position: absolute; left: 50%; width: 4px; height: 20px; background: #ddd;
+    transform: translateX(-50%);
+    animation: hw-stripe-move 0.8s linear infinite;
+  }
+  @keyframes hw-stripe-move {
+    from { transform: translateX(-50%) translateY(0) scaleY(1); opacity: 0.3; }
+    to { transform: translateX(-50%) translateY(200px) scaleY(3); opacity: 1; }
+  }
+  .highway-horizon {
+    position: absolute; top: 35%; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  }
   .highway-car {
-    position: absolute; bottom: 20px; font-size: 2rem; transition: left 0.15s ease;
-    width: 33.33%; text-align: center; z-index: 5;
+    position: absolute; bottom: 16px; font-size: 2.5rem; z-index: 10;
+    transition: left 0.15s ease; text-align: center; width: 60px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    transform: translateX(-50%);
   }
   .highway-letter {
-    position: absolute; font-family: 'Fredoka One', cursive; font-size: 1.5rem;
-    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    position: absolute; font-family: 'Fredoka One', cursive;
+    display: flex; align-items: center; justify-content: center;
     border-radius: 10px; border: 2px solid #3d4270; background: var(--card2); color: var(--text);
-    z-index: 3;
+    z-index: 5; transition: none;
+    transform: translateX(-50%);
   }
-  .highway-letter.target { border-color: var(--accent); color: var(--accent); }
+  .highway-letter.target { border-color: var(--accent); color: var(--accent); text-shadow: 0 0 8px var(--accent); }
   .highway-letter.caught { background: rgba(34,211,160,0.3); border-color: var(--green); color: var(--green); }
 
   /* Boss cardcast (slay the spire) minigame */
@@ -4408,7 +4426,7 @@ function cleanupPacman() {
   }
 }
 
-// --- Type 6: HIGHWAY (3-lane car catching letters) ---
+// --- Type 6: HIGHWAY (Outrun-style 3-lane racing) ---
 var highwayInterval = null;
 var highwayState = null;
 
@@ -4425,11 +4443,14 @@ function renderBossHighway(word, boss, idleAnim) {
   html += '</div></div>';
 
   html += '<div class="boss-rain-target" id="hwTarget">\u{1F3AF} Fang: <strong>' + word[0] + '</strong></div>';
-  html += '<div class="highway-area" id="hwArea"><div class="highway-lanes">';
-  html += '<div class="highway-lane"></div><div class="highway-lane"></div><div class="highway-lane"></div>';
-  html += '</div><div class="highway-car" id="hwCar" style="left:33.33%">\u{1F697}</div></div>';
 
-  // D-pad (left/right only)
+  // Outrun-style road area
+  html += '<div class="highway-area" id="hwArea">';
+  html += '<div class="highway-horizon"></div>';
+  html += '<div class="highway-car" id="hwCar" style="left:50%">\u{1F697}</div>';
+  html += '</div>';
+
+  // D-pad
   html += '<div style="display:flex;justify-content:center;gap:16px;margin-top:10px">';
   html += '<div class="dpad-btn" onpointerdown="hwMove(-1)" style="width:70px;height:50px">\u2B05\uFE0F</div>';
   html += '<div class="dpad-btn" onpointerdown="hwMove(1)" style="width:70px;height:50px">\u27A1\uFE0F</div>';
@@ -4437,28 +4458,47 @@ function renderBossHighway(word, boss, idleAnim) {
 
   document.getElementById('bossContent').innerHTML = html;
 
+  // Lane positions (percentage from left)
+  var lanePositions = [25, 50, 75];
+
   highwayState = {
-    lane: 1, // 0=left, 1=center, 2=right
+    lane: 1,
     letterIndex: 0,
-    spawnCount: 0
+    spawnCount: 0,
+    lanePositions: lanePositions
   };
 
-  // Keyboard controls
+  // Position car
+  var car = document.getElementById('hwCar');
+  if (car) car.style.left = lanePositions[1] + '%';
+
+  // Keyboard
   highwayState._keyHandler = function(e) {
     if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); hwMove(-1); }
     if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); hwMove(1); }
   };
   document.addEventListener('keydown', highwayState._keyHandler);
 
-  highwayInterval = setInterval(function() { hwSpawnLetter(); }, 1000);
-  setTimeout(function() { hwSpawnLetter(); }, 300);
+  // Swipe
+  var area = document.getElementById('hwArea');
+  var touchX = null;
+  area.addEventListener('touchstart', function(e) { touchX = e.touches[0].clientX; }, { passive: true });
+  area.addEventListener('touchend', function(e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    touchX = null;
+    if (Math.abs(dx) > 20) hwMove(dx > 0 ? 1 : -1);
+  }, { passive: true });
+
+  highwayInterval = setInterval(function() { hwSpawnLetter(); }, 1100);
+  setTimeout(function() { hwSpawnLetter(); }, 400);
 }
 
 function hwMove(dir) {
   if (!highwayState || !bossState) return;
   highwayState.lane = Math.max(0, Math.min(2, highwayState.lane + dir));
   var car = document.getElementById('hwCar');
-  if (car) car.style.left = (highwayState.lane * 33.33) + '%';
+  if (car) car.style.left = highwayState.lanePositions[highwayState.lane] + '%';
 }
 
 function hwSpawnLetter() {
@@ -4477,21 +4517,23 @@ function hwSpawnLetter() {
   }
 
   var lane = Math.floor(Math.random() * 3);
+  var laneX = highwayState.lanePositions[lane];
   var el = document.createElement('div');
   el.className = 'highway-letter' + (letter === target ? ' target' : '');
   el.textContent = letter;
-  var laneWidth = area.offsetWidth / 3;
-  el.style.left = (lane * laneWidth + laneWidth / 2 - 20) + 'px';
-  el.style.top = '-44px';
-  var dropId = 'hwDrop' + highwayState.spawnCount;
-  el.id = dropId;
   el.dataset.lane = lane;
   el.dataset.letter = letter;
+  var dropId = 'hwDrop' + highwayState.spawnCount;
+  el.id = dropId;
   area.appendChild(el);
 
+  // Outrun perspective animation: starts small at horizon, grows as it approaches
   var startTime = Date.now();
-  var duration = 2500 + Math.random() * 1000;
+  var duration = 2200;
   var areaHeight = area.offsetHeight;
+  var horizonY = areaHeight * 0.35; // vanishing point
+  var carY = areaHeight - 60;
+
   function animate() {
     var elRef = document.getElementById(dropId);
     if (!elRef) return;
@@ -4500,15 +4542,30 @@ function hwSpawnLetter() {
       if (elRef.parentNode) elRef.parentNode.removeChild(elRef);
       return;
     }
-    var yPos = progress * (areaHeight - 44);
-    elRef.style.top = yPos + 'px';
 
-    // Check collision with car
-    if (yPos > areaHeight - 80 && yPos < areaHeight - 20 && parseInt(elRef.dataset.lane) === highwayState.lane) {
+    // Exponential scaling for perspective effect
+    var t = progress * progress; // ease-in for approaching feel
+    var yPos = horizonY + t * (carY - horizonY);
+    var scale = 0.3 + t * 1.2;
+
+    // Lateral position converges from center to lane position
+    var centerX = 50;
+    var laneXpct = laneX;
+    var xPos = centerX + (laneXpct - centerX) * t;
+
+    elRef.style.left = xPos + '%';
+    elRef.style.top = yPos + 'px';
+    elRef.style.fontSize = (0.8 + scale * 0.8) + 'rem';
+    elRef.style.width = (20 + scale * 25) + 'px';
+    elRef.style.height = (20 + scale * 25) + 'px';
+    elRef.style.opacity = 0.4 + t * 0.6;
+
+    // Collision check near car
+    if (t > 0.85 && parseInt(elRef.dataset.lane) === highwayState.lane) {
       var l = elRef.dataset.letter;
       if (l === bossState.word[bossState.letterIndex]) {
         elRef.classList.add('caught');
-        setTimeout(function() { if (elRef.parentNode) elRef.parentNode.removeChild(elRef); }, 200);
+        setTimeout(function() { if (elRef.parentNode) elRef.parentNode.removeChild(elRef); }, 150);
         bossState.hp--; bossState.letterIndex++;
         var prev = document.getElementById('hwGuide' + (bossState.letterIndex - 1));
         if (prev) { prev.classList.remove('active'); prev.classList.add('caught'); }

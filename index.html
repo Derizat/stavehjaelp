@@ -4866,7 +4866,7 @@ var SS_ITEMS = [
   { emoji: '\u{1F3A9}', name: 'Hat' }
 ];
 
-function renderCoatRack(correctCount) {
+function renderCoatRack(correctCount, wrongCount) {
   var html = '<div style="text-align:center;margin-bottom:14px">';
   html += '<div style="font-weight:700;color:var(--accent);margin-bottom:8px">Stumtjeneren</div>';
   html += '<div style="display:flex;flex-direction:column-reverse;align-items:center;gap:2px;min-height:180px;justify-content:flex-start">';
@@ -4878,6 +4878,12 @@ function renderCoatRack(correctCount) {
     html += '<div style="font-size:1.8rem;transition:all 0.5s;' + (visible ? 'opacity:1;transform:scale(1)' : 'opacity:0.15;transform:scale(0.7);filter:grayscale(1)') + '">' + SS_ITEMS[i].emoji + '</div>';
   }
   html += '</div>';
+  // Show X marks for wrong answers
+  html += '<div style="font-size:1.2rem;margin-top:4px">';
+  for (var x = 0; x < 2; x++) {
+    html += '<span style="margin:0 4px;' + (x < wrongCount ? 'color:var(--red)' : 'color:#333') + '">\u2717</span>';
+  }
+  html += '</div>';
   html += '<div style="font-size:0.8rem;color:var(--muted)">' + correctCount + ' / ' + SS_ITEMS.length + ' ting p\u00E5 stumtjeneren</div>';
   html += '</div>';
   return html;
@@ -4885,6 +4891,7 @@ function renderCoatRack(correctCount) {
 
 function renderBossSilentServant(word, boss, idleAnim) {
   bossState.ssCorrect = 0;
+  bossState.ssWrong = 0;
   bossState.ssRound = 0;
 
   // Build 5 rounds: mix of stumme bogstaver words (correct=with silent letter)
@@ -4951,7 +4958,7 @@ function renderBossSilentServant(word, boss, idleAnim) {
   bossState.maxHP = 5;
 
   var content = document.getElementById('bossContent');
-  content.innerHTML = renderCoatRack(0);
+  content.innerHTML = renderCoatRack(0, 0);
   buildSilentServantRound();
 }
 
@@ -4962,7 +4969,7 @@ function buildSilentServantRound() {
   if (!round) { bossDefeated(); return; }
 
   var content = document.getElementById('bossContent');
-  var html = renderCoatRack(bossState.ssCorrect);
+  var html = renderCoatRack(bossState.ssCorrect, bossState.ssWrong);
   html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:10px 0">Hvilken stavem\u00E5de er rigtig?</p>';
 
   var opts = [round.correct, round.wrong];
@@ -5001,6 +5008,12 @@ function pickSilentOption(btn, picked) {
       setTimeout(function() { bossDefeated(); }, 800);
       return;
     }
+  } else {
+    bossState.ssWrong++;
+    if (bossState.ssWrong >= 2) {
+      setTimeout(function() { bossLost(); }, 800);
+      return;
+    }
   }
 
   setTimeout(function() {
@@ -5010,6 +5023,17 @@ function pickSilentOption(btn, picked) {
     }
     buildSilentServantRound();
   }, 1200);
+}
+
+function bossLost() {
+  bossState = null;
+  var content = document.getElementById('bossContent');
+  content.innerHTML = '<div style="text-align:center;padding:30px">' +
+    '<div style="font-size:4rem;margin-bottom:12px">\u{1F614}</div>' +
+    '<h2 style="color:var(--red);margin-bottom:8px">Du tabte!</h2>' +
+    '<p style="color:var(--muted);margin-bottom:16px">Pr\u00F8v igen n\u00E6ste gang!</p>' +
+    '<button class="btn btn-primary btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
+    '</div>';
 }
 
 function cleanupSnake() {

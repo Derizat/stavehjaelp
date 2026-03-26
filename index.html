@@ -1139,7 +1139,7 @@
 <!-- TEST (shared for diagnostic, training, review) -->
 <div id="phase-test" class="card hidden">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <div class="phase-label" style="margin-bottom:0" id="testPhaseLabel">&#x1F4CB; Diagnostisk test</div>
+    <div class="phase-label" style="margin-bottom:0" id="testPhaseLabel">&#x1F4CB; Stavespil</div>
     <button onclick="toggleApiPanel()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted)" title="API-indstillinger">&#x2699;&#xFE0F;</button>
   </div>
   <div id="difficultyLabel" style="text-align:center;margin-bottom:10px"></div>
@@ -2229,7 +2229,7 @@ function startDiagnostic() {
 
   document.getElementById('scoreCorrect').textContent = '0';
   document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').textContent = '\u{1F4CB} Diagnostisk test';
+  document.getElementById('testPhaseLabel').textContent = '\u{1F4CB} Stavespil';
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   hide('phase-welcome');
   show('phase-test');
@@ -2548,7 +2548,12 @@ function renderWord() {
   var total = currentWords.length;
   document.getElementById('wordNum').textContent = (results.length + 1);
   document.getElementById('progressBar').style.width = ((results.length / Math.max(total, results.length + 1)) * 100) + '%';
-  document.getElementById('patternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  if (gameMode === 'diagnostic') {
+    document.getElementById('patternBadge').style.display = 'none';
+  } else {
+    document.getElementById('patternBadge').style.display = '';
+    document.getElementById('patternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  }
   document.getElementById('spellingInput').value = '';
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('checkBtn').classList.remove('hidden');

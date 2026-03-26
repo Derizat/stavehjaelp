@@ -1093,7 +1093,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.9</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.1.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1402,6 +1402,7 @@
     <button class="rf-btn rf-btn-wrong" onclick="checkRightOrWrong(false)">&#x274C; Forkert</button>
   </div>
   <div id="rfFeedbackBox" style="display:none; margin-top:12px;"></div>
+  <button class="btn btn-green btn-full hidden" id="rfNextBtn" onclick="nextRightOrWrongWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
 <!-- SCREENING INTRO -->
@@ -6922,6 +6923,7 @@ function renderRightOrWrongWord() {
   document.getElementById('rfProgressBar').style.width = ((rfResults.length / total) * 100) + '%';
   document.getElementById('rfPatternBadge').textContent = (CATEGORY_ICONS[item.category] || '\u{1F520}') + ' ' + item.category;
   document.getElementById('rfFeedbackBox').style.display = 'none';
+  document.getElementById('rfNextBtn').classList.add('hidden');
   document.getElementById('rfWordDisplay').textContent = item.displayed;
   document.getElementById('rfHint').textContent = 'Er dette ord stavet rigtigt?';
 
@@ -7025,9 +7027,7 @@ function checkRightOrWrong(answeredCorrect) {
   document.getElementById('rfScoreCorrect').textContent = rfResults.filter(function(r) { return r.correct; }).length;
   document.getElementById('rfScoreWrong').textContent = rfResults.filter(function(r) { return !r.correct; }).length;
 
-  // Auto-advance
-  var delay = ok ? 600 : 1200;
-  setTimeout(function() { nextRightOrWrongWord(); }, delay);
+  document.getElementById('rfNextBtn').classList.remove('hidden');
 }
 
 function nextRightOrWrongWord() {

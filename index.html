@@ -478,31 +478,59 @@
     background: rgba(255,255,255,0.1);
   }
   .highway-car {
-    position: absolute; bottom: 12px; z-index: 10;
-    transition: left 0.15s ease; width: 36px; height: 52px;
+    position: absolute; bottom: 10px; z-index: 10;
+    transition: left 0.15s ease; width: 44px; height: 64px;
     transform: translateX(-50%);
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
   }
   .highway-car-body {
-    width: 36px; height: 52px; background: #e63946; border-radius: 8px 8px 4px 4px;
-    position: relative;
+    width: 44px; height: 64px; position: relative;
+    background: linear-gradient(180deg, #cc0000 0%, #ff1a1a 30%, #cc0000 60%, #990000 100%);
+    border-radius: 6px 6px 3px 3px;
+    clip-path: polygon(15% 0%, 85% 0%, 100% 25%, 100% 100%, 0% 100%, 0% 25%);
   }
+  /* Windshield */
   .highway-car-body::before {
-    content: ''; position: absolute; top: 6px; left: 4px; right: 4px; height: 16px;
-    background: #87CEEB; border-radius: 6px 6px 2px 2px; opacity: 0.7;
+    content: ''; position: absolute; top: 4px; left: 7px; right: 7px; height: 14px;
+    background: linear-gradient(180deg, #1a1a2e, #2d3158);
+    border-radius: 4px 4px 1px 1px;
+    border: 1px solid rgba(255,255,255,0.15);
   }
+  /* Tail lights + spoiler */
   .highway-car-body::after {
-    content: ''; position: absolute; bottom: 3px; left: 3px; right: 3px; height: 4px;
-    background: transparent;
-    border-left: 8px solid #ff4444; border-right: 8px solid #ff4444;
+    content: ''; position: absolute; bottom: 2px; left: 2px; right: 2px; height: 6px;
+    background: #1a1a1a;
+    border-radius: 1px;
+    border-left: 10px solid #ff3333; border-right: 10px solid #ff3333;
+    box-shadow: -12px 0 4px rgba(255,50,50,0.4), 12px 0 4px rgba(255,50,50,0.4);
+  }
+  /* Racing stripe */
+  .highway-car-stripe {
+    position: absolute; top: 18px; left: 50%; width: 4px; height: 40px;
+    background: rgba(255,255,255,0.25); transform: translateX(-50%);
     border-radius: 2px;
   }
+  /* Wheels */
   .highway-car-wheel-l, .highway-car-wheel-r {
-    position: absolute; width: 8px; height: 14px; background: #222; border-radius: 3px;
-    top: 50%; transform: translateY(-50%);
+    position: absolute; width: 8px; height: 16px; background: #111;
+    border-radius: 3px; border: 1px solid #333;
   }
-  .highway-car-wheel-l { left: -5px; }
-  .highway-car-wheel-r { right: -5px; }
+  .highway-car-wheel-l { left: -5px; top: 14px; }
+  .highway-car-wheel-r { right: -5px; top: 14px; }
+  .highway-car-wheel-bl { left: -5px; bottom: 8px; }
+  .highway-car-wheel-br { right: -5px; bottom: 8px; }
+  .highway-car-wheel-bl, .highway-car-wheel-br {
+    position: absolute; width: 8px; height: 16px; background: #111;
+    border-radius: 3px; border: 1px solid #333;
+  }
+  /* Exhaust glow */
+  .highway-car-exhaust {
+    position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+    width: 16px; height: 6px;
+    background: radial-gradient(ellipse, rgba(255,100,0,0.4), transparent);
+    animation: hw-exhaust 0.3s ease infinite alternate;
+  }
+  @keyframes hw-exhaust { from { opacity: 0.5; } to { opacity: 1; } }
   .highway-letter {
     position: absolute; font-family: 'Fredoka One', cursive;
     display: flex; align-items: center; justify-content: center;
@@ -4527,7 +4555,7 @@ function renderBossHighway(word, boss, idleAnim) {
   html += '<div class="highway-lane-stripe highway-lane-stripe-3"></div>';
   html += '</div>';
   html += '<div class="highway-horizon-line"></div>';
-  html += '<div class="highway-car" id="hwCar" style="left:50%"><div class="highway-car-body"><div class="highway-car-wheel-l"></div><div class="highway-car-wheel-r"></div></div></div>';
+  html += '<div class="highway-car" id="hwCar" style="left:50%"><div class="highway-car-body"><div class="highway-car-stripe"></div><div class="highway-car-wheel-l"></div><div class="highway-car-wheel-r"></div><div class="highway-car-wheel-bl"></div><div class="highway-car-wheel-br"></div></div><div class="highway-car-exhaust"></div></div>';
   html += '</div>';
 
   // D-pad

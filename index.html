@@ -4619,7 +4619,7 @@ function renderBossCardcast(word, boss, idleAnim) {
   // Build hand: correct letters + distractors
   var handLetters = word.split('');
   var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
-  var distractorCount = Math.min(3, Math.max(1, 6 - word.length));
+  var distractorCount = 2 + Math.floor(Math.random() * 2); // 2-3 distractors
   for (var d = 0; d < distractorCount; d++) {
     var distractor;
     do {

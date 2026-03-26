@@ -3633,12 +3633,22 @@ var BOSS_INSTRUCTIONS = {
 var bossPracticeMode = false;
 var bossPracticeType = null;
 
+var BOSS_DISABLED_TYPES = ['rain', 'reverse', 'pacman', 'highway', 'snake'];
+var BOSS_ALL_TYPES = ['scramble', 'memory', 'cardcast', 'rain', 'reverse', 'pacman', 'highway', 'snake'];
+
 function showBossPicker() {
   var container = document.getElementById('bossPickerButtons');
-  var html = '';
+  var html = '<div style="grid-column:1/-1;font-size:0.85rem;font-weight:700;color:var(--green);margin-bottom:2px">Virker</div>';
   BOSS_BATTLE_TYPES.forEach(function(type) {
     var instr = BOSS_INSTRUCTIONS[type];
     html += '<button class="btn btn-green" style="padding:14px 10px;font-size:0.95rem;display:flex;flex-direction:column;align-items:center;gap:4px" onclick="startBossPractice(\'' + type + '\')">' +
+      '<span style="font-size:1.8rem">' + instr.emoji + '</span>' +
+      '<span>' + type.charAt(0).toUpperCase() + type.slice(1) + '</span></button>';
+  });
+  html += '<div style="grid-column:1/-1;font-size:0.85rem;font-weight:700;color:var(--red);margin-top:8px;margin-bottom:2px">Virker ikke endnu</div>';
+  BOSS_DISABLED_TYPES.forEach(function(type) {
+    var instr = BOSS_INSTRUCTIONS[type];
+    html += '<button class="btn" style="padding:14px 10px;font-size:0.95rem;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5" onclick="startBossPractice(\'' + type + '\')">' +
       '<span style="font-size:1.8rem">' + instr.emoji + '</span>' +
       '<span>' + type.charAt(0).toUpperCase() + type.slice(1) + '</span></button>';
   });

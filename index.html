@@ -1160,11 +1160,10 @@
 
   <div style="margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:8px">
     <button class="btn btn-accent" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavespil!</button>
-    <button class="btn btn-primary hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
-    <button class="btn btn-green hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F3AF; Forts&#xe6;t tr&#xe6;ning</button>
     <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Nyt stavespil</button>
   </div>
 
+  <button class="settings-toggle" onclick="showExercisePicker()">&#x1F4DD; &#xD8;velser</button>
   <button class="settings-toggle" onclick="showBossPicker()">&#x1F47E; Boss-kampe</button>
   <button class="settings-toggle" onclick="switchPlayer()">&#x1F465; Skift spiller</button>
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
@@ -1471,6 +1470,15 @@
     <h2 style="font-family:'Fredoka One',cursive;color:var(--accent);text-align:center;margin-bottom:16px">&#x1F47E; V&#xe6;lg boss-kamp</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="bossPickerButtons"></div>
     <button class="btn btn-primary" style="margin-top:16px;width:100%" onclick="hideBossPicker()">&#x2716; Luk</button>
+  </div>
+</div>
+
+<!-- EXERCISE PICKER OVERLAY -->
+<div id="exercisePickerOverlay" class="chest-overlay hidden" style="z-index:999">
+  <div class="card" style="max-width:420px;width:90%;margin:auto;padding:24px">
+    <h2 style="font-family:'Fredoka One',cursive;color:var(--accent);text-align:center;margin-bottom:16px">&#x1F4DD; V&#xe6;lg &#xF8;velse</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="exercisePickerButtons"></div>
+    <button class="btn btn-primary" style="margin-top:16px;width:100%" onclick="hideExercisePicker()">&#x2716; Luk</button>
   </div>
 </div>
 
@@ -3697,6 +3705,30 @@ var bossPracticeType = null;
 
 var BOSS_DISABLED_TYPES = ['rain', 'reverse', 'pacman', 'highway', 'snake'];
 var BOSS_ALL_TYPES = ['scramble', 'memory', 'cardcast', 'rain', 'reverse', 'pacman', 'highway', 'snake'];
+
+var EXERCISE_TYPES = [
+  { id: 'diagnostic', emoji: '\u{1F680}', name: 'Stavespil', fn: 'startDiagnostic' },
+  { id: 'fillin', emoji: '\u{270F}\uFE0F', name: 'Udfyld bogstav', fn: 'startFillIn' },
+  { id: 'rightorwrong', emoji: '\u{2705}', name: 'Rigtigt/forkert', fn: 'startRightOrWrong' },
+  { id: 'spellingpolice', emoji: '\u{1F46E}', name: 'Stavepolitiet', fn: 'startSpellingPolice' },
+  { id: 'wordbuilder', emoji: '\u{1F9F1}', name: 'Ordbyggeren', fn: 'startWordBuilder' }
+];
+
+function showExercisePicker() {
+  var container = document.getElementById('exercisePickerButtons');
+  var html = '';
+  EXERCISE_TYPES.forEach(function(ex) {
+    html += '<button class="btn btn-green" style="padding:14px 10px;font-size:0.95rem;display:flex;flex-direction:column;align-items:center;gap:4px" onclick="hideExercisePicker();' + ex.fn + '()">' +
+      '<span style="font-size:1.8rem">' + ex.emoji + '</span>' +
+      '<span>' + ex.name + '</span></button>';
+  });
+  container.innerHTML = html;
+  document.getElementById('exercisePickerOverlay').classList.remove('hidden');
+}
+
+function hideExercisePicker() {
+  document.getElementById('exercisePickerOverlay').classList.add('hidden');
+}
 
 function showBossPicker() {
   var container = document.getElementById('bossPickerButtons');
@@ -8279,35 +8311,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // Welcome buttons
 function refreshWelcomeButtons() {
   var profile = loadProfile();
-  var dueWords = getDueWords();
 
   var startBtn = document.getElementById('startDiagBtn');
-  var continueBtn = document.getElementById('continueTrainBtn');
   var newDiagBtn = document.getElementById('newDiagBtn');
-  var reviewBtn = document.getElementById('reviewBtn');
 
   if (profile) {
     startBtn.classList.add('hidden');
-    if (profile.weakCategories && profile.weakCategories.length > 0) {
-      continueBtn.classList.remove('hidden');
-    } else {
-      continueBtn.classList.add('hidden');
-    }
     newDiagBtn.classList.remove('hidden');
   } else {
     startBtn.classList.remove('hidden');
-    continueBtn.classList.add('hidden');
     newDiagBtn.classList.add('hidden');
   }
-
-  if (dueWords.length > 0) {
-    reviewBtn.textContent = '\u{1F501} ' + dueWords.length + ' ord klar til gennemgang';
-    reviewBtn.classList.remove('hidden');
-  } else {
-    reviewBtn.classList.add('hidden');
-  }
-
-  // Screening button always visible
 }
 
 // Init

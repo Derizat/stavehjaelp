@@ -1093,7 +1093,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3477,7 +3477,19 @@ function showBossMinigame(bossData) {
   var battleType = pickRandom(BOSS_BATTLE_TYPES);
   var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
 
-  // Look up full word object for spellpick
+  // Memory boss: pick a word 2 levels above the player's category level
+  if (battleType === 'memory' && bossData.category) {
+    var levels = loadCategoryLevels();
+    var catLvl = (levels[bossData.category] && levels[bossData.category].level !== undefined) ? levels[bossData.category].level : 1;
+    var memLevel = Math.min(4, catLvl + 2);
+    var memPool = (WORD_BANK[bossData.category] || []).filter(function(w) { return w.level === memLevel; });
+    if (memPool.length === 0) memPool = (WORD_BANK[bossData.category] || []).filter(function(w) { return w.level >= catLvl + 1; });
+    if (memPool.length > 0) {
+      word = pickRandom(memPool).word.toLowerCase();
+    }
+  }
+
+  // Look up full word object
   var wordObj = { word: word, category: bossData.category, patternHint: '' };
   var catWords = WORD_BANK[bossData.category] || [];
   for (var wi = 0; wi < catWords.length; wi++) {

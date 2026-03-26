@@ -4,7 +4,7 @@
       "word": "hvil",
       "hint": "Hold en pause",
       "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Nu skal du hvile dig lidt.",
+      "sentence": "Tag et hvil inden vi går videre.",
       "level": 1,
       "category": "Stumme bogstaver"
     },
@@ -68,7 +68,7 @@
       "word": "hjørne",
       "hint": "Krog i et rum",
       "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Katten sover i hjørnet af stuen.",
+      "sentence": "Stolen står henne i hjørne af stuen.",
       "level": 1,
       "category": "Stumme bogstaver"
     },
@@ -124,7 +124,7 @@
       "word": "hjerne",
       "hint": "Sidder inde i hovedet",
       "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Hjernen styrer hele kroppen.",
+      "sentence": "Din hjerne arbejder hårdt når du læser.",
       "level": 2,
       "category": "Stumme bogstaver"
     },
@@ -252,7 +252,7 @@
       "word": "afdeling",
       "hint": "Del af en bygning",
       "patternHint": "stumt 'd' i 'af-d'",
-      "sentence": "Hospitalet har en stor børneafdeling.",
+      "sentence": "Vi besøgte en afdeling på hospitalet.",
       "level": 4,
       "category": "Stumme bogstaver"
     },
@@ -420,7 +420,7 @@
       "word": "gulv",
       "hint": "Det man går på indendørs",
       "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Katten ligger på gulvet.",
+      "sentence": "Der ligger et tæppe på gulv i stuen.",
       "level": 2,
       "category": "Stumme bogstaver"
     },
@@ -468,7 +468,7 @@
       "word": "halvdel",
       "hint": "Den ene af to dele",
       "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Jeg spiste halvdelen af kagen.",
+      "sentence": "Giv mig en halvdel af æblet.",
       "level": 3,
       "category": "Stumme bogstaver"
     },
@@ -516,7 +516,7 @@
       "word": "hverdag",
       "hint": "En almindelig dag",
       "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Livet i hverdagen kan også være spændende.",
+      "sentence": "Det sker ikke hver hverdag men ofte nok.",
       "level": 3,
       "category": "Stumme bogstaver"
     },
@@ -532,7 +532,7 @@
       "word": "vild",
       "hint": "Ikke tam, ukontrolleret",
       "patternHint": "stumt 'd' efter 'l'",
-      "sentence": "Den vilde kat lever i skoven.",
+      "sentence": "Katten er helt vild med at lege.",
       "level": 2,
       "category": "Stumme bogstaver"
     },
@@ -748,7 +748,7 @@
       "word": "stilfærdig",
       "hint": "Rolig og beskeden",
       "patternHint": "stumt 'l' i udtalen",
-      "sentence": "Den stilfærdige pige sagde ikke meget.",
+      "sentence": "Min ven er stilfærdig og meget venlig.",
       "level": 4,
       "category": "Stumme bogstaver"
     }
@@ -758,7 +758,7 @@
       "word": "kok",
       "hint": "Person der laver mad",
       "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Kokken laver mad i køkkenet.",
+      "sentence": "Min onkel arbejder som kok på en restaurant.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -766,7 +766,7 @@
       "word": "tap",
       "hint": "Man åbner for vand",
       "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Vandet løber fra tappen.",
+      "sentence": "Drej på tap for at få vand.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -790,7 +790,7 @@
       "word": "sommer",
       "hint": "Den varme årstid",
       "patternHint": "dobbelt-m efter kort 'o'",
-      "sentence": "Om sommeren bader vi i havet.",
+      "sentence": "Til sommer skal vi på ferie.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -822,7 +822,7 @@
       "word": "vinter",
       "hint": "Den kolde årstid",
       "patternHint": "enkelt-n (kort vokal + to kons.)",
-      "sentence": "Om vinteren kan det fryse.",
+      "sentence": "Til vinter falder der måske sne.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -1070,7 +1070,7 @@
       "word": "summe",
       "hint": "Lyden en bi laver",
       "patternHint": "dobbelt 'm' efter kort vokal",
-      "sentence": "Bierne summer rundt i haven.",
+      "sentence": "Bierne begyndte at summe omkring blomsten.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -1094,7 +1094,7 @@
       "word": "kopper",
       "hint": "Man drikker af dem",
       "patternHint": "dobbelt 'p' efter kort vokal",
-      "sentence": "Mor hældte te i kopperne.",
+      "sentence": "Sæt to kopper på bordet til os.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -1102,7 +1102,7 @@
       "word": "rytter",
       "hint": "Person der rider på en hest",
       "patternHint": "dobbelt 't' efter kort vokal",
-      "sentence": "Rytteren red afsted på sin hest.",
+      "sentence": "En dygtig rytter kan styre sin hest.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -1110,7 +1110,7 @@
       "word": "nisse",
       "hint": "Lille julevæsen",
       "patternHint": "dobbelt 's' efter kort vokal",
-      "sentence": "Nissen bor på loftet.",
+      "sentence": "Julemanden har en lille nisse med sig.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -1126,7 +1126,7 @@
       "word": "trappe",
       "hint": "Man går op ad den",
       "patternHint": "dobbelt 'p' efter kort vokal",
-      "sentence": "Vi løb op ad trappen til tredje sal.",
+      "sentence": "Gå op ad trappe til første sal.",
       "level": 2,
       "category": "Dobbeltkonsonant"
     },
@@ -1190,7 +1190,7 @@
       "word": "terrasse",
       "hint": "Udeområde ved huset",
       "patternHint": "dobbelt 'r' og dobbelt 's'",
-      "sentence": "Vi spiste aftensmad på terrassen.",
+      "sentence": "Vi sidder ude på terrasse og spiser.",
       "level": 3,
       "category": "Dobbeltkonsonant"
     },
@@ -1254,7 +1254,7 @@
       "word": "kommunal",
       "hint": "Ejet af det lokale styre",
       "patternHint": "dobbelt 'm' efter kort vokal",
-      "sentence": "Den kommunale skole ligger tæt på.",
+      "sentence": "Vores skole er en kommunal skole.",
       "level": 4,
       "category": "Dobbeltkonsonant"
     },
@@ -1350,7 +1350,7 @@
       "word": "tøffel",
       "hint": "Blød indendørssko",
       "patternHint": "dobbelt 'f' efter kort vokal",
-      "sentence": "Han gik rundt i sine tøfler.",
+      "sentence": "Jeg har mistet en tøffel under sengen.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -1528,7 +1528,7 @@
       "word": "umulig",
       "hint": "Kan ikke lade sig gøre",
       "patternHint": "forstavelse 'u-'",
-      "sentence": "Det er umuligt at flyve uden vinger.",
+      "sentence": "Denne opgave er næsten umulig at løse.",
       "level": 1,
       "category": "For- og efterstavelser"
     },
@@ -1544,7 +1544,7 @@
       "word": "farlig",
       "hint": "Kan gøre ondt",
       "patternHint": "efterstavelse '-lig'",
-      "sentence": "Det er farligt at lege ved vejen.",
+      "sentence": "Det er farlig at løbe på isen.",
       "level": 1,
       "category": "For- og efterstavelser"
     },
@@ -1816,7 +1816,7 @@
       "word": "synlig",
       "hint": "Noget man kan se",
       "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
-      "sentence": "Stjernerne er synlige på en klar nat.",
+      "sentence": "Månen er synlig på himlen i aften.",
       "level": 1,
       "category": "For- og efterstavelser"
     },
@@ -1848,7 +1848,7 @@
       "word": "frihed",
       "hint": "At kunne gøre hvad man vil",
       "patternHint": "efterstavelsen '-hed' danner navneord",
-      "sentence": "Børnene nød friheden i sommerferien.",
+      "sentence": "Fuglene nyder deres frihed i naturen.",
       "level": 1,
       "category": "For- og efterstavelser"
     },
@@ -1856,7 +1856,7 @@
       "word": "modig",
       "hint": "Ikke bange",
       "patternHint": "efterstavelsen '-ig' gør ord til tillægsord",
-      "sentence": "Den modige dreng klatrede op i træet.",
+      "sentence": "Du er meget modig når du prøver noget nyt.",
       "level": 1,
       "category": "For- og efterstavelser"
     },
@@ -1888,7 +1888,7 @@
       "word": "indgang",
       "hint": "Stedet man går ind",
       "patternHint": "forstavelsen 'ind-' angiver retning",
-      "sentence": "Indgangen til skolen er der henne.",
+      "sentence": "Vi mødes ved indgang til parken.",
       "level": 2,
       "category": "For- og efterstavelser"
     },
@@ -1896,7 +1896,7 @@
       "word": "udgang",
       "hint": "Stedet man går ud",
       "patternHint": "forstavelsen 'ud-' angiver retning",
-      "sentence": "Udgangen er markeret med et grønt skilt.",
+      "sentence": "Find nærmeste udgang og gå den vej.",
       "level": 2,
       "category": "For- og efterstavelser"
     },
@@ -1920,7 +1920,7 @@
       "word": "overgang",
       "hint": "Sted man krydser over",
       "patternHint": "forstavelsen 'over-' angiver retning",
-      "sentence": "Brug altid fodgængerovergangen.",
+      "sentence": "Brug den sikre overgang ved skolen.",
       "level": 2,
       "category": "For- og efterstavelser"
     },
@@ -2008,7 +2008,7 @@
       "word": "omstændighed",
       "hint": "De forhold noget sker under",
       "patternHint": "forstavelsen 'om-' + efterstavelsen '-hed'",
-      "sentence": "Under disse omstændigheder må vi vente.",
+      "sentence": "Det var en heldig omstændighed for os.",
       "level": 4,
       "category": "For- og efterstavelser"
     },
@@ -2016,7 +2016,7 @@
       "word": "uigennemskuelig",
       "hint": "Svært at forstå",
       "patternHint": "forstavelsen 'u-' + 'igennem-' + efterstavelsen '-lig'",
-      "sentence": "Reglerne er uigennemskuelige for mange.",
+      "sentence": "Denne tekst er helt uigennemskuelig for mig.",
       "level": 4,
       "category": "For- og efterstavelser"
     },
@@ -2088,7 +2088,7 @@
       "word": "skadelig",
       "hint": "Noget der kan gøre ondt",
       "patternHint": "efterstavelse '-lig'",
-      "sentence": "For meget sukker er skadeligt for tænderne.",
+      "sentence": "For meget slik er skadelig for tænderne.",
       "level": 2,
       "category": "For- og efterstavelser"
     },
@@ -2096,7 +2096,7 @@
       "word": "barnlig",
       "hint": "Som en lille person opfører sig",
       "patternHint": "efterstavelse '-lig'",
-      "sentence": "Han havde et barnligt smil.",
+      "sentence": "Hans glæde var helt barnlig og smittende.",
       "level": 1,
       "category": "For- og efterstavelser"
     },
@@ -2104,7 +2104,7 @@
       "word": "frygtsom",
       "hint": "Bange for mange ting",
       "patternHint": "efterstavelse '-som'",
-      "sentence": "Den frygtsomme mus gemte sig.",
+      "sentence": "Den lille kanin er frygtsom og sky.",
       "level": 2,
       "category": "For- og efterstavelser"
     },
@@ -2112,7 +2112,7 @@
       "word": "uheldig",
       "hint": "Har ikke held med sig",
       "patternHint": "forstavelse 'u-'",
-      "sentence": "Det var uheldigt at det regnede.",
+      "sentence": "Det var uheldig at vi glemte nøglen.",
       "level": 1,
       "category": "For- og efterstavelser"
     },
@@ -2240,7 +2240,7 @@
       "word": "underbevidsthed",
       "hint": "Den del af tankerne man ikke styrer",
       "patternHint": "forstavelsen 'under-' + efterstavelsen '-hed'",
-      "sentence": "Drømmene kommer fra underbevidstheden.",
+      "sentence": "Din underbevidsthed arbejder mens du sover.",
       "level": 4,
       "category": "For- og efterstavelser"
     }
@@ -2282,7 +2282,7 @@
       "word": "badeværelse",
       "hint": "Rum med brusebad og toilet",
       "patternHint": "'bade' + 'værelse'",
-      "sentence": "Badeværelset er lige om hjørnet.",
+      "sentence": "Vi har et nyt badeværelse i huset.",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2306,7 +2306,7 @@
       "word": "legeplads",
       "hint": "Sted med gynger og rutsjebane",
       "patternHint": "'lege' + 'plads'",
-      "sentence": "Vi løber ned på legepladsen efter skole.",
+      "sentence": "Der er en stor legeplads ved skolen.",
       "level": 1,
       "category": "Sammensatte ord"
     },
@@ -2346,7 +2346,7 @@
       "word": "frikvarter",
       "hint": "Pause mellem timerne",
       "patternHint": "'fri' + 'kvarter'",
-      "sentence": "I frikvarteret spiller vi fodbold.",
+      "sentence": "I næste frikvarter spiller vi fodbold.",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2354,7 +2354,7 @@
       "word": "svømmehal",
       "hint": "Bygning med svømmebassiner",
       "patternHint": "'svømme' + 'hal'",
-      "sentence": "Vi tager i svømmehallen hver lørdag.",
+      "sentence": "Vi tager i svømmehal hver lørdag.",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2378,7 +2378,7 @@
       "word": "fodboldbane",
       "hint": "Bane man spiller på",
       "patternHint": "'fod' + 'bold' + 'bane'",
-      "sentence": "Vi mødes nede på fodboldbanen.",
+      "sentence": "Der er en stor fodboldbane bag skolen.",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2442,7 +2442,7 @@
       "word": "håndboldkamp",
       "hint": "Kamp i håndbold",
       "patternHint": "'hånd' + 'bold' + 'kamp'",
-      "sentence": "Vi vandt håndboldkampen i sidste sekund.",
+      "sentence": "Vi skal se en håndboldkamp i hallen.",
       "level": 3,
       "category": "Sammensatte ord"
     },
@@ -2538,7 +2538,7 @@
       "word": "cykelsti",
       "hint": "Sti kun til cykler",
       "patternHint": "'cykel' + 'sti'",
-      "sentence": "Vi cykler på cykelstien langs åen.",
+      "sentence": "Der er en ny cykelsti langs vejen.",
       "level": 1,
       "category": "Sammensatte ord"
     },
@@ -2546,7 +2546,7 @@
       "word": "sandkasse",
       "hint": "Sted med sand til leg",
       "patternHint": "sammensat af 'sand' + 'kasse'",
-      "sentence": "Børnene leger i sandkassen.",
+      "sentence": "Børnene leger i en sandkasse i haven.",
       "level": 1,
       "category": "Sammensatte ord"
     },
@@ -2562,7 +2562,7 @@
       "word": "isterning",
       "hint": "Frossen vandklump",
       "patternHint": "sammensat af 'is' + 'terning'",
-      "sentence": "Vil du have isterninger i din juice?",
+      "sentence": "Læg en isterning i glasset med saft.",
       "level": 1,
       "category": "Sammensatte ord"
     },
@@ -2626,7 +2626,7 @@
       "word": "vandkande",
       "hint": "Kande til at vande blomster",
       "patternHint": "sammensat af 'vand' + 'kande'",
-      "sentence": "Hent vandkanden, så vi kan vande blomsterne.",
+      "sentence": "Hent en vandkande til blomsterne.",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2650,7 +2650,7 @@
       "word": "barnepige",
       "hint": "En der passer børn",
       "patternHint": "sammensat med fuge-e: 'barne' + 'pige'",
-      "sentence": "Barnepigen legede med børnene hele aftenen.",
+      "sentence": "Vores barnepige leger altid med os.",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2722,7 +2722,7 @@
       "word": "havneområde",
       "hint": "Område ved havnen",
       "patternHint": "sammensat med fuge-e: 'havne' + 'område'",
-      "sentence": "Havneområdet er blevet renoveret.",
+      "sentence": "Der er et stort havneområde i byen.",
       "level": 3,
       "category": "Sammensatte ord"
     },
@@ -2826,7 +2826,7 @@
       "word": "skolegård",
       "hint": "Udendørs areal ved en skole",
       "patternHint": "'skole' + 'gård'",
-      "sentence": "Vi spiller bold i skolegården.",
+      "sentence": "Vi spiller bold i vores skolegård.",
       "level": 1,
       "category": "Sammensatte ord"
     },
@@ -2842,7 +2842,7 @@
       "word": "fiskedam",
       "hint": "Lille sø med svømmende dyr",
       "patternHint": "sammensat med fuge-e: 'fiske' + 'dam'",
-      "sentence": "Der var guldfisk i fiskedammen.",
+      "sentence": "Der er en fiskedam nede i parken.",
       "level": 1,
       "category": "Sammensatte ord"
     },
@@ -2874,7 +2874,7 @@
       "word": "legehus",
       "hint": "Lille hus til børn i haven",
       "patternHint": "sammensat med fuge-e: 'lege' + 'hus'",
-      "sentence": "Børnene legede i legehuset.",
+      "sentence": "Vi har et legehus ude i haven.",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2890,7 +2890,7 @@
       "word": "fuglebad",
       "hint": "Skål med vand til fugle i haven",
       "patternHint": "sammensat med fuge-e: 'fugle' + 'bad'",
-      "sentence": "Solsorten badede i fuglebadet.",
+      "sentence": "Der står et fuglebad ude i haven.",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2898,7 +2898,7 @@
       "word": "postkasse",
       "hint": "Boks til breve ved hoveddøren",
       "patternHint": "'post' + 'kasse'",
-      "sentence": "Der lå et brev i postkassen.",
+      "sentence": "Er der noget i vores postkasse i dag?",
       "level": 2,
       "category": "Sammensatte ord"
     },
@@ -2922,7 +2922,7 @@
       "word": "livredder",
       "hint": "Person der redder folk fra at drukne",
       "patternHint": "'liv' + 'redder'",
-      "sentence": "Livredderen holdt øje med de badende.",
+      "sentence": "Der sidder en livredder ved bassinet.",
       "level": 3,
       "category": "Sammensatte ord"
     },
@@ -2938,7 +2938,7 @@
       "word": "tilstandsrapport",
       "hint": "Dokument der beskriver noget kvalitet",
       "patternHint": "sammensat med fuge-s: 'tilstands' + 'rapport'",
-      "sentence": "Tilstandsrapporten viste at huset var i god stand.",
+      "sentence": "Vi fik en tilstandsrapport på huset.",
       "level": 3,
       "category": "Sammensatte ord"
     },
@@ -2946,7 +2946,7 @@
       "word": "sikkerhedsbælte",
       "hint": "Rem i en bil der beskytter passagerer",
       "patternHint": "sammensat med fuge-s: 'sikkerheds' + 'bælte'",
-      "sentence": "Husk altid at spænde sikkerhedsbæltet.",
+      "sentence": "Husk at spænde dit sikkerhedsbælte i bilen.",
       "level": 4,
       "category": "Sammensatte ord"
     },
@@ -2962,7 +2962,7 @@
       "word": "kommunalbestyrelse",
       "hint": "Politisk organ der styrer en kommune",
       "patternHint": "sammensat af 'kommunal' + 'bestyrelse'",
-      "sentence": "Kommunalbestyrelsen holdt møde om den nye skole.",
+      "sentence": "En kommunalbestyrelse styrer en kommune.",
       "level": 4,
       "category": "Sammensatte ord"
     },
@@ -4134,7 +4134,7 @@
       "word": "ænder",
       "hint": "Flere fugle der siger rap",
       "patternHint": "flertal med vokalskifte: and → ænder",
-      "sentence": "Ænderne svømmer i søen.",
+      "sentence": "Vi fodrede ænder nede ved søen.",
       "level": 3,
       "category": "Navneordsendelser"
     },
@@ -4166,7 +4166,7 @@
       "word": "bønder",
       "hint": "Flere der arbejder på en gård",
       "patternHint": "flertal med vokalskifte: bonde → bønder",
-      "sentence": "Bønderne dyrker korn på markerne.",
+      "sentence": "Mange bønder dyrker korn på markerne.",
       "level": 3,
       "category": "Navneordsendelser"
     },
@@ -4448,7 +4448,7 @@
       "word": "sol",
       "hint": "Den skinner på himlen",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Solen skinner i dag.",
+      "sentence": "I dag skinner sol fra en blå himmel.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4456,7 +4456,7 @@
       "word": "mus",
       "hint": "Lille dyr med lang hale",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Musen løb hen over gulvet.",
+      "sentence": "Der gemte sig en lille mus under sengen.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4472,7 +4472,7 @@
       "word": "kat",
       "hint": "Dyr der siger mjav",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Katten sover på sofaen.",
+      "sentence": "Vi har en kat der hedder Misser.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4480,7 +4480,7 @@
       "word": "hund",
       "hint": "Dyr der siger vov",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Hunden leger i haven.",
+      "sentence": "Min nabo har en hund der er meget stor.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4496,7 +4496,7 @@
       "word": "lam",
       "hint": "Et lille får",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Lammet spiser græs på marken.",
+      "sentence": "Der er et lille lam på bondegården.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4528,7 +4528,7 @@
       "word": "bus",
       "hint": "Stor vogn med mange pladser",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Vi tager bussen til skole.",
+      "sentence": "Vi tager med bus til skolen.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4584,7 +4584,7 @@
       "word": "ko",
       "hint": "Stort dyr på bondegården",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Koen giver mælk.",
+      "sentence": "Der står en ko ude på marken.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4592,7 +4592,7 @@
       "word": "sø",
       "hint": "Vand i naturen",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Vi bader i søen.",
+      "sentence": "Vi bor tæt på en sø.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4608,7 +4608,7 @@
       "word": "lampe",
       "hint": "Giver lys i mørket",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Lampen lyser i stuen.",
+      "sentence": "Tænd den store lampe i stuen.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4616,7 +4616,7 @@
       "word": "fisk",
       "hint": "Dyr der lever i vand",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Fisken svømmer i akvariet.",
+      "sentence": "Vi fangede en stor fisk i søen.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4648,7 +4648,7 @@
       "word": "sofa",
       "hint": "Man sidder i den",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Vi sidder i sofaen og ser fjernsyn.",
+      "sentence": "Vi har en blød sofa i stuen.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4656,7 +4656,7 @@
       "word": "panda",
       "hint": "Sort og hvid bjørn",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Pandaen spiser bambus.",
+      "sentence": "En panda spiser mest bambus.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4664,7 +4664,7 @@
       "word": "tiger",
       "hint": "Stort stribet rovdyr",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Tigeren lever i junglen.",
+      "sentence": "En tiger har sorte striber.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4672,7 +4672,7 @@
       "word": "gulerod",
       "hint": "Orange grøntsag",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Kaninen elsker gulerødder.",
+      "sentence": "Kaninen spiser en gulerod fra haven.",
       "level": 2,
       "category": "Lydrette ord"
     },
@@ -4704,7 +4704,7 @@
       "word": "hest",
       "hint": "Stort dyr man kan ride på",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Hesten galopperede over marken.",
+      "sentence": "Min kusine har en hest.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4720,7 +4720,7 @@
       "word": "finger",
       "hint": "Sidder på hånden",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Hun skar sig på fingeren.",
+      "sentence": "Jeg skar mig på min finger i køkkenet.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4736,7 +4736,7 @@
       "word": "melon",
       "hint": "Stor rund frugt med frø indeni",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Vi delte en vandmelon til dessert.",
+      "sentence": "Vi delte en stor melon til dessert.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4744,7 +4744,7 @@
       "word": "spand",
       "hint": "Beholder med hank til vand eller sand",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Han fyldte spanden med sand.",
+      "sentence": "Tag en spand og fyld den med vand.",
       "level": 1,
       "category": "Lydrette ord"
     },
@@ -4768,7 +4768,7 @@
       "word": "ambulance",
       "hint": "Køretøj der henter syge mennesker",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Ambulancen kørte med udrykning.",
+      "sentence": "Vi hørte en ambulance køre forbi.",
       "level": 3,
       "category": "Lydrette ord"
     },
@@ -4776,7 +4776,7 @@
       "word": "elefant",
       "hint": "Kæmpestort dyr med snabel",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Elefanten sprøjtede vand med snablen.",
+      "sentence": "En elefant har en lang snabel.",
       "level": 2,
       "category": "Lydrette ord"
     },
@@ -4784,7 +4784,7 @@
       "word": "lokomotiv",
       "hint": "Maskinen forrest på et tog",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Lokomotivet trak de mange vogne.",
+      "sentence": "Forrest på toget kører et lokomotiv.",
       "level": 2,
       "category": "Lydrette ord"
     },
@@ -4792,7 +4792,7 @@
       "word": "karrusel",
       "hint": "Man kører rundt i den i en forlystelsespark",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Børnene elskede at køre i karrusellen.",
+      "sentence": "Vi kørte i karrusel i Tivoli.",
       "level": 3,
       "category": "Lydrette ord"
     },
@@ -4808,7 +4808,7 @@
       "word": "temperatur",
       "hint": "Mål for varme eller kulde",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Temperaturen steg til tredive grader.",
+      "sentence": "Mål din temperatur med et termometer.",
       "level": 3,
       "category": "Lydrette ord"
     },
@@ -4816,7 +4816,7 @@
       "word": "maskerade",
       "hint": "Fest hvor man er klædt ud",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Til maskeraden gik hun som prinsesse.",
+      "sentence": "Vi skal til maskerade på fredag.",
       "level": 3,
       "category": "Lydrette ord"
     },
@@ -4840,7 +4840,7 @@
       "word": "katastrofe",
       "hint": "En stor ulykke",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Oversvømmelsen var en naturkatastrofe.",
+      "sentence": "Stormen var en katastrofe for byen.",
       "level": 4,
       "category": "Lydrette ord"
     },
@@ -4872,7 +4872,7 @@
       "word": "kapelmester",
       "hint": "Leder af et orkester",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Kapelmesteren dirigerede symfonien.",
+      "sentence": "En kapelmester leder hele orkestret.",
       "level": 4,
       "category": "Lydrette ord"
     },
@@ -4880,7 +4880,7 @@
       "word": "bi",
       "hint": "Lille insekt der laver honning",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Bien fløj hen til blomsten.",
+      "sentence": "En lille bi fløj hen til blomsten.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4968,7 +4968,7 @@
       "word": "lys",
       "hint": "Det skinner i mørket",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Tænd lyset i stuen.",
+      "sentence": "Der er dejligt lys i rummet.",
       "level": 0,
       "category": "Lydrette ord"
     },
@@ -4984,7 +4984,7 @@
       "word": "top",
       "hint": "Det allerhøjeste punkt",
       "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Vi nåede op til toppen.",
+      "sentence": "Vi nåede helt op til top af bakken.",
       "level": 0,
       "category": "Lydrette ord"
     }

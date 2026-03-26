@@ -1163,15 +1163,17 @@
     <div class="score-box"><div class="num num-red" id="scoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
   </div>
   <div class="pattern-badge" id="patternBadge">&#x1F520; Mønster</div>
-  <div class="listen-box">
-    <div class="word-flash" id="wordFlash"></div>
-    <div class="countdown-bar-wrap" id="countdownWrap"><div class="countdown-bar" id="countdownBar"></div></div>
-    <p class="hint-text" id="wordHint" style="margin-bottom:8px">Husk ordet og stav det!</p>
-    <p id="wordSentence" style="font-size:0.88rem;color:var(--muted);font-style:italic;margin-bottom:12px;min-height:1.2em;line-height:1.5;padding:0 8px"></p>
-    <button class="btn-listen" id="listenBtn" onclick="speakCurrentWord()">&#x1F508; Hør ordet igen</button>
+  <div style="position:relative">
+    <div class="listen-box" id="listenBox">
+      <div class="word-flash" id="wordFlash"></div>
+      <div class="countdown-bar-wrap" id="countdownWrap"><div class="countdown-bar" id="countdownBar"></div></div>
+      <p class="hint-text" id="wordHint" style="margin-bottom:8px">Husk ordet og stav det!</p>
+      <p id="wordSentence" style="font-size:0.88rem;color:var(--muted);font-style:italic;margin-bottom:12px;min-height:1.2em;line-height:1.5;padding:0 8px"></p>
+      <button class="btn-listen" id="listenBtn" onclick="speakCurrentWord()">&#x1F508; Hør ordet igen</button>
+    </div>
+    <div id="feedbackBox" style="display:none;position:absolute;top:0;left:0;right:0;bottom:0;border-radius:14px;z-index:10;align-items:center;justify-content:center;padding:16px"></div>
   </div>
   <input type="text" id="spellingInput" placeholder="Skriv ordet her..." autocomplete="off" autocorrect="off" spellcheck="false" />
-  <div id="feedbackBox" style="display:none; margin-top:12px;"></div>
   <button class="btn btn-primary btn-full" id="checkBtn" onclick="checkSpelling()" style="margin-top:14px">&#x270F;&#xFE0F; Tjek stavning</button>
   <button class="btn btn-green btn-full hidden" id="nextBtn" onclick="nextWord()">&#x27A1;&#xFE0F; Næste ord</button>
 </div>
@@ -2654,7 +2656,7 @@ function checkSpelling() {
   if (!ans) return;
   var ok = ans === w.word.toLowerCase();
   var box = document.getElementById('feedbackBox');
-  box.style.display = 'block';
+  box.style.display = 'flex';
 
   // Single attempt — no retry
   var result = { word: w.word, correct: ok, selfCorrected: false, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
@@ -2673,11 +2675,12 @@ function checkSpelling() {
   }
 
   if (ok) {
-    box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! Flot klaret! \u{1F389}</div>';
+    box.style.background = 'rgba(16,185,129,0.15)';
+    box.innerHTML = '<div style="text-align:center;font-size:1.2rem;font-weight:700;color:var(--green)">\u2705 Rigtigt! Flot klaret! \u{1F389}</div>';
   } else {
-    var feedbackHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + ans + '</strong><br>' +
+    box.style.background = 'rgba(239,68,68,0.15)';
+    box.innerHTML = '<div style="text-align:center;font-size:1.1rem;font-weight:700;color:var(--red)">\u274C Du skrev: <strong>' + ans + '</strong><br>' +
       'Rigtigt: <span style="color:var(--green)">' + diffHighlight(w.word, ans) + '</span></div>';
-    box.innerHTML = feedbackHTML;
   }
 
   // Streak and boss/chest trigger (reward-based)

@@ -5203,7 +5203,7 @@ function updateWelcomeAvatar() {
   var el = document.getElementById('avatarEmoji');
   if (el) {
     if (displayedLevel.image) {
-      el.innerHTML = '<img src="' + displayedLevel.image + '" alt="' + displayedLevel.title + '" style="width:4rem;height:4rem;object-fit:contain">';
+      el.innerHTML = '<img src="' + displayedLevel.image + '" alt="' + displayedLevel.title + '" style="width:5rem;height:5rem;object-fit:contain">';
     } else {
       el.textContent = displayedLevel.emoji;
     }
@@ -5286,7 +5286,7 @@ function doLevelUp() {
   // Phase 2: New avatar appears
   setTimeout(function() {
     if (newLevel.image) {
-      emojiEl.innerHTML = '<img src="' + newLevel.image + '" alt="' + newLevel.title + '" style="width:4rem;height:4rem;object-fit:contain">';
+      emojiEl.innerHTML = '<img src="' + newLevel.image + '" alt="' + newLevel.title + '" style="width:5rem;height:5rem;object-fit:contain">';
     } else {
       emojiEl.textContent = newLevel.emoji;
     }

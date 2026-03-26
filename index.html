@@ -1093,7 +1093,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.7</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.8</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1146,6 +1146,7 @@
       <div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%;background:linear-gradient(90deg,var(--green),var(--accent))"></div></div>
     </div>
     <div id="avatarProgressLabel" style="font-size:0.75rem;color:var(--muted)"></div>
+    <div id="welcomeGemsDisplay" style="font-size:0.85rem;color:var(--blue);font-weight:700;margin-top:6px">&#x1F48E; 0</div>
     <button class="btn btn-accent hidden" id="levelUpBtn" onclick="doLevelUp()" style="margin-top:10px;padding:12px 28px;font-size:1.1rem">&#x2B50; Level Up!</button>
   </div>
 
@@ -1544,8 +1545,6 @@ function selectPlayer(name) {
 function switchPlayer() {
   activePlayer = '';
   hide('phase-welcome');
-  hide('rewardBar');
-  hide('rewardXPBarWrap');
   var panel = document.getElementById('settingsPanel');
   if (panel) panel.classList.remove('open');
   show('phase-profile-picker');
@@ -1951,8 +1950,6 @@ function goHome() {
   updateWelcomeAvatar();
   renderCategoryLevels();
   // Hide reward bar on welcome (welcome has its own streak display)
-  hide('rewardBar');
-  hide('rewardXPBarWrap');
 }
 
 // Grade selector
@@ -2426,8 +2423,6 @@ function startTrainingFromProfile() {
 
   mixedIndex = 0;
   hide('phase-welcome');
-  show('rewardBar');
-  show('rewardXPBarWrap');
   updateRewardBar();
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
 
@@ -2627,8 +2622,6 @@ function finishMixedTraining() {
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
   }
-  show('rewardBar');
-  show('rewardXPBarWrap');
   renderTrainingResults();
 }
 
@@ -2652,8 +2645,6 @@ function startReview() {
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   hide('phase-welcome');
   show('phase-test');
-  show('rewardBar');
-  show('rewardXPBarWrap');
   updateRewardBar();
   var b = document.createElement('div');
   b.className = 'session-badge';
@@ -2875,8 +2866,6 @@ function finishTest() {
   }
 
   // Show reward bar now that we're leaving the test phase
-  show('rewardBar');
-  show('rewardXPBarWrap');
 
   if (gameMode === 'review') {
     renderReviewResults();
@@ -5461,6 +5450,10 @@ function updateWelcomeAvatar() {
     }
   }
 
+  // Gems display
+  var gemsEl = document.getElementById('welcomeGemsDisplay');
+  if (gemsEl) gemsEl.innerHTML = '\u{1F48E} ' + (data.gems || 0);
+
   // Level Up button
   var btn = document.getElementById('levelUpBtn');
   if (btn) {
@@ -6452,8 +6445,6 @@ function startFillIn() {
 
   hide('phase-welcome');
   show('phase-fillin');
-  show('rewardBar');
-  show('rewardXPBarWrap');
   updateRewardBar();
 
   var b = document.createElement('div');
@@ -6669,8 +6660,6 @@ function finishFillIn() {
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
   }
-  show('rewardBar');
-  show('rewardXPBarWrap');
 
   // Render results
   renderFillInResults();
@@ -6911,8 +6900,6 @@ function startRightOrWrong() {
 
   hide('phase-welcome');
   show('phase-rightorwrong');
-  show('rewardBar');
-  show('rewardXPBarWrap');
   updateRewardBar();
 
   var b = document.createElement('div');
@@ -7098,8 +7085,6 @@ function finishRightOrWrong() {
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
   }
-  show('rewardBar');
-  show('rewardXPBarWrap');
 
   renderRightOrWrongResults();
 }
@@ -7247,8 +7232,6 @@ function startSpellingPolice() {
 
   hide('phase-welcome');
   show('phase-spellingpolice');
-  show('rewardBar');
-  show('rewardXPBarWrap');
   updateRewardBar();
 
   var b = document.createElement('div');
@@ -7412,8 +7395,6 @@ function finishSpellingPolice() {
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
   }
-  show('rewardBar');
-  show('rewardXPBarWrap');
 
   renderSpellingPoliceResults();
 }
@@ -7570,8 +7551,6 @@ function startWordBuilder() {
 
   hide('phase-welcome');
   show('phase-wordbuilder');
-  show('rewardBar');
-  show('rewardXPBarWrap');
   updateRewardBar();
 
   var b = document.createElement('div');
@@ -7780,8 +7759,6 @@ function finishWordBuilder() {
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
   }
-  show('rewardBar');
-  show('rewardXPBarWrap');
 
   renderWBResults();
 }
@@ -7856,8 +7833,6 @@ function startSpellPick() {
 
   hide('phase-welcome');
   show('phase-spellpick');
-  show('rewardBar');
-  show('rewardXPBarWrap');
   updateRewardBar();
 
   // Fetch misspellings for all words, then render
@@ -8010,8 +7985,6 @@ function finishSpellPick() {
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
   }
-  show('rewardBar');
-  show('rewardXPBarWrap');
 
   renderSpkResults();
 }

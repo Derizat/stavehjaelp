@@ -1093,7 +1093,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.1.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.1.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1906,7 +1906,8 @@ var LEVEL_LABELS = {
   1: { text: "\u{1F7E2} Niveau 1", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
   2: { text: "\u{1F7E1} Niveau 2", bg: "rgba(245,166,35,0.15)", color: "var(--accent)" },
   3: { text: "\u{1F7E0} Niveau 3", bg: "rgba(249,115,22,0.15)", color: "#f97316" },
-  4: { text: "\u2B50 Mestret", bg: "rgba(244,63,94,0.15)", color: "var(--red)" }
+  4: { text: "\u{1F534} Niveau 4", bg: "rgba(244,63,94,0.15)", color: "var(--red)" },
+  5: { text: "\u2B50 Mestret", bg: "rgba(168,85,247,0.15)", color: "#a855f7" }
 };
 
 var LEVEL_GRADE_MAP = {
@@ -1914,7 +1915,8 @@ var LEVEL_GRADE_MAP = {
   1: "Niveau 1",
   2: "Niveau 2",
   3: "Niveau 3",
-  4: "Mestret"
+  4: "Niveau 4",
+  5: "Mestret"
 };
 
 // State
@@ -2006,7 +2008,7 @@ function updateSRWord(word, correct, category) {
   var sr = loadSRData();
   if (!sr.words) sr.words = {};
   if (!sr.words[word]) { sr.words[word] = { level: 0, nextReview: Date.now(), category: category }; }
-  if (correct) { sr.words[word].level = Math.min(sr.words[word].level + 1, 4); }
+  if (correct) { sr.words[word].level = Math.min(sr.words[word].level + 1, 5); }
   else { sr.words[word].level = 0; }
   var interval = SR_INTERVALS[sr.words[word].level] || 0;
   sr.words[word].nextReview = Date.now() + interval;
@@ -2076,7 +2078,7 @@ function updateCategoryLevel(category, correct) {
 
   var total = cat.history.length;
   var correctCount = cat.history.filter(function(h) { return h; }).length;
-  var maxLevel = CATEGORY_MAX_LEVELS[category] !== undefined ? CATEGORY_MAX_LEVELS[category] : 4;
+  var maxLevel = CATEGORY_MAX_LEVELS[category] !== undefined ? CATEGORY_MAX_LEVELS[category] : 5;
 
   // New player fast-track: level up after 2 correct when <5 total answers
   if (total < 5 && correctCount >= 2 && cat.level < maxLevel) {
@@ -2102,7 +2104,7 @@ function buildPoolForCategory(cat, catLevel) {
   var pool = (WORD_BANK[cat] || []).filter(function(w) { return w.level === catLevel; });
   if (pool.length < 3) {
     pool = (WORD_BANK[cat] || []).filter(function(w) {
-      return w.level >= Math.max(0, catLevel - 1) && w.level <= Math.min(4, catLevel + 1);
+      return w.level >= Math.max(0, catLevel - 1) && w.level <= Math.min(5, catLevel + 1);
     });
   }
   return pool.map(function(w) { return Object.assign({}, w, { category: cat }); });
@@ -2898,8 +2900,8 @@ function renderTrainingResults() {
   results.forEach(function(r) {
     var srWord = sr.words[r.word];
     var level = srWord ? srWord.level : 0;
-    var levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
-    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+    var levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Niveau 4', 'Mestret!'];
+    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--red)', 'var(--green)'];
     html += '<div class="word-attempt">';
     html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
     html += '<span>';
@@ -2952,8 +2954,8 @@ function renderReviewResults() {
   results.forEach(function(r) {
     var srWord = sr.words[r.word];
     var level = srWord ? srWord.level : 0;
-    var levelNames = ['Nulstillet', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
-    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+    var levelNames = ['Nulstillet', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Niveau 4', 'Mestret!'];
+    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--red)', 'var(--green)'];
     html += '<div class="word-attempt">';
     html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
     html += '<span>';
@@ -3469,7 +3471,7 @@ function showBossMinigame(bossData) {
   if (battleType === 'memory' && bossData.category) {
     var levels = loadCategoryLevels();
     var catLvl = (levels[bossData.category] && levels[bossData.category].level !== undefined) ? levels[bossData.category].level : 1;
-    var memLevel = Math.min(4, catLvl + 2);
+    var memLevel = Math.min(5, catLvl + 2);
     var memPool = (WORD_BANK[bossData.category] || []).filter(function(w) { return w.level === memLevel; });
     if (memPool.length === 0) memPool = (WORD_BANK[bossData.category] || []).filter(function(w) { return w.level >= catLvl + 1; });
     if (memPool.length > 0) {
@@ -6688,8 +6690,8 @@ function renderFillInResults() {
   fillinResults.forEach(function(r) {
     var srWord = sr.words[r.word];
     var level = srWord ? srWord.level : 0;
-    var levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
-    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+    var levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Niveau 4', 'Mestret!'];
+    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--red)', 'var(--green)'];
     html += '<div class="word-attempt">';
     html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
     html += '<span>';
@@ -8155,7 +8157,7 @@ function renderCategoryLevels() {
   var el = document.getElementById('categoryLevelsDisplay');
   if (!el || ALL_CATEGORIES.length === 0) return;
   var levels = loadCategoryLevels();
-  var levelColors = ['#9ca3af', '#22d3a0', '#f5a623', '#f97316', '#f43f5e'];
+  var levelColors = ['#9ca3af', '#22d3a0', '#f5a623', '#f97316', '#f43f5e', '#a855f7'];
   var html = '<div style="background:var(--card2);border-radius:12px;padding:12px 14px;border:1px solid #3d4270">' +
     '<div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:8px">Kategoriniveauer (dev)</div>';
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {

@@ -3586,6 +3586,7 @@ var BOSS_INSTRUCTIONS = {
 };
 
 var bossPracticeMode = false;
+var bossPracticeType = null;
 
 function showBossPicker() {
   var container = document.getElementById('bossPickerButtons');
@@ -3607,6 +3608,7 @@ function hideBossPicker() {
 function startBossPractice(battleType) {
   hideBossPicker();
   bossPracticeMode = true;
+  bossPracticeType = battleType;
   // Pick a random word from the word bank
   var allWords = [];
   var cats = Object.keys(WORD_BANK);
@@ -4911,10 +4913,9 @@ function continueAfterBoss() {
   pendingBoss = null;
   hide('phase-boss');
 
-  // Boss practice mode — go back to welcome
+  // Boss practice mode — start another fight of the same type
   if (bossPracticeMode) {
-    bossPracticeMode = false;
-    goHome();
+    startBossPractice(bossPracticeType);
     return;
   }
 

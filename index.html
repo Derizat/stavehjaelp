@@ -1341,6 +1341,24 @@
   <button class="btn btn-green btn-full hidden" id="wbNextBtn" onclick="nextWBWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
+<!-- SPELL PICK EXERCISE -->
+<div id="phase-spellpick" class="card hidden">
+  <div class="phase-label">&#x1F3AF; Stavev&#xe6;lger</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="spkProgressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="spkWordNum">1</div><div class="lbl">Ord nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="spkScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="spkScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
+  </div>
+  <div class="listen-box">
+    <p class="hint-text" id="spkHint"></p>
+    <button class="btn-listen" id="spkListenBtn" onclick="speakSpkWord()">&#x1F508; H&#xf8;r ordet</button>
+  </div>
+  <div id="spkOptions" style="display:flex;flex-direction:column;gap:10px;max-width:320px;margin:12px auto 0"></div>
+  <div id="spkFeedbackBox" style="display:none; margin-top:12px;"></div>
+  <button class="btn btn-green btn-full hidden" id="spkNextBtn" onclick="nextSpkWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
+</div>
+
 <!-- SPELLING POLICE EXERCISE -->
 <div id="phase-spellingpolice" class="card hidden">
   <div class="phase-label">&#x1F50D; Stavepolitiet</div>
@@ -2404,7 +2422,7 @@ function startTrainingFromProfile() {
 }
 
 function hideAllExercisePhases() {
-  ['phase-test', 'phase-fillin', 'phase-rightorwrong', 'phase-spellingpolice', 'phase-wordbuilder', 'phase-sentence'].forEach(function(id) { hide(id); });
+  ['phase-test', 'phase-fillin', 'phase-rightorwrong', 'phase-spellingpolice', 'phase-wordbuilder', 'phase-sentence', 'phase-spellpick'].forEach(function(id) { hide(id); });
 }
 
 function renderMixedItem() {
@@ -3235,7 +3253,7 @@ var BOSS_MONSTERS = {
   "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex" }
 };
 
-var BOSS_BATTLE_TYPES = ['scramble', 'memory', 'cardcast', 'spellpick', 'silentservant'];
+var BOSS_BATTLE_TYPES = ['scramble', 'memory', 'cardcast', 'silentservant'];
 var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];
 var BOSS_IDLE_ANIMS = ['boss-idle-float', 'boss-idle-pulse', 'boss-idle-wobble'];
 var BOSS_VICTORY_MSGS = [
@@ -3271,7 +3289,8 @@ var EXERCISE_TYPES = [
   { id: 'fillin', emoji: '\u{270F}\uFE0F', name: 'Udfyld bogstav', fn: 'startFillIn' },
   { id: 'rightorwrong', emoji: '\u{2705}', name: 'Rigtigt/forkert', fn: 'startRightOrWrong' },
   { id: 'spellingpolice', emoji: '\u{1F46E}', name: 'Stavepolitiet', fn: 'startSpellingPolice' },
-  { id: 'wordbuilder', emoji: '\u{1F9F1}', name: 'Ordbyggeren', fn: 'startWordBuilder' }
+  { id: 'wordbuilder', emoji: '\u{1F9F1}', name: 'Ordbyggeren', fn: 'startWordBuilder' },
+  { id: 'spellpick', emoji: '\u{1F3AF}', name: 'Stavev\u00E6lger', fn: 'startSpellPick' }
 ];
 
 function showExercisePicker() {
@@ -5099,6 +5118,7 @@ function continueAfterBoss() {
     else if (gameMode === 'spellingpolice') show('phase-spellingpolice');
     else if (gameMode === 'wordbuilder') show('phase-wordbuilder');
     else if (gameMode === 'sentence') show('phase-sentence');
+    else if (gameMode === 'spellpick') show('phase-spellpick');
     else show('phase-test');
   }
   proceedAfterInterrupt();
@@ -5153,6 +5173,16 @@ function proceedAfterInterrupt() {
     } else {
       show('phase-wordbuilder');
       renderWBWord();
+    }
+    return;
+  }
+
+  if (gameMode === 'spellpick') {
+    if (action === 'finish') {
+      finishSpellPick();
+    } else {
+      show('phase-spellpick');
+      renderSpkWord();
     }
     return;
   }
@@ -7745,6 +7775,236 @@ function renderWBResults() {
 
   html += '<hr class="divider">';
   html += '<button class="btn btn-green btn-full" onclick="startWordBuilder()">\u{1F9E9} Ny runde</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ===== SPELL PICK EXERCISE =====
+
+var spkWords = [], spkIndex = 0, spkResults = [];
+
+function startSpellPick() {
+  var profile = loadProfile() || {};
+  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
+  isMixedSession = false;
+  gameMode = 'spellpick';
+  pendingBoss = null;
+  pendingLesson = false;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  pendingChest = false;
+
+  var pool = buildPoolWithCategoryLevels(categories);
+  if (pool.length === 0) {
+    for (var ci2 = 0; ci2 < categories.length; ci2++) {
+      var cat2 = categories[ci2];
+      if (!WORD_BANK[cat2]) continue;
+      pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
+    }
+  }
+  pool = shuffle(pool);
+  spkWords = pool.slice(0, 10);
+
+  if (spkWords.length < 3) {
+    alert('Ikke nok ord til Stavev\u00E6lger.');
+    return;
+  }
+
+  spkIndex = 0;
+  spkResults = [];
+  results = [];
+
+  document.getElementById('spkScoreCorrect').textContent = '0';
+  document.getElementById('spkScoreWrong').textContent = '0';
+
+  hide('phase-welcome');
+  show('phase-spellpick');
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  updateRewardBar();
+
+  // Fetch misspellings for all words, then render
+  var wordList = spkWords.map(function(w) { return w.word.toLowerCase(); });
+  fetchMisspellings(wordList, function(misByWord) {
+    for (var i = 0; i < spkWords.length; i++) {
+      spkWords[i]._dbMis = misByWord[spkWords[i].word.toLowerCase()] || [];
+    }
+    renderSpkWord();
+  });
+}
+
+function speakSpkWord() {
+  if (spkWords[spkIndex]) speakWord(spkWords[spkIndex].word, null);
+}
+
+function renderSpkWord() {
+  if (spkIndex >= spkWords.length) { finishSpellPick(); return; }
+  var w = spkWords[spkIndex];
+  var word = w.word.toLowerCase();
+
+  document.getElementById('spkWordNum').textContent = (spkIndex + 1);
+  document.getElementById('spkProgressBar').style.width = ((spkIndex / spkWords.length) * 100) + '%';
+  document.getElementById('spkHint').textContent = '\u{1F4A1} ' + w.hint;
+  document.getElementById('spkFeedbackBox').style.display = 'none';
+  document.getElementById('spkNextBtn').classList.add('hidden');
+
+  // Build 4 options: 1 correct + up to 3 wrong
+  var options = [word];
+
+  // Real misspellings from DB
+  var dbMis = (w._dbMis || []).slice();
+  for (var di = dbMis.length - 1; di > 0; di--) {
+    var dj = Math.floor(Math.random() * (di + 1));
+    var dt = dbMis[di]; dbMis[di] = dbMis[dj]; dbMis[dj] = dt;
+  }
+  for (var dbi = 0; dbi < dbMis.length && options.length < 4; dbi++) {
+    if (options.indexOf(dbMis[dbi]) < 0) options.push(dbMis[dbi]);
+  }
+
+  // Category-aware misspelling
+  if (options.length < 4) {
+    var mis = generateMisspelling(w);
+    if (mis && mis.misspelled && options.indexOf(mis.misspelled.toLowerCase()) < 0) {
+      options.push(mis.misspelled.toLowerCase());
+    }
+  }
+
+  // Fallback misspellings
+  if (options.length < 4) {
+    var fallbacks = generateFallbackMisspellings(word);
+    for (var fi = 0; fi < fallbacks.length && options.length < 4; fi++) {
+      if (options.indexOf(fallbacks[fi]) < 0) options.push(fallbacks[fi]);
+    }
+  }
+
+  // Shuffle
+  for (var si = options.length - 1; si > 0; si--) {
+    var sj = Math.floor(Math.random() * (si + 1));
+    var tmp = options[si]; options[si] = options[sj]; options[sj] = tmp;
+  }
+
+  var container = document.getElementById('spkOptions');
+  var html = '';
+  for (var oi = 0; oi < options.length; oi++) {
+    html += '<button class="btn btn-primary" style="font-size:1.15rem;letter-spacing:2px;padding:14px 20px" onclick="pickSpkOption(this,\'' + options[oi].replace(/'/g, "\\'") + '\')">' + options[oi] + '</button>';
+  }
+  container.innerHTML = html;
+
+  speakWord(word, null);
+}
+
+function pickSpkOption(btn, picked) {
+  var w = spkWords[spkIndex];
+  var word = w.word.toLowerCase();
+  var ok = picked === word;
+  var buttons = btn.parentNode.querySelectorAll('button');
+
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+    if (buttons[i].textContent === word) {
+      buttons[i].style.background = 'var(--green)';
+      buttons[i].style.color = '#fff';
+    } else if (buttons[i] === btn && !ok) {
+      buttons[i].style.background = 'var(--red)';
+      buttons[i].style.color = '#fff';
+    }
+  }
+
+  var result = { word: w.word, correct: ok, userAnswer: picked, category: w.category, level: w.level || 0 };
+  spkResults.push(result);
+  results.push(result);
+  logAnswer(w.word, picked, ok, 1, w.category, w.level || 0);
+  updateCategoryLevel(w.category, ok);
+  updateSRWord(w.word, ok, w.category);
+
+  if (ok) { sessionCorrectCount++; sessionCorrectStreak++; }
+  else { sessionCorrectStreak = 0; trackCategoryError(w.category); }
+
+  document.getElementById('spkScoreCorrect').textContent = spkResults.filter(function(r) { return r.correct; }).length;
+  document.getElementById('spkScoreWrong').textContent = spkResults.filter(function(r) { return !r.correct; }).length;
+  document.getElementById('spkNextBtn').classList.remove('hidden');
+}
+
+function nextSpkWord() {
+  if (isMixedSession) { nextMixedItem(); return; }
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  if (pendingBoss) {
+    pendingInterruptAction = (spkIndex + 1) >= spkWords.length ? 'finish' : 'continue';
+    spkIndex++;
+    showBossMinigame(pendingBoss);
+    return;
+  }
+  if (pendingChest) {
+    pendingChest = false;
+    pendingInterruptAction = (spkIndex + 1 >= spkWords.length) ? 'finish' : 'continue';
+    if (!pendingBoss) spkIndex++;
+    showTreasureChest();
+    return;
+  }
+
+  spkIndex++;
+  if (spkIndex >= spkWords.length) { finishSpellPick(); }
+  else { renderSpkWord(); }
+}
+
+function finishSpellPick() {
+  hide('phase-spellpick');
+
+  var correctCount = spkResults.filter(function(r) { return r.correct; }).length;
+  var totalCount = spkResults.length;
+  var prevXP = loadRewardData().totalXP || 0;
+  var rewardResult = awardSessionXP(correctCount, totalCount);
+  var rewardData = loadRewardData();
+  var newXP = rewardData.totalXP || 0;
+  var prevLevel = getAvatarLevel(prevXP);
+  var newLevel = getAvatarLevel(newXP);
+  var milestone = checkMilestone(rewardData);
+  updateRewardBar();
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  if (rewardResult.dailyGoalReached) {
+    setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
+  }
+  if (milestone) {
+    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
+  }
+  if (newLevel.index > prevLevel.index) {
+    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
+  }
+  show('rewardBar');
+  show('rewardXPBarWrap');
+
+  renderSpkResults();
+}
+
+function renderSpkResults() {
+  show('phase-results');
+  var correct = spkResults.filter(function(r) { return r.correct; }).length;
+  var wrong = spkResults.filter(function(r) { return !r.correct; });
+
+  var html = '';
+  var msgs = ['Godt valgt! \u{1F3AF}', 'Skarpt \u00F8je! \u{1F441}\uFE0F', 'Flot stavning! \u{1F4AA}'];
+  html += '<div class="ai-bubble"><p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
+  html += '<p style="margin-top:8px">' + correct + ' ud af ' + spkResults.length + ' ord valgt rigtigt.</p></div>';
+
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Forkerte</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / spkResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
+  html += '<div style="margin-bottom:18px">';
+  spkResults.forEach(function(r) {
+    html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+    html += '<span>' + (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">' + r.userAnswer + '</span>') + '</span></div>';
+  });
+  html += '</div>';
+
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-green btn-full" onclick="startSpellPick()">\u{1F3AF} Ny runde</button>';
   html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('resultsContent').innerHTML = html;

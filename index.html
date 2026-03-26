@@ -1072,6 +1072,7 @@
     <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Nyt stavespil</button>
   </div>
 
+  <button class="settings-toggle" onclick="showBossPicker()">&#x1F47E; Boss-kampe</button>
   <button class="settings-toggle" onclick="switchPlayer()">&#x1F465; Skift spiller</button>
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
   <div class="settings-panel" id="settingsPanel">
@@ -1351,6 +1352,15 @@
 <div id="phase-boss" class="card hidden">
   <div class="phase-label">&#x2694;&#xFE0F; Ord-Boss!</div>
   <div id="bossContent"></div>
+</div>
+
+<!-- BOSS PICKER OVERLAY -->
+<div id="bossPickerOverlay" class="chest-overlay hidden" style="z-index:999">
+  <div class="card" style="max-width:420px;width:90%;margin:auto;padding:24px">
+    <h2 style="font-family:'Fredoka One',cursive;color:var(--accent);text-align:center;margin-bottom:16px">&#x1F47E; V&#xe6;lg boss-kamp</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="bossPickerButtons"></div>
+    <button class="btn btn-primary" style="margin-top:16px;width:100%" onclick="hideBossPicker()">&#x2716; Luk</button>
+  </div>
 </div>
 
 <!-- TREASURE CHEST OVERLAY -->
@@ -3547,6 +3557,58 @@ var BOSS_INSTRUCTIONS = {
   snake: { emoji: '\u{1F40D}', text: 'Styr slangen og spis bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' }
 };
 
+var bossPracticeMode = false;
+
+function showBossPicker() {
+  var container = document.getElementById('bossPickerButtons');
+  var html = '';
+  BOSS_BATTLE_TYPES.forEach(function(type) {
+    var instr = BOSS_INSTRUCTIONS[type];
+    html += '<button class="btn btn-green" style="padding:14px 10px;font-size:0.95rem;display:flex;flex-direction:column;align-items:center;gap:4px" onclick="startBossPractice(\'' + type + '\')">' +
+      '<span style="font-size:1.8rem">' + instr.emoji + '</span>' +
+      '<span>' + type.charAt(0).toUpperCase() + type.slice(1) + '</span></button>';
+  });
+  container.innerHTML = html;
+  document.getElementById('bossPickerOverlay').classList.remove('hidden');
+}
+
+function hideBossPicker() {
+  document.getElementById('bossPickerOverlay').classList.add('hidden');
+}
+
+function startBossPractice(battleType) {
+  hideBossPicker();
+  bossPracticeMode = true;
+  // Pick a random word from the word bank
+  var allWords = [];
+  var cats = Object.keys(WORD_BANK);
+  cats.forEach(function(cat) {
+    WORD_BANK[cat].forEach(function(w) { allWords.push({ word: w.word, category: cat }); });
+  });
+  var chosen = allWords[Math.floor(Math.random() * allWords.length)];
+  var word = chosen.word.toLowerCase();
+  var boss = BOSS_MONSTERS[chosen.category] || { emoji: '\uD83D\uDC7E', name: 'Ordbossen' };
+  var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
+
+  hide('phase-welcome');
+  show('phase-boss');
+
+  bossState = {
+    word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
+    battleType: battleType, boss: boss, idleAnim: idleAnim,
+    deathAnim: pickRandom(BOSS_DEATH_ANIMS)
+  };
+
+  if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
+  else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
+  else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
+  else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
+  else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+  else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
+  else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
+  else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
+}
+
 function loadBossSeen() {
   try { var raw = localStorage.getItem(playerKey('boss_seen')); return raw ? JSON.parse(raw) : {}; } catch(e) { return {}; }
 }
@@ -4786,6 +4848,13 @@ function bossDefeated() {
 function continueAfterBoss() {
   pendingBoss = null;
   hide('phase-boss');
+
+  // Boss practice mode — go back to welcome
+  if (bossPracticeMode) {
+    bossPracticeMode = false;
+    goHome();
+    return;
+  }
 
   // After boss defeat, show chest reward if pending
   if (pendingChest) {

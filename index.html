@@ -2461,11 +2461,8 @@ var mixedIndex = 0;
 var isMixedSession = false;
 
 function startTrainingFromProfile() {
-  var profile = loadProfile();
-  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
-    startDiagnostic();
-    return;
-  }
+  var profile = loadProfile() || {};
+  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
   isMixedSession = true;
   pendingBoss = null;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
@@ -2473,10 +2470,10 @@ function startTrainingFromProfile() {
   wrongCountPerWord = {};
   results = [];
 
-  var pool = buildPoolWithCategoryLevels(profile.weakCategories);
+  var pool = buildPoolWithCategoryLevels(categories);
   if (pool.length === 0) {
-    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
-      var cat2 = profile.weakCategories[ci2];
+    for (var ci2 = 0; ci2 < categories.length; ci2++) {
+      var cat2 = categories[ci2];
       if (!WORD_BANK[cat2]) continue;
       pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
     }
@@ -6843,20 +6840,17 @@ function generateBlanks(wordObj) {
 var fillinWords = [], fillinIndex = 0, fillinResults = [], fillinBlanks = [];
 
 function startFillIn() {
-  var profile = loadProfile();
-  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
-    startDiagnostic();
-    return;
-  }
+  var profile = loadProfile() || {};
+  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
   gameMode = 'fillin';
   pendingBoss = null;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
-  var pool = buildPoolWithCategoryLevels(profile.weakCategories);
+  var pool = buildPoolWithCategoryLevels(categories);
   if (pool.length === 0) {
-    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
-      var cat2 = profile.weakCategories[ci2];
+    for (var ci2 = 0; ci2 < categories.length; ci2++) {
+      var cat2 = categories[ci2];
       if (!WORD_BANK[cat2]) continue;
       pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
     }
@@ -7309,20 +7303,17 @@ var rfCombo = 0, rfMaxCombo = 0;
 var rfAnswered = false;
 
 function startRightOrWrong() {
-  var profile = loadProfile();
-  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
-    startDiagnostic();
-    return;
-  }
+  var profile = loadProfile() || {};
+  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
   gameMode = 'rightorwrong';
   pendingBoss = null;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
-  var pool = buildPoolWithCategoryLevels(profile.weakCategories);
+  var pool = buildPoolWithCategoryLevels(categories);
   if (pool.length === 0) {
-    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
-      var cat2 = profile.weakCategories[ci2];
+    for (var ci2 = 0; ci2 < categories.length; ci2++) {
+      var cat2 = categories[ci2];
       if (!WORD_BANK[cat2]) continue;
       pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
     }
@@ -7680,20 +7671,17 @@ function buildSpellingPoliceItem(wordObj) {
 }
 
 function startSpellingPolice() {
-  var profile = loadProfile();
-  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
-    startDiagnostic();
-    return;
-  }
+  var profile = loadProfile() || {};
+  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
   gameMode = 'spellingpolice';
   pendingBoss = null;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
-  var pool = buildPoolWithCategoryLevels(profile.weakCategories);
+  var pool = buildPoolWithCategoryLevels(categories);
   if (pool.length === 0) {
-    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
-      var cat2 = profile.weakCategories[ci2];
+    for (var ci2 = 0; ci2 < categories.length; ci2++) {
+      var cat2 = categories[ci2];
       if (!WORD_BANK[cat2]) continue;
       pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
     }
@@ -7999,11 +7987,7 @@ var wbPlacedCount = 0;
 var wbMistakes = 0;
 
 function startWordBuilder() {
-  var profile = loadProfile();
-  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
-    startDiagnostic();
-    return;
-  }
+  var profile = loadProfile() || {};
   gameMode = 'wordbuilder';
   pendingBoss = null;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};

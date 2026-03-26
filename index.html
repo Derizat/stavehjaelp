@@ -4753,7 +4753,21 @@ function renderBossSnake(word, boss, idleAnim) {
     else snakeDir(0, dy > 0 ? 1 : -1);
   }, { passive: true });
 
-  snakeInterval = setInterval(function() { snakeTick(); }, 200);
+  // 3-2-1 countdown before snake starts moving
+  var countdownEl = document.createElement('div');
+  countdownEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Fredoka One,cursive;font-size:4rem;color:var(--accent);z-index:20;text-shadow:0 4px 12px rgba(0,0,0,0.8);';
+  countdownEl.textContent = '3';
+  var snArea = document.getElementById('snakeArea');
+  snArea.style.position = 'relative';
+  snArea.appendChild(countdownEl);
+  setTimeout(function() { countdownEl.textContent = '2'; }, 1000);
+  setTimeout(function() { countdownEl.textContent = '1'; }, 2000);
+  setTimeout(function() {
+    countdownEl.textContent = 'GO!';
+    countdownEl.style.color = 'var(--green)';
+    setTimeout(function() { if (countdownEl.parentNode) countdownEl.parentNode.removeChild(countdownEl); }, 400);
+    snakeInterval = setInterval(function() { snakeTick(); }, 200);
+  }, 3000);
 }
 
 function snakeSpawnPair() {

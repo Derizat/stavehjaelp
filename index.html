@@ -1566,7 +1566,7 @@ function renderProfilePickerGrid(list) {
     var nameStyle = '';
     try {
       var raw = localStorage.getItem(name + '_reward_data');
-      if (raw) { var rd = JSON.parse(raw); var lvl = getAvatarLevel(rd.totalXP || 0); var dispIdx = rd.displayedLevel || 0; var dispLvl = AVATAR_LEVELS[dispIdx] || AVATAR_LEVELS[0]; emoji = dispLvl.image ? '<img src="' + dispLvl.image + '" style="width:2.5rem;height:2.5rem;object-fit:contain">' : dispLvl.emoji; nameStyle = dispLvl.titleStyle || ''; }
+      if (raw) { var rd = JSON.parse(raw); var lvl = getAvatarLevel(rd.totalXP || 0); var dispIdx = rd.displayedLevel || 0; var dispLvl = AVATAR_LEVELS[dispIdx] || AVATAR_LEVELS[0]; emoji = dispLvl.image ? '<img src="' + dispLvl.image + '" style="width:2.5rem;height:2.5rem;object-fit:cover;border-radius:50%">' : dispLvl.emoji; nameStyle = dispLvl.titleStyle || ''; }
     } catch(e) {}
     html += '<button class="profile-picker-btn" onclick="selectPlayer(\'' + name.replace(/'/g, "\\'") + '\')">';
     html += '<span class="pp-emoji">' + emoji + '</span>';
@@ -5341,7 +5341,7 @@ function updateWelcomeAvatar() {
   var el = document.getElementById('avatarEmoji');
   if (el) {
     if (displayedLevel.image) {
-      el.innerHTML = '<img src="' + displayedLevel.image + '" alt="' + displayedLevel.title + '" style="width:8rem;height:8rem;object-fit:contain;margin:-2rem 0">';
+      el.innerHTML = '<img src="' + displayedLevel.image + '" alt="' + displayedLevel.title + '" style="width:6rem;height:6rem;object-fit:cover;border-radius:50%">';
     } else {
       el.textContent = displayedLevel.emoji;
     }
@@ -5424,7 +5424,7 @@ function doLevelUp() {
   // Phase 2: New avatar appears
   setTimeout(function() {
     if (newLevel.image) {
-      emojiEl.innerHTML = '<img src="' + newLevel.image + '" alt="' + newLevel.title + '" style="width:8rem;height:8rem;object-fit:contain;margin:-2rem 0">';
+      emojiEl.innerHTML = '<img src="' + newLevel.image + '" alt="' + newLevel.title + '" style="width:6rem;height:6rem;object-fit:cover;border-radius:50%">';
     } else {
       emojiEl.textContent = newLevel.emoji;
     }

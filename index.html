@@ -2375,7 +2375,7 @@ var isMixedSession = false;
 function startTrainingFromProfile() {
   var profile = loadProfile() || {};
   var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
-  isMixedSession = false;
+  isMixedSession = true;
   pendingBoss = null;
   pendingLesson = false;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
@@ -2393,31 +2393,54 @@ function startTrainingFromProfile() {
   }
   pool = shuffle(pool);
 
-  currentWords = pool.slice(0, 10);
-  if (currentWords.length === 0) {
+  // Build mixed queue: diktat by default, random exercise every 3rd question
+  mixedQueue = [];
+  var exerciseTypes = ['fillin', 'rightorwrong', 'spellingpolice', 'wordbuilder', 'spellpick'];
+  for (var i = 0; i < pool.length && mixedQueue.length < 10; i++) {
+    var w = pool[i];
+    var isExerciseSlot = (mixedQueue.length + 1) % 3 === 0; // positions 3, 6, 9
+    var chosenType = 'diktat';
+
+    if (isExerciseSlot) {
+      // Try random exercise types until one is compatible
+      var shuffledTypes = exerciseTypes.slice();
+      for (var st = shuffledTypes.length - 1; st > 0; st--) {
+        var sj = Math.floor(Math.random() * (st + 1));
+        var tmp = shuffledTypes[st]; shuffledTypes[st] = shuffledTypes[sj]; shuffledTypes[sj] = tmp;
+      }
+      for (var ti = 0; ti < shuffledTypes.length; ti++) {
+        var t = shuffledTypes[ti];
+        if (t === 'fillin' && generateBlanks(w)) { chosenType = t; break; }
+        else if (t === 'rightorwrong' && generateMisspelling(w)) { chosenType = t; break; }
+        else if (t === 'spellingpolice' && buildSpellingPoliceItem(w)) { chosenType = t; break; }
+        else if (t === 'wordbuilder' && parseMorphemes(w.patternHint, w.word)) { chosenType = t; break; }
+        else if (t === 'spellpick') { chosenType = t; break; }
+      }
+    }
+
+    mixedQueue.push({
+      wordObj: w,
+      type: chosenType,
+      blanks: generateBlanks(w),
+      misspelling: generateMisspelling(w),
+      spItem: buildSpellingPoliceItem(w),
+      morphemes: parseMorphemes(w.patternHint, w.word)
+    });
+  }
+
+  if (mixedQueue.length === 0) {
     alert('Ingen ord fundet til tr\u00E6ning.');
     return;
   }
 
-  currentIndex = 0;
-  gameMode = 'training';
+  mixedIndex = 0;
   hide('phase-welcome');
   show('rewardBar');
   show('rewardXPBarWrap');
   updateRewardBar();
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
 
-  hideAllExercisePhases();
-  hide('phase-boss');
-  document.getElementById('chestOverlay').classList.add('hidden');
-
-  document.getElementById('scoreCorrect').textContent = '0';
-  document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').style.display = 'none';
-  document.getElementById('wordNum').textContent = '1';
-  document.getElementById('progressBar').style.width = '0%';
-  show('phase-test');
-  renderWord();
+  renderMixedItem();
 }
 
 function hideAllExercisePhases() {
@@ -2509,6 +2532,25 @@ function renderMixedItem() {
       document.getElementById('wbProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
       show('phase-wordbuilder');
       renderWBWord();
+      break;
+
+    case 'spellpick':
+      gameMode = 'spellpick';
+      spkWords = [item.wordObj];
+      spkIndex = 0;
+      spkResults = [];
+      document.getElementById('spkScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+      document.getElementById('spkScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+      document.getElementById('spkWordNum').textContent = (mixedIndex + 1);
+      document.getElementById('spkProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
+      // Fetch misspellings then render
+      var spkWord = item.wordObj;
+      spkWord._dbMis = [];
+      fetchMisspellings([spkWord.word.toLowerCase()], function(misByWord) {
+        spkWords[0]._dbMis = misByWord[spkWord.word.toLowerCase()] || [];
+        show('phase-spellpick');
+        renderSpkWord();
+      });
       break;
 
     case 'sentence':

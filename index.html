@@ -3666,7 +3666,7 @@ var BOSS_MONSTERS = {
   "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex" }
 };
 
-var BOSS_BATTLE_TYPES = ['scramble', 'memory', 'cardcast'];
+var BOSS_BATTLE_TYPES = ['scramble', 'memory', 'cardcast', 'spellpick'];
 var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];
 var BOSS_IDLE_ANIMS = ['boss-idle-float', 'boss-idle-pulse', 'boss-idle-wobble'];
 var BOSS_VICTORY_MSGS = [
@@ -3687,6 +3687,7 @@ var BOSS_INSTRUCTIONS = {
   pacman: { emoji: '\u{1F3AE}', text: 'Saml bogstaverne i r\u00E6kkef\u00F8lge \u2014 undg\u00E5 sp\u00F8gelset!' },
   highway: { emoji: '\u{1F697}', text: 'K\u00F8r bilen fra bane til bane og fang de rigtige bogstaver!' },
   cardcast: { emoji: '\u{1F0CF}', text: 'Lyt til ordet og kast de rigtige bogstav-kort mod bossen!' },
+  spellpick: { emoji: '\u{1F3AF}', text: 'V\u00E6lg den rigtige stavem\u00E5de!' },
   snake: { emoji: '\u{1F40D}', text: 'Styr slangen og spis bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' }
 };
 
@@ -3728,7 +3729,7 @@ function startBossPractice(battleType) {
   var allWords = [];
   var cats = Object.keys(WORD_BANK);
   cats.forEach(function(cat) {
-    WORD_BANK[cat].forEach(function(w) { allWords.push({ word: w.word, category: cat }); });
+    WORD_BANK[cat].forEach(function(w) { allWords.push({ word: w.word, category: cat, patternHint: w.patternHint || '', sentence: w.sentence || '' }); });
   });
   var chosen = allWords[Math.floor(Math.random() * allWords.length)];
   var word = chosen.word.toLowerCase();
@@ -3741,7 +3742,8 @@ function startBossPractice(battleType) {
   bossState = {
     word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
     battleType: battleType, boss: boss, idleAnim: idleAnim,
-    deathAnim: pickRandom(BOSS_DEATH_ANIMS)
+    deathAnim: pickRandom(BOSS_DEATH_ANIMS),
+    wordObj: chosen
   };
 
   if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
@@ -3751,6 +3753,7 @@ function startBossPractice(battleType) {
   else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
   else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
   else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
+  else if (battleType === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
   else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
 }
 
@@ -3793,6 +3796,7 @@ function testBoss(type) {
   else if (type === 'pacman') renderBossPacman(word, boss, idleAnim);
   else if (type === 'highway') renderBossHighway(word, boss, idleAnim);
   else if (type === 'cardcast') renderBossCardcast(word, boss, idleAnim);
+  else if (type === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
   else if (type === 'snake') renderBossSnake(word, boss, idleAnim);
 }
 
@@ -3810,10 +3814,18 @@ function showBossMinigame(bossData) {
   var battleType = pickRandom(BOSS_BATTLE_TYPES);
   var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
 
+  // Look up full word object for spellpick
+  var wordObj = { word: word, category: bossData.category, patternHint: '' };
+  var catWords = WORD_BANK[bossData.category] || [];
+  for (var wi = 0; wi < catWords.length; wi++) {
+    if (catWords[wi].word.toLowerCase() === word) { wordObj = catWords[wi]; wordObj.category = bossData.category; break; }
+  }
+
   bossState = {
     word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
     battleType: battleType, boss: boss, idleAnim: idleAnim,
-    deathAnim: pickRandom(BOSS_DEATH_ANIMS)
+    deathAnim: pickRandom(BOSS_DEATH_ANIMS),
+    wordObj: wordObj
   };
 
   // Show instruction first time per boss type
@@ -3836,6 +3848,7 @@ function showBossMinigame(bossData) {
       else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
       else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
       else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
+      else if (battleType === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
       else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
     }, 3000);
   } else {
@@ -5045,6 +5058,124 @@ function snakeDeath() {
   html += '</div>';
 
   setTimeout(function() { content.innerHTML = html; }, 400);
+}
+
+// --- Type 9: SPELLPICK (multiple choice) ---
+function renderBossSpellpick(word, boss, idleAnim) {
+  var hp = 3; // 3 rounds to win
+  bossState.hp = hp;
+  bossState.maxHP = hp;
+  bossState.spRound = 0;
+
+  var content = document.getElementById('bossContent');
+  content.innerHTML = renderBossHeader(boss, idleAnim, hp, hp);
+
+  // Play audio
+  speakWord(word, null);
+
+  // Build rounds
+  buildSpellpickRound();
+}
+
+function buildSpellpickRound() {
+  if (!bossState || bossState.hp <= 0) return;
+  var wordObj = bossState.wordObj;
+  var word = bossState.word;
+
+  // Generate misspellings
+  var options = [word];
+  var mis = generateMisspelling(wordObj);
+  if (mis && mis.misspelled && mis.misspelled !== word) {
+    options.push(mis.misspelled.toLowerCase());
+  }
+
+  // Generate additional misspellings by swapping/removing/doubling letters
+  var extraMis = [];
+  // Swap two adjacent letters
+  if (word.length >= 3) {
+    var si = 1 + Math.floor(Math.random() * (word.length - 2));
+    var swapped = word.substring(0, si) + word[si + 1] + word[si] + word.substring(si + 2);
+    if (swapped !== word && options.indexOf(swapped) < 0) extraMis.push(swapped);
+  }
+  // Remove a letter
+  var ri = Math.floor(Math.random() * word.length);
+  var removed = word.substring(0, ri) + word.substring(ri + 1);
+  if (removed !== word && options.indexOf(removed) < 0 && removed.length > 1) extraMis.push(removed);
+  // Double a letter
+  var di = Math.floor(Math.random() * word.length);
+  var doubled = word.substring(0, di) + word[di] + word[di] + word.substring(di + 1);
+  if (doubled !== word && options.indexOf(doubled) < 0) extraMis.push(doubled);
+  // Replace a vowel
+  var vowels = 'aeiouy\u00E6\u00F8\u00E5';
+  for (var vi = 0; vi < word.length; vi++) {
+    if (vowels.indexOf(word[vi]) >= 0) {
+      var rv = vowels[Math.floor(Math.random() * vowels.length)];
+      if (rv !== word[vi]) {
+        var replaced = word.substring(0, vi) + rv + word.substring(vi + 1);
+        if (options.indexOf(replaced) < 0) { extraMis.push(replaced); break; }
+      }
+    }
+  }
+
+  // Fill up to 4 options total
+  for (var ei = 0; ei < extraMis.length && options.length < 4; ei++) {
+    if (options.indexOf(extraMis[ei]) < 0) options.push(extraMis[ei]);
+  }
+
+  // Shuffle
+  for (var si2 = options.length - 1; si2 > 0; si2--) {
+    var sj = Math.floor(Math.random() * (si2 + 1));
+    var tmp = options[si2]; options[si2] = options[sj]; options[sj] = tmp;
+  }
+
+  var content = document.getElementById('bossContent');
+  var html = renderBossHeader(bossState.boss, bossState.idleAnim, bossState.hp, bossState.maxHP);
+  html += '<button class="btn-listen" onclick="speakWord(bossState.word, null)" style="margin:8px auto;display:block">\u{1F508} H\u00F8r ordet igen</button>';
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:10px 0">Hvilken stavem\u00E5de er rigtig?</p>';
+  html += '<div style="display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto">';
+  for (var oi = 0; oi < options.length; oi++) {
+    html += '<button class="btn btn-primary" style="font-size:1.15rem;letter-spacing:2px;padding:14px 20px" onclick="pickSpellOption(this, \'' + options[oi].replace(/'/g, "\\'") + '\')">' + options[oi] + '</button>';
+  }
+  html += '</div>';
+  content.innerHTML = html;
+
+  speakWord(word, null);
+}
+
+function pickSpellOption(btn, picked) {
+  if (!bossState) return;
+  var correct = picked === bossState.word;
+  var buttons = btn.parentNode.querySelectorAll('button');
+
+  // Highlight correct/wrong
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+    if (buttons[i].textContent === bossState.word) {
+      buttons[i].style.background = 'var(--green)';
+      buttons[i].style.color = '#fff';
+    } else if (buttons[i] === btn && !correct) {
+      buttons[i].style.background = 'var(--red)';
+      buttons[i].style.color = '#fff';
+    }
+  }
+
+  if (correct) {
+    bossState.hp--;
+    updateBossHP();
+    bossHitAnim();
+    if (bossState.hp <= 0) {
+      setTimeout(function() { bossDefeated(); }, 800);
+      return;
+    }
+  } else {
+    bossAttackAnim();
+  }
+
+  // Next round after delay
+  setTimeout(function() {
+    bossState.spRound++;
+    buildSpellpickRound();
+  }, 1200);
 }
 
 function cleanupSnake() {

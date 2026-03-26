@@ -1158,7 +1158,7 @@
   </div>
 
 
-  <div style="margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:8px">
+  <div style="margin-top:20px;margin-bottom:60px;display:flex;flex-direction:column;align-items:center;gap:8px">
     <button class="btn btn-accent" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" onclick="startTrainingFromProfile()">&#x1F680; Start stavespil!</button>
   </div>
 
@@ -2355,7 +2355,7 @@ var isMixedSession = false;
 function startTrainingFromProfile() {
   var profile = loadProfile() || {};
   var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
-  isMixedSession = true;
+  isMixedSession = false;
   pendingBoss = null;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
@@ -2372,54 +2372,21 @@ function startTrainingFromProfile() {
   }
   pool = shuffle(pool);
 
-  // Build mixed queue: assign each word a random compatible exercise type
-  mixedQueue = [];
-  for (var i = 0; i < pool.length && mixedQueue.length < 10; i++) {
-    var w = pool[i];
-    var types = []; // diktat is fallback only
-
-    var blanks = generateBlanks(w);
-    if (blanks) types.push('fillin');
-
-    var ms = generateMisspelling(w);
-    if (ms) types.push('rightorwrong');
-
-    var spItem = buildSpellingPoliceItem(w);
-    if (spItem) types.push('spellingpolice');
-
-    var morphemes = parseMorphemes(w.patternHint, w.word);
-    if (morphemes) types.push('wordbuilder');
-
-    // Sentence writing works for level 1+ words with hints
-    if (w.hint && w.level >= 1) types.push('sentence');
-
-    if (types.length === 0 || Math.random() < 0.2) types = ['diktat']; // 20% chance + fallback
-
-    var chosenType = types[Math.floor(Math.random() * types.length)];
-
-    mixedQueue.push({
-      wordObj: w,
-      type: chosenType,
-      blanks: blanks,
-      misspelling: ms,
-      spItem: spItem,
-      morphemes: morphemes
-    });
-  }
-
-  if (mixedQueue.length === 0) {
+  words = pool.slice(0, 10);
+  if (words.length === 0) {
     alert('Ingen ord fundet til tr\u00E6ning.');
     return;
   }
 
-  mixedIndex = 0;
+  currentWordIndex = 0;
+  gameMode = 'training';
   hide('phase-welcome');
   show('rewardBar');
   show('rewardXPBarWrap');
   updateRewardBar();
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
 
-  renderMixedItem();
+  showWord();
 }
 
 function hideAllExercisePhases() {

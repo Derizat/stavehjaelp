@@ -1635,19 +1635,40 @@ try {
   );
 } catch(e) { console.log('Supabase ikke tilg\u00E6ngelig'); }
 
+// --- Batched answer logging ---
+var answerQueue = [];
+var answerFlushTimer = null;
+
 function logAnswer(word, answer, correct, attempt, category, level) {
   if (!supabaseClient || !activePlayer) return;
   var grade = 0;
   try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
-  supabaseClient.from('answers').insert({
+  answerQueue.push({
     player: activePlayer, word: word, answer: answer, correct: correct,
     attempt: attempt, category: category || null, level: level || 0, grade: grade
-  }).then(function(res) {
-    if (res.error) console.warn('Supabase log fejl:', res.error.message);
+  });
+  if (answerFlushTimer) clearTimeout(answerFlushTimer);
+  answerFlushTimer = setTimeout(flushAnswers, 3000);
+}
+
+function flushAnswers() {
+  if (!supabaseClient || answerQueue.length === 0) return;
+  var batch = answerQueue.splice(0, answerQueue.length);
+  supabaseClient.from('answers').insert(batch).then(function(res) {
+    if (res.error) console.warn('Supabase batch log fejl:', res.error.message);
   });
 }
 
+// --- Debounced profile sync ---
+var syncTimer = null;
+
 function syncToSupabase() {
+  if (!supabaseClient || !activePlayer) return;
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(doSyncToSupabase, 2000);
+}
+
+function doSyncToSupabase() {
   if (!supabaseClient || !activePlayer) return;
   var profileData = null, rewardData = null, srData = null, grade = 0;
   try { profileData = JSON.parse(localStorage.getItem(playerKey('profile_data')) || 'null'); } catch(e) {}
@@ -1665,6 +1686,12 @@ function syncToSupabase() {
     if (res.error) console.warn('Supabase sync fejl:', res.error.message);
   });
 }
+
+// Flush on page unload
+window.addEventListener('beforeunload', function() {
+  flushAnswers();
+  if (syncTimer) { clearTimeout(syncTimer); doSyncToSupabase(); }
+});
 
 function syncFromSupabase(name, callback) {
   if (!supabaseClient) { if (callback) callback(); return; }
@@ -5135,13 +5162,26 @@ function renderBossSpellpick(word, boss, idleAnim) {
   });
 }
 
+var misspellingCache = {};
+var misspellingCacheTime = 0;
+
 function fetchMisspellings(words, callback) {
   if (!supabaseClient) { callback({}); return; }
-  // Query all wrong answers for these words
+
+  // Use cache if fresh (5 minutes)
+  var now = Date.now();
+  var uncached = words.filter(function(w) { return !misspellingCache[w] || now - misspellingCacheTime > 300000; });
+  if (uncached.length === 0) {
+    var result = {};
+    words.forEach(function(w) { if (misspellingCache[w]) result[w] = misspellingCache[w]; });
+    callback(result);
+    return;
+  }
+
   supabaseClient.from('answers')
     .select('word, answer')
     .eq('correct', false)
-    .in('word', words)
+    .in('word', uncached)
     .then(function(res) {
       var misByWord = {};
       if (res.data) {
@@ -5155,7 +5195,13 @@ function fetchMisspellings(words, callback) {
           }
         }
       }
-      callback(misByWord);
+      // Update cache
+      uncached.forEach(function(w) { misspellingCache[w] = misByWord[w] || []; });
+      misspellingCacheTime = now;
+      // Return all requested words from cache
+      var result = {};
+      words.forEach(function(w) { if (misspellingCache[w]) result[w] = misspellingCache[w]; });
+      callback(result);
     }).catch(function() { callback({}); });
 }
 

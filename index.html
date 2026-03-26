@@ -1159,8 +1159,7 @@
 
 
   <div style="margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:8px">
-    <button class="btn btn-accent" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavespil!</button>
-    <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Nyt stavespil</button>
+    <button class="btn btn-accent" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" onclick="startTrainingFromProfile()">&#x1F680; Start stavespil!</button>
   </div>
 
   <!-- Dev: category levels display -->
@@ -1231,7 +1230,7 @@
   </div>
 </div>
 
-<!-- TEST (shared for diagnostic, training, review) -->
+<!-- TEST (shared for training, review) -->
 <div id="phase-test" class="card hidden">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
     <div class="phase-label" style="margin-bottom:0" id="testPhaseLabel">&#x1F4CB; Stavespil</div>
@@ -1273,24 +1272,6 @@
   <button class="btn btn-green btn-full hidden" id="nextBtn" onclick="nextWord()">&#x27A1;&#xFE0F; Næste ord</button>
 </div>
 
-<!-- ANALYZING -->
-<div id="phase-analyzing" class="card hidden">
-  <div class="phase-label">&#x1F916; AI analyserer</div>
-  <h2>Et øjeblik...</h2>
-  <div class="ai-bubble">
-    <p>Jeg finder mønstre i fejlene og laver forklaringer og øvelser der rammer præcis det du har brug for!</p>
-  </div>
-  <div class="spinner">
-    <div class="spinner-dot"></div><div class="spinner-dot"></div><div class="spinner-dot"></div>
-    <span>Analyserer mønstre...</span>
-  </div>
-</div>
-
-<!-- PROFILE (after diagnostic) -->
-<div id="phase-profile" class="card hidden">
-  <div class="phase-label">&#x1F4CA; Din profil</div>
-  <div id="profileContent"></div>
-</div>
 
 <!-- RESULTS (after training/review) -->
 <div id="phase-results" class="card hidden">
@@ -1938,9 +1919,7 @@ var LEVEL_GRADE_MAP = {
 var currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
 var retryAttempt = false;
 var sessionCategoryErrors = {}; // track errors per category for lesson triggers
-var gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
-var diagnosticWordsList = [];
-var adaptiveState = null;
+var gameMode = 'training'; // 'training' | 'review'
 
 // Gamification state
 var wrongCountPerWord = {};
@@ -1956,7 +1935,7 @@ function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
@@ -2367,93 +2346,6 @@ function speakCurrentWord() {
   speakWord(w.word, w.sentence || null);
 }
 
-// Spelling level estimation
-function estimateSpellingLevel(res) {
-  for (var level = 4; level >= 0; level--) {
-    var levelResults = res.filter(function(r) { return r.level === level; });
-    if (levelResults.length === 0) continue;
-    var correct = levelResults.filter(function(r) { return r.correct; }).length;
-    if (correct / levelResults.length >= 0.66) return level;
-  }
-  return 0;
-}
-
-function gradeToExpectedLevel(grade) {
-  if (grade <= 0) return 0;
-  if (grade <= 2) return 1;
-  if (grade <= 4) return 2;
-  if (grade <= 6) return 3;
-  return 4;
-}
-
-// Adaptive diagnostic builder
-function buildAdaptiveDiagnosticWords(level) {
-  // Pick 5 words from given level, each from a different random category
-  var cats = shuffle(ALL_CATEGORIES);
-  var picked = [];
-  for (var ci = 0; ci < cats.length && picked.length < 5; ci++) {
-    var cat = cats[ci];
-    var pool = WORD_BANK[cat].filter(function(w) {
-      return w.level === level && !diagnosticWordsList.find(function(d) { return d.word === w.word; });
-    });
-    if (pool.length > 0) {
-      var word = shuffle(pool)[0];
-      picked.push(Object.assign({}, word, { category: cat }));
-    }
-  }
-  // If not enough from unique categories, fill from any category
-  if (picked.length < 5) {
-    for (var ci2 = 0; ci2 < ALL_CATEGORIES.length && picked.length < 5; ci2++) {
-      var cat2 = ALL_CATEGORIES[ci2];
-      var pool2 = WORD_BANK[cat2].filter(function(w) {
-        return w.level === level && !diagnosticWordsList.find(function(d) { return d.word === w.word; }) && !picked.find(function(p) { return p.word === w.word; });
-      });
-      if (pool2.length > 0) {
-        picked.push(Object.assign({}, shuffle(pool2)[0], { category: cat2 }));
-      }
-    }
-  }
-  return shuffle(picked);
-}
-
-// Start Diagnostic with adaptive logic
-function startDiagnostic() {
-  gameMode = 'diagnostic';
-  diagnosticWordsList = [];
-  results = [];
-  currentIndex = 0;
-  wrongCountPerWord = {};
-  pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
-  pendingChest = false;
-  var startLevel = 0;
-
-  adaptiveState = {
-    currentLevel: startLevel,
-    levelResults: [],
-    phase: 'testing', // 'testing' | 'confirming'
-    confirmedLevel: null,
-    totalWordsShown: 0,
-    finished: false
-  };
-
-  // Get first batch of words for starting level
-  var firstBatch = buildAdaptiveDiagnosticWords(startLevel);
-  diagnosticWordsList = diagnosticWordsList.concat(firstBatch);
-  currentWords = firstBatch;
-
-  document.getElementById('scoreCorrect').textContent = '0';
-  document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').style.display = 'none';
-  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
-  hide('phase-welcome');
-  show('phase-test');
-  show('rewardBar');
-  show('rewardXPBarWrap');
-  updateRewardBar();
-  renderWord();
-}
-
 // Training mode
 // Mixed training queue
 var mixedQueue = [];
@@ -2522,7 +2414,6 @@ function startTrainingFromProfile() {
 
   mixedIndex = 0;
   hide('phase-welcome');
-  hide('phase-profile');
   show('rewardBar');
   show('rewardXPBarWrap');
   updateRewardBar();
@@ -2752,12 +2643,7 @@ function renderWord() {
   var total = currentWords.length;
   document.getElementById('wordNum').textContent = (results.length + 1);
   document.getElementById('progressBar').style.width = ((results.length / Math.max(total, results.length + 1)) * 100) + '%';
-  if (gameMode === 'diagnostic') {
-    document.getElementById('patternBadge').style.display = 'none';
-  } else {
-    document.getElementById('patternBadge').style.display = '';
-    document.getElementById('patternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
-  }
+  document.getElementById('patternBadge').style.display = 'none';
   document.getElementById('spellingInput').value = '';
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('listenBox').style.visibility = '';
@@ -2777,30 +2663,13 @@ function renderWord() {
   var sentEl = document.getElementById('wordSentence');
   var diffLabel = document.getElementById('difficultyLabel');
 
-  // Level indicator
-  if (gameMode === 'diagnostic' && adaptiveState) {
-    var lvl = adaptiveState.currentLevel;
-    var info = LEVEL_LABELS[lvl];
-    diffLabel.innerHTML = '<span class="difficulty-label" style="background:' + info.bg + ';color:' + info.color + '">' + info.text + '</span>';
-  } else {
-    diffLabel.innerHTML = '';
-  }
+  diffLabel.innerHTML = '';
 
   // Hint always shown
   hintEl.textContent = '\u{1F4A1} ' + w.hint;
   if (sentEl) sentEl.textContent = '';
 
-  if (gameMode === 'diagnostic') {
-    // DIAGNOSTIC: No word flash, audio only + hint
-    flashEl.textContent = '';
-    flashEl.style.opacity = '0';
-    wrap.style.display = 'none';
-    flashEl.textContent = '\u{1F50A}';
-    flashEl.style.opacity = '1';
-    flashEl.style.fontSize = '2.5rem';
-    setTimeout(function() { speakWord(w.word, w.sentence || null); }, 200);
-    setTimeout(function() { document.getElementById('spellingInput').focus(); }, 500);
-  } else if (gameMode === 'training') {
+  if (gameMode === 'training') {
     // TRAINING: Show word for 3 seconds
     flashEl.style.fontSize = '2.8rem';
     flashEl.textContent = w.word; flashEl.style.opacity = '1';
@@ -2877,17 +2746,7 @@ function checkSpelling() {
   results.push(result);
   logAnswer(w.word, ans, ok, 1, w.category, w.level || 0);
   updateCategoryLevel(w.category, ok);
-
-  // Track adaptive state for diagnostic
-  if (gameMode === 'diagnostic' && adaptiveState) {
-    adaptiveState.levelResults.push(result);
-    adaptiveState.totalWordsShown++;
-  }
-
-  // Update SR for training and review modes
-  if (gameMode === 'training' || gameMode === 'review') {
-    updateSRWord(w.word, ok, w.category);
-  }
+  updateSRWord(w.word, ok, w.category);
 
   document.getElementById('listenBox').style.visibility = 'hidden';
   if (ok) {
@@ -2904,7 +2763,7 @@ function checkSpelling() {
     sessionCorrectCount++;
     sessionCorrectStreak++;
     // Boss + chest triggered as reward after 5 correct in a row
-    if (sessionCorrectStreak >= 5 && gameMode !== 'diagnostic') {
+    if (sessionCorrectStreak >= 5) {
       sessionCorrectStreak = 0;
       // Pick a random correct word from this session for the boss fight
       var correctWords = results.filter(function(r) { return r.correct; });
@@ -2933,7 +2792,7 @@ function nextWord() {
   if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
 
   // Check for pending boss FIRST (reward for streak) — chest follows after boss
-  if (pendingBoss && gameMode !== 'diagnostic') {
+  if (pendingBoss) {
     pendingInterruptAction = (currentIndex + 1) >= currentWords.length ? 'finish' : 'continue';
     currentIndex++;
     showBossMinigame(pendingBoss);
@@ -2941,7 +2800,7 @@ function nextWord() {
   }
 
   // Check for pending chest (awarded after boss defeat)
-  if (pendingChest && gameMode !== 'diagnostic') {
+  if (pendingChest) {
     pendingChest = false;
     pendingInterruptAction = (currentIndex + 1 >= currentWords.length) ? 'finish' : 'continue';
     if (!pendingBoss) currentIndex++; // only advance if boss didn't already advance
@@ -2951,63 +2810,10 @@ function nextWord() {
 
   currentIndex++;
 
-  if (gameMode === 'diagnostic' && adaptiveState) {
-    // Check if we finished the current batch
-    if (currentIndex >= currentWords.length) {
-      // Evaluate the current level results
-      var levelCorrect = adaptiveState.levelResults.filter(function(r) { return r.correct; }).length;
-      var levelTotal = adaptiveState.levelResults.length;
-
-      if (adaptiveState.phase === 'confirming') {
-        // We were confirming a level, now finish
-        adaptiveState.finished = true;
-        finishTest();
-        return;
-      }
-
-      if (levelCorrect >= 3 && adaptiveState.currentLevel < 4) {
-        // Advance to next level (3/5 = 60% correct)
-        adaptiveState.currentLevel++;
-        adaptiveState.levelResults = [];
-        adaptiveState.phase = 'testing';
-        var nextBatch = buildAdaptiveDiagnosticWords(adaptiveState.currentLevel);
-        if (nextBatch.length === 0) {
-          adaptiveState.finished = true;
-          finishTest();
-          return;
-        }
-        diagnosticWordsList = diagnosticWordsList.concat(nextBatch);
-        currentWords = nextBatch;
-        currentIndex = 0;
-        renderWord();
-      } else if (levelCorrect >= 3 && adaptiveState.currentLevel === 4) {
-        // At max level and passed, finish
-        adaptiveState.finished = true;
-        finishTest();
-      } else {
-        // Got 3+ wrong, pick 5 more at this level to confirm
-        adaptiveState.levelResults = [];
-        adaptiveState.phase = 'confirming';
-        var confirmBatch = buildAdaptiveDiagnosticWords(adaptiveState.currentLevel);
-        if (confirmBatch.length === 0) {
-          adaptiveState.finished = true;
-          finishTest();
-          return;
-        }
-        diagnosticWordsList = diagnosticWordsList.concat(confirmBatch);
-        currentWords = confirmBatch;
-        currentIndex = 0;
-        renderWord();
-      }
-      return;
-    }
-    renderWord();
+  if (currentIndex >= currentWords.length) {
+    finishTest();
   } else {
-    if (currentIndex >= currentWords.length) {
-      finishTest();
-    } else {
-      renderWord();
-    }
+    renderWord();
   }
 }
 
@@ -3049,330 +2855,11 @@ function finishTest() {
   show('rewardBar');
   show('rewardXPBarWrap');
 
-  if (gameMode === 'diagnostic') {
-    var spellingLevel = estimateSpellingLevel(results);
-    var grade = loadGrade();
-
-    var categoryScores = {};
-    for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
-      var cat = ALL_CATEGORIES[ci];
-      categoryScores[cat] = { correct: 0, total: 0 };
-    }
-    for (var ri = 0; ri < results.length; ri++) {
-      var r = results[ri];
-      categoryScores[r.category].total++;
-      if (r.correct) categoryScores[r.category].correct++;
-    }
-    var weakCategories = ALL_CATEGORIES.filter(function(cat) {
-      var cs = categoryScores[cat];
-      return cs.total > 0 && (cs.correct / cs.total) < 0.66;
-    });
-    // If no weak categories identified but there are errors, add those categories
-    if (weakCategories.length === 0) {
-      var errorCats = [];
-      results.forEach(function(r) {
-        if (!r.correct && errorCats.indexOf(r.category) === -1) errorCats.push(r.category);
-      });
-      weakCategories = errorCats;
-    }
-
-    // Update SR for diagnostic words that were wrong
-    for (var ri2 = 0; ri2 < results.length; ri2++) {
-      if (!results[ri2].correct) {
-        updateSRWord(results[ri2].word, false, results[ri2].category);
-      }
-    }
-
-    var profile = loadProfile() || {};
-    profile.lastDiagnostic = Date.now();
-    profile.grade = grade;
-    profile.spellingLevel = spellingLevel;
-    profile.categoryScores = categoryScores;
-    profile.weakCategories = weakCategories;
-    profile.diagnosticResults = results.map(function(r) { return { word: r.word, correct: r.correct, userAnswer: r.userAnswer, category: r.category, level: r.level }; });
-    saveProfile(profile);
-
-    show('phase-analyzing');
-    analyzeWithAI(profile);
-  } else if (gameMode === 'training') {
-    renderTrainingResults();
-  } else if (gameMode === 'review') {
+  if (gameMode === 'review') {
     renderReviewResults();
+  } else {
+    renderTrainingResults();
   }
-}
-
-// AI Analysis
-async function analyzeWithAI(profile) {
-  var correct = results.filter(function(r) { return r.correct; }).length;
-  var wrong = results.filter(function(r) { return !r.correct; });
-  var cats = [];
-  wrong.forEach(function(r) { if (cats.indexOf(r.category) === -1) cats.push(r.category); });
-  var spellingLevel = profile.spellingLevel || 1;
-  var levelInfo = 'Estimeret stave-niveau: ' + LEVEL_GRADE_MAP[spellingLevel] + ' (niveau ' + spellingLevel + '/4).';
-
-  var prompt = 'Du er en dansk stavningstutor for et barn.\n\n' +
-    levelInfo + '\n\n' +
-    'Diagnostisk test med adaptivt niveau (starter let, bliver sværere).\n\n' +
-    'Testresultater:\n' +
-    results.map(function(r) { return '- "' + r.word + '" (kategori: ' + r.category + ', niveau: ' + r.level + '): ' + (r.correct ? 'RIGTIGT' : 'FORKERT — eleven skrev "' + r.userAnswer + '"'); }).join('\n') +
-    '\n\nRigtige: ' + correct + '/' + results.length + '. Fejlkategorier: ' + (cats.join(', ') || 'ingen') + '.\n\n' +
-    'Kategori-scores:\n' +
-    ALL_CATEGORIES.map(function(c) { var cs = profile.categoryScores[c]; return '- ' + c + ': ' + (cs ? cs.correct : 0) + '/' + (cs ? cs.total : 0); }).join('\n') +
-    '\n\nSvage kategorier: ' + (profile.weakCategories.join(', ') || 'ingen') + '\n\n' +
-    'Svar KUN som JSON (ingen markdown):\n' +
-    '{\n' +
-    '  "encouragement": "Varm, motiverende sætning (max 2 sætninger)",\n' +
-    '  "summary": "Analyse af mønstrene bag fejlene — forklar HVORFOR disse ord er svære på dansk (2-3 sætninger)",\n' +
-    '  "patterns": ["1-3 stavemønstre eleven bør fokusere på"],\n' +
-    '  "exercises": [\n' +
-    '    {\n' +
-    '      "title": "Øvelsens navn",\n' +
-    '      "type": "Øvelsestype",\n' +
-    '      "why": "Én sætning: hvorfor netop denne øvelse hjælper",\n' +
-    '      "description": "Konkret beskrivelse af hvad eleven skal gøre",\n' +
-    '      "words": ["ord1","ord2","ord3","ord4","ord5"],\n' +
-    '      "pattern_rule": "Den korte regel eller det mønster der binder ordene sammen"\n' +
-    '    }\n' +
-    '  ],\n' +
-    '  "daily_tip": "Ét konkret tip til hvad eleven kan gøre i morgen i 5 minutter"\n' +
-    '}\n' +
-    'Lav 2-3 øvelser. Ordene skal dele mønster med fejlene. Tilpas til elevens niveau.';
-
-  var anthropicKey = loadAnthropicKey();
-  if (!anthropicKey) { renderProfileFallback(profile); return; }
-
-  try {
-    var res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": anthropicKey,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true"
-      },
-      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1500, messages: [{ role: "user", content: prompt }] })
-    });
-    if (!res.ok) { console.error('API error:', res.status); renderProfileFallback(profile); return; }
-    var data = await res.json();
-    var text = data.content.map(function(i) { return i.text || ''; }).join('');
-    renderProfile(profile, JSON.parse(text.replace(/```json|```/g, '').trim()));
-  } catch(err) {
-    console.error(err); renderProfileFallback(profile);
-  }
-}
-
-// Render Profile
-function renderProfile(profile, aiData) {
-  hide('phase-analyzing'); show('phase-profile');
-  var correct = results.filter(function(r) { return r.correct; }).length;
-  var wrong = results.filter(function(r) { return !r.correct; });
-  var spellingLevel = profile.spellingLevel || 1;
-  var grade = profile.grade || 0;
-
-  var html = '';
-
-  // AI feedback
-  if (aiData) {
-    html += '<div class="ai-bubble"><p><strong>' + aiData.encouragement + '</strong></p>';
-    html += '<p style="margin-top:8px">' + aiData.summary + '</p></div>';
-  }
-
-  // Overall score
-  html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
-  html += '</div>';
-
-  // Spelling level display
-  html += '<div style="text-align:center;margin:16px 0 8px">';
-  html += '<h2 style="font-size:1.3rem;margin-bottom:4px">Dit stave-niveau</h2>';
-  html += '<div style="font-family:\'Fredoka One\',cursive;font-size:1.8rem;color:var(--accent)">' + LEVEL_GRADE_MAP[spellingLevel] + '</div>';
-  html += '</div>';
-
-  // Level meter
-  var meterPct = (spellingLevel / 4) * 100;
-  var meterColors = { 0: '#ccc', 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
-  html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + Math.max(meterPct, 5) + '%;background:' + (meterColors[spellingLevel] || '#ccc') + '"></div></div>';
-  html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
-  html += '<span>Niv. 0</span><span>Niv. 1</span><span>Niv. 2</span><span>Niv. 3</span><span>Niv. 4</span></div>';
-
-  // Per-category breakdown
-  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
-  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
-    var cat = ALL_CATEGORIES[ci];
-    var cs = profile.categoryScores[cat];
-    if (!cs || cs.total === 0) continue;
-    var pct = Math.round((cs.correct / cs.total) * 100);
-    var color = 'var(--green)';
-    if (cs.correct === 0) color = 'var(--red)';
-    else if (cs.correct < cs.total) color = 'var(--accent)';
-    html += '<div class="cat-score">';
-    html += '<div class="cat-icon">' + (CATEGORY_ICONS[cat] || '\u{1F520}') + '</div>';
-    html += '<div class="cat-name">' + cat + '</div>';
-    html += '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>';
-    html += '<div class="cat-result" style="color:' + color + '">' + cs.correct + '/' + cs.total + '</div>';
-    html += '</div>';
-  }
-
-  // Patterns to focus on
-  if (aiData && aiData.patterns && aiData.patterns.length) {
-    html += '<p style="margin:16px 0 8px;font-size:0.85rem;color:var(--muted)">Fokusér på disse mønstre:</p><div style="margin-bottom:16px">';
-    aiData.patterns.forEach(function(p) { html += '<span class="tag">\u{1F3AF} ' + p + '</span>'; });
-    html += '</div>';
-  }
-
-  // Per-word results
-  html += '<div style="margin-bottom:18px">';
-  results.forEach(function(r) {
-    html += '<div class="word-attempt">';
-    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + ' (niv. ' + r.level + ')</span></span>';
-    html += '<span>' + (r.correct ? '<span class="correct-mark">\u2713 rigtigt</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>') + '</span>';
-    html += '</div>';
-  });
-  html += '</div>';
-
-  // AI exercises
-  if (aiData && aiData.exercises && aiData.exercises.length) {
-    html += '<h2 style="margin-bottom:14px">\u{1F3CB}\uFE0F Øvelser fra AI</h2>';
-    var icons = ['\u{1F4DA}','\u270D\uFE0F','\u{1F3B2}','\u{1F0CF}','\u{1F524}'];
-    aiData.exercises.forEach(function(ex, i) {
-      html += '<div class="exercise-block">';
-      html += '<h3>' + icons[i % icons.length] + ' ' + ex.title + ' <span style="font-size:0.75rem;color:var(--muted);font-weight:400">(' + ex.type + ')</span></h3>';
-      if (ex.why) html += '<div class="why-box">\u{1F9E0} ' + ex.why + '</div>';
-      html += '<p>' + ex.description + '</p>';
-      if (ex.pattern_rule) html += '<p style="margin-top:8px;font-size:0.85rem;color:#a78bfa">\u{1F4CC} Regel: <em>' + ex.pattern_rule + '</em></p>';
-      if (ex.words && ex.words.length) {
-        html += '<div class="word-pills">';
-        ex.words.forEach(function(w) { html += '<button class="word-pill" onclick="speakWord(\'' + w.replace(/'/g, "\\'") + '\')">' + w + ' \u{1F508}</button>'; });
-        html += '</div>';
-      }
-      html += '</div>';
-    });
-  }
-
-  // Daily tip
-  if (wrong.length > 0 && aiData && aiData.daily_tip) {
-    html += '<div class="tomorrow-box">';
-    html += '<h3>\u{1F5D3}\uFE0F Kom igen i morgen!</h3>';
-    html += '<p>' + aiData.daily_tip + '</p>';
-    html += '</div>';
-  }
-
-  // Action buttons
-  html += '<hr class="divider">';
-  if (profile.weakCategories.length > 0) {
-    html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F3AF} Start træning af svage kategorier</button>';
-  }
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Nyt stavespil</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
-
-  document.getElementById('profileContent').innerHTML = html;
-}
-
-function renderProfileFallback(profile) {
-  hide('phase-analyzing'); show('phase-profile');
-  var correct = results.filter(function(r) { return r.correct; }).length;
-  var wrong = results.filter(function(r) { return !r.correct; });
-  var cats = profile.weakCategories;
-  var spellingLevel = profile.spellingLevel || 1;
-  var grade = profile.grade || 0;
-
-  var encouragements = [
-    'Godt gået! Øvelse gør mester \u{1F4AA}',
-    'Flot indsats! Du er på rette vej \u{1F31F}',
-    'Stærkt arbejde! Bliv ved med at øve \u2B50'
-  ];
-  var encouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
-
-  var html = '';
-
-  html += '<div class="ai-bubble"><p><strong>' + encouragement + '</strong></p>';
-  html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige.' + (wrong.length > 0 ? ' Fokusér på: ' + cats.join(', ') + '.' : ' Perfekt score!') + '</p></div>';
-
-  // Overall score
-  html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
-  html += '</div>';
-
-  // Spelling level display
-  html += '<div style="text-align:center;margin:16px 0 8px">';
-  html += '<h2 style="font-size:1.3rem;margin-bottom:4px">Dit stave-niveau</h2>';
-  html += '<div style="font-family:\'Fredoka One\',cursive;font-size:1.8rem;color:var(--accent)">' + LEVEL_GRADE_MAP[spellingLevel] + '</div>';
-  html += '</div>';
-
-  // Level meter
-  var meterPct = (spellingLevel / 4) * 100;
-  var meterColors = { 0: '#ccc', 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
-  html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + Math.max(meterPct, 5) + '%;background:' + (meterColors[spellingLevel] || '#ccc') + '"></div></div>';
-  html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
-  html += '<span>Niv. 0</span><span>Niv. 1</span><span>Niv. 2</span><span>Niv. 3</span><span>Niv. 4</span></div>';
-
-  // Per-category breakdown
-  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
-  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
-    var cat = ALL_CATEGORIES[ci];
-    var cs = profile.categoryScores[cat];
-    if (!cs || cs.total === 0) continue;
-    var pct = Math.round((cs.correct / cs.total) * 100);
-    var color = 'var(--green)';
-    if (cs.correct === 0) color = 'var(--red)';
-    else if (cs.correct < cs.total) color = 'var(--accent)';
-    html += '<div class="cat-score">';
-    html += '<div class="cat-icon">' + (CATEGORY_ICONS[cat] || '\u{1F520}') + '</div>';
-    html += '<div class="cat-name">' + cat + '</div>';
-    html += '<div class="cat-bar"><div class="cat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>';
-    html += '<div class="cat-result" style="color:' + color + '">' + cs.correct + '/' + cs.total + '</div>';
-    html += '</div>';
-  }
-
-  // Per-word results
-  html += '<div style="margin:18px 0">';
-  results.forEach(function(r) {
-    html += '<div class="word-attempt">';
-    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + ' (niv. ' + r.level + ')</span></span>';
-    html += '<span>' + (r.correct ? '<span class="correct-mark">\u2713 rigtigt</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>') + '</span>';
-    html += '</div>';
-  });
-  html += '</div>';
-
-  // Show rules for weak categories
-  if (cats.length > 0) {
-    html += '<h2 style="margin-bottom:14px">\u{1F4D6} Regler for dine fejlkategorier</h2>';
-    cats.forEach(function(cat) {
-      var catWrong = wrong.filter(function(r) { return r.category === cat; });
-      var rule = PATTERN_RULES[cat] || '';
-      html += '<div class="exercise-block">';
-      html += '<h3>' + (CATEGORY_ICONS[cat] || '\u{1F520}') + ' ' + cat + '</h3>';
-      if (rule) html += '<div class="why-box">\u{1F4CC} ' + rule + '</div>';
-      html += '<div class="word-pills">';
-      catWrong.forEach(function(r) {
-        html += '<button class="word-pill" onclick="speakWord(\'' + r.word.replace(/'/g, "\\'") + '\')">' + r.word + ' \u{1F508}</button>';
-      });
-      var extra = WORD_BANK[cat].filter(function(w) { return !catWrong.find(function(cw) { return cw.word === w.word; }); }).slice(0, 3);
-      extra.forEach(function(w) {
-        html += '<button class="word-pill" onclick="speakWord(\'' + w.word.replace(/'/g, "\\'") + '\')">' + w.word + ' \u{1F508}</button>';
-      });
-      html += '</div></div>';
-    });
-
-    html += '<div class="tomorrow-box">';
-    html += '<h3>\u{1F5D3}\uFE0F Kom igen i morgen!</h3>';
-    html += '<p>Skriv hvert fejlord 3 gange og sig det højt mens du skriver. Forskning viser at korte daglige sessioner virker bedre end én lang session.</p>';
-    html += '</div>';
-  }
-
-  // Action buttons
-  html += '<hr class="divider">';
-  if (profile.weakCategories.length > 0) {
-    html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F3AF} Start træning af svage kategorier</button>';
-  }
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Nyt stavespil</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
-
-  document.getElementById('profileContent').innerHTML = html;
 }
 
 // Training results
@@ -3410,7 +2897,7 @@ function renderTrainingResults() {
   html += '</div>';
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Nyt stavespil</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startTrainingFromProfile()">\u{1F504} Nyt stavespil</button>';
   html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
@@ -3450,7 +2937,7 @@ function renderReviewResults() {
   html += '</div>';
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Nyt stavespil</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startTrainingFromProfile()">\u{1F504} Nyt stavespil</button>';
   html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
@@ -3806,7 +3293,6 @@ var BOSS_DISABLED_TYPES = ['rain', 'reverse', 'pacman', 'highway', 'snake'];
 var BOSS_ALL_TYPES = ['scramble', 'memory', 'cardcast', 'rain', 'reverse', 'pacman', 'highway', 'snake'];
 
 var EXERCISE_TYPES = [
-  { id: 'diagnostic', emoji: '\u{1F680}', name: 'Stavespil', fn: 'startDiagnostic' },
   { id: 'fillin', emoji: '\u{270F}\uFE0F', name: 'Udfyld bogstav', fn: 'startFillIn' },
   { id: 'rightorwrong', emoji: '\u{2705}', name: 'Rigtigt/forkert', fn: 'startRightOrWrong' },
   { id: 'spellingpolice', emoji: '\u{1F46E}', name: 'Stavepolitiet', fn: 'startSpellingPolice' },
@@ -6351,19 +5837,6 @@ function analyzePassiveData() {
       }
     }
 
-    if (profile && profile.diagnosticResults) {
-      for (var i = 0; i < profile.diagnosticResults.length; i++) {
-        var r = profile.diagnosticResults[i];
-        if (!r.correct) {
-          totalErrors++;
-          // Check for phonological error patterns
-          if (r.category === 'Stumme bogstaver' || r.category === 'Lydrette ord') {
-            phonologicalErrors++;
-          }
-        }
-        totalWords++;
-      }
-    }
 
     if (totalWords === 0) return 50;
 
@@ -8428,18 +7901,7 @@ function renderCategoryLevels() {
 }
 
 function refreshWelcomeButtons() {
-  var profile = loadProfile();
-
-  var startBtn = document.getElementById('startDiagBtn');
-  var newDiagBtn = document.getElementById('newDiagBtn');
-
-  if (profile) {
-    startBtn.classList.add('hidden');
-    newDiagBtn.classList.remove('hidden');
-  } else {
-    startBtn.classList.remove('hidden');
-    newDiagBtn.classList.add('hidden');
-  }
+  // No-op — kept for compatibility with callers
 }
 
 // Init

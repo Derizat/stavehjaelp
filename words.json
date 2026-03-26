@@ -269,7 +269,7 @@
       "hint": "Modsatte side af venstre",
       "patternHint": "stumt 'j' i udtalen",
       "sentence": "Drej til højre ved lyskrydset.",
-      "level": 4,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -365,7 +365,7 @@
       "hint": "Stort dyr med stødtænder",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "En hvalros lever i det kolde hav.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -373,7 +373,7 @@
       "hint": "Korn til brød",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Bonden dyrker hvede på marken.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -477,7 +477,7 @@
       "hint": "En ung ko",
       "patternHint": "stumt 'l' foran 'v'",
       "sentence": "Bonden har en ny kalv i stalden.",
-      "level": 3,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -485,7 +485,7 @@
       "hint": "Blid og rolig",
       "patternHint": "stumt 'd' efter 'l'",
       "sentence": "Vinden er mild i aften.",
-      "level": 3,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -501,7 +501,7 @@
       "hint": "Dyrebart skinnende metal",
       "patternHint": "stumt 'd' efter 'l'",
       "sentence": "Ringen er lavet af guld.",
-      "level": 3,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -517,7 +517,7 @@
       "hint": "En almindelig dag",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Livet i hverdagen kan også være spændende.",
-      "level": 4,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -525,7 +525,7 @@
       "hint": "Afgift på varer",
       "patternHint": "stumt 'd' efter 'l'",
       "sentence": "Der skal betales told på varen.",
-      "level": 4,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -533,7 +533,7 @@
       "hint": "Ikke tam, ukontrolleret",
       "patternHint": "stumt 'd' efter 'l'",
       "sentence": "Den vilde kat lever i skoven.",
-      "level": 4,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -557,7 +557,7 @@
       "hint": "Skinger lyd fra bremser",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Der kom et højt hvin fra bremserne.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -565,7 +565,7 @@
       "hint": "Skarp og kold som vinden",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Vinden var hvas ude ved stranden.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -573,7 +573,7 @@
       "hint": "En meget stille lyd",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Hun sagde det med et hvisk.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -581,7 +581,7 @@
       "hint": "En flok køer eller får",
       "patternHint": "stumt 'h' i 'hj'",
       "sentence": "En hjord af køer stod på marken.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -589,7 +589,7 @@
       "hint": "Buet tag i en kælder",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Kælderen har et gammelt hvælv.",
-      "level": 1,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -597,7 +597,7 @@
       "hint": "Noget der snurrer rundt",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Bladene dansede i en hvirvel.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -605,7 +605,7 @@
       "hint": "Følelsen af at savne sit hus",
       "patternHint": "stumt 'h' i 'hj'",
       "sentence": "Hun fik hjemve på sommerlejren.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -613,7 +613,7 @@
       "hint": "Kun halvdelen af den lyser på himlen",
       "patternHint": "stumt 'l' foran 'v'",
       "sentence": "Der var en smuk halvmåne på himlen i nat.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -621,7 +621,7 @@
       "hint": "Sted langs vejen hvor man holder pause",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Vi holdt ind på en hvileplads.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -629,7 +629,7 @@
       "hint": "De små unger fra en tæve",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Hvalpene legede i haven.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -717,7 +717,7 @@
       "hint": "Tallet 50",
       "patternHint": "stumt 'l' foran 'v'",
       "sentence": "Der var halvtreds elever til eksamen.",
-      "level": 4,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -725,7 +725,7 @@
       "hint": "Flad ting man spiser af",
       "patternHint": "stumt 'l' i udtalen",
       "sentence": "Sæt venligst en tallerken på bordet.",
-      "level": 4,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -733,7 +733,7 @@
       "hint": "Kropsdel mellem hals og arm",
       "patternHint": "stumt 'l' i udtalen",
       "sentence": "Han lagde armen om hendes skulder.",
-      "level": 4,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -967,7 +967,7 @@
       "hint": "Sted hvor børn lærer",
       "patternHint": "enkelt-l (lang vokal 'o')",
       "sentence": "Vi går i skole hver dag.",
-      "level": 3,
+      "level": 1,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1099,10 +1099,10 @@
       "category": "Dobbeltkonsonant"
     },
     {
-      "word": "rytte",
-      "hint": "Person på en hest",
+      "word": "rytter",
+      "hint": "Person der rider på en hest",
       "patternHint": "dobbelt 't' efter kort vokal",
-      "sentence": "En dygtig rytter red forbi på hesten.",
+      "sentence": "Rytteren red afsted på sin hest.",
       "level": 1,
       "category": "Dobbeltkonsonant"
     },
@@ -1291,7 +1291,7 @@
       "category": "Dobbeltkonsonant"
     },
     {
-      "word": "eppelin",
+      "word": "zeppelin",
       "hint": "Stort luftskib med gas",
       "patternHint": "dobbelt 'p' efter kort vokal",
       "sentence": "Den store zeppelin svævede over byen.",
@@ -1375,7 +1375,7 @@
       "hint": "Samle sig i en gruppe",
       "patternHint": "dobbelt 'k' efter kort vokal",
       "sentence": "Fuglene begyndte at flokke sig.",
-      "level": 1,
+      "level": 2,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1569,7 +1569,7 @@
       "hint": "Meget glad",
       "patternHint": "efterstavelse '-lig'",
       "sentence": "Hun blev lykkelig for gaven.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -2089,7 +2089,7 @@
       "hint": "Noget der kan gøre ondt",
       "patternHint": "efterstavelse '-lig'",
       "sentence": "For meget sukker er skadeligt for tænderne.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -2105,7 +2105,7 @@
       "hint": "Bange for mange ting",
       "patternHint": "efterstavelse '-som'",
       "sentence": "Den frygtsomme mus gemte sig.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -2121,7 +2121,7 @@
       "hint": "Det at være klog",
       "patternHint": "efterstavelsen '-dom' danner navneord",
       "sentence": "Bedstemor er fuld af visdom.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -2275,7 +2275,7 @@
       "hint": "Rum hvor man sover",
       "patternHint": "'sove' + 'værelse'",
       "sentence": "Mit soveværelse ligger ovenpå.",
-      "level": 1,
+      "level": 2,
       "category": "Sammensatte ord"
     },
     {
@@ -2283,7 +2283,7 @@
       "hint": "Rum med brusebad og toilet",
       "patternHint": "'bade' + 'værelse'",
       "sentence": "Badeværelset er lige om hjørnet.",
-      "level": 1,
+      "level": 2,
       "category": "Sammensatte ord"
     },
     {
@@ -2475,7 +2475,7 @@
       "hint": "Bygning med bøger",
       "patternHint": "'bibliotek' + '-et'",
       "sentence": "Vi besøger biblioteket hver tirsdag.",
-      "level": 4,
+      "level": 3,
       "category": "Sammensatte ord"
     },
     {
@@ -2499,7 +2499,7 @@
       "hint": "Skolefag om samfundet",
       "patternHint": "'samfund' + 's' + 'fag' (fuge-s)",
       "sentence": "I samfundsfag lærer vi om demokrati.",
-      "level": 4,
+      "level": 3,
       "category": "Sammensatte ord"
     },
     {
@@ -2811,7 +2811,7 @@
       "hint": "Tørrer sig med efter bad",
       "patternHint": "'hånd' + 'klæde'",
       "sentence": "Husk at tage et håndklæde med.",
-      "level": 1,
+      "level": 2,
       "category": "Sammensatte ord"
     },
     {
@@ -2979,7 +2979,7 @@
       "hint": "Reparation af veje",
       "patternHint": "'vej' + 'arbejde'",
       "sentence": "Der var vejarbejde på motorvejen.",
-      "level": 4,
+      "level": 3,
       "category": "Sammensatte ord"
     }
   ],
@@ -3301,7 +3301,7 @@
       "hint": "Bevægede sig i vandet i fortiden",
       "patternHint": "datid med '-ede': svømm + '-ede'",
       "sentence": "Vi svømmede i søen hele dagen.",
-      "level": 1,
+      "level": 2,
       "category": "Verbernes bøjning"
     },
     {
@@ -3629,7 +3629,7 @@
       "hint": "Gjorde sig klar til noget (datid)",
       "patternHint": "datid: '-te'",
       "sentence": "Læreren forberedte en sjov time.",
-      "level": 2,
+      "level": 3,
       "category": "Verbernes bøjning"
     },
     {
@@ -3887,7 +3887,7 @@
       "hint": "Det man har på kroppen, bestemt",
       "patternHint": "bestemt: '-et'",
       "sentence": "Hæng venligst tøjet op på bøjler.",
-      "level": 3,
+      "level": 2,
       "category": "Navneordsendelser"
     },
     {
@@ -3895,7 +3895,7 @@
       "hint": "Det man laver sandwich af, bestemt",
       "patternHint": "bestemt: '-et'",
       "sentence": "Brødet er bagt i dag.",
-      "level": 3,
+      "level": 2,
       "category": "Navneordsendelser"
     },
     {
@@ -4481,7 +4481,7 @@
       "hint": "Dyr der siger vov",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Hunden leger i haven.",
-      "level": 0,
+      "level": 1,
       "category": "Lydrette ord"
     },
     {
@@ -4489,7 +4489,7 @@
       "hint": "Rund ting man leger med",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Vi spiller bold i parken.",
-      "level": 0,
+      "level": 1,
       "category": "Lydrette ord"
     },
     {
@@ -4601,7 +4601,7 @@
       "hint": "Rar og venlig",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Du er en god ven.",
-      "level": 0,
+      "level": 1,
       "category": "Lydrette ord"
     },
     {
@@ -4673,15 +4673,7 @@
       "hint": "Orange grøntsag",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Kaninen elsker gulerødder.",
-      "level": 1,
-      "category": "Lydrette ord"
-    },
-    {
-      "word": "vindus",
-      "hint": "Man kigger ud igennem det",
-      "patternHint": "lydrette ord — staves som det lyder",
-      "sentence": "Fuglen sad på vinduskarmen.",
-      "level": 1,
+      "level": 2,
       "category": "Lydrette ord"
     },
     {
@@ -4761,7 +4753,7 @@
       "hint": "Helligt hus i andre lande",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Vi besøgte et gammelt tempel.",
-      "level": 1,
+      "level": 2,
       "category": "Lydrette ord"
     },
     {
@@ -4777,7 +4769,7 @@
       "hint": "Køretøj der henter syge mennesker",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Ambulancen kørte med udrykning.",
-      "level": 2,
+      "level": 3,
       "category": "Lydrette ord"
     },
     {
@@ -4801,7 +4793,7 @@
       "hint": "Man kører rundt i den i en forlystelsespark",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Børnene elskede at køre i karrusellen.",
-      "level": 2,
+      "level": 3,
       "category": "Lydrette ord"
     },
     {

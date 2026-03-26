@@ -3257,7 +3257,7 @@ var BOSS_INSTRUCTIONS = {
   highway: { emoji: '\u{1F697}', text: 'K\u00F8r bilen fra bane til bane og fang de rigtige bogstaver!' },
   cardcast: { emoji: '\u{1F0CF}', text: 'Lyt til ordet og kast de rigtige bogstav-kort mod bossen!' },
   spellpick: { emoji: '\u{1F3AF}', text: 'V\u00E6lg den rigtige stavem\u00E5de!' },
-  silentservant: { emoji: '\u{1F507}', text: 'Skal det stumme bogstav med eller ej?' },
+  silentservant: { emoji: '\u{1F9F3}', text: 'Fyld stumtjeneren! V\u00E6lg den rigtige stavem\u00E5de.' },
   snake: { emoji: '\u{1F40D}', text: 'Styr slangen og spis bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' }
 };
 
@@ -4858,15 +4858,38 @@ function pickSpellOption(btn, picked) {
 }
 
 // --- Type 10: SILENT SERVANT (stumtjeneren) ---
+var SS_ITEMS = [
+  { emoji: '\u{1F45F}', name: 'Sko' },
+  { emoji: '\u{1F9E6}', name: 'Sokker' },
+  { emoji: '\u{1F9E3}', name: 'Halst\u00F8rkl\u00E6de' },
+  { emoji: '\u{1F9E5}', name: 'Jakke' },
+  { emoji: '\u{1F3A9}', name: 'Hat' }
+];
+
+function renderCoatRack(correctCount) {
+  var html = '<div style="text-align:center;margin-bottom:14px">';
+  html += '<div style="font-weight:700;color:var(--accent);margin-bottom:8px">Stumtjeneren</div>';
+  html += '<div style="display:flex;flex-direction:column-reverse;align-items:center;gap:2px;min-height:180px;justify-content:flex-start">';
+  // Rack base
+  html += '<div style="font-size:1.2rem;color:var(--muted)">\u2503\u2501\u2501\u2501\u2503</div>';
+  // Items from bottom to top
+  for (var i = 0; i < SS_ITEMS.length; i++) {
+    var visible = i < correctCount;
+    html += '<div style="font-size:1.8rem;transition:all 0.5s;' + (visible ? 'opacity:1;transform:scale(1)' : 'opacity:0.15;transform:scale(0.7);filter:grayscale(1)') + '">' + SS_ITEMS[i].emoji + '</div>';
+  }
+  html += '</div>';
+  html += '<div style="font-size:0.8rem;color:var(--muted)">' + correctCount + ' / ' + SS_ITEMS.length + ' ting p\u00E5 stumtjeneren</div>';
+  html += '</div>';
+  return html;
+}
+
 function renderBossSilentServant(word, boss, idleAnim) {
-  bossState.hp = 5;
-  bossState.maxHP = 5;
+  bossState.ssCorrect = 0;
   bossState.ssRound = 0;
 
   // Build 5 rounds: mix of stumme bogstaver words (correct=with silent letter)
   // and non-stumme words (correct=without silent letter)
   var stummeWords = (WORD_BANK['Stumme bogstaver'] || []).slice();
-  // Shuffle
   for (var i = stummeWords.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t = stummeWords[i]; stummeWords[i] = stummeWords[j]; stummeWords[j] = t;
@@ -4875,28 +4898,19 @@ function renderBossSilentServant(word, boss, idleAnim) {
   var rounds = [];
   var usedWords = {};
 
-  // Pick stumme words (answer = with silent letter)
   for (var si = 0; si < stummeWords.length && rounds.length < 3; si++) {
     var sw = stummeWords[si];
     var mis = generateMisspelling(sw);
     if (mis && mis.misspelled && mis.misspelled.toLowerCase() !== sw.word.toLowerCase()) {
       if (usedWords[sw.word.toLowerCase()]) continue;
       usedWords[sw.word.toLowerCase()] = true;
-      rounds.push({
-        correct: sw.word.toLowerCase(),
-        wrong: mis.misspelled.toLowerCase(),
-        hasSilent: true
-      });
+      rounds.push({ correct: sw.word.toLowerCase(), wrong: mis.misspelled.toLowerCase(), hasSilent: true });
     }
   }
 
-  // Pick non-stumme words that look like they could have silent letters
-  // Create fake "silent letter" versions of normal words
   var otherCats = Object.keys(WORD_BANK).filter(function(c) { return c !== 'Stumme bogstaver'; });
   var otherWords = [];
-  otherCats.forEach(function(cat) {
-    WORD_BANK[cat].forEach(function(w) { otherWords.push(w); });
-  });
+  otherCats.forEach(function(cat) { WORD_BANK[cat].forEach(function(w) { otherWords.push(w); }); });
   for (var oi = otherWords.length - 1; oi > 0; oi--) {
     var oj = Math.floor(Math.random() * (oi + 1));
     var ot = otherWords[oi]; otherWords[oi] = otherWords[oj]; otherWords[oj] = ot;
@@ -4905,67 +4919,52 @@ function renderBossSilentServant(word, boss, idleAnim) {
   for (var ni = 0; ni < otherWords.length && rounds.length < 5; ni++) {
     var nw = otherWords[ni].word.toLowerCase();
     if (usedWords[nw]) continue;
-    // Add a fake silent letter
     var fakeVersion = null;
-    if (nw.match(/^v/) && !nw.match(/^hv/)) {
-      fakeVersion = 'h' + nw; // add h before v
-    } else if (nw.match(/^j/) && !nw.match(/^hj/)) {
-      fakeVersion = 'h' + nw; // add h before j
-    } else if (nw.indexOf('lv') >= 0) {
-      // word already has lv, could add silent letter elsewhere — skip
-      continue;
-    } else {
-      continue;
-    }
+    if (nw.match(/^v/) && !nw.match(/^hv/)) fakeVersion = 'h' + nw;
+    else if (nw.match(/^j/) && !nw.match(/^hj/)) fakeVersion = 'h' + nw;
+    else continue;
     if (fakeVersion && fakeVersion !== nw) {
       usedWords[nw] = true;
-      rounds.push({
-        correct: nw,
-        wrong: fakeVersion,
-        hasSilent: false
-      });
+      rounds.push({ correct: nw, wrong: fakeVersion, hasSilent: false });
     }
   }
 
-  // If not enough non-stumme, fill with more stumme
   for (var si2 = 0; si2 < stummeWords.length && rounds.length < 5; si2++) {
     var sw2 = stummeWords[si2];
     if (usedWords[sw2.word.toLowerCase()]) continue;
     var mis2 = generateMisspelling(sw2);
     if (mis2 && mis2.misspelled) {
       usedWords[sw2.word.toLowerCase()] = true;
-      rounds.push({
-        correct: sw2.word.toLowerCase(),
-        wrong: mis2.misspelled.toLowerCase(),
-        hasSilent: true
-      });
+      rounds.push({ correct: sw2.word.toLowerCase(), wrong: mis2.misspelled.toLowerCase(), hasSilent: true });
     }
   }
 
-  // Shuffle rounds
   for (var ri = rounds.length - 1; ri > 0; ri--) {
     var rj = Math.floor(Math.random() * (ri + 1));
     var rt = rounds[ri]; rounds[ri] = rounds[rj]; rounds[rj] = rt;
   }
 
   bossState.ssRounds = rounds;
-  bossState.boss = { emoji: '\u{1F9CF}', name: 'Stumtjeneren' };
+  bossState.boss = { emoji: '\u{1F9F3}', name: 'Stumtjeneren' };
+  // Set hp for compatibility with bossDefeated
+  bossState.hp = 5;
+  bossState.maxHP = 5;
 
   var content = document.getElementById('bossContent');
-  content.innerHTML = renderBossHeader(bossState.boss, idleAnim, 5, 5);
+  content.innerHTML = renderCoatRack(0);
   buildSilentServantRound();
 }
 
 function buildSilentServantRound() {
-  if (!bossState || bossState.hp <= 0) return;
+  if (!bossState) return;
+  if (bossState.ssCorrect >= SS_ITEMS.length) { bossDefeated(); return; }
   var round = bossState.ssRounds[bossState.ssRound];
   if (!round) { bossDefeated(); return; }
 
   var content = document.getElementById('bossContent');
-  var html = renderBossHeader(bossState.boss, bossState.idleAnim, bossState.hp, bossState.maxHP);
+  var html = renderCoatRack(bossState.ssCorrect);
   html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:10px 0">Hvilken stavem\u00E5de er rigtig?</p>';
 
-  // Show two options: correct and wrong, shuffled
   var opts = [round.correct, round.wrong];
   if (Math.random() > 0.5) { opts = [round.wrong, round.correct]; }
 
@@ -4996,21 +4995,17 @@ function pickSilentOption(btn, picked) {
   }
 
   if (correct) {
+    bossState.ssCorrect++;
     bossState.hp--;
-    updateBossHP();
-    bossHitAnim();
-    if (bossState.hp <= 0) {
+    if (bossState.ssCorrect >= SS_ITEMS.length) {
       setTimeout(function() { bossDefeated(); }, 800);
       return;
     }
-  } else {
-    bossAttackAnim();
   }
 
   setTimeout(function() {
     bossState.ssRound++;
     if (bossState.ssRound >= bossState.ssRounds.length) {
-      // Ran out of rounds without defeating boss — refill
       bossState.ssRound = 0;
     }
     buildSilentServantRound();

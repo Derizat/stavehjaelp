@@ -1093,7 +1093,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.8</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.0.9</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -7934,6 +7934,15 @@ function pickSpkOption(btn, picked) {
 
   document.getElementById('spkScoreCorrect').textContent = spkResults.filter(function(r) { return r.correct; }).length;
   document.getElementById('spkScoreWrong').textContent = spkResults.filter(function(r) { return !r.correct; }).length;
+
+  var box = document.getElementById('spkFeedbackBox');
+  box.style.display = 'block';
+  if (ok) {
+    box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt!</div>';
+  } else {
+    box.innerHTML = '<div class="feedback-wrong">\u274C Forkert! Det rigtige er: <strong>' + w.word + '</strong></div>';
+  }
+
   document.getElementById('spkNextBtn').classList.remove('hidden');
 }
 

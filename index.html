@@ -2560,6 +2560,7 @@ function renderWord() {
   }
   document.getElementById('spellingInput').value = '';
   document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('listenBox').style.visibility = '';
   document.getElementById('checkBtn').classList.remove('hidden');
   document.getElementById('checkBtn').innerHTML = '\u270F\uFE0F Tjek stavning';
   document.getElementById('nextBtn').classList.add('hidden');
@@ -2674,6 +2675,7 @@ function checkSpelling() {
     updateSRWord(w.word, ok, w.category);
   }
 
+  document.getElementById('listenBox').style.visibility = 'hidden';
   if (ok) {
     box.style.background = 'rgba(16,185,129,0.15)';
     box.innerHTML = '<div style="text-align:center;font-size:1.2rem;font-weight:700;color:var(--green)">\u2705 Rigtigt! Flot klaret! \u{1F389}</div>';

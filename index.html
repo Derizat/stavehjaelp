@@ -5070,7 +5070,6 @@ function renderBossSpellpick(word, boss, idleAnim) {
   // Pick 3 different words from the same category
   var cat = bossState.wordObj.category;
   var catWords = (WORD_BANK[cat] || []).slice();
-  // Shuffle
   for (var i = catWords.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t = catWords[i]; catWords[i] = catWords[j]; catWords[j] = t;
@@ -5080,19 +5079,76 @@ function renderBossSpellpick(word, boss, idleAnim) {
     var wo = catWords[wi];
     var mis = generateMisspelling(wo);
     if (mis && mis.misspelled && mis.misspelled.toLowerCase() !== wo.word.toLowerCase()) {
-      spWords.push({ word: wo.word.toLowerCase(), category: cat, patternHint: wo.patternHint || '', wordObj: wo });
+      spWords.push({ word: wo.word.toLowerCase(), category: cat, patternHint: wo.patternHint || '', wordObj: wo, dbMisspellings: [] });
     }
   }
-  // Fallback: if not enough, use the original word
   while (spWords.length < 3) {
-    spWords.push({ word: word, category: cat, patternHint: bossState.wordObj.patternHint || '', wordObj: bossState.wordObj });
+    spWords.push({ word: word, category: cat, patternHint: bossState.wordObj.patternHint || '', wordObj: bossState.wordObj, dbMisspellings: [] });
   }
   bossState.spWords = spWords;
 
   var content = document.getElementById('bossContent');
-  content.innerHTML = renderBossHeader(boss, idleAnim, hp, hp);
+  content.innerHTML = renderBossHeader(boss, idleAnim, hp, hp) +
+    '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin-top:12px">Henter stavefejl...</p>';
 
-  buildSpellpickRound();
+  // Fetch real misspellings from Supabase for all 3 words
+  var wordList = spWords.map(function(w) { return w.word; });
+  fetchMisspellings(wordList, function(misByWord) {
+    for (var mi = 0; mi < spWords.length; mi++) {
+      spWords[mi].dbMisspellings = misByWord[spWords[mi].word] || [];
+    }
+    buildSpellpickRound();
+  });
+}
+
+function fetchMisspellings(words, callback) {
+  if (!supabaseClient) { callback({}); return; }
+  // Query all wrong answers for these words
+  supabaseClient.from('answers')
+    .select('word, answer')
+    .eq('correct', false)
+    .in('word', words)
+    .then(function(res) {
+      var misByWord = {};
+      if (res.data) {
+        for (var i = 0; i < res.data.length; i++) {
+          var r = res.data[i];
+          var w = r.word.toLowerCase();
+          var a = r.answer.toLowerCase().trim();
+          if (a && a !== w) {
+            if (!misByWord[w]) misByWord[w] = [];
+            if (misByWord[w].indexOf(a) < 0) misByWord[w].push(a);
+          }
+        }
+      }
+      callback(misByWord);
+    }).catch(function() { callback({}); });
+}
+
+function generateFallbackMisspellings(word) {
+  var extras = [];
+  if (word.length >= 3) {
+    var si = 1 + Math.floor(Math.random() * (word.length - 2));
+    var swapped = word.substring(0, si) + word[si + 1] + word[si] + word.substring(si + 2);
+    if (swapped !== word) extras.push(swapped);
+  }
+  var ri = Math.floor(Math.random() * word.length);
+  var removed = word.substring(0, ri) + word.substring(ri + 1);
+  if (removed !== word && removed.length > 1) extras.push(removed);
+  var di = Math.floor(Math.random() * word.length);
+  var doubled = word.substring(0, di) + word[di] + word[di] + word.substring(di + 1);
+  if (doubled !== word) extras.push(doubled);
+  var vowels = 'aeiouy\u00E6\u00F8\u00E5';
+  for (var vi = 0; vi < word.length; vi++) {
+    if (vowels.indexOf(word[vi]) >= 0) {
+      var rv = vowels[Math.floor(Math.random() * vowels.length)];
+      if (rv !== word[vi]) {
+        extras.push(word.substring(0, vi) + rv + word.substring(vi + 1));
+        break;
+      }
+    }
+  }
+  return extras;
 }
 
 function buildSpellpickRound() {
@@ -5101,47 +5157,37 @@ function buildSpellpickRound() {
   var wordObj = spWord.wordObj || spWord;
   var word = spWord.word;
 
-  // Generate misspellings
+  // Start with correct answer
   var options = [word];
-  var mis = generateMisspelling(wordObj);
-  if (mis && mis.misspelled && mis.misspelled !== word) {
-    options.push(mis.misspelled.toLowerCase());
+
+  // Prioritize real misspellings from database
+  var dbMis = (spWord.dbMisspellings || []).slice();
+  // Shuffle db misspellings
+  for (var di = dbMis.length - 1; di > 0; di--) {
+    var dj = Math.floor(Math.random() * (di + 1));
+    var dt = dbMis[di]; dbMis[di] = dbMis[dj]; dbMis[dj] = dt;
+  }
+  for (var dbi = 0; dbi < dbMis.length && options.length < 4; dbi++) {
+    if (options.indexOf(dbMis[dbi]) < 0) options.push(dbMis[dbi]);
   }
 
-  // Generate additional misspellings by swapping/removing/doubling letters
-  var extraMis = [];
-  // Swap two adjacent letters
-  if (word.length >= 3) {
-    var si = 1 + Math.floor(Math.random() * (word.length - 2));
-    var swapped = word.substring(0, si) + word[si + 1] + word[si] + word.substring(si + 2);
-    if (swapped !== word && options.indexOf(swapped) < 0) extraMis.push(swapped);
-  }
-  // Remove a letter
-  var ri = Math.floor(Math.random() * word.length);
-  var removed = word.substring(0, ri) + word.substring(ri + 1);
-  if (removed !== word && options.indexOf(removed) < 0 && removed.length > 1) extraMis.push(removed);
-  // Double a letter
-  var di = Math.floor(Math.random() * word.length);
-  var doubled = word.substring(0, di) + word[di] + word[di] + word.substring(di + 1);
-  if (doubled !== word && options.indexOf(doubled) < 0) extraMis.push(doubled);
-  // Replace a vowel
-  var vowels = 'aeiouy\u00E6\u00F8\u00E5';
-  for (var vi = 0; vi < word.length; vi++) {
-    if (vowels.indexOf(word[vi]) >= 0) {
-      var rv = vowels[Math.floor(Math.random() * vowels.length)];
-      if (rv !== word[vi]) {
-        var replaced = word.substring(0, vi) + rv + word.substring(vi + 1);
-        if (options.indexOf(replaced) < 0) { extraMis.push(replaced); break; }
-      }
+  // Fill with category-aware misspelling
+  if (options.length < 4) {
+    var mis = generateMisspelling(wordObj);
+    if (mis && mis.misspelled && options.indexOf(mis.misspelled.toLowerCase()) < 0) {
+      options.push(mis.misspelled.toLowerCase());
     }
   }
 
-  // Fill up to 4 options total
-  for (var ei = 0; ei < extraMis.length && options.length < 4; ei++) {
-    if (options.indexOf(extraMis[ei]) < 0) options.push(extraMis[ei]);
+  // Fill remaining with fallback misspellings
+  if (options.length < 4) {
+    var fallbacks = generateFallbackMisspellings(word);
+    for (var fi = 0; fi < fallbacks.length && options.length < 4; fi++) {
+      if (options.indexOf(fallbacks[fi]) < 0) options.push(fallbacks[fi]);
+    }
   }
 
-  // Shuffle
+  // Shuffle options
   for (var si2 = options.length - 1; si2 > 0; si2--) {
     var sj = Math.floor(Math.random() * (si2 + 1));
     var tmp = options[si2]; options[si2] = options[sj]; options[sj] = tmp;

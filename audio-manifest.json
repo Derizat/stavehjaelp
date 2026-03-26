@@ -797,11 +797,11 @@
     "word_m": "audio/word_bukser_m.mp3",
     "sentence_m": "audio/sentence_bukser_m.mp3"
   },
-  "lamme": {
-    "word": "audio/word_lamme.mp3",
-    "sentence": "audio/sentence_lamme.mp3",
-    "word_m": "audio/word_lamme_m.mp3",
-    "sentence_m": "audio/sentence_lamme_m.mp3"
+  "summe": {
+    "word": "audio/word_summe.mp3",
+    "sentence": "audio/sentence_summe.mp3",
+    "word_m": "audio/word_summe_m.mp3",
+    "sentence_m": "audio/sentence_summe_m.mp3"
   },
   "rulle": {
     "word": "audio/word_rulle.mp3",
@@ -821,11 +821,11 @@
     "word_m": "audio/word_kopper_m.mp3",
     "sentence_m": "audio/sentence_kopper_m.mp3"
   },
-  "rytte": {
-    "word": "audio/word_rytte.mp3",
-    "sentence": "audio/sentence_rytte.mp3",
-    "word_m": "audio/word_rytte_m.mp3",
-    "sentence_m": "audio/sentence_rytte_m.mp3"
+  "rytter": {
+    "word": "audio/word_rytter.mp3",
+    "sentence": "audio/sentence_rytter.mp3",
+    "word_m": "audio/word_rytter_m.mp3",
+    "sentence_m": "audio/sentence_rytter_m.mp3"
   },
   "nisse": {
     "word": "audio/word_nisse.mp3",
@@ -965,11 +965,11 @@
     "word_m": "audio/word_aggressive_m.mp3",
     "sentence_m": "audio/sentence_aggressive_m.mp3"
   },
-  "eppelin": {
-    "word": "audio/word_eppelin.mp3",
-    "sentence": "audio/sentence_eppelin.mp3",
-    "word_m": "audio/word_eppelin_m.mp3",
-    "sentence_m": "audio/sentence_eppelin_m.mp3"
+  "zeppelin": {
+    "word": "audio/word_zeppelin.mp3",
+    "sentence": "audio/sentence_zeppelin.mp3",
+    "word_m": "audio/word_zeppelin_m.mp3",
+    "sentence_m": "audio/sentence_zeppelin_m.mp3"
   },
   "hak": {
     "word": "audio/word_hak.mp3",
@@ -3497,12 +3497,6 @@
     "word_m": "audio/word_gulerod_m.mp3",
     "sentence_m": "audio/sentence_gulerod_m.mp3"
   },
-  "vindus": {
-    "word": "audio/word_vindus.mp3",
-    "sentence": "audio/sentence_vindus.mp3",
-    "word_m": "audio/word_vindus_m.mp3",
-    "sentence_m": "audio/sentence_vindus_m.mp3"
-  },
   "mad": {
     "word": "audio/word_mad.mp3",
     "sentence": "audio/sentence_mad.mp3",
@@ -3652,6 +3646,90 @@
     "sentence": "audio/sentence_kapelmester.mp3",
     "word_m": "audio/word_kapelmester_m.mp3",
     "sentence_m": "audio/sentence_kapelmester_m.mp3"
+  },
+  "bi": {
+    "word": "audio/word_bi.mp3",
+    "sentence": "audio/sentence_bi.mp3",
+    "word_m": "audio/word_bi_m.mp3",
+    "sentence_m": "audio/sentence_bi_m.mp3"
+  },
+  "by": {
+    "word": "audio/word_by.mp3",
+    "sentence": "audio/sentence_by.mp3",
+    "word_m": "audio/word_by_m.mp3",
+    "sentence_m": "audio/sentence_by_m.mp3"
+  },
+  "se": {
+    "word": "audio/word_se.mp3",
+    "sentence": "audio/sentence_se.mp3",
+    "word_m": "audio/word_se_m.mp3",
+    "sentence_m": "audio/sentence_se_m.mp3"
+  },
+  "ti": {
+    "word": "audio/word_ti.mp3",
+    "sentence": "audio/sentence_ti.mp3",
+    "word_m": "audio/word_ti_m.mp3",
+    "sentence_m": "audio/sentence_ti_m.mp3"
+  },
+  "to": {
+    "word": "audio/word_to.mp3",
+    "sentence": "audio/sentence_to.mp3",
+    "word_m": "audio/word_to_m.mp3",
+    "sentence_m": "audio/sentence_to_m.mp3"
+  },
+  "nu": {
+    "word": "audio/word_nu.mp3",
+    "sentence": "audio/sentence_nu.mp3",
+    "word_m": "audio/word_nu_m.mp3",
+    "sentence_m": "audio/sentence_nu_m.mp3"
+  },
+  "op": {
+    "word": "audio/word_op.mp3",
+    "sentence": "audio/sentence_op.mp3",
+    "word_m": "audio/word_op_m.mp3",
+    "sentence_m": "audio/sentence_op_m.mp3"
+  },
+  "af": {
+    "word": "audio/word_af.mp3",
+    "sentence": "audio/sentence_af.mp3",
+    "word_m": "audio/word_af_m.mp3",
+    "sentence_m": "audio/sentence_af_m.mp3"
+  },
+  "ned": {
+    "word": "audio/word_ned.mp3",
+    "sentence": "audio/sentence_ned.mp3",
+    "word_m": "audio/word_ned_m.mp3",
+    "sentence_m": "audio/sentence_ned_m.mp3"
+  },
+  "ben": {
+    "word": "audio/word_ben.mp3",
+    "sentence": "audio/sentence_ben.mp3",
+    "word_m": "audio/word_ben_m.mp3",
+    "sentence_m": "audio/sentence_ben_m.mp3"
+  },
+  "ven": {
+    "word": "audio/word_ven.mp3",
+    "sentence": "audio/sentence_ven.mp3",
+    "word_m": "audio/word_ven_m.mp3",
+    "sentence_m": "audio/sentence_ven_m.mp3"
+  },
+  "lys": {
+    "word": "audio/word_lys.mp3",
+    "sentence": "audio/sentence_lys.mp3",
+    "word_m": "audio/word_lys_m.mp3",
+    "sentence_m": "audio/sentence_lys_m.mp3"
+  },
+  "ild": {
+    "word": "audio/word_ild.mp3",
+    "sentence": "audio/sentence_ild.mp3",
+    "word_m": "audio/word_ild_m.mp3",
+    "sentence_m": "audio/sentence_ild_m.mp3"
+  },
+  "top": {
+    "word": "audio/word_top.mp3",
+    "sentence": "audio/sentence_top.mp3",
+    "word_m": "audio/word_top_m.mp3",
+    "sentence_m": "audio/sentence_top_m.mp3"
   },
   "hopper": {
     "word": "audio/word_hopper.mp3",

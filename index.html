@@ -1498,7 +1498,7 @@ function renderProfilePickerGrid(list) {
     var nameStyle = '';
     try {
       var raw = localStorage.getItem(name + '_reward_data');
-      if (raw) { var rd = JSON.parse(raw); var lvl = getAvatarLevel(rd.totalXP || 0); emoji = lvl.emoji; nameStyle = lvl.titleStyle || ''; }
+      if (raw) { var rd = JSON.parse(raw); var lvl = getAvatarLevel(rd.totalXP || 0); var dispIdx = rd.displayedLevel || 0; var dispLvl = AVATAR_LEVELS[dispIdx] || AVATAR_LEVELS[0]; emoji = dispLvl.image ? '<img src="' + dispLvl.image + '" style="width:2.5rem;height:2.5rem;object-fit:contain">' : dispLvl.emoji; nameStyle = dispLvl.titleStyle || ''; }
     } catch(e) {}
     html += '<button class="profile-picker-btn" onclick="selectPlayer(\'' + name.replace(/'/g, "\\'") + '\')">';
     html += '<span class="pp-emoji">' + emoji + '</span>';
@@ -5168,7 +5168,7 @@ function openChest() {
 
 var AVATAR_LEVELS = [
   { minXP: 0,    emoji: '\uD83E\uDD8A', title: 'Baby R\u00E6v', desc: 'Stavesp\u00E6d', titleStyle: 'color:var(--muted)' },
-  { minXP: 100,  emoji: '\uD83E\uDD8A\uD83C\uDFA9', title: 'R\u00E6v med Hat', desc: 'Stavebegynder', titleStyle: 'color:var(--text)' },
+  { minXP: 100,  emoji: '\uD83E\uDD8A\uD83C\uDFA9', image: 'images/foxhat.png', title: 'R\u00E6v med Hat', desc: 'Stavebegynder', titleStyle: 'color:var(--text)' },
   { minXP: 300,  emoji: '\uD83E\uDD8A\uD83E\uDDB8', title: 'Super-R\u00E6v', desc: 'Bogstavhelt', titleStyle: 'color:var(--green)' },
   { minXP: 600,  emoji: '\uD83E\uDD8A\u2694\uFE0F', title: 'R\u00E6v-Kriger', desc: 'Bogstavkriger', titleStyle: 'color:var(--blue)' },
   { minXP: 1000, emoji: '\uD83E\uDD8A\uD83D\uDC51', title: 'R\u00E6v-Dronning', desc: 'Ordmester', titleStyle: 'color:var(--accent2)' },
@@ -5201,7 +5201,13 @@ function updateWelcomeAvatar() {
 
   // Show the displayed level (not the actual earned one)
   var el = document.getElementById('avatarEmoji');
-  if (el) el.textContent = displayedLevel.emoji;
+  if (el) {
+    if (displayedLevel.image) {
+      el.innerHTML = '<img src="' + displayedLevel.image + '" alt="' + displayedLevel.title + '" style="width:4rem;height:4rem;object-fit:contain">';
+    } else {
+      el.textContent = displayedLevel.emoji;
+    }
+  }
   var titleEl = document.getElementById('avatarTitle');
   if (titleEl) {
     titleEl.textContent = displayedLevel.title;
@@ -5279,7 +5285,11 @@ function doLevelUp() {
 
   // Phase 2: New avatar appears
   setTimeout(function() {
-    emojiEl.textContent = newLevel.emoji;
+    if (newLevel.image) {
+      emojiEl.innerHTML = '<img src="' + newLevel.image + '" alt="' + newLevel.title + '" style="width:4rem;height:4rem;object-fit:contain">';
+    } else {
+      emojiEl.textContent = newLevel.emoji;
+    }
     emojiEl.style.animation = 'levelup-appear 0.8s ease forwards';
 
     titleEl.textContent = newLevel.title;

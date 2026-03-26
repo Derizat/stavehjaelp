@@ -13,7 +13,7 @@
       "hint": "Lyden en slange laver",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Slangen sagde hvæs!",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -61,7 +61,7 @@
       "hint": "Spørger om tid",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Hvornår skal vi spise?",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -69,7 +69,7 @@
       "hint": "Krog i et rum",
       "patternHint": "stumt 'h' i 'hj'",
       "sentence": "Stolen står henne i hjørne af stuen.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -77,7 +77,7 @@
       "hint": "Slappe af",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Du skal hvile dig efter løbeturen.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver"
     },
     {
@@ -445,7 +445,7 @@
       "hint": "Dreje rundt og rundt",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Bladene begyndte at hvirvle i vinden.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -557,7 +557,7 @@
       "hint": "Skinger lyd fra bremser",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Der kom et højt hvin fra bremserne.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -565,7 +565,7 @@
       "hint": "Skarp og kold som vinden",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Vinden var hvas ude ved stranden.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -613,7 +613,7 @@
       "hint": "Kun halvdelen af den lyser på himlen",
       "patternHint": "stumt 'l' foran 'v'",
       "sentence": "Der var en smuk halvmåne på himlen i nat.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -621,7 +621,7 @@
       "hint": "Sted langs vejen hvor man holder pause",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Vi holdt ind på en hvileplads.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -645,7 +645,7 @@
       "hint": "En der gerne giver en hånd",
       "patternHint": "stumt 'h' i 'hj'",
       "sentence": "Min nabo er meget hjælpsom.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -653,7 +653,7 @@
       "hint": "Noget der hører til det daglige",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Hun havde sit hverdags tøj på.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -661,7 +661,7 @@
       "hint": "Hyggeligt og trygt",
       "patternHint": "stumt 'h' i 'hj'",
       "sentence": "Stuen var varm og hjemlig.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -669,7 +669,7 @@
       "hint": "En halv cirkel",
       "patternHint": "stumt 'l' foran 'v'",
       "sentence": "Børnene sad i en halvkreds.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver"
     },
     {
@@ -767,7 +767,7 @@
       "hint": "Man åbner for vand",
       "patternHint": "enkelt konsonant, kort ord",
       "sentence": "Drej på tap for at få vand.",
-      "level": 1,
+      "level": 2,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -839,7 +839,7 @@
       "hint": "Hælde væske ud",
       "patternHint": "dobbelt-p efter kort 'a'",
       "sentence": "Far skal tappe øl fra tønden.",
-      "level": 1,
+      "level": 2,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1399,7 +1399,7 @@
       "hint": "Rund tagform på en bygning",
       "patternHint": "dobbelt 'p' efter kort vokal",
       "sentence": "Kirken havde en stor kuppel.",
-      "level": 2,
+      "level": 3,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1407,7 +1407,7 @@
       "hint": "Krydsende stænger i et hegn",
       "patternHint": "dobbelt 't' efter kort vokal",
       "sentence": "Der var et gitter foran vinduet.",
-      "level": 2,
+      "level": 3,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1415,7 +1415,7 @@
       "hint": "Ustadigt blinkende lys",
       "patternHint": "dobbelt 'm' efter kort vokal",
       "sentence": "Der var flimmer på den gamle tv-skærm.",
-      "level": 2,
+      "level": 3,
       "category": "Dobbeltkonsonant"
     },
     {
@@ -1529,7 +1529,7 @@
       "hint": "Kan ikke lade sig gøre",
       "patternHint": "forstavelse 'u-'",
       "sentence": "Denne opgave er næsten umulig at løse.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -1577,7 +1577,7 @@
       "hint": "Stille og roligt",
       "patternHint": "efterstavelse '-lig'",
       "sentence": "Det er så fredelig ude ved søen.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -1809,7 +1809,7 @@
       "hint": "Ikke lige, uens",
       "patternHint": "forstavelsen 'u-' betyder ikke/modsat",
       "sentence": "Tre er et ulige tal.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -1817,7 +1817,7 @@
       "hint": "Noget man kan se",
       "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
       "sentence": "Månen er synlig på himlen i aften.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -1841,7 +1841,7 @@
       "hint": "Når kroppen ikke har det godt",
       "patternHint": "efterstavelsen '-dom' danner navneord",
       "sentence": "Han var hjemme på grund af sygdom.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -1849,7 +1849,7 @@
       "hint": "At kunne gøre hvad man vil",
       "patternHint": "efterstavelsen '-hed' danner navneord",
       "sentence": "Fuglene nyder deres frihed i naturen.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -1865,7 +1865,7 @@
       "hint": "Noget slemt der sker",
       "patternHint": "forstavelsen 'u-' betyder ikke/modsat",
       "sentence": "Der var en ulykke på vejen.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -2097,7 +2097,7 @@
       "hint": "Som en lille person opfører sig",
       "patternHint": "efterstavelse '-lig'",
       "sentence": "Hans glæde var helt barnlig og smittende.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -2113,7 +2113,7 @@
       "hint": "Har ikke held med sig",
       "patternHint": "forstavelse 'u-'",
       "sentence": "Det var uheldig at vi glemte nøglen.",
-      "level": 1,
+      "level": 2,
       "category": "For- og efterstavelser"
     },
     {
@@ -2563,7 +2563,7 @@
       "hint": "Frossen vandklump",
       "patternHint": "sammensat af 'is' + 'terning'",
       "sentence": "Læg en isterning i glasset med saft.",
-      "level": 1,
+      "level": 2,
       "category": "Sammensatte ord"
     },
     {
@@ -2587,7 +2587,7 @@
       "hint": "Mølle der drives af vind",
       "patternHint": "sammensat af 'vind' + 'mølle'",
       "sentence": "Den gamle vindmølle står på bakken.",
-      "level": 1,
+      "level": 2,
       "category": "Sammensatte ord"
     },
     {
@@ -2651,7 +2651,7 @@
       "hint": "En der passer børn",
       "patternHint": "sammensat med fuge-e: 'barne' + 'pige'",
       "sentence": "Vores barnepige leger altid med os.",
-      "level": 2,
+      "level": 3,
       "category": "Sammensatte ord"
     },
     {
@@ -3053,7 +3053,7 @@
       "hint": "Datid af 'sige'",
       "patternHint": "uregelmæssig datid",
       "sentence": "Hun sagde godnat til os alle.",
-      "level": 1,
+      "level": 2,
       "category": "Verbernes bøjning"
     },
     {
@@ -4769,7 +4769,7 @@
       "hint": "Køretøj der henter syge mennesker",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Vi hørte en ambulance køre forbi.",
-      "level": 3,
+      "level": 4,
       "category": "Lydrette ord"
     },
     {

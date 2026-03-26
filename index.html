@@ -2675,11 +2675,13 @@ function renderWord() {
 }
 
 // Enter key handler
-document.getElementById('spellingInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    if (feedbackShown) nextWord();
-    else checkSpelling();
-  }
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  var testPhase = document.getElementById('phase-test');
+  if (!testPhase || testPhase.classList.contains('hidden')) return;
+  e.preventDefault();
+  if (feedbackShown) nextWord();
+  else checkSpelling();
 });
 
 // Diff highlight

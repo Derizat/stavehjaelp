@@ -3337,12 +3337,14 @@ function startBossPractice(battleType) {
   hideBossPicker();
   bossPracticeMode = true;
   bossPracticeType = battleType;
-  // Pick a random word from the word bank
-  var allWords = [];
-  var cats = Object.keys(WORD_BANK);
-  cats.forEach(function(cat) {
-    WORD_BANK[cat].forEach(function(w) { allWords.push({ word: w.word, category: cat, patternHint: w.patternHint || '', sentence: w.sentence || '' }); });
-  });
+  // Pick a random word matching the player's category levels
+  var allWords = buildPoolWithCategoryLevels(ALL_CATEGORIES);
+  if (allWords.length === 0) {
+    var cats = Object.keys(WORD_BANK);
+    cats.forEach(function(cat) {
+      WORD_BANK[cat].forEach(function(w) { allWords.push(Object.assign({}, w, { category: cat })); });
+    });
+  }
   var chosen = allWords[Math.floor(Math.random() * allWords.length)];
   var word = chosen.word.toLowerCase();
   var boss = BOSS_MONSTERS[chosen.category] || { emoji: '\uD83D\uDC7E', name: 'Ordbossen' };

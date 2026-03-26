@@ -1300,9 +1300,9 @@
   <button class="btn btn-green btn-full hidden" id="fillinNextBtn" onclick="nextFillInWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
-<!-- SENTENCE WRITING EXERCISE -->
+<!-- WHAT IS THE WORD EXERCISE -->
 <div id="phase-sentence" class="card hidden">
-  <div class="phase-label">&#x270D;&#xFE0F; Skriv en s&#xe6;tning</div>
+  <div class="phase-label">&#x1F914; Hvad er ordet?</div>
   <div class="progress-bar-wrap"><div class="progress-bar" id="swProgressBar" style="width:0%"></div></div>
   <div class="score-row">
     <div class="score-box"><div class="num num-yellow" id="swWordNum">1</div><div class="lbl">Ord nr.</div></div>
@@ -1311,12 +1311,12 @@
   </div>
   <div class="pattern-badge" id="swPatternBadge">&#x1F520; M&#xf8;nster</div>
   <div class="listen-box">
-    <div class="sw-target-word" id="swTargetWord"></div>
-    <p class="hint-text" id="swHint"></p>
+    <div id="swEmojiHint" style="font-size:3rem;margin-bottom:8px"></div>
+    <p class="hint-text" id="swHint" style="font-size:1.1rem"></p>
     <button class="btn-listen" id="swListenBtn" onclick="speakSWWord()">&#x1F508; H&#xf8;r ordet</button>
   </div>
-  <p style="color:var(--accent);font-weight:700;font-size:0.95rem;margin:12px 0;text-align:center">Skriv en s&#xe6;tning med ordet!</p>
-  <input type="text" class="sw-input" id="swInput" placeholder="Skriv din s&#xe6;tning her..." autocomplete="off" autocorrect="off" spellcheck="false" />
+  <p style="color:var(--accent);font-weight:700;font-size:0.95rem;margin:12px 0;text-align:center">Hvilket ord passer til beskrivelsen?</p>
+  <input type="text" id="swInput" placeholder="Skriv ordet her..." autocomplete="off" autocorrect="off" spellcheck="false" style="text-align:center;letter-spacing:2px" />
   <div id="swFeedbackBox" style="display:none; margin-top:12px;"></div>
   <button class="btn btn-primary" style="width:100%;margin-top:12px" id="swCheckBtn" onclick="checkSentence()">&#x2714;&#xFE0F; Tjek</button>
   <button class="btn btn-green btn-full hidden" id="swNextBtn" onclick="nextSentenceWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
@@ -2379,7 +2379,7 @@ function startTrainingFromProfile() {
 
   // Build mixed queue: diktat by default, random exercise every 3rd question
   mixedQueue = [];
-  var exerciseTypes = ['fillin', 'rightorwrong', 'spellingpolice', 'wordbuilder', 'spellpick'];
+  var exerciseTypes = ['fillin', 'rightorwrong', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
   for (var i = 0; i < pool.length && mixedQueue.length < 10; i++) {
     var w = pool[i];
     var isExerciseSlot = (mixedQueue.length + 1) % 3 === 0; // positions 3, 6, 9
@@ -2405,6 +2405,7 @@ function startTrainingFromProfile() {
         else if (t === 'spellingpolice' && spItemData) { chosenType = t; break; }
         else if (t === 'wordbuilder' && morphemesData) { chosenType = t; break; }
         else if (t === 'spellpick') { chosenType = t; break; }
+        else if (t === 'sentence' && w.hint && w.level >= 1) { chosenType = t; break; }
       }
     }
 
@@ -8031,7 +8032,7 @@ function renderSpkResults() {
   document.getElementById('resultsContent').innerHTML = html;
 }
 
-// ===== SENTENCE WRITING EXERCISE =====
+// ===== WHAT IS THE WORD EXERCISE =====
 
 var swCurrentWord = null;
 
@@ -8045,14 +8046,11 @@ function renderSentenceWord(wordObj) {
   document.getElementById('swNextBtn').classList.add('hidden');
   document.getElementById('swInput').value = '';
 
-  // Show word + hint
+  // Show ONLY hint + emoji — NOT the word!
   var emoji = WORD_EMOJIS[w.word] || '';
-  document.getElementById('swTargetWord').textContent = w.word;
-  if (emoji) {
-    document.getElementById('swHint').innerHTML = '<span style="font-size:2rem;display:block;margin-bottom:4px">' + emoji + '</span>' + (w.hint || '');
-  } else {
-    document.getElementById('swHint').textContent = w.hint || '';
-  }
+  var emojiEl = document.getElementById('swEmojiHint');
+  if (emojiEl) emojiEl.textContent = emoji;
+  document.getElementById('swHint').textContent = w.hint || '';
 
   // Play audio
   speakWord(w.word, null);
@@ -8061,7 +8059,7 @@ function renderSentenceWord(wordObj) {
 }
 
 function speakSWWord() {
-  if (swCurrentWord) speakWord(swCurrentWord.word, swCurrentWord.sentence || null);
+  if (swCurrentWord) speakWord(swCurrentWord.word, null);
 }
 
 function checkSentence() {
@@ -8070,31 +8068,16 @@ function checkSentence() {
   if (!input) return;
 
   var word = swCurrentWord.word.toLowerCase();
-  var inputLower = input.toLowerCase();
-
-  // Check if the word appears in the sentence (word boundary match)
-  var regex = new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
-  var ok = regex.test(inputLower);
-
-  // Also check for common inflected forms (word + s, word + e, word + r, word + n, word + t, word + de, word + ede, word + er, word + en, word + et)
-  if (!ok) {
-    var inflections = [word + 's', word + 'e', word + 'r', word + 'n', word + 't', word + 'ne', word + 'en', word + 'et', word + 'er'];
-    for (var ii = 0; ii < inflections.length; ii++) {
-      var inflRegex = new RegExp('\\b' + inflections[ii].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
-      if (inflRegex.test(inputLower)) { ok = true; break; }
-    }
-  }
+  var answer = input.toLowerCase();
+  var ok = (answer === word);
 
   var box = document.getElementById('swFeedbackBox');
   box.style.display = 'block';
 
   if (ok) {
-    // Highlight the word in the sentence
-    var highlighted = input.replace(new RegExp('(' + word + '\\w*)', 'gi'), '<span class="sw-highlight">$1</span>');
-    box.innerHTML = '<div class="feedback-correct">\u2705 Flot s\u00E6tning! ' + highlighted + '</div>';
+    box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! <strong>' + swCurrentWord.word + '</strong> \u{1F389}</div>';
   } else {
-    box.innerHTML = '<div class="feedback-wrong">\u274C Hmm, jeg kan ikke finde "<strong>' + swCurrentWord.word + '</strong>" i din s\u00E6tning.<br>' +
-      '<span style="font-size:0.9rem;color:var(--muted)">Eksempel: ' + swCurrentWord.sentence + '</span></div>';
+    box.innerHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + input + '</strong><br>Rigtigt: <strong style="color:var(--green)">' + swCurrentWord.word + '</strong></div>';
   }
 
   // Record result

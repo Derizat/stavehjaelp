@@ -2712,10 +2712,12 @@ function diffHighlight(correct, attempt) {
 
 // Check spelling
 function checkSpelling() {
+  try {
   var w = currentWords[currentIndex];
+  if (!w) { alert('DEBUG: currentWords[' + currentIndex + '] er undefined. currentWords.length=' + currentWords.length); return; }
   var inp = document.getElementById('spellingInput');
   var ans = inp.value.trim().toLowerCase();
-  if (!ans) return;
+  if (!ans) { alert('DEBUG: tomt inputfelt'); return; }
   var ok = ans === w.word.toLowerCase();
   var box = document.getElementById('feedbackBox');
   box.style.display = 'flex';
@@ -2761,6 +2763,7 @@ function checkSpelling() {
   document.getElementById('nextBtn').classList.remove('hidden');
   feedbackShown = true;
   retryAttempt = false;
+  } catch(e) { alert('DEBUG checkSpelling fejl: ' + e.message); }
 }
 
 function nextWord() {

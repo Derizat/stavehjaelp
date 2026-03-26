@@ -3249,16 +3249,16 @@ var bossRainInterval = null;
 function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 var BOSS_INSTRUCTIONS = {
-  scramble: { emoji: '\u{1F500}', text: 'Tryk p\u00E5 bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' },
-  rain: { emoji: '\u{1F327}\uFE0F', text: 'Fang det rigtige bogstav n\u00E5r det falder ned!' },
-  memory: { emoji: '\u{1F9E0}', text: 'Husk ordet \u2014 du skal stave det bagefter!' },
-  reverse: { emoji: '\u{1F500}', text: 'Ordet er bagl\u00E6ns \u2014 skriv det rigtigt!' },
-  pacman: { emoji: '\u{1F3AE}', text: 'Saml bogstaverne i r\u00E6kkef\u00F8lge \u2014 undg\u00E5 sp\u00F8gelset!' },
-  highway: { emoji: '\u{1F697}', text: 'K\u00F8r bilen fra bane til bane og fang de rigtige bogstaver!' },
-  cardcast: { emoji: '\u{1F0CF}', text: 'Lyt til ordet og kast de rigtige bogstav-kort mod bossen!' },
-  spellpick: { emoji: '\u{1F3AF}', text: 'V\u00E6lg den rigtige stavem\u00E5de!' },
-  silentservant: { emoji: '\u{1F9F3}', text: 'Fyld stumtjeneren! V\u00E6lg den rigtige stavem\u00E5de.' },
-  snake: { emoji: '\u{1F40D}', text: 'Styr slangen og spis bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' }
+  scramble: { emoji: '\u{1F500}', name: 'Bogstavmix', text: 'Tryk p\u00E5 bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' },
+  rain: { emoji: '\u{1F327}\uFE0F', name: 'Bogstavregn', text: 'Fang det rigtige bogstav n\u00E5r det falder ned!' },
+  memory: { emoji: '\u{1F9E0}', name: 'Hukommelse', text: 'Husk ordet \u2014 du skal stave det bagefter!' },
+  reverse: { emoji: '\u{1F500}', name: 'Bagl\u00E6ns', text: 'Ordet er bagl\u00E6ns \u2014 skriv det rigtigt!' },
+  pacman: { emoji: '\u{1F3AE}', name: 'Pac-Man', text: 'Saml bogstaverne i r\u00E6kkef\u00F8lge \u2014 undg\u00E5 sp\u00F8gelset!' },
+  highway: { emoji: '\u{1F697}', name: 'Motorvejen', text: 'K\u00F8r bilen fra bane til bane og fang de rigtige bogstaver!' },
+  cardcast: { emoji: '\u{1F0CF}', name: 'Kortmagi', text: 'Lyt til ordet og kast de rigtige bogstav-kort mod bossen!' },
+  spellpick: { emoji: '\u{1F3AF}', name: 'Stavev\u00E6lger', text: 'V\u00E6lg den rigtige stavem\u00E5de!' },
+  silentservant: { emoji: '\u{1F9F3}', name: 'Stumtjeneren', text: 'Fyld stumtjeneren! V\u00E6lg den rigtige stavem\u00E5de.' },
+  snake: { emoji: '\u{1F40D}', name: 'Slangen', text: 'Styr slangen og spis bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' }
 };
 
 var bossPracticeMode = false;
@@ -3297,14 +3297,14 @@ function showBossPicker() {
     var instr = BOSS_INSTRUCTIONS[type];
     html += '<button class="btn btn-green" style="padding:14px 10px;font-size:0.95rem;display:flex;flex-direction:column;align-items:center;gap:4px" onclick="startBossPractice(\'' + type + '\')">' +
       '<span style="font-size:1.8rem">' + instr.emoji + '</span>' +
-      '<span>' + type.charAt(0).toUpperCase() + type.slice(1) + '</span></button>';
+      '<span>' + instr.name + '</span></button>';
   });
   html += '<div style="grid-column:1/-1;font-size:0.85rem;font-weight:700;color:var(--red);margin-top:8px;margin-bottom:2px">Virker ikke endnu</div>';
   BOSS_DISABLED_TYPES.forEach(function(type) {
     var instr = BOSS_INSTRUCTIONS[type];
     html += '<button class="btn" style="padding:14px 10px;font-size:0.95rem;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5" onclick="startBossPractice(\'' + type + '\')">' +
       '<span style="font-size:1.8rem">' + instr.emoji + '</span>' +
-      '<span>' + type.charAt(0).toUpperCase() + type.slice(1) + '</span></button>';
+      '<span>' + instr.name + '</span></button>';
   });
   container.innerHTML = html;
   document.getElementById('bossPickerOverlay').classList.remove('hidden');

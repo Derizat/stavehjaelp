@@ -426,40 +426,67 @@
   /* Boss highway minigame (Outrun style) */
   .highway-area {
     position: relative; height: 280px; overflow: hidden; border-radius: 14px;
-    margin: 12px 0; perspective: 400px;
+    margin: 12px 0;
     border: 2px solid #3d4270;
-    background: linear-gradient(180deg, #1a0a2e 0%, #0d1a0d 40%, #1a1520 100%);
   }
-  .highway-road {
-    position: absolute; bottom: 0; left: 50%; width: 100%; height: 100%;
-    transform-origin: bottom center;
-    transform: translateX(-50%) rotateX(45deg);
-    background: #222;
-    border-left: 4px solid #888; border-right: 4px solid #888;
+  .highway-sky {
+    position: absolute; top: 0; left: 0; right: 0; height: 40%;
+    background: linear-gradient(180deg, #0a0620 0%, #1a0a3e 60%, #2d1a4e 100%);
   }
-  .highway-stripe {
-    position: absolute; left: 50%; width: 4px; height: 20px; background: #ddd;
-    transform: translateX(-50%);
-    animation: hw-stripe-move 0.8s linear infinite;
+  .highway-sky-stars { position: absolute; top: 8%; left: 20%; font-size: 0.6rem; color: rgba(255,255,255,0.4); }
+  .highway-sky-stars2 { position: absolute; top: 15%; right: 25%; font-size: 0.5rem; color: rgba(255,255,255,0.3); }
+  .highway-ground {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+    background: #1a3a1a;
+    overflow: hidden;
   }
-  @keyframes hw-stripe-move {
-    from { transform: translateX(-50%) translateY(0) scaleY(1); opacity: 0.3; }
-    to { transform: translateX(-50%) translateY(200px) scaleY(3); opacity: 1; }
+  .highway-road-surface {
+    position: absolute; bottom: 0; height: 100%;
+    left: 15%; right: 15%;
+    background: #333;
+    clip-path: polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%);
   }
-  .highway-horizon {
-    position: absolute; top: 35%; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  .highway-road-edge-l, .highway-road-edge-r {
+    position: absolute; bottom: 0; height: 100%; width: 4px;
+    background: repeating-linear-gradient(180deg, #cc0000 0px, #cc0000 12px, #fff 12px, #fff 24px);
+    animation: hw-edge-scroll 0.4s linear infinite;
+  }
+  .highway-road-edge-l { left: 15%; clip-path: polygon(100% 0%, 100% 100%, 0% 100%); transform-origin: bottom; }
+  .highway-road-edge-r { right: 15%; clip-path: polygon(0% 0%, 100% 100%, 0% 100%); transform-origin: bottom; }
+  @keyframes hw-edge-scroll { from { background-position: 0 0; } to { background-position: 0 24px; } }
+  .highway-lane-stripe {
+    position: absolute; bottom: 0; height: 100%; width: 2px;
+    animation: hw-edge-scroll 0.4s linear infinite;
+  }
+  .highway-lane-stripe-1 {
+    left: calc(15% + (85% - 15%) * 0.22);
+    background: repeating-linear-gradient(180deg, transparent 0px, transparent 16px, rgba(255,255,255,0.6) 16px, rgba(255,255,255,0.6) 28px);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  }
+  .highway-lane-stripe-2 {
+    left: calc(15% + (85% - 15%) * 0.5);
+    background: repeating-linear-gradient(180deg, transparent 0px, transparent 16px, rgba(255,255,255,0.8) 16px, rgba(255,255,255,0.8) 28px);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  }
+  .highway-lane-stripe-3 {
+    left: calc(15% + (85% - 15%) * 0.78);
+    background: repeating-linear-gradient(180deg, transparent 0px, transparent 16px, rgba(255,255,255,0.6) 16px, rgba(255,255,255,0.6) 28px);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  }
+  .highway-horizon-line {
+    position: absolute; top: 40%; left: 0; right: 0; height: 1px;
+    background: rgba(255,255,255,0.1);
   }
   .highway-car {
-    position: absolute; bottom: 16px; font-size: 2.5rem; z-index: 10;
+    position: absolute; bottom: 12px; font-size: 2.5rem; z-index: 10;
     transition: left 0.15s ease; text-align: center; width: 60px;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-    transform: translateX(-50%);
+    transform: translateX(-50%) scaleX(-1);
   }
   .highway-letter {
     position: absolute; font-family: 'Fredoka One', cursive;
     display: flex; align-items: center; justify-content: center;
-    border-radius: 10px; border: 2px solid #3d4270; background: var(--card2); color: var(--text);
+    border-radius: 10px; border: 2px solid #3d4270; background: rgba(26,29,46,0.9); color: var(--text);
     z-index: 5; transition: none;
     transform: translateX(-50%);
   }
@@ -4448,8 +4475,17 @@ function renderBossHighway(word, boss, idleAnim) {
 
   // Outrun-style road area
   html += '<div class="highway-area" id="hwArea">';
-  html += '<div class="highway-horizon"></div>';
-  html += '<div class="highway-car" id="hwCar" style="left:50%">\u{1F697}</div>';
+  html += '<div class="highway-sky"><span class="highway-sky-stars">\u2728</span><span class="highway-sky-stars2">\u2B50</span></div>';
+  html += '<div class="highway-ground">';
+  html += '<div class="highway-road-surface"></div>';
+  html += '<div class="highway-road-edge-l"></div>';
+  html += '<div class="highway-road-edge-r"></div>';
+  html += '<div class="highway-lane-stripe highway-lane-stripe-1"></div>';
+  html += '<div class="highway-lane-stripe highway-lane-stripe-2"></div>';
+  html += '<div class="highway-lane-stripe highway-lane-stripe-3"></div>';
+  html += '</div>';
+  html += '<div class="highway-horizon-line"></div>';
+  html += '<div class="highway-car" id="hwCar" style="left:50%">\u{1F3CE}\uFE0F</div>';
   html += '</div>';
 
   // D-pad
@@ -4533,7 +4569,7 @@ function hwSpawnLetter() {
   var startTime = Date.now();
   var duration = 2200;
   var areaHeight = area.offsetHeight;
-  var horizonY = areaHeight * 0.35; // vanishing point
+  var horizonY = areaHeight * 0.40; // vanishing point (matches sky/ground split)
   var carY = areaHeight - 60;
 
   function animate() {

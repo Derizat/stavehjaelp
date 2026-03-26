@@ -178,23 +178,74 @@
     border-radius: 99px; margin-bottom: 12px; display: inline-block;
   }
 
-  .grade-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width:340px; margin: 10px auto 16px; }
+  .grade-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-width: 280px; margin: 10px auto 16px; }
   .grade-btn {
     background: var(--card2); border: 2px solid #3d4270; border-radius: 10px;
     color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
-    padding: 8px 10px; cursor: pointer; transition: all 0.15s; text-align: center;
+    padding: 8px 14px; cursor: pointer; transition: all 0.15s; min-width: 52px; text-align: center;
   }
   .grade-btn:hover { border-color: var(--accent); color: var(--text); }
   .grade-btn.active { background: rgba(245,166,35,0.2); border-color: var(--accent); color: var(--accent); }
 
-  .settings-toggle {
-    background: none; border: 1px solid #3d4270; border-radius: 10px;
-    color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
-    padding: 10px 18px; cursor: pointer; transition: all 0.15s; width: 100%; text-align: center; margin-top: 12px;
+  /* Category lesson overlay */
+  .lesson-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000;
+    background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
+    padding: 20px; animation: lessonFadeIn 0.5s ease;
   }
-  .settings-toggle:hover { border-color: var(--accent2); color: var(--text); }
-  .settings-panel { display: none; margin-top: 12px; }
-  .settings-panel.open { display: block; }
+  @keyframes lessonFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .lesson-card {
+    background: var(--card); border-radius: 20px; border: 2px solid var(--accent);
+    padding: 28px; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+    animation: lessonSlideUp 0.5s ease;
+  }
+  @keyframes lessonSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .lesson-card h2 { font-family: 'Fredoka One', cursive; color: var(--accent); font-size: 1.4rem; margin-bottom: 12px; text-align: center; }
+  .lesson-card .lesson-emoji { font-size: 3rem; text-align: center; margin-bottom: 8px; }
+  .lesson-rule {
+    background: var(--card2); border-radius: 12px; padding: 14px 16px;
+    margin: 12px 0; border-left: 4px solid var(--accent);
+  }
+  .lesson-rule p { margin: 6px 0; line-height: 1.6; font-size: 0.95rem; }
+  .lesson-examples {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 12px 0;
+  }
+  .lesson-example {
+    background: rgba(34,211,160,0.1); border: 1px solid rgba(34,211,160,0.3);
+    border-radius: 10px; padding: 8px 14px; font-weight: 700; font-size: 1rem;
+  }
+  .lesson-example .highlight { color: var(--green); font-size: 1.1rem; }
+  .lesson-tip {
+    background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 10px; padding: 12px 14px; margin: 12px 0; text-align: center;
+    font-size: 0.9rem; color: #c4b5fd;
+  }
+
+  /* Level up animation */
+  @keyframes levelup-shake {
+    0%, 100% { transform: rotate(0) scale(1); }
+    10% { transform: rotate(-10deg) scale(1.1); }
+    20% { transform: rotate(10deg) scale(1.2); }
+    30% { transform: rotate(-15deg) scale(1.3); }
+    40% { transform: rotate(15deg) scale(1.4); }
+    50% { transform: rotate(0) scale(1.5); opacity: 0; }
+  }
+  @keyframes levelup-appear {
+    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+    50% { transform: scale(1.3) rotate(10deg); opacity: 1; }
+    70% { transform: scale(0.9) rotate(-5deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  @keyframes levelup-sparkle {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+  }
+  .levelup-sparkle {
+    position: absolute; font-size: 1.5rem; pointer-events: none;
+    animation: levelup-sparkle 0.8s ease-out forwards;
+  }
+  #levelUpBtn { animation: fillin-pop 0.5s ease infinite alternate; }
 
   /* Profile picker */
   .profile-picker-grid {
@@ -219,6 +270,15 @@
   .player-name-display {
     font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--text); margin-top: 4px;
   }
+
+  .settings-toggle {
+    background: none; border: 1px solid #3d4270; border-radius: 10px;
+    color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
+    padding: 10px 18px; cursor: pointer; transition: all 0.15s; width: 100%; text-align: center; margin-top: 12px;
+  }
+  .settings-toggle:hover { border-color: var(--accent2); color: var(--text); }
+  .settings-panel { display: none; margin-top: 12px; }
+  .settings-panel.open { display: block; }
 
   .level-meter { background: #2d3158; border-radius: 99px; height: 14px; overflow: hidden; margin: 8px 0 12px; }
   .level-meter-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
@@ -361,6 +421,97 @@
     .pac-cell { width: 34px; height: 34px; font-size: 0.95rem; }
     .pac-player, .pac-ghost { font-size: 1.2rem; }
     .pac-letter { font-size: 1rem; }
+  }
+
+  /* Boss highway minigame */
+  .highway-area {
+    position: relative; height: 260px; overflow: hidden; border-radius: 14px;
+    margin: 12px 0; background: linear-gradient(180deg, #1a1520, #12101a);
+    border: 2px solid #3d4270;
+  }
+  .highway-lanes {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+  }
+  .highway-lane { border-right: 2px dashed rgba(255,255,255,0.08); position: relative; }
+  .highway-lane:last-child { border-right: none; }
+  .highway-car {
+    position: absolute; bottom: 20px; font-size: 2rem; transition: left 0.15s ease;
+    width: 33.33%; text-align: center; z-index: 5;
+  }
+  .highway-letter {
+    position: absolute; font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; border: 2px solid #3d4270; background: var(--card2); color: var(--text);
+    z-index: 3;
+  }
+  .highway-letter.target { border-color: var(--accent); color: var(--accent); }
+  .highway-letter.caught { background: rgba(34,211,160,0.3); border-color: var(--green); color: var(--green); }
+
+  /* Boss cardcast (slay the spire) minigame */
+  .cardcast-hearts {
+    display: flex; justify-content: center; gap: 4px; margin: 10px 0;
+    font-size: 1.6rem; min-height: 2.2rem;
+  }
+  .cardcast-heart { transition: all 0.3s; display: inline-block; }
+  .cardcast-heart.revealed {
+    font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+    color: var(--green); animation: fillin-pop 0.3s ease;
+  }
+  .cardcast-hand {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 16px 0;
+  }
+  .cardcast-card {
+    font-family: 'Fredoka One', cursive; font-size: 1.5rem; padding: 16px 12px;
+    border-radius: 14px; border: 3px solid #3d4270; background: var(--card2); color: var(--text);
+    cursor: pointer; transition: all 0.2s; min-width: 50px; text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .cardcast-card:hover { border-color: var(--accent); transform: translateY(-6px); }
+  .cardcast-card:active { transform: translateY(-2px); }
+  .cardcast-card.played {
+    opacity: 0.2; pointer-events: none; transform: translateY(-20px) scale(0.8);
+  }
+  .cardcast-card.wrong-cast {
+    border-color: var(--red); background: rgba(244,63,94,0.15);
+    animation: boss-shake 0.3s ease;
+  }
+
+  /* Sentence writing exercise */
+  .sw-target-word {
+    font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--accent);
+    text-align: center; margin: 8px 0; letter-spacing: 3px;
+  }
+  .sw-input {
+    width: 100%; background: var(--card2); border: 2px solid #3d4270; border-radius: 10px;
+    color: var(--text); font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 600;
+    padding: 14px 18px; outline: none; transition: border-color 0.2s; text-align: left;
+    letter-spacing: 0; line-height: 1.5;
+  }
+  .sw-input:focus { border-color: var(--accent2); }
+  .sw-input::placeholder { color: #555; font-weight: 400; }
+  .sw-highlight { color: var(--green); font-weight: 800; text-decoration: underline; }
+
+  /* Boss snake minigame */
+  .snake-area {
+    position: relative; display: inline-grid; gap: 0; border-radius: 10px;
+    overflow: hidden; border: 2px solid #3d4270; background: #0a0c18;
+    touch-action: none; margin: 8px auto;
+  }
+  .snake-cell {
+    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+  }
+  .snake-head { background: var(--green); border-radius: 6px; font-size: 1rem; }
+  .snake-body { background: rgba(34,211,160,0.5); border-radius: 4px; }
+  .snake-letter {
+    font-family: 'Fredoka One', cursive; font-size: 0.85rem; color: var(--accent);
+  }
+  .snake-letter.next-target { color: #fff; text-shadow: 0 0 6px var(--accent); font-size: 0.95rem; }
+  @media (min-width: 500px) {
+    .snake-cell { width: 30px; height: 30px; font-size: 0.85rem; }
+    .snake-letter { font-size: 0.95rem; }
+    .snake-head { font-size: 1.1rem; }
   }
 
   /* Treasure chest */
@@ -644,6 +795,162 @@
   }
   @keyframes guide-pulse { from { opacity: 0.8; } to { opacity: 1; text-shadow: 0 0 12px var(--accent); } }
 
+  /* Right or wrong exercise */
+  .rf-word {
+    font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--text);
+    letter-spacing: 4px; min-height: 4rem; margin: 12px 0; text-align: center;
+    transition: all 0.3s;
+  }
+  .rf-buttons {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;
+  }
+  .rf-btn {
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem; padding: 18px 12px;
+    border-radius: 14px; border: 3px solid; cursor: pointer; transition: all 0.15s;
+    text-align: center; user-select: none; -webkit-user-select: none;
+  }
+  .rf-btn:active { transform: scale(0.95); }
+  .rf-btn-correct {
+    border-color: var(--green); background: rgba(34,211,160,0.1); color: var(--green);
+  }
+  .rf-btn-correct:hover { background: rgba(34,211,160,0.2); }
+  .rf-btn-wrong {
+    border-color: var(--red); background: rgba(244,63,94,0.1); color: var(--red);
+  }
+  .rf-btn-wrong:hover { background: rgba(244,63,94,0.2); }
+  .rf-btn.disabled { opacity: 0.3; pointer-events: none; }
+  .rf-timer-wrap {
+    background: #2d3158; border-radius: 99px; height: 8px; overflow: hidden; margin: 8px 0;
+  }
+  .rf-timer-bar {
+    height: 100%; border-radius: 99px; width: 100%;
+    background: linear-gradient(90deg, var(--green), var(--accent));
+    transition: width linear;
+  }
+  .rf-combo {
+    text-align: center; font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    color: var(--accent); min-height: 2rem; transition: all 0.2s;
+  }
+  .rf-combo.pop { animation: fillin-pop 0.3s ease; }
+  .rf-flash { border-radius: var(--radius); transition: box-shadow 0.15s; }
+  .rf-flash-correct { box-shadow: inset 0 0 40px rgba(34,211,160,0.3); }
+  .rf-flash-wrong { box-shadow: inset 0 0 40px rgba(244,63,94,0.3); }
+
+  /* Word Builder exercise */
+  .wb-built-word {
+    font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--text);
+    letter-spacing: 2px; min-height: 3.5rem; margin: 12px 0; text-align: center;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px;
+  }
+  .wb-slot {
+    display: inline-block; min-width: 2em; min-height: 1.2em;
+    border-bottom: 4px dashed #3d4270; padding: 4px 8px;
+    color: var(--muted); opacity: 0.4; font-size: 1.6rem;
+    transition: all 0.3s;
+  }
+  .wb-slot.active { border-bottom-color: var(--accent); opacity: 0.7; }
+  .wb-slot.filled {
+    border-bottom-style: solid; border-bottom-color: var(--green);
+    color: var(--green); opacity: 1;
+    animation: fillin-pop 0.3s ease;
+  }
+  .wb-morphemes {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 16px 0;
+  }
+  .wb-morph-btn {
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem; padding: 14px 18px;
+    border-radius: 14px; border: 3px solid #3d4270; background: var(--card2); color: var(--text);
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .wb-morph-btn:hover { border-color: var(--accent); transform: scale(1.05); }
+  .wb-morph-btn:active { transform: scale(0.97); }
+  .wb-morph-btn.used {
+    opacity: 0.3; pointer-events: none; border-color: var(--green);
+  }
+  .wb-morph-btn.wrong-pick {
+    border-color: var(--red); background: rgba(244,63,94,0.15);
+  }
+
+  /* Spelling Police exercise */
+  #phase-spellingpolice .listen-box { cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='24'>🔍</text></svg>") 4 4, pointer; }
+  .sp-lineup {
+    background: linear-gradient(180deg, #1a1520 0%, #12101a 100%);
+    border: 2px solid #3d4270; border-radius: 14px; padding: 16px 8px;
+    position: relative; overflow: hidden; margin: 8px 0;
+  }
+  .sp-lineup::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px);
+    pointer-events: none;
+  }
+  .sp-sentence {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    min-height: 3rem; position: relative; z-index: 1;
+    padding: 8px 0;
+  }
+  .sp-word {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 10px 10px; border-radius: 12px;
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='24'>🔍</text></svg>") 4 4, pointer;
+    transition: all 0.2s; border: 2px solid rgba(61,66,112,0.5);
+    background: rgba(26,29,46,0.6); min-width: 60px;
+  }
+  .sp-suspect {
+    font-size: 1.8rem; line-height: 1; transition: transform 0.2s;
+  }
+  .sp-sign {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 6px 12px; margin-top: 4px; min-width: 44px; text-align: center;
+  }
+  .sp-sign .sp-text {
+    font-family: 'Fredoka One', cursive; font-size: 1.25rem; font-weight: 800;
+    color: #fff;
+  }
+  .sp-word .sp-number {
+    font-size: 0.6rem; color: var(--muted); font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .sp-word:hover { border-color: var(--accent); background: rgba(245,166,35,0.08); transform: scale(1.08); }
+  .sp-word:hover .sp-suspect { transform: scale(1.15); }
+  .sp-word:active { transform: scale(0.95); }
+  .sp-word.selected-correct {
+    border-color: var(--green); background: rgba(34,211,160,0.2);
+    animation: sp-caught 0.5s ease;
+  }
+  .sp-word.selected-correct .sp-suspect::after { content: '\u{1F6A8}'; font-size: 0.9rem; position: relative; top: -4px; }
+  .sp-word.selected-correct .sp-text { color: var(--green); }
+  .sp-word.selected-correct .sp-number { color: var(--green); }
+  .sp-word.selected-correct .sp-number::after { content: ' FANGET!'; }
+  .sp-word.selected-wrong {
+    border-color: var(--red); background: rgba(244,63,94,0.1);
+  }
+  .sp-word.selected-wrong .sp-suspect { opacity: 0.5; }
+  .sp-word.selected-wrong .sp-text { color: var(--red); }
+  .sp-word.selected-wrong .sp-number::after { content: ' Uskyldig'; color: var(--muted); }
+  .sp-word.reveal-target {
+    border-color: #f59e0b; background: rgba(245,158,11,0.15);
+  }
+  .sp-word.reveal-target .sp-suspect { animation: sp-shake 0.4s ease; }
+  .sp-word.reveal-target .sp-text { color: #f59e0b; text-decoration: line-through; }
+  .sp-word.reveal-target .sp-number { color: #f59e0b; }
+  .sp-word.reveal-target .sp-number::after { content: ' SKYLDIG!'; }
+  .sp-word.disabled { pointer-events: none; cursor: default; }
+  @keyframes sp-caught {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.15) rotate(-3deg); }
+    60% { transform: scale(1.1) rotate(3deg); }
+    100% { transform: scale(1); }
+  }
+  @keyframes sp-shake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-8deg); }
+    75% { transform: rotate(8deg); }
+  }
+  .sp-correction {
+    text-align: center; font-family: 'Fredoka One', cursive; font-size: 1.6rem;
+    color: var(--green); margin: 8px 0;
+  }
+
   /* Fill-in exercise */
   .fillin-word {
     font-family: 'Fredoka One', cursive; font-size: 2.6rem; color: var(--text);
@@ -693,7 +1000,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.0.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v2.9.8</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -712,6 +1019,11 @@
 
 <!-- SESSION REWARD OVERLAY (injected dynamically) -->
 <div id="rewardOverlay" class="reward-overlay hidden"></div>
+
+<!-- LESSON OVERLAY -->
+<div id="lessonOverlay" class="lesson-overlay hidden" style="display:none">
+  <div class="lesson-card" id="lessonContent"></div>
+</div>
 
 <!-- PROFILE PICKER -->
 <div id="phase-profile-picker" class="card">
@@ -734,12 +1046,14 @@
 <!-- WELCOME -->
 <div id="phase-welcome" class="card hidden">
   <div id="welcomeAvatarSection" style="text-align:center;margin-bottom:16px">
-    <div id="avatarEmoji" style="font-size:4rem;line-height:1.2"></div>
+    <div id="avatarEmoji" style="font-size:4rem;line-height:1.2;transition:all 0.3s"></div>
     <div id="playerNameDisplay" class="player-name-display"></div>
     <div id="avatarTitle" class="hidden"></div>
-    <div id="avatarDesc" style="font-size:0.85rem;color:var(--muted);margin-top:2px"></div>
-    <div class="hidden"><div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%"></div></div></div>
-    <div id="avatarProgressLabel" class="hidden"></div>
+    <div style="max-width:220px;margin:10px auto 4px">
+      <div class="level-meter"><div class="level-meter-fill" id="avatarProgressBar" style="width:0%;background:linear-gradient(90deg,var(--green),var(--accent))"></div></div>
+    </div>
+    <div id="avatarProgressLabel" style="font-size:0.75rem;color:var(--muted)"></div>
+    <button class="btn btn-accent hidden" id="levelUpBtn" onclick="doLevelUp()" style="margin-top:10px;padding:12px 28px;font-size:1.1rem">&#x2B50; Level Up!</button>
   </div>
 
   <!-- Welcome streak section (dynamic) -->
@@ -750,31 +1064,15 @@
     <div id="welcomeFreezeBtn"></div>
   </div>
 
-  <div style="text-align:center; margin-top:16px">
-    <p style="font-weight:700; font-size:0.95rem; margin-bottom:6px">Hvilket klassetrin går du i?</p>
-    <div class="grade-selector" id="gradeSelector">
-      <button class="grade-btn" onclick="selectGrade(1)">1. kl</button>
-      <button class="grade-btn" onclick="selectGrade(2)">2. kl</button>
-      <button class="grade-btn" onclick="selectGrade(3)">3. kl</button>
-      <button class="grade-btn" onclick="selectGrade(4)">4. kl</button>
-      <button class="grade-btn" onclick="selectGrade(5)">5. kl</button>
-      <button class="grade-btn" onclick="selectGrade(6)">6. kl</button>
-      <button class="grade-btn" onclick="selectGrade(7)">7. kl</button>
-      <button class="grade-btn" onclick="selectGrade(8)">8. kl</button>
-    </div>
-  </div>
 
-  <div style="margin-top:20px"></div>
-
-  <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
-    <button class="btn btn-accent" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavetest!</button>
+  <div style="margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:8px">
+    <button class="btn btn-accent" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" onclick="startDiagnostic()" id="startDiagBtn">&#x1F680; Start stavespil!</button>
     <button class="btn btn-primary hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="reviewBtn" onclick="startReview()">&#x1F501; 0 ord klar til gennemgang</button>
-    <button class="btn btn-green hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F4CA; Fortsæt træning</button>
-    <button class="btn btn-accent hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="fillInBtn" onclick="startFillIn()">&#x270D;&#xFE0F; Udfyld bogstav</button>
-    <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Ny stavetest</button>
+    <button class="btn btn-green hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="continueTrainBtn" onclick="startTrainingFromProfile()">&#x1F3AF; Forts&#xe6;t tr&#xe6;ning</button>
+    <button class="btn btn-blue hidden" style="min-width:220px;max-width:320px;width:auto;padding:14px 32px" id="newDiagBtn" onclick="startDiagnostic()">&#x1F504; Nyt stavespil</button>
   </div>
 
-  <div style="margin-top:120px"></div>
+  <button class="settings-toggle" onclick="switchPlayer()">&#x1F465; Skift spiller</button>
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
   <div class="settings-panel" id="settingsPanel">
     <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-bottom:10px">
@@ -813,18 +1111,17 @@
         <span style="font-size:1.2rem">&#x1F504;</span>
         <strong style="font-size:0.9rem">Nulstil data</strong>
       </div>
-      <button class="btn btn-full" onclick="resetProfile()" style="background:#e67e22;color:white;font-size:0.85rem;padding:10px">&#x1F504; Nulstil stavetest-resultat</button>
-      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter dit niveau og svage kategorier, s&aring; du kan tage stavetesten forfra. XP, streak og &oslash;veord beholdes.</p>
+      <button class="btn btn-full" onclick="resetProfile()" style="background:#e67e22;color:white;font-size:0.85rem;padding:10px">&#x1F504; Nulstil stavespil-resultat</button>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter dit niveau og svage kategorier, s&aring; du kan tage stavespillet forfra. XP, streak og &oslash;veord beholdes.</p>
       <button class="btn btn-full" onclick="resetAll()" style="background:#e74c3c;color:white;font-size:0.85rem;padding:10px;margin-top:8px">&#x1F5D1;&#xFE0F; Nulstil alt</button>
-      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter ALT — stavetest, XP, streak, &oslash;veord og screening. Du starter helt forfra.</p>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter ALT &mdash; stavespil, XP, streak og &oslash;veord. Du starter helt forfra.</p>
     </div>
-    <button class="btn btn-full" onclick="switchPlayer()" style="background:var(--card2);color:var(--muted);border:1px solid #3d4270;font-size:0.85rem;padding:10px;margin-top:10px">&#x1F465; Skift spiller</button>
   </div>
 </div>
 
 <!-- TEST (shared for diagnostic, training, review) -->
 <div id="phase-test" class="card hidden">
-  <div style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
     <div class="phase-label" style="margin-bottom:0" id="testPhaseLabel">&#x1F4CB; Diagnostisk test</div>
     <button onclick="toggleApiPanel()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted)" title="API-indstillinger">&#x2699;&#xFE0F;</button>
   </div>
@@ -848,7 +1145,7 @@
     <div class="score-box"><div class="num num-green" id="scoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
     <div class="score-box"><div class="num num-red" id="scoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
   </div>
-  <div class="pattern-badge" id="patternBadge" style="display:none">&#x1F520; Mønster</div>
+  <div class="pattern-badge" id="patternBadge">&#x1F520; Mønster</div>
   <div class="listen-box">
     <div class="word-flash" id="wordFlash"></div>
     <div class="countdown-bar-wrap" id="countdownWrap"><div class="countdown-bar" id="countdownBar"></div></div>
@@ -858,7 +1155,7 @@
   </div>
   <input type="text" id="spellingInput" placeholder="Skriv ordet her..." autocomplete="off" autocorrect="off" spellcheck="false" />
   <div id="feedbackBox" style="display:none; margin-top:12px;"></div>
-  <button class="btn btn-primary btn-full hidden" id="checkBtn" onclick="checkSpelling()" style="margin-top:14px">&#x270F;&#xFE0F; Tjek stavning</button>
+  <button class="btn btn-primary btn-full" id="checkBtn" onclick="checkSpelling()" style="margin-top:14px">&#x270F;&#xFE0F; Tjek stavning</button>
   <button class="btn btn-green btn-full hidden" id="nextBtn" onclick="nextWord()">&#x27A1;&#xFE0F; Næste ord</button>
 </div>
 
@@ -896,7 +1193,7 @@
     <div class="score-box"><div class="num num-green" id="fillinScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
     <div class="score-box"><div class="num num-red" id="fillinScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
   </div>
-  <div class="pattern-badge" id="fillinPatternBadge" style="display:none">&#x1F520; M&#xf8;nster</div>
+  <div class="pattern-badge" id="fillinPatternBadge">&#x1F520; M&#xf8;nster</div>
   <div class="listen-box">
     <div class="fillin-word" id="fillinWordDisplay"></div>
     <p class="hint-text" id="fillinHint"></p>
@@ -905,6 +1202,92 @@
   <div class="fillin-choices" id="fillinChoices"></div>
   <div id="fillinFeedbackBox" style="display:none; margin-top:12px;"></div>
   <button class="btn btn-green btn-full hidden" id="fillinNextBtn" onclick="nextFillInWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
+</div>
+
+<!-- SENTENCE WRITING EXERCISE -->
+<div id="phase-sentence" class="card hidden">
+  <div class="phase-label">&#x270D;&#xFE0F; Skriv en s&#xe6;tning</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="swProgressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="swWordNum">1</div><div class="lbl">Ord nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="swScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="swScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
+  </div>
+  <div class="pattern-badge" id="swPatternBadge">&#x1F520; M&#xf8;nster</div>
+  <div class="listen-box">
+    <div class="sw-target-word" id="swTargetWord"></div>
+    <p class="hint-text" id="swHint"></p>
+    <button class="btn-listen" id="swListenBtn" onclick="speakSWWord()">&#x1F508; H&#xf8;r ordet</button>
+  </div>
+  <p style="color:var(--accent);font-weight:700;font-size:0.95rem;margin:12px 0;text-align:center">Skriv en s&#xe6;tning med ordet!</p>
+  <input type="text" class="sw-input" id="swInput" placeholder="Skriv din s&#xe6;tning her..." autocomplete="off" autocorrect="off" spellcheck="false" />
+  <div id="swFeedbackBox" style="display:none; margin-top:12px;"></div>
+  <button class="btn btn-primary" style="width:100%;margin-top:12px" id="swCheckBtn" onclick="checkSentence()">&#x2714;&#xFE0F; Tjek</button>
+  <button class="btn btn-green btn-full hidden" id="swNextBtn" onclick="nextSentenceWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
+</div>
+
+<!-- WORD BUILDER EXERCISE -->
+<div id="phase-wordbuilder" class="card hidden">
+  <div class="phase-label">&#x1F9E9; Ordbyggeren</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="wbProgressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="wbWordNum">1</div><div class="lbl">Ord nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="wbScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="wbScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
+  </div>
+  <div class="pattern-badge" id="wbPatternBadge">&#x1F520; M&#xf8;nster</div>
+  <div class="listen-box">
+    <p class="hint-text" id="wbHint"></p>
+    <div class="wb-built-word" id="wbBuiltWord"></div>
+    <button class="btn-listen" id="wbListenBtn" onclick="speakWBWord()">&#x1F508; H&#xf8;r ordet</button>
+  </div>
+  <div class="wb-morphemes" id="wbMorphemes"></div>
+  <div id="wbFeedbackBox" style="display:none; margin-top:12px;"></div>
+  <button class="btn btn-green btn-full hidden" id="wbNextBtn" onclick="nextWBWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
+</div>
+
+<!-- SPELLING POLICE EXERCISE -->
+<div id="phase-spellingpolice" class="card hidden">
+  <div class="phase-label">&#x1F50D; Stavepolitiet</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="spProgressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="spWordNum">1</div><div class="lbl">Sag nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="spScoreCorrect">0</div><div class="lbl">Fanget &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="spScoreWrong">0</div><div class="lbl">Undslap &#x2717;</div></div>
+  </div>
+  <div class="pattern-badge" id="spPatternBadge">&#x1F520; M&#xf8;nster</div>
+  <div class="listen-box">
+    <p style="color:var(--accent);font-size:1.1rem;font-weight:800;margin-bottom:10px">&#x1F50D; Hvilket ord er stavet forkert? Tryk p&#xe5; det!</p>
+    <div class="sp-lineup">
+      <div class="sp-sentence" id="spSentence"></div>
+    </div>
+    <div class="sp-correction hidden" id="spCorrection"></div>
+  </div>
+  <div id="spFeedbackBox" style="display:none; margin-top:12px;"></div>
+  <button class="btn btn-green btn-full hidden" id="spNextBtn" onclick="nextSpellingPolice()">&#x27A1;&#xFE0F; N&#xe6;ste sag</button>
+</div>
+
+<!-- RIGHT OR WRONG EXERCISE -->
+<div id="phase-rightorwrong" class="card hidden rf-flash">
+  <div class="phase-label" id="rfPhaseLabel">&#x1F441;&#xFE0F; Rigtigt eller forkert?</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="rfProgressBar" style="width:0%"></div></div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-yellow" id="rfWordNum">1</div><div class="lbl">Ord nr.</div></div>
+    <div class="score-box"><div class="num num-green" id="rfScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
+    <div class="score-box"><div class="num num-red" id="rfScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
+  </div>
+  <div class="pattern-badge" id="rfPatternBadge">&#x1F520; M&#xf8;nster</div>
+  <div class="rf-combo" id="rfCombo"></div>
+  <div class="listen-box">
+    <div class="rf-word" id="rfWordDisplay"></div>
+    <div class="rf-timer-wrap"><div class="rf-timer-bar" id="rfTimerBar"></div></div>
+    <p class="hint-text" id="rfHint">Er dette ord stavet rigtigt?</p>
+  </div>
+  <div class="rf-buttons" id="rfButtons">
+    <button class="rf-btn rf-btn-correct" onclick="checkRightOrWrong(true)">&#x2705; Rigtigt</button>
+    <button class="rf-btn rf-btn-wrong" onclick="checkRightOrWrong(false)">&#x274C; Forkert</button>
+  </div>
+  <div id="rfFeedbackBox" style="display:none; margin-top:12px;"></div>
 </div>
 
 <!-- SCREENING INTRO -->
@@ -976,142 +1359,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 
-// Base path for shared assets (words.json, audio-manifest.json, audio/)
-// When deployed in /v2/ subdirectory, assets are in parent directory
-var BASE_PATH = '../';
+// ===== MULTI-PROFIL SYSTEM =====
+var activePlayer = '';
 
-// Supabase
-var supabase = window.supabase.createClient(
-  'https://cfkddsiwwujbbxjuthie.supabase.co',
-  'sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt'
-);
-
-// Sync player data to Supabase
-function syncToSupabase() {
-  if (!activePlayer) return;
-  var profileRaw = localStorage.getItem(playerKey('profile_data'));
-  var rewardRaw = localStorage.getItem(playerKey('reward_data'));
-  var srRaw = localStorage.getItem(playerKey('sr_data'));
-  var grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0;
-  var row = {
-    player: activePlayer,
-    profile_data: profileRaw ? JSON.parse(profileRaw) : {},
-    reward_data: rewardRaw ? JSON.parse(rewardRaw) : {},
-    sr_data: srRaw ? JSON.parse(srRaw) : {},
-    student_grade: grade,
-    updated_at: new Date().toISOString()
-  };
-  supabase.from('profiles').upsert(row, { onConflict: 'player' }).then(function(res) {
-    if (res.error) console.warn('Supabase sync fejl:', res.error.message);
-  });
-}
-
-// Load player data from Supabase into localStorage
-function syncFromSupabase(name, callback) {
-  supabase.from('profiles').select('*').eq('player', name).single().then(function(res) {
-    if (res.data) {
-      var d = res.data;
-      if (d.profile_data && Object.keys(d.profile_data).length > 0) {
-        localStorage.setItem(name + '_profile_data', JSON.stringify(d.profile_data));
-      }
-      if (d.reward_data && Object.keys(d.reward_data).length > 0) {
-        localStorage.setItem(name + '_reward_data', JSON.stringify(d.reward_data));
-      }
-      if (d.sr_data && Object.keys(d.sr_data).length > 0) {
-        localStorage.setItem(name + '_sr_data', JSON.stringify(d.sr_data));
-      }
-      if (d.student_grade) {
-        localStorage.setItem(name + '_student_grade', d.student_grade.toString());
-      }
-    }
-    if (callback) callback();
-  });
-}
-
-function logAnswer(word, answer, correct, attempt, category, level) {
-  var grade = 0;
-  try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
-  supabase.from('answers').insert({
-    player: activePlayer,
-    word: word,
-    answer: answer,
-    correct: correct,
-    attempt: attempt,
-    category: category || null,
-    level: level || 0,
-    grade: grade
-  }).then(function(res) {
-    if (res.error) console.warn('Supabase log fejl:', res.error.message);
-  });
-}
-
-// Word bank loaded from words.json
-var WORD_BANK = {};
-
-var PATTERN_RULES = {
-  "Stumme bogstaver": "<b>Nogle bogstaver er usynlige!</b> De skrives, men man kan ikke h\u00F8re dem.<br><span style='color:var(--accent)'>hv-</span> (hvid), <span style='color:var(--accent)'>hj-</span> (hj\u00E6lp) \u2014 h'et er stumt!",
-  "Dobbeltkonsonant": "<b>Kort vokal = dobbelt!</b><br>Sig vokalen: er den <span style='color:var(--red)'>kort</span>? \u2192 dobbelt (<span style='color:var(--accent)'>hoppe</span>)<br>Er den <span style='color:var(--green)'>lang</span>? \u2192 enkelt (<span style='color:var(--accent)'>bade</span>)",
-  "For- og efterstavelser": "<b>Del ordet op i klodser!</b><br>Forstavelser: <span style='color:var(--accent)'>be-</span>, <span style='color:var(--accent)'>for-</span>, <span style='color:var(--accent)'>u-</span><br>Efterstavelser: <span style='color:var(--accent)'>-hed</span>, <span style='color:var(--accent)'>-else</span>, <span style='color:var(--accent)'>-lig</span><br>Klodserne staves altid ens!",
-  "Sammensatte ord": "<b>Del ordet i stykker!</b><br><span style='color:var(--accent)'>skole + arbejde</span>, <span style='color:var(--accent)'>mad + pakke</span><br>Kan du stave stykkerne? S\u00E5 kan du stave hele ordet!",
-  "Verbernes bøjning": "<b>Hvad skete der?</b><br>De fleste: <span style='color:var(--accent)'>-ede</span> (legede, cyklede)<br>Korte ord: <span style='color:var(--accent)'>-te</span> (spiste, k\u00F8bte)",
-  "Navneordsendelser": "<b>Hvor mange? Hvilken \u00E9n?</b><br>Flertal: <span style='color:var(--accent)'>-e</span> eller <span style='color:var(--accent)'>-er</span> (hunde, lamper)<br>Bestemt: en-ord f\u00E5r <span style='color:var(--accent)'>-en</span>, et-ord f\u00E5r <span style='color:var(--accent)'>-et</span>",
-  "Lydrette ord": "<b>Sig ordet langsomt!</b> Skriv \u00E9n lyd ad gangen \u2014 det staves pr\u00E6cis som det lyder.",
-  "Nutids-r": "<b>Pr\u00F8v at s\u00E6tte \u201Dhan\u201D foran!</b><br>Han hoppe<span style='color:var(--green);font-weight:800'>r</span>, hun spise<span style='color:var(--green);font-weight:800'>r</span>, de lege<span style='color:var(--green);font-weight:800'>r</span><br>Passer \u201Dhan/hun\u201D foran? S\u00E5 skal der <span style='color:var(--green);font-weight:800'>-r</span> p\u00E5!"
-};
-
-var CATEGORY_ICONS = {
-  "Stumme bogstaver": "\u{1F507}",
-  "Dobbeltkonsonant": "\u270C\uFE0F",
-  "For- og efterstavelser": "\u{1F9E9}",
-  "Sammensatte ord": "\u{1F517}",
-  "Verbernes bøjning": "\u270F\uFE0F",
-  "Navneordsendelser": "\u{1F4DD}",
-  "Lydrette ord": "\u{1F524}",
-  "Nutids-r": "\u00AE\uFE0F"
-};
-
-var ALL_CATEGORIES = [];
-
-var LEVEL_LABELS = {
-  0: { text: "\u26AA Niveau 0 (0. klasse)", bg: "rgba(255,255,255,0.1)", color: "#ccc" },
-  1: { text: "\u{1F7E2} Niveau 1 (1.-2. klasse)", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
-  2: { text: "\u{1F7E1} Niveau 2 (3.-4. klasse)", bg: "rgba(245,166,35,0.15)", color: "var(--accent)" },
-  3: { text: "\u{1F7E0} Niveau 3 (5.-6. klasse)", bg: "rgba(249,115,22,0.15)", color: "#f97316" },
-  4: { text: "\u{1F534} Niveau 4 (7.-8. klasse)", bg: "rgba(244,63,94,0.15)", color: "var(--red)" }
-};
-
-var LEVEL_GRADE_MAP = {
-  0: "0. klasse niveau",
-  1: "1.-2. klasse niveau",
-  2: "3.-4. klasse niveau",
-  3: "5.-6. klasse niveau",
-  4: "7.-8. klasse niveau"
-};
-
-// State
-var currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
-var retryAttempt = false;
-var gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
-var diagnosticWordsList = [];
-var adaptiveState = null;
-
-// Gamification state
-var wrongCountPerWord = {};
-var pendingBoss = null;
-var sessionCorrectCount = 0;
-var sessionCorrectStreak = 0; // consecutive correct answers for boss trigger
-var pendingChest = false;
-var pendingInterruptAction = null; // stores what to do after boss/chest
-
-// Utility
-function show(id) { document.getElementById(id).classList.remove('hidden'); }
-function hide(id) { document.getElementById(id).classList.add('hidden'); }
-function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-
-// ===== MULTI-PROFILE SYSTEM =====
-var activePlayer = ''; // current player name
-
-// Per-player localStorage key
 function playerKey(key) {
   return activePlayer + '_' + key;
 }
@@ -1126,37 +1376,28 @@ function savePlayersList(list) {
 
 function addPlayer(name) {
   var list = loadPlayersList();
-  if (list.indexOf(name) === -1) {
-    list.push(name);
-    savePlayersList(list);
-  }
+  if (list.indexOf(name) === -1) { list.push(name); savePlayersList(list); }
 }
 
 function removePlayer(name) {
   if (!confirm('Slet spilleren "' + name + '" og al deres data?')) return;
-  var list = loadPlayersList();
-  list = list.filter(function(n) { return n !== name; });
+  var list = loadPlayersList().filter(function(n) { return n !== name; });
   savePlayersList(list);
-  // Remove all player data
-  var keys = ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade'];
-  for (var i = 0; i < keys.length; i++) {
-    try { localStorage.removeItem(name + '_' + keys[i]); } catch(e) {}
-  }
+  ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade'].forEach(function(k) {
+    try { localStorage.removeItem(name + '_' + k); } catch(e) {}
+  });
   renderProfilePicker();
 }
 
 function selectPlayer(name) {
   activePlayer = name;
   try { localStorage.setItem('last_player', name); } catch(e) {}
-  // Add to players list if not already there (for cross-device sync)
-  var list = loadPlayersList();
-  if (list.indexOf(name) === -1) { addPlayer(name); }
-  hide('phase-profile-picker');
-  show('phase-welcome');
-  var nameEl = document.getElementById('playerNameDisplay');
-  if (nameEl) nameEl.textContent = activePlayer;
-  // Load from Supabase then refresh UI
+  // Sync from Supabase before showing welcome
   syncFromSupabase(name, function() {
+    hide('phase-profile-picker');
+    show('phase-welcome');
+    var nameEl = document.getElementById('playerNameDisplay');
+    if (nameEl) nameEl.textContent = activePlayer;
     refreshWelcomeButtons();
     updateWelcomeStreak();
     updateWelcomeAvatar();
@@ -1181,48 +1422,46 @@ function switchPlayer() {
 
 function renderProfilePicker() {
   var list = loadPlayersList();
-  renderProfileGrid(list);
-  // Also fetch players from Supabase to show profiles from other devices
-  supabase.from('profiles').select('player').then(function(res) {
-    if (res.data) {
-      var merged = list.slice();
-      for (var i = 0; i < res.data.length; i++) {
-        if (merged.indexOf(res.data[i].player) === -1) {
-          merged.push(res.data[i].player);
-        }
+  var grid = document.getElementById('profilePickerGrid');
+
+  // Merge with Supabase players
+  if (supabaseClient) {
+    supabaseClient.from('profiles').select('player').then(function(res) {
+      if (res.data) {
+        var changed = false;
+        res.data.forEach(function(row) {
+          if (list.indexOf(row.player) === -1) {
+            list.push(row.player);
+            changed = true;
+          }
+        });
+        if (changed) { savePlayersList(list); renderProfilePickerGrid(list); }
       }
-      if (merged.length !== list.length) {
-        savePlayersList(merged);
-        renderProfileGrid(merged);
-      }
-    }
-  });
+    }).catch(function() {});
+  }
+
+  renderProfilePickerGrid(list);
 }
 
-function renderProfileGrid(list) {
+function renderProfilePickerGrid(list) {
   var grid = document.getElementById('profilePickerGrid');
   var html = '';
   for (var i = 0; i < list.length; i++) {
     var name = list[i];
     var emoji = '\u{1F98A}';
+    var nameStyle = '';
     try {
       var raw = localStorage.getItem(name + '_reward_data');
-      if (raw) {
-        var rd = JSON.parse(raw);
-        var level = getAvatarLevel(rd.totalXP || 0);
-        emoji = level.emoji;
-      }
+      if (raw) { var rd = JSON.parse(raw); var lvl = getAvatarLevel(rd.totalXP || 0); emoji = lvl.emoji; nameStyle = lvl.titleStyle || ''; }
     } catch(e) {}
     html += '<button class="profile-picker-btn" onclick="selectPlayer(\'' + name.replace(/'/g, "\\'") + '\')">';
     html += '<span class="pp-emoji">' + emoji + '</span>';
-    html += '<span class="pp-name">' + name + '</span>';
+    html += '<span class="pp-name" style="' + nameStyle + '">' + name + '</span>';
     html += '<span class="pp-delete" onclick="event.stopPropagation();removePlayer(\'' + name.replace(/'/g, "\\'") + '\')">\u2717 slet</span>';
     html += '</button>';
   }
   html += '<button class="profile-picker-btn pp-new" onclick="showNewPlayerForm()">';
-  html += '<span class="pp-emoji">&#x2795;</span>';
-  html += '<span class="pp-name">Ny spiller</span>';
-  html += '</button>';
+  html += '<span class="pp-emoji">&#x2795;</span><span class="pp-name">Ny spiller</span></button>';
   grid.innerHTML = html;
   hide('newPlayerForm');
 }
@@ -1230,54 +1469,341 @@ function renderProfileGrid(list) {
 function showNewPlayerForm() {
   show('newPlayerForm');
   var inp = document.getElementById('newPlayerInput');
-  inp.value = '';
-  inp.focus();
+  inp.value = ''; inp.focus();
 }
 
-function cancelNewPlayer() {
-  hide('newPlayerForm');
-}
+function cancelNewPlayer() { hide('newPlayerForm'); }
 
 function confirmNewPlayer() {
   var inp = document.getElementById('newPlayerInput');
   var name = inp.value.trim();
   if (!name) return;
-  var list = loadPlayersList();
-  if (list.indexOf(name) !== -1) {
-    alert('Der findes allerede en spiller med det navn.');
-    return;
-  }
+  if (loadPlayersList().indexOf(name) !== -1) { alert('Der findes allerede en spiller med det navn.'); return; }
   addPlayer(name);
   selectPlayer(name);
 }
 
-// Migrate old data (pre-profile system) to first profile
 function migrateOldData() {
   var list = loadPlayersList();
-  if (list.length > 0) return false; // already migrated or has profiles
-  // Check if there's any old data
-  var hasOld = localStorage.getItem('profile_data') || localStorage.getItem('reward_data') || localStorage.getItem('sr_data');
+  if (list.length > 0) return false;
+  var hasOld = localStorage.getItem(playerKey('profile_data')) || localStorage.getItem(playerKey('reward_data')) || localStorage.getItem(playerKey('sr_data'));
   if (!hasOld) return false;
   var migrateName = 'Spiller 1';
-  var oldKeys = ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade'];
-  for (var i = 0; i < oldKeys.length; i++) {
-    var val = localStorage.getItem(oldKeys[i]);
-    if (val) {
-      localStorage.setItem(migrateName + '_' + oldKeys[i], val);
-      localStorage.removeItem(oldKeys[i]);
-    }
-  }
+  ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade'].forEach(function(k) {
+    var val = localStorage.getItem(k);
+    if (val) { localStorage.setItem(migrateName + '_' + k, val); localStorage.removeItem(k); }
+  });
   addPlayer(migrateName);
   return true;
 }
-// ===== END MULTI-PROFILE SYSTEM =====
+
+// ===== SUPABASE =====
+var supabaseClient = null;
+try {
+  supabaseClient = window.supabase.createClient(
+    'https://cfkddsiwwujbbxjuthie.supabase.co',
+    'sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt'
+  );
+} catch(e) { console.log('Supabase ikke tilg\u00E6ngelig'); }
+
+function logAnswer(word, answer, correct, attempt, category, level) {
+  if (!supabaseClient || !activePlayer) return;
+  var grade = 0;
+  try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
+  supabaseClient.from('answers').insert({
+    player: activePlayer, word: word, answer: answer, correct: correct,
+    attempt: attempt, category: category || null, level: level || 0, grade: grade
+  }).then(function(res) {
+    if (res.error) console.warn('Supabase log fejl:', res.error.message);
+  });
+}
+
+function syncToSupabase() {
+  if (!supabaseClient || !activePlayer) return;
+  var profileData = null, rewardData = null, srData = null, grade = 0;
+  try { profileData = JSON.parse(localStorage.getItem(playerKey('profile_data')) || 'null'); } catch(e) {}
+  try { rewardData = JSON.parse(localStorage.getItem(playerKey('reward_data')) || 'null'); } catch(e) {}
+  try { srData = JSON.parse(localStorage.getItem(playerKey('sr_data')) || 'null'); } catch(e) {}
+  try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
+  supabaseClient.from('profiles').upsert({
+    player: activePlayer,
+    profile_data: profileData,
+    reward_data: rewardData,
+    sr_data: srData,
+    student_grade: grade,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'player' }).then(function(res) {
+    if (res.error) console.warn('Supabase sync fejl:', res.error.message);
+  });
+}
+
+function syncFromSupabase(name, callback) {
+  if (!supabaseClient) { if (callback) callback(); return; }
+  supabaseClient.from('profiles').select('*').eq('player', name).single().then(function(res) {
+    if (res.data) {
+      if (res.data.profile_data) try { localStorage.setItem(name + '_profile_data', JSON.stringify(res.data.profile_data)); } catch(e) {}
+      if (res.data.reward_data) try { localStorage.setItem(name + '_reward_data', JSON.stringify(res.data.reward_data)); } catch(e) {}
+      if (res.data.sr_data) try { localStorage.setItem(name + '_sr_data', JSON.stringify(res.data.sr_data)); } catch(e) {}
+      if (res.data.student_grade !== null) try { localStorage.setItem(name + '_student_grade', res.data.student_grade.toString()); } catch(e) {}
+    }
+    if (callback) callback();
+  }).catch(function() { if (callback) callback(); });
+}
+
+// Word bank loaded from words.json
+var WORD_BANK = {};
+
+var PATTERN_RULES = {
+  "Stumme bogstaver": "<b>Nogle bogstaver er usynlige!</b> De skrives, men man kan ikke h\u00F8re dem.<br><span style='color:var(--accent)'>hv-</span> (hvid), <span style='color:var(--accent)'>hj-</span> (hj\u00E6lp) \u2014 h'et er stumt!",
+  "Dobbeltkonsonant": "<b>Kort vokal = dobbelt!</b><br>Sig vokalen: er den <span style='color:var(--red)'>kort</span>? \u2192 dobbelt (<span style='color:var(--accent)'>hoppe</span>)<br>Er den <span style='color:var(--green)'>lang</span>? \u2192 enkelt (<span style='color:var(--accent)'>bade</span>)",
+  "For- og efterstavelser": "<b>Del ordet op i klodser!</b><br>Forstavelser: <span style='color:var(--accent)'>be-</span>, <span style='color:var(--accent)'>for-</span>, <span style='color:var(--accent)'>u-</span><br>Efterstavelser: <span style='color:var(--accent)'>-hed</span>, <span style='color:var(--accent)'>-else</span>, <span style='color:var(--accent)'>-lig</span><br>Klodserne staves altid ens!",
+  "Sammensatte ord": "<b>Del ordet i stykker!</b><br><span style='color:var(--accent)'>skole + arbejde</span>, <span style='color:var(--accent)'>mad + pakke</span><br>Kan du stave stykkerne? S\u00E5 kan du stave hele ordet!",
+  "Verbernes bøjning": "<b>Hvad skete der?</b><br>De fleste: <span style='color:var(--accent)'>-ede</span> (legede, cyklede)<br>Korte ord: <span style='color:var(--accent)'>-te</span> (spiste, k\u00F8bte)",
+  "Navneordsendelser": "<b>Hvor mange? Hvilken \u00E9n?</b><br>Flertal: <span style='color:var(--accent)'>-e</span> eller <span style='color:var(--accent)'>-er</span> (hunde, lamper)<br>Bestemt: en-ord f\u00E5r <span style='color:var(--accent)'>-en</span>, et-ord f\u00E5r <span style='color:var(--accent)'>-et</span>",
+  "Lydrette ord": "<b>Sig ordet langsomt!</b> Skriv \u00E9n lyd ad gangen \u2014 det staves pr\u00E6cis som det lyder.",
+  "Nutids-r": "<b>Pr\u00F8v at s\u00E6tte \u201Dhan\u201D foran!</b><br>Han hoppe<span style='color:var(--green);font-weight:800'>r</span>, hun spise<span style='color:var(--green);font-weight:800'>r</span>, de lege<span style='color:var(--green);font-weight:800'>r</span><br>Passer \u201Dhan/hun\u201D foran? S\u00E5 skal der <span style='color:var(--green);font-weight:800'>-r</span> p\u00E5!"
+};
+
+// Emoji illustrations for fill-in exercise (words with clear visual representation)
+var WORD_EMOJIS = {
+  // Stumme bogstaver
+  "hvid": "\u2B1C", "hjul": "\u{1F6DE}", "hjem": "\u{1F3E0}", "hjerte": "\u2764\uFE0F",
+  "hveps": "\u{1F41D}", "hjort": "\u{1F98C}", "hval": "\u{1F40B}", "hvalp": "\u{1F436}",
+  "hvalros": "\u{1F9AD}", "hvede": "\u{1F33E}", "hjelm": "\u26D1\uFE0F", "chokolade": "\u{1F36B}",
+  "hjerne": "\u{1F9E0}", "dværg": "\u{1F9CC}", "guld": "\u{1FAA9}", "sølv": "\u{1FA99}",
+  "gulv": "\u{1F3E0}", "kalv": "\u{1F404}", "hjørne": "\u{1F4D0}",
+  // Dobbeltkonsonant
+  "hoppe": "\u{1F407}", "kaffe": "\u2615", "sommer": "\u2600\uFE0F", "suppe": "\u{1F372}",
+  "trappen": "\u{1FA9C}", "vinter": "\u2744\uFE0F", "katte": "\u{1F431}", "briller": "\u{1F453}",
+  "dukke": "\u{1F9F8}", "tromme": "\u{1F941}", "flaske": "\u{1F37C}", "skole": "\u{1F3EB}",
+  "lamme": "\u{1F411}", "kopper": "\u2615", "nisse": "\u{1F385}", "svømme": "\u{1F3CA}",
+  "klasse": "\u{1F4DA}", "bade": "\u{1F6C1}",
+  // Navneordsendelser
+  "huset": "\u{1F3E0}", "stolen": "\u{1FA91}", "bogen": "\u{1F4D6}", "drengen": "\u{1F466}",
+  "blomster": "\u{1F490}", "fuglen": "\u{1F426}", "lamper": "\u{1F4A1}", "børnene": "\u{1F9D2}",
+  "pigerne": "\u{1F467}", "æbler": "\u{1F34E}", "brødet": "\u{1F35E}", "tøjet": "\u{1F455}",
+  "kvinder": "\u{1F469}", "biler": "\u{1F697}", "hesten": "\u{1F40E}", "træet": "\u{1F333}",
+  "skyer": "\u2601\uFE0F", "bilerne": "\u{1F697}", "hestene": "\u{1F40E}", "fuglene": "\u{1F426}",
+  "blomsterne": "\u{1F490}", "gæster": "\u{1F465}",
+  // Nutids-r
+  "hopper": "\u{1F3C3}", "spiser": "\u{1F37D}\uFE0F", "leger": "\u{1F3B2}", "sover": "\u{1F634}",
+  "cykler": "\u{1F6B2}", "svømmer": "\u{1F3CA}", "tegner": "\u{1F3A8}", "danser": "\u{1F483}",
+  "lytter": "\u{1F442}",
+  // Sammensatte ord
+  "morgensmad": "\u{1F373}", "fødselsdagsgave": "\u{1F381}",
+  // Verbernes bøjning
+  "spiste": "\u{1F37D}\uFE0F", "legede": "\u{1F3B2}", "hoppede": "\u{1F3C3}",
+  "cyklede": "\u{1F6B2}", "svømmede": "\u{1F3CA}", "rejste": "\u2708\uFE0F",
+  // For- og efterstavelser
+  "venlig": "\u{1F60A}", "farlig": "\u26A0\uFE0F", "kærlighed": "\u2764\uFE0F",
+  "frihed": "\u{1F5FD}", "ulykke": "\u{1F4A5}"
+};
+
+var CATEGORY_LESSONS = {
+  "Stumme bogstaver": {
+    emoji: "\u{1F47B}",
+    title: "Stumme bogstaver",
+    rule: "Nogle bogstaver er usynlige! De skrives, men man kan <strong>ikke h\u00F8re dem</strong>.",
+    examples: [
+      { word: "<span class='highlight'>h</span>vid", note: "h'et er stumt" },
+      { word: "<span class='highlight'>h</span>j\u00E6lp", note: "h'et er stumt" },
+      { word: "ha<span class='highlight'>l</span>v", note: "l'et er stumt" },
+      { word: "gul<span class='highlight'>d</span>", note: "d'et er stumt" }
+    ],
+    tip: "\u{1F4A1} Trick: Pr\u00F8v at sige ordet langsomt. Kan du h\u00F8re alle bogstaverne? Hvis ikke, er der nok et stumt bogstav gemt!"
+  },
+  "Dobbeltkonsonant": {
+    emoji: "\u270C\uFE0F",
+    title: "Dobbeltkonsonant",
+    rule: "Sig vokalen (a, e, i, o, u) h\u00F8jt. Er den <strong style='color:var(--red)'>kort</strong>? S\u00E5 <strong>dobbelt</strong> konsonant!",
+    examples: [
+      { word: "ho<span class='highlight'>pp</span>e", note: "kort 'o' \u2192 dobbelt" },
+      { word: "ka<span class='highlight'>ff</span>e", note: "kort 'a' \u2192 dobbelt" },
+      { word: "ba<span class='highlight'>d</span>e", note: "lang 'a' \u2192 enkelt" },
+      { word: "vi<span class='highlight'>d</span>e", note: "lang 'i' \u2192 enkelt" }
+    ],
+    tip: "\u{1F4A1} Trick: Sig vokalen langsomt. Kort vokal = hop-pe. Lang vokal = ba-de."
+  },
+  "For- og efterstavelser": {
+    emoji: "\u{1F9E9}",
+    title: "For- og efterstavelser",
+    rule: "Mange ord er bygget af <strong>klodser</strong> der altid staves ens!",
+    examples: [
+      { word: "<span class='highlight'>for-</span>bered<span class='highlight'>-else</span>", note: "3 klodser" },
+      { word: "<span class='highlight'>u-</span>mulig", note: "u- = ikke/modsat" },
+      { word: "ven<span class='highlight'>-lig</span>", note: "-lig, ikke -leg" },
+      { word: "k\u00E6rlig<span class='highlight'>-hed</span>", note: "-hed, ikke -het" }
+    ],
+    tip: "\u{1F4A1} Trick: Del ordet op i klodser! Kender du klodserne, kan du stave hele ordet."
+  },
+  "Sammensatte ord": {
+    emoji: "\u{1F517}",
+    title: "Sammensatte ord",
+    rule: "Dansk elsker at <strong>s\u00E6tte ord sammen</strong>. Del dem i stykker!",
+    examples: [
+      { word: "<span class='highlight'>skole</span>+<span class='highlight'>taske</span>", note: "to ord" },
+      { word: "<span class='highlight'>morgen</span>-s-<span class='highlight'>mad</span>", note: "med fuge-s" },
+      { word: "<span class='highlight'>mad</span>+<span class='highlight'>pakke</span>", note: "to ord" }
+    ],
+    tip: "\u{1F4A1} Trick: Kan du dele ordet i to ord du kender? S\u00E5 er det et sammensat ord!"
+  },
+  "Verbernes b\u00F8jning": {
+    emoji: "\u270F\uFE0F",
+    title: "Verbernes b\u00F8jning",
+    rule: "N\u00E5r noget <strong>skete i g\u00E5r</strong>, skal verbet b\u00F8jes.",
+    examples: [
+      { word: "leg<span class='highlight'>ede</span>", note: "de fleste f\u00E5r -ede" },
+      { word: "spis<span class='highlight'>te</span>", note: "korte ord f\u00E5r -te" },
+      { word: "k\u00F8b<span class='highlight'>te</span>", note: "kort stamme = -te" },
+      { word: "cykl<span class='highlight'>ede</span>", note: "lang stamme = -ede" }
+    ],
+    tip: "\u{1F4A1} Trick: Sig grundformen (at lege, at spise). F\u00F8les stammen kort? S\u00E5 -te. Lang? S\u00E5 -ede."
+  },
+  "Navneordsendelser": {
+    emoji: "\u{1F4DD}",
+    title: "Navneordsendelser",
+    rule: "Er det <strong>en</strong>-ord eller <strong>et</strong>-ord? Det bestemmer endelsen!",
+    examples: [
+      { word: "stol<span class='highlight'>en</span>", note: "en stol \u2192 -en" },
+      { word: "hus<span class='highlight'>et</span>", note: "et hus \u2192 -et" },
+      { word: "bil<span class='highlight'>er</span>", note: "flertal \u2192 -er" },
+      { word: "hund<span class='highlight'>ene</span>", note: "bestemt flertal" }
+    ],
+    tip: "\u{1F4A1} Trick: Sig \"en\" eller \"et\" foran ordet. \"En stol\" \u2192 stolen. \"Et hus\" \u2192 huset."
+  },
+  "Lydrette ord": {
+    emoji: "\u{1F524}",
+    title: "Lydrette ord",
+    rule: "Disse ord staves <strong>pr\u00E6cis som de lyder</strong>. Sig dem langsomt!",
+    examples: [
+      { word: "sol", note: "s-o-l" },
+      { word: "mus", note: "m-u-s" },
+      { word: "hund", note: "h-u-n-d" }
+    ],
+    tip: "\u{1F4A1} Trick: Sig ordet \u00E9n lyd ad gangen og skriv hver lyd ned."
+  },
+  "Nutids-r": {
+    emoji: "\u{1F996}",
+    title: "Nutids-r",
+    rule: "Pr\u00F8v at s\u00E6tte <strong>\"han\"</strong> foran! Passer det? S\u00E5 skal der <strong style='color:var(--green)'>-r</strong> p\u00E5!",
+    examples: [
+      { word: "hun hoppe<span class='highlight'>r</span>", note: "han/hun = nutid" },
+      { word: "de spise<span class='highlight'>r</span>", note: "de = nutid" },
+      { word: "at hoppe", note: "at = INGEN -r" },
+      { word: "at spise", note: "at = INGEN -r" }
+    ],
+    tip: "\u{1F4A1} Trick: \"Han hopper\" \u2192 -r. \"At hoppe\" \u2192 ingen -r. S\u00E5 simpelt er det!"
+  }
+};
+
+var pendingLesson = false;
+
+function showCategoryLesson(category) {
+  var lesson = CATEGORY_LESSONS[category];
+  if (!lesson) return;
+  pendingLesson = true;
+
+  var html = '<div class="lesson-emoji">' + lesson.emoji + '</div>';
+  html += '<h2>' + lesson.title + '</h2>';
+  html += '<div class="lesson-rule"><p>' + lesson.rule + '</p></div>';
+
+  html += '<div class="lesson-examples">';
+  for (var i = 0; i < lesson.examples.length; i++) {
+    var ex = lesson.examples[i];
+    html += '<div class="lesson-example"><div>' + ex.word + '</div><div style="font-size:0.75rem;color:var(--muted);font-weight:400;margin-top:2px">' + ex.note + '</div></div>';
+  }
+  html += '</div>';
+
+  html += '<div class="lesson-tip">' + lesson.tip + '</div>';
+  html += '<button class="btn btn-accent" style="width:100%;margin-top:16px;padding:14px" onclick="dismissLesson()">\u{1F4AA} Forst\u00E5et! Videre</button>';
+
+  document.getElementById('lessonContent').innerHTML = html;
+  var overlay = document.getElementById('lessonOverlay');
+  overlay.style.display = 'flex';
+  overlay.classList.remove('hidden');
+}
+
+function dismissLesson() {
+  pendingLesson = false;
+  var overlay = document.getElementById('lessonOverlay');
+  overlay.classList.add('hidden');
+  overlay.style.display = 'none';
+
+  // Resume the exercise — try each mode's next function
+  if (gameMode === 'rightorwrong') {
+    nextRightOrWrongWord();
+  }
+  // Other modes use a manual "Næste" button, so no auto-advance needed
+}
+
+function trackCategoryError(category) {
+  if (!sessionCategoryErrors[category]) sessionCategoryErrors[category] = 0;
+  sessionCategoryErrors[category]++;
+  if (sessionCategoryErrors[category] === 3) {
+    sessionCategoryErrors[category] = 0;
+    showCategoryLesson(category);
+  }
+}
+
+var CATEGORY_ICONS = {
+  "Stumme bogstaver": "\u{1F507}",
+  "Dobbeltkonsonant": "\u270C\uFE0F",
+  "For- og efterstavelser": "\u{1F9E9}",
+  "Sammensatte ord": "\u{1F517}",
+  "Verbernes bøjning": "\u270F\uFE0F",
+  "Navneordsendelser": "\u{1F4DD}",
+  "Lydrette ord": "\u{1F524}",
+  "Nutids-r": "\u00AE\uFE0F"
+};
+
+var ALL_CATEGORIES = [];
+
+var LEVEL_LABELS = {
+  0: { text: "\u26AA Niveau 0", bg: "rgba(255,255,255,0.1)", color: "#ccc" },
+  1: { text: "\u{1F7E2} Niveau 1", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
+  2: { text: "\u{1F7E1} Niveau 2", bg: "rgba(245,166,35,0.15)", color: "var(--accent)" },
+  3: { text: "\u{1F7E0} Niveau 3", bg: "rgba(249,115,22,0.15)", color: "#f97316" },
+  4: { text: "\u{1F534} Niveau 4", bg: "rgba(244,63,94,0.15)", color: "var(--red)" }
+};
+
+var LEVEL_GRADE_MAP = {
+  0: "Niveau 0",
+  1: "Niveau 1",
+  2: "Niveau 2",
+  3: "Niveau 3",
+  4: "Niveau 4"
+};
+
+// State
+var currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
+var retryAttempt = false;
+var sessionCategoryErrors = {}; // track errors per category for lesson triggers
+var gameMode = 'diagnostic'; // 'diagnostic' | 'training' | 'review'
+var diagnosticWordsList = [];
+var adaptiveState = null;
+
+// Gamification state
+var wrongCountPerWord = {};
+var pendingBoss = null;
+var sessionCorrectCount = 0;
+var sessionCorrectStreak = 0; // consecutive correct answers for boss trigger
+var pendingChest = false;
+var pendingInterruptAction = null; // stores what to do after boss/chest
+
+// Utility
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-analyzing','phase-profile','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
+  cleanupHighway();
+  cleanupSnake();
   if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
+  if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
   show('phase-welcome');
   refreshWelcomeButtons();
   updateWelcomeStreak();
@@ -1292,8 +1818,8 @@ function selectGrade(g) {
   try { localStorage.setItem(playerKey('student_grade'), g.toString()); } catch(e) {}
   syncToSupabase();
   var btns = document.querySelectorAll('.grade-btn');
-  btns.forEach(function(b, i) {
-    if (i === g) b.classList.add('active');
+  btns.forEach(function(b) {
+    if (parseInt(b.getAttribute('data-grade')) === g) b.classList.add('active');
     else b.classList.remove('active');
   });
 }
@@ -1311,8 +1837,8 @@ function restoreGradeSelection() {
   var g = loadGrade();
   if (g >= 0 && g <= 8) {
     var btns = document.querySelectorAll('.grade-btn');
-    btns.forEach(function(b, i) {
-      if (i === g) b.classList.add('active');
+    btns.forEach(function(b) {
+      if (parseInt(b.getAttribute('data-grade')) === g) b.classList.add('active');
       else b.classList.remove('active');
     });
   }
@@ -1374,13 +1900,13 @@ function saveProfile(data) {
 }
 
 function resetProfile() {
-  if (!confirm('Er du sikker? Dit stavetest-resultat og niveau bliver slettet.')) return;
+  if (!confirm('Er du sikker? Dit stavespil-resultat og niveau bliver slettet.')) return;
   localStorage.removeItem(playerKey('profile_data'));
   goHome();
 }
 
 function resetAll() {
-  if (!confirm('Er du HELT sikker? ALT bliver slettet — stavetest, XP, streak, øveord og screening.')) return;
+  if (!confirm('Er du HELT sikker? ALT bliver slettet \u2014 stavespil, XP, streak og \u00F8veord.')) return;
   localStorage.removeItem(playerKey('profile_data'));
   localStorage.removeItem(playerKey('reward_data'));
   localStorage.removeItem(playerKey('sr_data'));
@@ -1514,8 +2040,8 @@ async function speakWord(word, sentence) {
   if (audioManifest && audioManifest[word]) {
     var m = audioManifest[word];
     var voice = loadVoice();
-    var wordUrl = BASE_PATH + (voice === 'male' && m.word_m ? m.word_m : m.word);
-    var sentUrl = BASE_PATH + (voice === 'male' && m.sentence_m ? m.sentence_m : m.sentence);
+    var wordUrl = voice === 'male' && m.word_m ? m.word_m : m.word;
+    var sentUrl = voice === 'male' && m.sentence_m ? m.sentence_m : m.sentence;
     playStaticAudio(wordUrl, sentence ? sentUrl : null, btn);
     return;
   }
@@ -1621,10 +2147,10 @@ function gradeToExpectedLevel(grade) {
 
 // Adaptive diagnostic builder
 function buildAdaptiveDiagnosticWords(level) {
-  // Pick 3 words from given level, each from a different random category
+  // Pick 5 words from given level, each from a different random category
   var cats = shuffle(ALL_CATEGORIES);
   var picked = [];
-  for (var ci = 0; ci < cats.length && picked.length < 3; ci++) {
+  for (var ci = 0; ci < cats.length && picked.length < 5; ci++) {
     var cat = cats[ci];
     var pool = WORD_BANK[cat].filter(function(w) {
       return w.level === level && !diagnosticWordsList.find(function(d) { return d.word === w.word; });
@@ -1635,8 +2161,8 @@ function buildAdaptiveDiagnosticWords(level) {
     }
   }
   // If not enough from unique categories, fill from any category
-  if (picked.length < 3) {
-    for (var ci2 = 0; ci2 < ALL_CATEGORIES.length && picked.length < 3; ci2++) {
+  if (picked.length < 5) {
+    for (var ci2 = 0; ci2 < ALL_CATEGORIES.length && picked.length < 5; ci2++) {
       var cat2 = ALL_CATEGORIES[ci2];
       var pool2 = WORD_BANK[cat2].filter(function(w) {
         return w.level === level && !diagnosticWordsList.find(function(d) { return d.word === w.word; }) && !picked.find(function(p) { return p.word === w.word; });
@@ -1657,11 +2183,9 @@ function startDiagnostic() {
   currentIndex = 0;
   wrongCountPerWord = {};
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
-  var startLevel = 1;
-  var selectedGrade = loadGrade();
-  if (selectedGrade >= 0 && selectedGrade <= 1) startLevel = 0;
+  var startLevel = 0;
 
   adaptiveState = {
     currentLevel: startLevel,
@@ -1690,59 +2214,272 @@ function startDiagnostic() {
 }
 
 // Training mode
+// Mixed training queue
+var mixedQueue = [];
+var mixedIndex = 0;
+var isMixedSession = false;
+
 function startTrainingFromProfile() {
   var profile = loadProfile();
   if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
     startDiagnostic();
     return;
   }
-  gameMode = 'training';
-  wrongCountPerWord = {};
+  isMixedSession = true;
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
-  var excludeWords = {};
-  if (profile.diagnosticResults) {
-    profile.diagnosticResults.forEach(function(r) { excludeWords[r.word] = true; });
-  }
-  // Target estimated level and two below for a mix of easy and hard
+  wrongCountPerWord = {};
+  results = [];
+
   var targetLevel = profile.spellingLevel || 2;
   var minLevel = Math.max(0, targetLevel - 2);
   var pool = [];
   for (var ci = 0; ci < profile.weakCategories.length; ci++) {
     var cat = profile.weakCategories[ci];
+    if (!WORD_BANK[cat]) continue;
     var words = WORD_BANK[cat].filter(function(w) {
-      return !excludeWords[w.word] && w.level >= minLevel && w.level <= targetLevel;
+      return w.level >= minLevel && w.level <= targetLevel;
     }).map(function(w) { return Object.assign({}, w, { category: cat }); });
     pool = pool.concat(words);
   }
-  pool = shuffle(pool);
   if (pool.length === 0) {
-    // Fallback: use any words from weak categories
     for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
       var cat2 = profile.weakCategories[ci2];
+      if (!WORD_BANK[cat2]) continue;
       pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
     }
-    pool = shuffle(pool);
   }
-  currentWords = pool.slice(0, 8);
-  currentIndex = 0; results = [];
-  document.getElementById('scoreCorrect').textContent = '0';
-  document.getElementById('scoreWrong').textContent = '0';
-  document.getElementById('testPhaseLabel').textContent = '\u{1F3AF} Træning';
-  document.getElementById('difficultyLabel').innerHTML = '';
-  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
+  pool = shuffle(pool);
+
+  // Build mixed queue: assign each word a random compatible exercise type
+  mixedQueue = [];
+  for (var i = 0; i < pool.length && mixedQueue.length < 10; i++) {
+    var w = pool[i];
+    var types = []; // diktat is fallback only
+
+    var blanks = generateBlanks(w);
+    if (blanks) types.push('fillin');
+
+    var ms = generateMisspelling(w);
+    if (ms) types.push('rightorwrong');
+
+    var spItem = buildSpellingPoliceItem(w);
+    if (spItem) types.push('spellingpolice');
+
+    var morphemes = parseMorphemes(w.patternHint, w.word);
+    if (morphemes) types.push('wordbuilder');
+
+    // Sentence writing works for level 1+ words with hints
+    if (w.hint && w.level >= 1) types.push('sentence');
+
+    if (types.length === 0 || Math.random() < 0.2) types = ['diktat']; // 20% chance + fallback
+
+    var chosenType = types[Math.floor(Math.random() * types.length)];
+
+    mixedQueue.push({
+      wordObj: w,
+      type: chosenType,
+      blanks: blanks,
+      misspelling: ms,
+      spItem: spItem,
+      morphemes: morphemes
+    });
+  }
+
+  if (mixedQueue.length === 0) {
+    alert('Ingen ord fundet til tr\u00E6ning.');
+    return;
+  }
+
+  mixedIndex = 0;
   hide('phase-welcome');
   hide('phase-profile');
-  show('phase-test');
   show('rewardBar');
   show('rewardXPBarWrap');
   updateRewardBar();
-  var b = document.createElement('div');
-  b.className = 'session-badge';
-  b.innerHTML = '\u{1F3AF} Træningsmodus — fokus på dine svage kategorier';
-  document.getElementById('phase-test').appendChild(b);
-  renderWord();
+  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
+
+  renderMixedItem();
+}
+
+function hideAllExercisePhases() {
+  ['phase-test', 'phase-fillin', 'phase-rightorwrong', 'phase-spellingpolice', 'phase-wordbuilder', 'phase-sentence'].forEach(function(id) { hide(id); });
+}
+
+function renderMixedItem() {
+  if (mixedIndex >= mixedQueue.length) { finishMixedTraining(); return; }
+  var item = mixedQueue[mixedIndex];
+  hideAllExercisePhases();
+  hide('phase-boss');
+  document.getElementById('chestOverlay').classList.add('hidden');
+
+  switch (item.type) {
+    case 'diktat':
+      gameMode = 'training';
+      currentWords = [item.wordObj];
+      currentIndex = 0;
+      document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+      document.getElementById('scoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+      document.getElementById('testPhaseLabel').textContent = '\u{1F3AF} Tr\u00E6ning';
+      document.getElementById('difficultyLabel').innerHTML = '';
+      document.getElementById('wordNum').textContent = (mixedIndex + 1);
+      document.getElementById('progressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
+      show('phase-test');
+      renderWord();
+      break;
+
+    case 'fillin':
+      gameMode = 'fillin';
+      fillinWords = [item.wordObj];
+      fillinBlanks = [item.blanks];
+      fillinIndex = 0;
+      fillinResults = results.filter(function(r) { return true; }); // share results
+      document.getElementById('fillinScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+      document.getElementById('fillinScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+      document.getElementById('fillinWordNum').textContent = (mixedIndex + 1);
+      document.getElementById('fillinProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
+      show('phase-fillin');
+      renderFillInWord();
+      break;
+
+    case 'rightorwrong':
+      gameMode = 'rightorwrong';
+      var ms = item.misspelling;
+      var showCorrect = Math.random() < 0.5;
+      rfItems = [{
+        word: item.wordObj.word,
+        displayed: showCorrect ? item.wordObj.word : ms.misspelled,
+        isCorrect: showCorrect,
+        explanation: ms.explanation,
+        category: item.wordObj.category,
+        patternHint: item.wordObj.patternHint || '',
+        level: item.wordObj.level || 0
+      }];
+      rfIndex = 0;
+      rfResults = [];
+      rfCombo = 0;
+      rfAnswered = false;
+      document.getElementById('rfScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+      document.getElementById('rfScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+      document.getElementById('rfWordNum').textContent = (mixedIndex + 1);
+      document.getElementById('rfProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
+      show('phase-rightorwrong');
+      renderRightOrWrongWord();
+      break;
+
+    case 'spellingpolice':
+      gameMode = 'spellingpolice';
+      spItems = [item.spItem];
+      spIndex = 0;
+      spResults = [];
+      document.getElementById('spScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+      document.getElementById('spScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+      document.getElementById('spWordNum').textContent = (mixedIndex + 1);
+      document.getElementById('spProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
+      show('phase-spellingpolice');
+      renderSpellingPoliceWord();
+      break;
+
+    case 'wordbuilder':
+      gameMode = 'wordbuilder';
+      wbWords = [{ wordObj: item.wordObj, morphemes: item.morphemes }];
+      wbIndex = 0;
+      wbResults = [];
+      document.getElementById('wbScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+      document.getElementById('wbScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+      document.getElementById('wbWordNum').textContent = (mixedIndex + 1);
+      document.getElementById('wbProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
+      show('phase-wordbuilder');
+      renderWBWord();
+      break;
+
+    case 'sentence':
+      gameMode = 'sentence';
+      document.getElementById('swScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+      document.getElementById('swScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+      document.getElementById('swWordNum').textContent = (mixedIndex + 1);
+      document.getElementById('swProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
+      show('phase-sentence');
+      renderSentenceWord(item.wordObj);
+      break;
+  }
+}
+
+function nextMixedItem() {
+  // Check for boss/chest interrupts
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  if (pendingBoss) {
+    pendingInterruptAction = (mixedIndex + 1) >= mixedQueue.length ? 'finish' : 'continue';
+    mixedIndex++;
+    hideAllExercisePhases();
+    showBossMinigame(pendingBoss);
+    return;
+  }
+
+  if (pendingChest) {
+    pendingChest = false;
+    pendingInterruptAction = (mixedIndex + 1) >= mixedQueue.length ? 'finish' : 'continue';
+    mixedIndex++;
+    showTreasureChest();
+    return;
+  }
+
+  mixedIndex++;
+
+  if (mixedIndex >= mixedQueue.length) {
+    finishMixedTraining();
+  } else {
+    renderMixedItem();
+  }
+}
+
+var finalBossDone = false;
+
+function finishMixedTraining() {
+  hideAllExercisePhases();
+
+  // Final boss fight before results
+  if (!finalBossDone && results.length > 0) {
+    finalBossDone = true;
+    var allWords = results.map(function(r) { return { word: r.word, category: r.category }; });
+    var bossWord = allWords[Math.floor(Math.random() * allWords.length)];
+    pendingInterruptAction = 'finish-final';
+    isMixedSession = true; // keep mixed so proceedAfterInterrupt routes back
+    pendingChest = true; // chest after final boss too
+    showBossMinigame(bossWord);
+    return;
+  }
+
+  isMixedSession = false;
+  finalBossDone = false;
+
+  var correctCount = results.filter(function(r) { return r.correct; }).length;
+  var totalCount = results.length;
+  var prevXP = loadRewardData().totalXP || 0;
+  var rewardResult = awardSessionXP(correctCount, totalCount);
+  var rewardData = loadRewardData();
+  var newXP = rewardData.totalXP || 0;
+  var prevLevel = getAvatarLevel(prevXP);
+  var newLevel = getAvatarLevel(newXP);
+  var milestone = checkMilestone(rewardData);
+  updateRewardBar();
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  if (rewardResult.dailyGoalReached) {
+    setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
+  }
+  if (milestone) {
+    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
+  }
+  if (newLevel.index > prevLevel.index) {
+    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
+  }
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  renderTrainingResults();
 }
 
 // Review mode
@@ -1750,7 +2487,7 @@ function startReview() {
   gameMode = 'review';
   wrongCountPerWord = {};
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
   currentWords = shuffle(getDueWords());
   if (currentWords.length === 0) {
@@ -1780,7 +2517,7 @@ function renderWord() {
   // Safety: don't render if chest or boss overlay is visible
   var chestOv = document.getElementById('chestOverlay');
   var bossOv = document.getElementById('bossOverlay');
-  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
   var w = currentWords[currentIndex];
   var total = currentWords.length;
   document.getElementById('wordNum').textContent = (results.length + 1);
@@ -1864,10 +2601,6 @@ document.getElementById('spellingInput').addEventListener('keydown', function(e)
   }
 });
 
-document.getElementById('newPlayerInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') confirmNewPlayer();
-});
-
 // Diff highlight
 function diffHighlight(correct, attempt) {
   var out = '';
@@ -1890,10 +2623,9 @@ function checkSpelling() {
   var box = document.getElementById('feedbackBox');
   box.style.display = 'block';
 
+  // Single attempt — no retry
   var result = { word: w.word, correct: ok, selfCorrected: false, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
-
-  // Log to Supabase
   logAnswer(w.word, ans, ok, 1, w.category, w.level || 0);
 
   // Track adaptive state for diagnostic
@@ -1910,8 +2642,9 @@ function checkSpelling() {
   if (ok) {
     box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! Flot klaret! \u{1F389}</div>';
   } else {
-    box.innerHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + ans + '</strong><br>' +
+    var feedbackHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + ans + '</strong><br>' +
       'Rigtigt: <span style="color:var(--green)">' + diffHighlight(w.word, ans) + '</span></div>';
+    box.innerHTML = feedbackHTML;
   }
 
   // Streak and boss/chest trigger (reward-based)
@@ -1929,6 +2662,7 @@ function checkSpelling() {
     }
   } else {
     sessionCorrectStreak = 0;
+    trackCategoryError(w.category);
   }
 
   document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
@@ -1936,14 +2670,16 @@ function checkSpelling() {
   document.getElementById('checkBtn').classList.add('hidden');
   document.getElementById('nextBtn').classList.remove('hidden');
   feedbackShown = true;
+  retryAttempt = false;
   document.getElementById('nextBtn').focus();
 }
 
 function nextWord() {
+  if (isMixedSession) { nextMixedItem(); return; }
   // Block if an interrupt overlay is active
   var chestOv = document.getElementById('chestOverlay');
   var bossOv = document.getElementById('bossOverlay');
-  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
 
   // Check for pending boss FIRST (reward for streak) — chest follows after boss
   if (pendingBoss && gameMode !== 'diagnostic') {
@@ -1978,8 +2714,8 @@ function nextWord() {
         return;
       }
 
-      if (levelCorrect >= 2 && adaptiveState.currentLevel < 4) {
-        // Advance to next level
+      if (levelCorrect >= 3 && adaptiveState.currentLevel < 4) {
+        // Advance to next level (3/5 = 60% correct)
         adaptiveState.currentLevel++;
         adaptiveState.levelResults = [];
         adaptiveState.phase = 'testing';
@@ -1993,12 +2729,12 @@ function nextWord() {
         currentWords = nextBatch;
         currentIndex = 0;
         renderWord();
-      } else if (levelCorrect >= 2 && adaptiveState.currentLevel === 4) {
+      } else if (levelCorrect >= 3 && adaptiveState.currentLevel === 4) {
         // At max level and passed, finish
         adaptiveState.finished = true;
         finishTest();
       } else {
-        // Got 2+ wrong, pick 3 more at this level to confirm
+        // Got 3+ wrong, pick 5 more at this level to confirm
         adaptiveState.levelResults = [];
         adaptiveState.phase = 'confirming';
         var confirmBatch = buildAdaptiveDiagnosticWords(adaptiveState.currentLevel);
@@ -2121,13 +2857,11 @@ async function analyzeWithAI(profile) {
   var wrong = results.filter(function(r) { return !r.correct; });
   var cats = [];
   wrong.forEach(function(r) { if (cats.indexOf(r.category) === -1) cats.push(r.category); });
-  var grade = profile.grade || 0;
   var spellingLevel = profile.spellingLevel || 1;
-  var gradeInfo = grade >= 0 ? ('Eleven går i ' + grade + '. klasse. ') : '';
   var levelInfo = 'Estimeret stave-niveau: ' + LEVEL_GRADE_MAP[spellingLevel] + ' (niveau ' + spellingLevel + '/4).';
 
   var prompt = 'Du er en dansk stavningstutor for et barn.\n\n' +
-    gradeInfo + levelInfo + '\n\n' +
+    levelInfo + '\n\n' +
     'Diagnostisk test med adaptivt niveau (starter let, bliver sværere).\n\n' +
     'Testresultater:\n' +
     results.map(function(r) { return '- "' + r.word + '" (kategori: ' + r.category + ', niveau: ' + r.level + '): ' + (r.correct ? 'RIGTIGT' : 'FORKERT — eleven skrev "' + r.userAnswer + '"'); }).join('\n') +
@@ -2211,21 +2945,7 @@ function renderProfile(profile, aiData) {
   var meterColors = { 0: '#ccc', 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
   html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + Math.max(meterPct, 5) + '%;background:' + (meterColors[spellingLevel] || '#ccc') + '"></div></div>';
   html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
-  html += '<span>0. kl</span><span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
-
-  // Grade comparison
-  if (grade >= 0) {
-    var expectedLevel = gradeToExpectedLevel(grade);
-    var compHtml = '';
-    if (spellingLevel > expectedLevel) {
-      compHtml = '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Imponerende! Du staver over dit klassetrin! \u{1F680}</div>';
-    } else if (spellingLevel >= expectedLevel) {
-      compHtml = '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Flot! Du staver som forventet for dit klassetrin \u{1F31F}</div>';
-    } else {
-      compHtml = '<div class="level-comparison" style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);color:var(--accent)">Du er på vej! Lad os træne de områder der er svære \u{1F4AA}</div>';
-    }
-    html += compHtml;
-  }
+  html += '<span>Niv. 0</span><span>Niv. 1</span><span>Niv. 2</span><span>Niv. 3</span><span>Niv. 4</span></div>';
 
   // Per-category breakdown
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
@@ -2294,7 +3014,7 @@ function renderProfile(profile, aiData) {
   if (profile.weakCategories.length > 0) {
     html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F3AF} Start træning af svage kategorier</button>';
   }
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Ny stavetest</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Nyt stavespil</button>';
   html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('profileContent').innerHTML = html;
@@ -2338,19 +3058,7 @@ function renderProfileFallback(profile) {
   var meterColors = { 0: '#ccc', 1: 'var(--green)', 2: 'var(--accent)', 3: '#f97316', 4: 'var(--red)' };
   html += '<div class="level-meter"><div class="level-meter-fill" style="width:' + Math.max(meterPct, 5) + '%;background:' + (meterColors[spellingLevel] || '#ccc') + '"></div></div>';
   html += '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:16px">';
-  html += '<span>0. kl</span><span>1.-2. kl</span><span>3.-4. kl</span><span>5.-6. kl</span><span>7.-8. kl</span></div>';
-
-  // Grade comparison
-  if (grade >= 0) {
-    var expectedLevel = gradeToExpectedLevel(grade);
-    if (spellingLevel > expectedLevel) {
-      html += '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Imponerende! Du staver over dit klassetrin! \u{1F680}</div>';
-    } else if (spellingLevel >= expectedLevel) {
-      html += '<div class="level-comparison" style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.3);color:var(--green)">Flot! Du staver som forventet for dit klassetrin \u{1F31F}</div>';
-    } else {
-      html += '<div class="level-comparison" style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);color:var(--accent)">Du er på vej! Lad os træne de områder der er svære \u{1F4AA}</div>';
-    }
-  }
+  html += '<span>Niv. 0</span><span>Niv. 1</span><span>Niv. 2</span><span>Niv. 3</span><span>Niv. 4</span></div>';
 
   // Per-category breakdown
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Kategorier</h2>';
@@ -2411,7 +3119,7 @@ function renderProfileFallback(profile) {
   if (profile.weakCategories.length > 0) {
     html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F3AF} Start træning af svage kategorier</button>';
   }
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Ny stavetest</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Nyt stavespil</button>';
   html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('profileContent').innerHTML = html;
@@ -2452,7 +3160,7 @@ function renderTrainingResults() {
   html += '</div>';
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Ny stavetest</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Nyt stavespil</button>';
   html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
@@ -2492,7 +3200,7 @@ function renderReviewResults() {
   html += '</div>';
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Ny stavetest</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="startDiagnostic()">\u{1F504} Nyt stavespil</button>';
   html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
@@ -2513,7 +3221,8 @@ function loadRewardData() {
     todayXP: 0,
     todayDate: '',
     streakFreezes: 0,
-    milestonesSeen: []
+    milestonesSeen: [],
+    displayedLevel: 0
   };
 }
 
@@ -2814,7 +3523,7 @@ var BOSS_MONSTERS = {
   "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex" }
 };
 
-var BOSS_BATTLE_TYPES = ['scramble', 'rain', 'memory', 'reverse', 'pacman'];
+var BOSS_BATTLE_TYPES = ['scramble', 'rain', 'memory', 'reverse', 'pacman', 'highway', 'cardcast', 'snake'];
 var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];
 var BOSS_IDLE_ANIMS = ['boss-idle-float', 'boss-idle-pulse', 'boss-idle-wobble'];
 var BOSS_VICTORY_MSGS = [
@@ -2827,9 +3536,32 @@ var bossRainInterval = null;
 
 function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+var BOSS_INSTRUCTIONS = {
+  scramble: { emoji: '\u{1F500}', text: 'Tryk p\u00E5 bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' },
+  rain: { emoji: '\u{1F327}\uFE0F', text: 'Fang det rigtige bogstav n\u00E5r det falder ned!' },
+  memory: { emoji: '\u{1F9E0}', text: 'Husk ordet \u2014 du skal stave det bagefter!' },
+  reverse: { emoji: '\u{1F500}', text: 'Ordet er bagl\u00E6ns \u2014 skriv det rigtigt!' },
+  pacman: { emoji: '\u{1F3AE}', text: 'Saml bogstaverne i r\u00E6kkef\u00F8lge \u2014 undg\u00E5 sp\u00F8gelset!' },
+  highway: { emoji: '\u{1F697}', text: 'K\u00F8r bilen fra bane til bane og fang de rigtige bogstaver!' },
+  cardcast: { emoji: '\u{1F0CF}', text: 'Lyt til ordet og kast de rigtige bogstav-kort mod bossen!' },
+  snake: { emoji: '\u{1F40D}', text: 'Styr slangen og spis bogstaverne i den rigtige r\u00E6kkef\u00F8lge!' }
+};
+
+function loadBossSeen() {
+  try { var raw = localStorage.getItem(playerKey('boss_seen')); return raw ? JSON.parse(raw) : {}; } catch(e) { return {}; }
+}
+
+function saveBossSeen(data) {
+  try { localStorage.setItem(playerKey('boss_seen'), JSON.stringify(data)); } catch(e) {}
+}
+
 function showBossMinigame(bossData) {
   hide('phase-test');
   hide('phase-fillin');
+  hide('phase-rightorwrong');
+  hide('phase-spellingpolice');
+  hide('phase-wordbuilder');
+  hide('phase-sentence');
   show('phase-boss');
 
   var word = bossData.word.toLowerCase();
@@ -2843,11 +3575,36 @@ function showBossMinigame(bossData) {
     deathAnim: pickRandom(BOSS_DEATH_ANIMS)
   };
 
-  if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
-  else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
-  else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
-  else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
-  else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+  // Show instruction first time per boss type
+  var seen = loadBossSeen();
+  if (!seen[battleType]) {
+    seen[battleType] = true;
+    saveBossSeen(seen);
+    var instr = BOSS_INSTRUCTIONS[battleType];
+    var content = document.getElementById('bossContent');
+    content.innerHTML = '<div style="text-align:center;padding:40px 20px">' +
+      '<div style="font-size:4rem;margin-bottom:16px">' + instr.emoji + '</div>' +
+      '<div style="font-size:3rem;margin-bottom:12px">' + boss.emoji + '</div>' +
+      '<h2 style="color:var(--accent);margin-bottom:12px">' + boss.name + '</h2>' +
+      '<p style="font-size:1.15rem;font-weight:700;color:var(--text);line-height:1.6">' + instr.text + '</p>' +
+      '</div>';
+    setTimeout(function() {
+      if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
+      else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
+      else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
+      else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
+      else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+      else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
+      else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
+      else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
+    }, 3000);
+  } else {
+    if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
+    else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
+    else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
+    else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
+    else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
+  }
 }
 
 // --- Shared boss UI helpers ---
@@ -3054,20 +3811,31 @@ function catchRainLetter(dropId, letter) {
 
 // --- Type 3: MEMORY (see word, then spell from memory) ---
 function renderBossMemory(word, boss, idleAnim) {
+  // Find the word's hint
+  var wordHint = '';
+  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+    var found = WORD_BANK[ALL_CATEGORIES[ci]].find(function(w) { return w.word === word; });
+    if (found) { wordHint = found.hint || ''; break; }
+  }
+
   var html = renderBossHeader(boss, idleAnim, word.length, word.length);
   html += '<div style="text-align:center;margin:20px 0">';
-  html += '<p style="color:var(--muted);font-size:0.95rem;margin-bottom:12px">\u{1F9E0} Husk ordet!</p>';
+  html += '<p style="color:var(--accent);font-size:1.1rem;font-weight:800;margin-bottom:12px">\u{1F9E0} Husk dette ord!</p>';
   html += '<div class="boss-memory-word" id="bossMemoryWord">' + word + '</div>';
   html += '</div>';
   html += '<div id="bossMemoryInput" style="display:none">';
   html += renderBossWordSlots(word);
-  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:12px 0">\u270F\uFE0F Stav ordet fra hukommelsen!</p>';
+  if (wordHint) html += '<p style="text-align:center;color:var(--accent);font-size:0.95rem;margin:8px 0">\u{1F4A1} ' + wordHint + '</p>';
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:8px 0">\u270F\uFE0F Stav ordet fra hukommelsen!</p>';
   html += '<input type="text" id="bossMemInput" placeholder="Skriv ordet her..." style="margin-bottom:12px" autocomplete="off" autocapitalize="off" />';
   html += '<button class="btn btn-primary btn-full" onclick="checkBossMemory()">\u2714\uFE0F Tjek</button>';
   html += '</div>';
   document.getElementById('bossContent').innerHTML = html;
 
-  // Show word for 2.5 seconds then hide
+  // Play the word aloud
+  speakWord(word, null);
+
+  // Show word for 4 seconds then hide
   setTimeout(function() {
     var wordEl = document.getElementById('bossMemoryWord');
     if (wordEl) wordEl.style.opacity = '0';
@@ -3079,7 +3847,7 @@ function renderBossMemory(word, boss, idleAnim) {
       var inp = document.getElementById('bossMemInput');
       if (inp) inp.focus();
     }, 500);
-  }, 2500);
+  }, 4000);
 }
 
 function checkBossMemory() {
@@ -3514,12 +4282,481 @@ function cleanupPacman() {
   }
 }
 
+// --- Type 6: HIGHWAY (3-lane car catching letters) ---
+var highwayInterval = null;
+var highwayState = null;
+
+function renderBossHighway(word, boss, idleAnim) {
+  var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+
+  // Word guide
+  html += '<div style="text-align:center;margin:8px 0">';
+  html += '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;letter-spacing:4px">';
+  for (var i = 0; i < word.length; i++) {
+    var cls = i === 0 ? 'boss-rain-guide-letter active' : 'boss-rain-guide-letter';
+    html += '<span class="' + cls + '" id="hwGuide' + i + '">' + word[i] + '</span>';
+  }
+  html += '</div></div>';
+
+  html += '<div class="boss-rain-target" id="hwTarget">\u{1F3AF} Fang: <strong>' + word[0] + '</strong></div>';
+  html += '<div class="highway-area" id="hwArea"><div class="highway-lanes">';
+  html += '<div class="highway-lane"></div><div class="highway-lane"></div><div class="highway-lane"></div>';
+  html += '</div><div class="highway-car" id="hwCar" style="left:33.33%">\u{1F697}</div></div>';
+
+  // D-pad (left/right only)
+  html += '<div style="display:flex;justify-content:center;gap:16px;margin-top:10px">';
+  html += '<div class="dpad-btn" onpointerdown="hwMove(-1)" style="width:70px;height:50px">\u2B05\uFE0F</div>';
+  html += '<div class="dpad-btn" onpointerdown="hwMove(1)" style="width:70px;height:50px">\u27A1\uFE0F</div>';
+  html += '</div>';
+
+  document.getElementById('bossContent').innerHTML = html;
+
+  highwayState = {
+    lane: 1, // 0=left, 1=center, 2=right
+    letterIndex: 0,
+    spawnCount: 0
+  };
+
+  // Keyboard controls
+  highwayState._keyHandler = function(e) {
+    if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); hwMove(-1); }
+    if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); hwMove(1); }
+  };
+  document.addEventListener('keydown', highwayState._keyHandler);
+
+  highwayInterval = setInterval(function() { hwSpawnLetter(); }, 1000);
+  setTimeout(function() { hwSpawnLetter(); }, 300);
+}
+
+function hwMove(dir) {
+  if (!highwayState || !bossState) return;
+  highwayState.lane = Math.max(0, Math.min(2, highwayState.lane + dir));
+  var car = document.getElementById('hwCar');
+  if (car) car.style.left = (highwayState.lane * 33.33) + '%';
+}
+
+function hwSpawnLetter() {
+  if (!bossState || bossState.battleType !== 'highway') { clearInterval(highwayInterval); return; }
+  var area = document.getElementById('hwArea');
+  if (!area) { clearInterval(highwayInterval); return; }
+
+  var target = bossState.word[bossState.letterIndex];
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
+  var letter;
+  highwayState.spawnCount++;
+  if (Math.random() < 0.4 || highwayState.spawnCount % 3 === 0) {
+    letter = target;
+  } else {
+    letter = alphabet[Math.floor(Math.random() * alphabet.length)];
+  }
+
+  var lane = Math.floor(Math.random() * 3);
+  var el = document.createElement('div');
+  el.className = 'highway-letter' + (letter === target ? ' target' : '');
+  el.textContent = letter;
+  var laneWidth = area.offsetWidth / 3;
+  el.style.left = (lane * laneWidth + laneWidth / 2 - 20) + 'px';
+  el.style.top = '-44px';
+  var dropId = 'hwDrop' + highwayState.spawnCount;
+  el.id = dropId;
+  el.dataset.lane = lane;
+  el.dataset.letter = letter;
+  area.appendChild(el);
+
+  var startTime = Date.now();
+  var duration = 2500 + Math.random() * 1000;
+  var areaHeight = area.offsetHeight;
+  function animate() {
+    var elRef = document.getElementById(dropId);
+    if (!elRef) return;
+    var progress = (Date.now() - startTime) / duration;
+    if (progress >= 1) {
+      if (elRef.parentNode) elRef.parentNode.removeChild(elRef);
+      return;
+    }
+    var yPos = progress * (areaHeight - 44);
+    elRef.style.top = yPos + 'px';
+
+    // Check collision with car
+    if (yPos > areaHeight - 80 && yPos < areaHeight - 20 && parseInt(elRef.dataset.lane) === highwayState.lane) {
+      var l = elRef.dataset.letter;
+      if (l === bossState.word[bossState.letterIndex]) {
+        elRef.classList.add('caught');
+        setTimeout(function() { if (elRef.parentNode) elRef.parentNode.removeChild(elRef); }, 200);
+        bossState.hp--; bossState.letterIndex++;
+        var prev = document.getElementById('hwGuide' + (bossState.letterIndex - 1));
+        if (prev) { prev.classList.remove('active'); prev.classList.add('caught'); }
+        var next = document.getElementById('hwGuide' + bossState.letterIndex);
+        if (next) next.classList.add('active');
+        updateBossHP(); bossHitAnim();
+        if (bossState.hp <= 0) {
+          clearInterval(highwayInterval);
+          cleanupHighway();
+          bossDefeated();
+          return;
+        }
+        var targetEl = document.getElementById('hwTarget');
+        if (targetEl) targetEl.innerHTML = '\u{1F3AF} Fang: <strong>' + bossState.word[bossState.letterIndex] + '</strong>';
+      } else {
+        elRef.style.borderColor = 'var(--red)';
+        if (elRef.parentNode) elRef.parentNode.removeChild(elRef);
+        bossAttackAnim();
+      }
+      return;
+    }
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+}
+
+function cleanupHighway() {
+  if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
+  if (highwayState && highwayState._keyHandler) {
+    document.removeEventListener('keydown', highwayState._keyHandler);
+  }
+  highwayState = null;
+}
+
+// --- Type 7: CARDCAST (Slay the Spire style) ---
+function renderBossCardcast(word, boss, idleAnim) {
+  var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+
+  // Hearts that become letters
+  html += '<div class="cardcast-hearts" id="ccHearts">';
+  for (var i = 0; i < word.length; i++) {
+    html += '<span class="cardcast-heart" id="ccHeart' + i + '">\u2764\uFE0F</span>';
+  }
+  html += '</div>';
+
+  html += '<button class="btn-listen" onclick="speakWord(bossState.word, null)" style="margin:8px auto;display:block">\u{1F508} H\u00F8r ordet igen</button>';
+  html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:8px 0">Kast det rigtige bogstav-kort!</p>';
+
+  // Build hand: correct letters + distractors
+  var handLetters = word.split('');
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
+  var distractorCount = Math.min(3, Math.max(1, 6 - word.length));
+  for (var d = 0; d < distractorCount; d++) {
+    var distractor;
+    do {
+      distractor = alphabet[Math.floor(Math.random() * alphabet.length)];
+    } while (handLetters.indexOf(distractor) >= 0);
+    handLetters.push(distractor);
+  }
+  // Shuffle hand
+  for (var si = handLetters.length - 1; si > 0; si--) {
+    var sj = Math.floor(Math.random() * (si + 1));
+    var tmp = handLetters[si]; handLetters[si] = handLetters[sj]; handLetters[sj] = tmp;
+  }
+
+  html += '<div class="cardcast-hand" id="ccHand">';
+  for (var ci = 0; ci < handLetters.length; ci++) {
+    html += '<button class="cardcast-card" data-index="' + ci + '" data-letter="' + handLetters[ci] + '" onclick="castCard(' + ci + ')">' + handLetters[ci] + '</button>';
+  }
+  html += '</div>';
+
+  document.getElementById('bossContent').innerHTML = html;
+
+  bossState.ccLetterIndex = 0;
+
+  // Play the word
+  speakWord(word, null);
+}
+
+function castCard(cardIndex) {
+  if (!bossState) return;
+  var card = document.querySelector('.cardcast-card[data-index="' + cardIndex + '"]');
+  if (!card || card.classList.contains('played')) return;
+
+  var letter = card.dataset.letter;
+  var expected = bossState.word[bossState.ccLetterIndex];
+
+  if (letter === expected) {
+    // Correct cast!
+    card.classList.add('played');
+    bossState.ccLetterIndex++;
+    bossState.hp--;
+
+    // Reveal heart → letter
+    var heart = document.getElementById('ccHeart' + (bossState.ccLetterIndex - 1));
+    if (heart) {
+      heart.textContent = letter;
+      heart.classList.add('revealed');
+    }
+
+    updateBossHP(); bossHitAnim();
+
+    if (bossState.hp <= 0) {
+      bossDefeated();
+    }
+  } else {
+    // Wrong cast
+    card.classList.add('wrong-cast');
+    setTimeout(function() { card.classList.remove('wrong-cast'); }, 400);
+    bossAttackAnim();
+  }
+}
+
+// --- Type 8: SNAKE ---
+var snakeState = null;
+var snakeInterval = null;
+
+function renderBossSnake(word, boss, idleAnim) {
+  var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+
+  // Word guide
+  html += '<div style="text-align:center;margin:6px 0">';
+  html += '<div style="font-family:Fredoka One,cursive;font-size:1.3rem;letter-spacing:4px">';
+  for (var i = 0; i < word.length; i++) {
+    var cls = i === 0 ? 'boss-rain-guide-letter active' : 'boss-rain-guide-letter';
+    html += '<span class="' + cls + '" id="snGuide' + i + '">' + word[i] + '</span>';
+  }
+  html += '</div></div>';
+
+  html += '<div style="text-align:center"><div class="snake-area" id="snakeArea"></div></div>';
+
+  // D-pad
+  html += '<div class="pacman-dpad" id="snakeDpad">';
+  html += '<div class="dpad-empty"></div>';
+  html += '<div class="dpad-btn" onpointerdown="snakeDir(0,-1)">\u2B06\uFE0F</div>';
+  html += '<div class="dpad-empty"></div>';
+  html += '<div class="dpad-btn" onpointerdown="snakeDir(-1,0)">\u2B05\uFE0F</div>';
+  html += '<div class="dpad-empty"></div>';
+  html += '<div class="dpad-btn" onpointerdown="snakeDir(1,0)">\u27A1\uFE0F</div>';
+  html += '<div class="dpad-empty"></div>';
+  html += '<div class="dpad-btn" onpointerdown="snakeDir(0,1)">\u2B07\uFE0F</div>';
+  html += '<div class="dpad-empty"></div>';
+  html += '</div>';
+
+  document.getElementById('bossContent').innerHTML = html;
+
+  var cols = 13, rows = 11;
+  var snake = [{ r: 5, c: 6 }, { r: 5, c: 5 }, { r: 5, c: 4 }];
+  var dir = { dc: 1, dr: 0 };
+  var nextDir = { dc: 1, dr: 0 };
+
+  snakeState = {
+    cols: cols, rows: rows, snake: snake, dir: dir, nextDir: nextDir,
+    letters: [], letterIndex: 0, alive: true, word: word
+  };
+
+  // Spawn first pair (correct + distractor)
+  snakeSpawnPair();
+
+  renderSnakeGrid();
+
+  // Keyboard
+  snakeState._keyHandler = function(e) {
+    if (!snakeState || !snakeState.alive) return;
+    if (e.key === 'ArrowUp' || e.key === 'w') { e.preventDefault(); snakeDir(0, -1); }
+    else if (e.key === 'ArrowDown' || e.key === 's') { e.preventDefault(); snakeDir(0, 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); snakeDir(-1, 0); }
+    else if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); snakeDir(1, 0); }
+  };
+  document.addEventListener('keydown', snakeState._keyHandler);
+
+  // Swipe
+  var area = document.getElementById('snakeArea');
+  var touchStart = null;
+  area.addEventListener('touchstart', function(e) {
+    touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, { passive: true });
+  area.addEventListener('touchend', function(e) {
+    if (!touchStart) return;
+    var dx = e.changedTouches[0].clientX - touchStart.x;
+    var dy = e.changedTouches[0].clientY - touchStart.y;
+    touchStart = null;
+    if (Math.abs(dx) < 15 && Math.abs(dy) < 15) return;
+    if (Math.abs(dx) > Math.abs(dy)) snakeDir(dx > 0 ? 1 : -1, 0);
+    else snakeDir(0, dy > 0 ? 1 : -1);
+  }, { passive: true });
+
+  snakeInterval = setInterval(function() { snakeTick(); }, 200);
+}
+
+function snakeSpawnPair() {
+  var s = snakeState;
+  if (s.letterIndex >= s.word.length) return;
+  var target = s.word[s.letterIndex];
+  var alphabet = 'abcdefghijklmnopqrstuvwxyz\u00E6\u00F8\u00E5';
+  var distractor;
+  do {
+    distractor = alphabet[Math.floor(Math.random() * alphabet.length)];
+  } while (distractor === target);
+
+  // Clear old letters
+  s.letters = [];
+  var occupied = {};
+  s.snake.forEach(function(seg) { occupied[seg.r + ',' + seg.c] = true; });
+
+  // Place correct letter
+  var pos1;
+  do { pos1 = { r: Math.floor(Math.random() * s.rows), c: Math.floor(Math.random() * s.cols) }; }
+  while (occupied[pos1.r + ',' + pos1.c]);
+  occupied[pos1.r + ',' + pos1.c] = true;
+  s.letters.push({ r: pos1.r, c: pos1.c, letter: target, isCorrect: true });
+
+  // Place distractor
+  var pos2;
+  do { pos2 = { r: Math.floor(Math.random() * s.rows), c: Math.floor(Math.random() * s.cols) }; }
+  while (occupied[pos2.r + ',' + pos2.c]);
+  s.letters.push({ r: pos2.r, c: pos2.c, letter: distractor, isCorrect: false });
+}
+
+function snakeDir(dc, dr) {
+  if (!snakeState) return;
+  // Prevent 180-degree turns
+  if (dc === -snakeState.dir.dc && dr === -snakeState.dir.dr) return;
+  snakeState.nextDir = { dc: dc, dr: dr };
+}
+
+function snakeTick() {
+  if (!snakeState || !snakeState.alive) return;
+  var s = snakeState;
+  s.dir = s.nextDir;
+
+  var head = s.snake[0];
+  var newR = head.r + s.dir.dr;
+  var newC = head.c + s.dir.dc;
+
+  // Wrap around walls
+  if (newR < 0) newR = s.rows - 1;
+  if (newR >= s.rows) newR = 0;
+  if (newC < 0) newC = s.cols - 1;
+  if (newC >= s.cols) newC = 0;
+
+  // Check self-collision
+  for (var i = 0; i < s.snake.length; i++) {
+    if (s.snake[i].r === newR && s.snake[i].c === newC) {
+      snakeDeath();
+      return;
+    }
+  }
+
+  // Move head
+  s.snake.unshift({ r: newR, c: newC });
+
+  // Check letter collision
+  var ate = false;
+  for (var li = 0; li < s.letters.length; li++) {
+    if (s.letters[li].r === newR && s.letters[li].c === newC) {
+      if (s.letters[li].isCorrect) {
+        // Correct letter!
+        s.letterIndex++;
+        ate = true;
+
+        var prev = document.getElementById('snGuide' + (s.letterIndex - 1));
+        if (prev) { prev.classList.remove('active'); prev.classList.add('caught'); }
+        var next = document.getElementById('snGuide' + s.letterIndex);
+        if (next) next.classList.add('active');
+
+        bossState.hp--;
+        bossState.letterIndex = s.letterIndex;
+        updateBossHP(); bossHitAnim();
+
+        if (bossState.hp <= 0) {
+          s.alive = false;
+          cleanupSnake();
+          bossDefeated();
+          return;
+        }
+        // Spawn next pair
+        snakeSpawnPair();
+      } else {
+        // Wrong letter — death!
+        snakeDeath();
+        return;
+      }
+      break;
+    }
+  }
+
+  if (!ate) {
+    s.snake.pop(); // Remove tail (no growth)
+  }
+
+  renderSnakeGrid();
+}
+
+function renderSnakeGrid() {
+  if (!snakeState) return;
+  var s = snakeState;
+  var area = document.getElementById('snakeArea');
+  if (!area) return;
+
+  area.style.gridTemplateColumns = 'repeat(' + s.cols + ', auto)';
+  var snakeSet = {};
+  s.snake.forEach(function(seg, idx) { snakeSet[seg.r + ',' + seg.c] = idx; });
+
+  var html = '';
+  for (var r = 0; r < s.rows; r++) {
+    for (var c = 0; c < s.cols; c++) {
+      var key = r + ',' + c;
+      if (snakeSet[key] === 0) {
+        html += '<div class="snake-cell snake-head">\u{1F40D}</div>';
+      } else if (snakeSet[key] !== undefined) {
+        html += '<div class="snake-cell snake-body"></div>';
+      } else {
+        var letterHere = null;
+        for (var li = 0; li < s.letters.length; li++) {
+          if (s.letters[li].r === r && s.letters[li].c === c) {
+            letterHere = s.letters[li];
+            break;
+          }
+        }
+        if (letterHere) {
+          html += '<div class="snake-cell snake-letter' + (letterHere.isCorrect ? ' next-target' : '') + '">' + letterHere.letter.toUpperCase() + '</div>';
+        } else {
+          html += '<div class="snake-cell"></div>';
+        }
+      }
+    }
+  }
+  area.innerHTML = html;
+}
+
+function snakeDeath() {
+  if (!snakeState) return;
+  snakeState.alive = false;
+  cleanupSnake();
+
+  var collected = snakeState.letterIndex;
+  var word = bossState.word;
+
+  var content = document.getElementById('bossContent');
+  var html = '<div style="text-align:center;padding:20px">';
+  html += '<div style="font-size:3.5rem;margin-bottom:10px">\u{1F4A5}</div>';
+  html += '<h2 style="color:var(--red);margin-bottom:8px">Slangen bed sig selv!</h2>';
+  html += '<p style="color:var(--muted);margin-bottom:6px">Du samlede ' + collected + ' ud af ' + word.length + ' bogstaver</p>';
+  html += '<p style="font-family:Fredoka One,cursive;font-size:1.6rem;color:var(--accent);letter-spacing:3px;margin:10px 0">' + word + '</p>';
+  if (collected > 0) {
+    html += '<p style="color:var(--green);font-weight:700">+' + (collected * 3) + ' XP alligevel!</p>';
+    var data = loadRewardData();
+    data.totalXP = (data.totalXP || 0) + collected * 3;
+    data.todayXP = (data.todayXP || 0) + collected * 3;
+    saveRewardData(data);
+    updateRewardBar();
+  }
+  html += '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>';
+  html += '</div>';
+
+  setTimeout(function() { content.innerHTML = html; }, 400);
+}
+
+function cleanupSnake() {
+  if (snakeInterval) { clearInterval(snakeInterval); snakeInterval = null; }
+  if (snakeState && snakeState._keyHandler) {
+    document.removeEventListener('keydown', snakeState._keyHandler);
+  }
+}
+
 // --- Boss defeated (shared) ---
 function bossDefeated() {
   var defeatedWord = bossState ? bossState.word : '';
   var deathAnim = bossState ? bossState.deathAnim : 'boss-death-spin';
   if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
   cleanupPacman();
+  cleanupHighway();
+  cleanupSnake();
   bossState = null;
 
   var monster = document.getElementById('bossMonster');
@@ -3557,10 +4794,13 @@ function continueAfterBoss() {
     return;
   }
 
-  if (gameMode === 'fillin') {
-    show('phase-fillin');
-  } else {
-    show('phase-test');
+  if (!isMixedSession) {
+    if (gameMode === 'fillin') show('phase-fillin');
+    else if (gameMode === 'rightorwrong') show('phase-rightorwrong');
+    else if (gameMode === 'spellingpolice') show('phase-spellingpolice');
+    else if (gameMode === 'wordbuilder') show('phase-wordbuilder');
+    else if (gameMode === 'sentence') show('phase-sentence');
+    else show('phase-test');
   }
   proceedAfterInterrupt();
 }
@@ -3569,11 +4809,61 @@ function proceedAfterInterrupt() {
   var action = pendingInterruptAction;
   pendingInterruptAction = null;
 
+  if (isMixedSession) {
+    if (action === 'finish' || action === 'finish-final') {
+      finishMixedTraining();
+    } else {
+      renderMixedItem();
+    }
+    return;
+  }
+
   if (gameMode === 'fillin') {
     if (action === 'finish') {
       finishFillIn();
     } else {
+      show('phase-fillin');
       renderFillInWord();
+    }
+    return;
+  }
+
+  if (gameMode === 'rightorwrong') {
+    if (action === 'finish') {
+      finishRightOrWrong();
+    } else {
+      show('phase-rightorwrong');
+      renderRightOrWrongWord();
+    }
+    return;
+  }
+
+  if (gameMode === 'spellingpolice') {
+    if (action === 'finish') {
+      finishSpellingPolice();
+    } else {
+      show('phase-spellingpolice');
+      renderSpellingPoliceWord();
+    }
+    return;
+  }
+
+  if (gameMode === 'wordbuilder') {
+    if (action === 'finish') {
+      finishWordBuilder();
+    } else {
+      show('phase-wordbuilder');
+      renderWBWord();
+    }
+    return;
+  }
+
+  if (gameMode === 'sentence') {
+    if (action === 'finish') {
+      finishMixedTraining();
+    } else {
+      show('phase-sentence');
+      renderSentenceWord();
     }
     return;
   }
@@ -3581,6 +4871,7 @@ function proceedAfterInterrupt() {
   if (action === 'finish') {
     finishTest();
   } else {
+    show('phase-test');
     renderWord();
   }
 }
@@ -3687,14 +4978,14 @@ function openChest() {
 // ===== AVATAR PROGRESSION =====
 
 var AVATAR_LEVELS = [
-  { minXP: 0,    emoji: '\uD83E\uDD8A', title: 'Baby R\u00E6v', desc: 'Stavesp\u00E6d' },
-  { minXP: 100,  emoji: '\uD83E\uDD8A\uD83C\uDFA9', title: 'R\u00E6v med Hat', desc: 'Stavebegynder' },
-  { minXP: 300,  emoji: '\uD83E\uDD8A\uD83E\uDDB8', title: 'Super-R\u00E6v', desc: 'Bogstavhelt' },
-  { minXP: 600,  emoji: '\uD83E\uDD8A\u2694\uFE0F', title: 'R\u00E6v-Kriger', desc: 'Bogstavkriger' },
-  { minXP: 1000, emoji: '\uD83E\uDD8A\uD83D\uDC51', title: 'R\u00E6v-Dronning', desc: 'Ordmester' },
-  { minXP: 2000, emoji: '\uD83D\uDC3A', title: 'Ulven', desc: 'Stave-Champion' },
-  { minXP: 3500, emoji: '\uD83D\uDC3A\uD83D\uDEE1\uFE0F', title: 'Pansret Ulv', desc: 'Ordgeneral' },
-  { minXP: 5000, emoji: '\uD83D\uDC32', title: 'Stavedragen', desc: 'Den Legendariske' }
+  { minXP: 0,    emoji: '\uD83E\uDD8A', title: 'Baby R\u00E6v', desc: 'Stavesp\u00E6d', titleStyle: 'color:var(--muted)' },
+  { minXP: 100,  emoji: '\uD83E\uDD8A\uD83C\uDFA9', title: 'R\u00E6v med Hat', desc: 'Stavebegynder', titleStyle: 'color:var(--text)' },
+  { minXP: 300,  emoji: '\uD83E\uDD8A\uD83E\uDDB8', title: 'Super-R\u00E6v', desc: 'Bogstavhelt', titleStyle: 'color:var(--green)' },
+  { minXP: 600,  emoji: '\uD83E\uDD8A\u2694\uFE0F', title: 'R\u00E6v-Kriger', desc: 'Bogstavkriger', titleStyle: 'color:var(--blue)' },
+  { minXP: 1000, emoji: '\uD83E\uDD8A\uD83D\uDC51', title: 'R\u00E6v-Dronning', desc: 'Ordmester', titleStyle: 'color:var(--accent2)' },
+  { minXP: 2000, emoji: '\uD83D\uDC3A', title: 'Ulven', desc: 'Stave-Champion', titleStyle: 'color:#f97316' },
+  { minXP: 3500, emoji: '\uD83D\uDC3A\uD83D\uDEE1\uFE0F', title: 'Pansret Ulv', desc: 'Ordgeneral', titleStyle: 'background:linear-gradient(135deg,#f5a623,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' },
+  { minXP: 5000, emoji: '\uD83D\uDC32', title: 'Stavedragen', desc: 'Den Legendariske', titleStyle: 'background:linear-gradient(90deg,#f43f5e,#f5a623,#22d3a0,#0ea5e9,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text' }
 ];
 
 function getAvatarLevel(totalXP) {
@@ -3709,45 +5000,129 @@ function getAvatarLevel(totalXP) {
   }
   var nextLevel = idx < AVATAR_LEVELS.length - 1 ? AVATAR_LEVELS[idx + 1] : null;
   var progress = nextLevel ? (totalXP - level.minXP) / (nextLevel.minXP - level.minXP) : 1;
-  return { emoji: level.emoji, title: level.title, desc: level.desc, index: idx, progress: progress, nextXP: nextLevel ? nextLevel.minXP : null, currentXP: totalXP };
+  return { emoji: level.emoji, title: level.title, desc: level.desc, titleStyle: level.titleStyle || '', index: idx, progress: progress, nextXP: nextLevel ? nextLevel.minXP : null, currentXP: totalXP };
 }
 
 function updateWelcomeAvatar() {
   var data = loadRewardData();
-  var level = getAvatarLevel(data.totalXP || 0);
+  var displayedIdx = data.displayedLevel || 0;
+  var displayedLevel = AVATAR_LEVELS[displayedIdx] || AVATAR_LEVELS[0];
+  var actualLevel = getAvatarLevel(data.totalXP || 0);
+  var canLevelUp = actualLevel.index > displayedIdx;
 
+  // Show the displayed level (not the actual earned one)
   var el = document.getElementById('avatarEmoji');
-  if (el) el.textContent = level.emoji;
-  var nameEl = document.getElementById('playerNameDisplay');
-  if (nameEl) nameEl.textContent = activePlayer;
+  if (el) el.textContent = displayedLevel.emoji;
   var titleEl = document.getElementById('avatarTitle');
-  if (titleEl) titleEl.textContent = level.title;
+  if (titleEl) {
+    titleEl.textContent = displayedLevel.title;
+    titleEl.setAttribute('style', 'font-family:Fredoka One,cursive;font-size:1.3rem;margin-top:4px;' + (displayedLevel.titleStyle || ''));
+    titleEl.classList.remove('hidden');
+  }
   var descEl = document.getElementById('avatarDesc');
-  if (descEl) descEl.textContent = level.desc;
+  if (descEl) descEl.textContent = displayedLevel.desc;
+
+  // Progress bar shows XP toward next level-up
+  var nextIdx = displayedIdx + 1;
+  var nextLevel = nextIdx < AVATAR_LEVELS.length ? AVATAR_LEVELS[nextIdx] : null;
   var bar = document.getElementById('avatarProgressBar');
-  if (bar) bar.style.width = (level.progress * 100) + '%';
   var label = document.getElementById('avatarProgressLabel');
-  if (label) {
-    if (level.nextXP) {
-      label.textContent = (data.totalXP || 0) + ' / ' + level.nextXP + ' XP til n\u00E6ste form';
+  if (bar && label) {
+    if (canLevelUp) {
+      bar.style.width = '100%';
+      label.textContent = '\u2B50 Klar til level up!';
+      label.style.color = 'var(--accent)';
+    } else if (nextLevel) {
+      var progress = (data.totalXP - displayedLevel.minXP) / (nextLevel.minXP - displayedLevel.minXP);
+      bar.style.width = Math.min(progress * 100, 100) + '%';
+      label.textContent = (data.totalXP || 0) + ' / ' + nextLevel.minXP + ' XP';
+      label.style.color = 'var(--muted)';
     } else {
+      bar.style.width = '100%';
       label.textContent = 'Maksimalt niveau! ' + (data.totalXP || 0) + ' XP';
+      label.style.color = 'var(--green)';
     }
+  }
+
+  // Level Up button
+  var btn = document.getElementById('levelUpBtn');
+  if (btn) {
+    if (canLevelUp) btn.classList.remove('hidden');
+    else btn.classList.add('hidden');
   }
 }
 
+function doLevelUp() {
+  var data = loadRewardData();
+  var oldIdx = data.displayedLevel || 0;
+  var actualLevel = getAvatarLevel(data.totalXP || 0);
+  var newIdx = oldIdx + 1; // level up one step at a time
+  if (newIdx > actualLevel.index) return;
+  var oldLevel = AVATAR_LEVELS[oldIdx];
+  var newLevel = AVATAR_LEVELS[newIdx];
+
+  // Hide level up button during animation
+  var btn = document.getElementById('levelUpBtn');
+  if (btn) btn.classList.add('hidden');
+
+  var emojiEl = document.getElementById('avatarEmoji');
+  var titleEl = document.getElementById('avatarTitle');
+  var descEl = document.getElementById('avatarDesc');
+  var section = document.getElementById('welcomeAvatarSection');
+
+  // Phase 1: Old avatar shakes and disappears
+  emojiEl.style.animation = 'levelup-shake 1s ease forwards';
+
+  // Spawn sparkles around the avatar
+  var sparkles = ['\u2728', '\u{1F31F}', '\u{1F4AB}', '\u26A1', '\u{1F525}'];
+  for (var si = 0; si < 8; si++) {
+    var spark = document.createElement('div');
+    spark.className = 'levelup-sparkle';
+    spark.textContent = sparkles[si % sparkles.length];
+    spark.style.setProperty('--tx', (Math.random() * 120 - 60) + 'px');
+    spark.style.setProperty('--ty', (Math.random() * 120 - 60) + 'px');
+    spark.style.left = '50%';
+    spark.style.top = '50%';
+    section.style.position = 'relative';
+    section.appendChild(spark);
+    setTimeout(function(s) { return function() { if (s.parentNode) s.parentNode.removeChild(s); }; }(spark), 1000);
+  }
+
+  // Phase 2: New avatar appears
+  setTimeout(function() {
+    emojiEl.textContent = newLevel.emoji;
+    emojiEl.style.animation = 'levelup-appear 0.8s ease forwards';
+
+    titleEl.textContent = newLevel.title;
+    titleEl.setAttribute('style', 'font-family:Fredoka One,cursive;font-size:1.3rem;margin-top:4px;' + (newLevel.titleStyle || ''));
+    descEl.textContent = newLevel.desc;
+
+    // More sparkles!
+    for (var si2 = 0; si2 < 10; si2++) {
+      var spark2 = document.createElement('div');
+      spark2.className = 'levelup-sparkle';
+      spark2.textContent = sparkles[si2 % sparkles.length];
+      spark2.style.setProperty('--tx', (Math.random() * 160 - 80) + 'px');
+      spark2.style.setProperty('--ty', (Math.random() * 160 - 80) + 'px');
+      spark2.style.left = '50%';
+      spark2.style.top = '50%';
+      section.appendChild(spark2);
+      setTimeout(function(s) { return function() { if (s.parentNode) s.parentNode.removeChild(s); }; }(spark2), 1200);
+    }
+  }, 1000);
+
+  // Phase 3: Save and update
+  setTimeout(function() {
+    emojiEl.style.animation = '';
+    data.displayedLevel = newIdx;
+    saveRewardData(data);
+    updateWelcomeAvatar(); // refresh bar and check if more level-ups available
+  }, 2000);
+}
+
+// Legacy — no longer auto-shows, kept for compatibility
 function showLevelUpPopup(newLevel) {
-  var overlay = document.createElement('div');
-  overlay.className = 'milestone-overlay';
-  overlay.id = 'levelUpOverlay';
-  overlay.innerHTML = '<div class="milestone-card">' +
-    '<div style="font-size:4rem;margin-bottom:10px">' + newLevel.emoji + '</div>' +
-    '<div style="font-family:Fredoka One,cursive;font-size:1.5rem;color:var(--accent);margin-bottom:6px">Nyt Niveau!</div>' +
-    '<div style="font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px">' + newLevel.title + '</div>' +
-    '<div style="font-size:0.9rem;color:var(--muted);margin-bottom:16px">' + newLevel.desc + '</div>' +
-    '<button class="btn btn-accent" onclick="document.getElementById(\'levelUpOverlay\').remove()">\uD83C\uDF89 Sejt!</button>' +
-    '</div>';
-  document.body.appendChild(overlay);
+  // Level-ups are now manual via the Level Up button on welcome screen
 }
 
 // ===== END GAMIFICATION =====
@@ -4621,7 +5996,7 @@ function startFillIn() {
   }
   gameMode = 'fillin';
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
 
   var targetLevel = profile.spellingLevel || 2;
@@ -4645,15 +6020,26 @@ function startFillIn() {
   }
   pool = shuffle(pool);
 
-  // Filter to words that have valid blanks
-  fillinWords = [];
-  fillinBlanks = [];
-  for (var i = 0; i < pool.length && fillinWords.length < 10; i++) {
+  // Filter to words that have valid blanks, prioritize words with emoji illustrations
+  var withEmoji = [], withoutEmoji = [], blanksEmoji = [], blanksNoEmoji = [];
+  for (var i = 0; i < pool.length; i++) {
     var blanks = generateBlanks(pool[i]);
     if (blanks) {
-      fillinWords.push(pool[i]);
-      fillinBlanks.push(blanks);
+      if (WORD_EMOJIS[pool[i].word]) {
+        withEmoji.push(pool[i]); blanksEmoji.push(blanks);
+      } else {
+        withoutEmoji.push(pool[i]); blanksNoEmoji.push(blanks);
+      }
     }
+  }
+  // Take emoji words first, fill up with non-emoji words
+  fillinWords = [];
+  fillinBlanks = [];
+  for (var ei = 0; ei < withEmoji.length && fillinWords.length < 10; ei++) {
+    fillinWords.push(withEmoji[ei]); fillinBlanks.push(blanksEmoji[ei]);
+  }
+  for (var ni = 0; ni < withoutEmoji.length && fillinWords.length < 10; ni++) {
+    fillinWords.push(withoutEmoji[ni]); fillinBlanks.push(blanksNoEmoji[ni]);
   }
 
   if (fillinWords.length === 0) {
@@ -4685,7 +6071,7 @@ function startFillIn() {
 function renderFillInWord() {
   var chestOv = document.getElementById('chestOverlay');
   var bossOv = document.getElementById('bossOverlay');
-  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
 
   var w = fillinWords[fillinIndex];
   var blanks = fillinBlanks[fillinIndex];
@@ -4696,7 +6082,14 @@ function renderFillInWord() {
   document.getElementById('fillinPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
   document.getElementById('fillinFeedbackBox').style.display = 'none';
   document.getElementById('fillinNextBtn').classList.add('hidden');
-  document.getElementById('fillinHint').textContent = w.hint || '';
+
+  // Show emoji illustration if available, otherwise text hint
+  var emoji = WORD_EMOJIS[w.word] || '';
+  if (emoji) {
+    document.getElementById('fillinHint').innerHTML = '<span style="font-size:2.5rem;display:block;margin-bottom:4px">' + emoji + '</span>' + (w.hint || '');
+  } else {
+    document.getElementById('fillinHint').textContent = w.hint || '';
+  }
 
   // Render word with blank
   var word = blanks.word;
@@ -4795,8 +6188,9 @@ function checkFillIn(chosenIndex) {
   fillinResults.push(result);
   results.push(result);
 
-  // SR update
+  // SR update + Supabase
   updateSRWord(w.word, ok, w.category);
+  logAnswer(w.word, chosen === '' ? '(intet)' : chosen, ok, 1, w.category, w.level || 0);
 
   // Gamification — boss + chest as reward for 5 correct streak
   if (ok) {
@@ -4811,6 +6205,7 @@ function checkFillIn(chosenIndex) {
     }
   } else {
     sessionCorrectStreak = 0;
+    trackCategoryError(w.category);
   }
 
   // Update scores
@@ -4822,9 +6217,10 @@ function checkFillIn(chosenIndex) {
 }
 
 function nextFillInWord() {
+  if (isMixedSession) { nextMixedItem(); return; }
   var chestOv = document.getElementById('chestOverlay');
   var bossOv = document.getElementById('bossOverlay');
-  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
 
   // Boss first (reward for streak), chest follows after boss defeat
   if (pendingBoss) {
@@ -4924,6 +6320,1279 @@ function renderFillInResults() {
   document.getElementById('resultsContent').innerHTML = html;
 }
 
+// ===== RIGHT OR WRONG EXERCISE =====
+
+function generateMisspelling(wordObj) {
+  var word = wordObj.word;
+  var cat = wordObj.category;
+  var hint = wordObj.patternHint || '';
+
+  // --- Stumme bogstaver: remove the silent letter ---
+  if (cat === 'Stumme bogstaver') {
+    var stmMatch = hint.match(/stumt '(\w+)' i '(\w+)'/);
+    if (stmMatch) {
+      var silent = stmMatch[1].toLowerCase();
+      var cluster = stmMatch[2].toLowerCase();
+      var pos = word.toLowerCase().indexOf(cluster);
+      if (pos >= 0) {
+        var misspelled = word.substring(0, pos) + word.substring(pos + silent.length);
+        return { misspelled: misspelled, explanation: '"' + silent + '" er stumt i "' + cluster + '" \u2014 det skal skrives!' };
+      }
+    }
+    var stmSimple = hint.match(/stumt '(\w+)'/);
+    if (stmSimple) {
+      var sl = stmSimple[1].toLowerCase();
+      var slPos = word.toLowerCase().indexOf(sl);
+      if (slPos >= 0) {
+        var ms = word.substring(0, slPos) + word.substring(slPos + sl.length);
+        if (ms !== word && ms.length > 1) {
+          return { misspelled: ms, explanation: '"' + sl + '" er stumt \u2014 man kan ikke h\u00F8re det, men det skal skrives!' };
+        }
+      }
+    }
+    return null;
+  }
+
+  // --- Dobbeltkonsonant: single instead of double (or vice versa) ---
+  if (cat === 'Dobbeltkonsonant') {
+    var dblMatch = hint.match(/dobbelt[- ]'?(\w)'?/);
+    if (dblMatch) {
+      var letter = dblMatch[1].toLowerCase();
+      var dbl = letter + letter;
+      var dblPos = word.toLowerCase().indexOf(dbl);
+      if (dblPos >= 0) {
+        var ms2 = word.substring(0, dblPos) + letter + word.substring(dblPos + 2);
+        return { misspelled: ms2, explanation: 'Her skal der dobbelt-' + letter + ' fordi vokalen er kort' };
+      }
+    }
+    var snglMatch = hint.match(/enkelt[- ]'?(\w)'?/);
+    if (snglMatch && snglMatch[1] !== 'k') {
+      var sLetter = snglMatch[1].toLowerCase();
+      for (var si = 0; si < word.length; si++) {
+        if (word[si].toLowerCase() === sLetter && (si + 1 >= word.length || word[si + 1].toLowerCase() !== sLetter)) {
+          var ms3 = word.substring(0, si) + sLetter + sLetter + word.substring(si + 1);
+          return { misspelled: ms3, explanation: 'Her er vokalen lang, s\u00E5 kun enkelt-' + sLetter };
+        }
+      }
+    }
+    return null;
+  }
+
+  // --- Nutids-r: remove trailing -r ---
+  if (cat === 'Nutids-r') {
+    if (word.endsWith('r')) {
+      return { misspelled: word.slice(0, -1), explanation: 'Verber i nutid ender p\u00E5 -r: "han hoppe-r"' };
+    }
+    return null;
+  }
+
+  // --- Verbernes bøjning ---
+  if (cat === 'Verbernes b\u00F8jning') {
+    if (hint.indexOf('-ede') >= 0 && word.indexOf('ede') > 0) {
+      var ms4 = word.replace(/ede([^a-z\u00E6\u00F8\u00E5]*)$/, 'te$1');
+      if (ms4 !== word) return { misspelled: ms4, explanation: 'Datid af dette verbum er med "-ede", ikke "-te"' };
+    }
+    if (hint.indexOf("'-te'") >= 0 || (hint.indexOf('-te') >= 0 && hint.indexOf('-ede') < 0)) {
+      var tePos = word.lastIndexOf('te');
+      if (tePos > 0 && word.indexOf('ede') < 0) {
+        var ms5 = word.substring(0, tePos) + 'ede';
+        return { misspelled: ms5, explanation: 'Datid af dette verbum er med "-te", ikke "-ede"' };
+      }
+    }
+    if ((hint.indexOf('-et') >= 0 || hint.indexOf('till\u00E6gsform') >= 0) && word.endsWith('et')) {
+      return { misspelled: word.slice(0, -2) + 't', explanation: 'Till\u00E6gsformen ender p\u00E5 "-et", ikke "-t"' };
+    }
+    return null;
+  }
+
+  // --- Navneordsendelser ---
+  if (cat === 'Navneordsendelser') {
+    if (word.endsWith('en') && hint.indexOf('-en') >= 0) {
+      return { misspelled: word.slice(0, -2) + 'et', explanation: 'Dette er et f\u00E6llesk\u00F8nsord \u2014 bestemt form er "-en"' };
+    }
+    if (word.endsWith('et') && hint.indexOf('-et') >= 0) {
+      return { misspelled: word.slice(0, -2) + 'en', explanation: 'Dette er et intetk\u00F8nsord \u2014 bestemt form er "-et"' };
+    }
+    if (word.endsWith('erne') && hint.indexOf('-erne') >= 0) {
+      return { misspelled: word.slice(0, -4) + 'ene', explanation: 'Bestemt flertal er her "-erne", ikke "-ene"' };
+    }
+    if (word.endsWith('ene') && hint.indexOf('-ene') >= 0) {
+      return { misspelled: word.slice(0, -3) + 'erne', explanation: 'Bestemt flertal er her "-ene", ikke "-erne"' };
+    }
+    return null;
+  }
+
+  // --- For- og efterstavelser ---
+  if (cat === 'For- og efterstavelser') {
+    if (hint.indexOf('-lig') >= 0 && word.indexOf('lig') > 0) {
+      return { misspelled: word.replace(/lig([^a-z\u00E6\u00F8\u00E5]*)$/, 'leg$1'), explanation: 'Efterstavelsen staves "-lig", ikke "-leg"' };
+    }
+    if (hint.indexOf('-hed') >= 0 && word.indexOf('hed') > 0) {
+      return { misspelled: word.replace(/hed([^a-z\u00E6\u00F8\u00E5]*)$/, 'het$1'), explanation: 'Efterstavelsen staves "-hed", ikke "-het"' };
+    }
+    if (hint.indexOf('-else') >= 0 && word.indexOf('else') > 0) {
+      return { misspelled: word.replace(/else([^a-z\u00E6\u00F8\u00E5]*)$/, '\u00E6lse$1'), explanation: 'Efterstavelsen staves "-else", ikke "-\u00E6lse"' };
+    }
+    return null;
+  }
+
+  // --- Sammensatte ord: fuge-s ---
+  if (cat === 'Sammensatte ord') {
+    if (hint.indexOf('fuge-s') >= 0 || hint.indexOf("'s'") >= 0) {
+      var parts = hint.match(/'([^']+)'/g);
+      if (parts && parts.length >= 2) {
+        var firstPart = parts[0].replace(/'/g, '').toLowerCase();
+        var fPos = word.toLowerCase().indexOf(firstPart);
+        if (fPos >= 0) {
+          var fugePos = fPos + firstPart.length;
+          if (word[fugePos] === 's') {
+            var ms6 = word.substring(0, fugePos) + word.substring(fugePos + 1);
+            return { misspelled: ms6, explanation: 'Her skal der fuge-s mellem orddelene' };
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  return null;
+}
+
+// Right or wrong state
+var rfItems = [], rfIndex = 0, rfResults = [];
+var rfTimerInterval = null;
+var rfCombo = 0, rfMaxCombo = 0;
+var rfAnswered = false;
+
+function startRightOrWrong() {
+  var profile = loadProfile();
+  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
+    startDiagnostic();
+    return;
+  }
+  gameMode = 'rightorwrong';
+  pendingBoss = null;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  pendingChest = false;
+
+  var targetLevel = profile.spellingLevel || 2;
+  var minLevel = Math.max(0, targetLevel - 2);
+  var pool = [];
+  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
+    var cat = profile.weakCategories[ci];
+    if (!WORD_BANK[cat]) continue;
+    var words = WORD_BANK[cat].filter(function(w) {
+      return w.level >= minLevel && w.level <= targetLevel;
+    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
+    pool = pool.concat(words);
+  }
+  if (pool.length === 0) {
+    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
+      var cat2 = profile.weakCategories[ci2];
+      if (!WORD_BANK[cat2]) continue;
+      pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
+    }
+  }
+  pool = shuffle(pool);
+
+  // Build items: ~50% correct, ~50% misspelled
+  rfItems = [];
+  for (var i = 0; i < pool.length && rfItems.length < 20; i++) {
+    var ms = generateMisspelling(pool[i]);
+    if (ms) {
+      // Randomly show correct or misspelled version
+      if (Math.random() < 0.5) {
+        rfItems.push({ word: pool[i].word, displayed: pool[i].word, isCorrect: true, explanation: '', category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
+      } else {
+        rfItems.push({ word: pool[i].word, displayed: ms.misspelled, isCorrect: false, explanation: ms.explanation, category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
+      }
+    }
+  }
+
+  if (rfItems.length < 5) {
+    alert('Ikke nok ord til denne \u00F8velse. Pr\u00F8v tr\u00E6ningsmodus i stedet.');
+    return;
+  }
+
+  rfItems = shuffle(rfItems);
+  rfIndex = 0;
+  rfResults = [];
+  results = [];
+  rfCombo = 0;
+  rfMaxCombo = 0;
+
+  document.getElementById('rfScoreCorrect').textContent = '0';
+  document.getElementById('rfScoreWrong').textContent = '0';
+
+  hide('phase-welcome');
+  show('phase-rightorwrong');
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  updateRewardBar();
+
+  var b = document.createElement('div');
+  b.className = 'session-badge';
+  b.innerHTML = '\u{1F441}\uFE0F Rigtigt eller forkert \u2014 er ordet stavet rigtigt?';
+  document.getElementById('phase-rightorwrong').appendChild(b);
+
+  renderRightOrWrongWord();
+}
+
+function renderRightOrWrongWord() {
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  var item = rfItems[rfIndex];
+  var total = rfItems.length;
+
+  document.getElementById('rfWordNum').textContent = (rfResults.length + 1);
+  document.getElementById('rfProgressBar').style.width = ((rfResults.length / total) * 100) + '%';
+  document.getElementById('rfPatternBadge').textContent = (CATEGORY_ICONS[item.category] || '\u{1F520}') + ' ' + item.category;
+  document.getElementById('rfFeedbackBox').style.display = 'none';
+  document.getElementById('rfWordDisplay').textContent = item.displayed;
+  document.getElementById('rfHint').textContent = 'Er dette ord stavet rigtigt?';
+
+  // Reset flash
+  var card = document.getElementById('phase-rightorwrong');
+  card.classList.remove('rf-flash-correct', 'rf-flash-wrong');
+
+  // Enable buttons
+  rfAnswered = false;
+  var btns = document.querySelectorAll('.rf-btn');
+  btns.forEach(function(b) { b.classList.remove('disabled'); });
+
+  // Update combo display
+  updateRFCombo();
+
+  // Start timer (3s → 1.5s, decreasing by 0.08s per word)
+  var duration = Math.max(2.5, 5 - rfResults.length * 0.1);
+  var timerBar = document.getElementById('rfTimerBar');
+  timerBar.style.transition = 'none';
+  timerBar.style.width = '100%';
+  setTimeout(function() {
+    timerBar.style.transition = 'width ' + duration + 's linear';
+    timerBar.style.width = '0%';
+  }, 50);
+
+  if (rfTimerInterval) clearTimeout(rfTimerInterval);
+  rfTimerInterval = setTimeout(function() {
+    if (!rfAnswered) {
+      checkRightOrWrong(null); // timeout = wrong
+    }
+  }, duration * 1000);
+}
+
+function updateRFCombo() {
+  var el = document.getElementById('rfCombo');
+  if (rfCombo >= 2) {
+    el.textContent = '\u{1F525} ' + rfCombo + 'x combo!';
+    el.classList.remove('pop');
+    void el.offsetWidth; // force reflow
+    el.classList.add('pop');
+  } else {
+    el.textContent = '';
+  }
+}
+
+function checkRightOrWrong(answeredCorrect) {
+  if (rfAnswered) return;
+  rfAnswered = true;
+
+  if (rfTimerInterval) { clearTimeout(rfTimerInterval); rfTimerInterval = null; }
+
+  var item = rfItems[rfIndex];
+  var ok = (answeredCorrect === item.isCorrect);
+  var timedOut = (answeredCorrect === null);
+
+  // Disable buttons
+  var btns = document.querySelectorAll('.rf-btn');
+  btns.forEach(function(b) { b.classList.add('disabled'); });
+
+  // Flash feedback
+  var card = document.getElementById('phase-rightorwrong');
+  if (ok) {
+    card.classList.add('rf-flash-correct');
+  } else {
+    card.classList.add('rf-flash-wrong');
+  }
+
+  // Feedback
+  var box = document.getElementById('rfFeedbackBox');
+  box.style.display = 'block';
+  if (ok) {
+    if (item.isCorrect) {
+      box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! "' + item.word + '" er korrekt stavet</div>';
+    } else {
+      box.innerHTML = '<div class="feedback-correct">\u2705 Godt spottet! Det rigtige er: <strong>' + item.word + '</strong></div>';
+    }
+  } else if (timedOut) {
+    box.innerHTML = '<div class="feedback-wrong">\u23F0 Tiden l\u00F8b ud! Det rigtige svar: <strong>' + item.word + '</strong>' +
+      (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
+  } else {
+    if (item.isCorrect) {
+      box.innerHTML = '<div class="feedback-wrong">\u274C "' + item.word + '" er faktisk stavet rigtigt!</div>';
+    } else {
+      box.innerHTML = '<div class="feedback-wrong">\u274C Det er forkert stavet! Rigtigt: <strong>' + item.word + '</strong>' +
+        (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
+    }
+  }
+
+  // Record result
+  var result = {
+    word: item.word, correct: ok, selfCorrected: false,
+    userAnswer: timedOut ? '(tid)' : (answeredCorrect ? 'rigtigt' : 'forkert'),
+    category: item.category, patternHint: item.patternHint, level: item.level
+  };
+  rfResults.push(result);
+  results.push(result);
+
+  // SR update + Supabase
+  updateSRWord(item.word, ok, item.category);
+  logAnswer(item.word, timedOut ? '(tid)' : (answeredCorrect ? 'rigtigt' : 'forkert'), ok, 1, item.category, item.level || 0);
+
+  // Gamification
+  if (ok) {
+    sessionCorrectCount++;
+    sessionCorrectStreak++;
+    rfCombo++;
+    if (rfCombo > rfMaxCombo) rfMaxCombo = rfCombo;
+    if (sessionCorrectStreak >= 5) {
+      sessionCorrectStreak = 0;
+      var correctWords = rfResults.filter(function(r) { return r.correct; });
+      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: item.word, category: item.category };
+      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingChest = true;
+    }
+  } else {
+    sessionCorrectStreak = 0;
+    rfCombo = 0;
+    trackCategoryError(item.category);
+  }
+
+  // Update scores
+  document.getElementById('rfScoreCorrect').textContent = rfResults.filter(function(r) { return r.correct; }).length;
+  document.getElementById('rfScoreWrong').textContent = rfResults.filter(function(r) { return !r.correct; }).length;
+
+  // Auto-advance
+  var delay = ok ? 600 : 1200;
+  setTimeout(function() { nextRightOrWrongWord(); }, delay);
+}
+
+function nextRightOrWrongWord() {
+  if (isMixedSession) { nextMixedItem(); return; }
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  // Boss first
+  if (pendingBoss) {
+    pendingInterruptAction = (rfIndex + 1) >= rfItems.length ? 'finish' : 'continue';
+    rfIndex++;
+    showBossMinigame(pendingBoss);
+    return;
+  }
+
+  // Chest
+  if (pendingChest) {
+    pendingChest = false;
+    pendingInterruptAction = (rfIndex + 1) >= rfItems.length ? 'finish' : 'continue';
+    rfIndex++;
+    showTreasureChest();
+    return;
+  }
+
+  rfIndex++;
+
+  if (rfIndex >= rfItems.length) {
+    finishRightOrWrong();
+  } else {
+    renderRightOrWrongWord();
+  }
+}
+
+function finishRightOrWrong() {
+  hide('phase-rightorwrong');
+  if (rfTimerInterval) { clearTimeout(rfTimerInterval); rfTimerInterval = null; }
+
+  var correctCount = rfResults.filter(function(r) { return r.correct; }).length;
+  var totalCount = rfResults.length;
+  var prevXP = loadRewardData().totalXP || 0;
+  var rewardResult = awardSessionXP(correctCount, totalCount);
+  var rewardData = loadRewardData();
+  var newXP = rewardData.totalXP || 0;
+  var prevLevel = getAvatarLevel(prevXP);
+  var newLevel = getAvatarLevel(newXP);
+  var milestone = checkMilestone(rewardData);
+  updateRewardBar();
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  if (rewardResult.dailyGoalReached) {
+    setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
+  }
+  if (milestone) {
+    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
+  }
+  if (newLevel.index > prevLevel.index) {
+    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
+  }
+  show('rewardBar');
+  show('rewardXPBarWrap');
+
+  renderRightOrWrongResults();
+}
+
+function renderRightOrWrongResults() {
+  show('phase-results');
+  var correct = rfResults.filter(function(r) { return r.correct; }).length;
+  var wrong = rfResults.filter(function(r) { return !r.correct; });
+
+  var html = '';
+  html += '<div class="ai-bubble"><p><strong>';
+  if (correct / rfResults.length >= 0.8) html += 'Skarpt \u00F8je! Du er god til at se fejl! \u{1F31F}';
+  else if (correct / rfResults.length >= 0.5) html += 'Godt g\u00E5et! \u00D8velse g\u00F8r mester \u{1F4AA}';
+  else html += 'Bliv ved! Det bliver lettere med \u00F8velse \u{1F680}';
+  html += '</strong></p>';
+  html += '<p style="margin-top:8px">' + correct + ' ud af ' + rfResults.length + ' rigtige.';
+  if (rfMaxCombo >= 3) html += ' Bedste combo: <strong>' + rfMaxCombo + 'x</strong> \u{1F525}';
+  html += '</p></div>';
+
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / rfResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  if (wrong.length > 0) {
+    html += '<h2 style="margin-bottom:12px;font-size:1.2rem">\u{1F4D6} Ord at \u00F8ve</h2>';
+    html += '<div style="margin-bottom:18px">';
+    wrong.forEach(function(r) {
+      html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+      html += '<span class="wrong-mark">\u2717</span></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-primary btn-full" onclick="startRightOrWrong()">\u{1F441}\uFE0F Ny runde</button>';
+  html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F4CA} Forts\u00E6t tr\u00E6ning</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ===== SPELLING POLICE EXERCISE =====
+
+var spItems = [], spIndex = 0, spResults = [];
+
+function buildSpellingPoliceItem(wordObj) {
+  var ms = generateMisspelling(wordObj);
+  if (!ms || !wordObj.sentence) return null;
+
+  var word = wordObj.word;
+  var sentence = wordObj.sentence;
+
+  // Find the target word in the sentence (case-insensitive match including inflected forms)
+  var regex = new RegExp('\\b(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\w*)\\b', 'i');
+  var match = sentence.match(regex);
+  if (!match) return null;
+
+  var originalForm = match[1]; // the word as it appears in the sentence (possibly capitalized/inflected)
+  var misspelledForm = ms.misspelled;
+
+  // Handle capitalization
+  if (originalForm[0] === originalForm[0].toUpperCase()) {
+    misspelledForm = misspelledForm[0].toUpperCase() + misspelledForm.slice(1);
+  }
+
+  // Handle inflected forms: if the sentence form is longer than the base word, append the suffix to misspelling
+  if (originalForm.toLowerCase() !== word.toLowerCase() && originalForm.toLowerCase().startsWith(word.toLowerCase())) {
+    var suffix = originalForm.slice(word.length);
+    misspelledForm = ms.misspelled + suffix;
+    if (originalForm[0] === originalForm[0].toUpperCase()) {
+      misspelledForm = misspelledForm[0].toUpperCase() + misspelledForm.slice(1);
+    }
+  }
+
+  // Create the misspelled sentence
+  var misspelledSentence = sentence.replace(originalForm, misspelledForm);
+  if (misspelledSentence === sentence) return null; // replacement didn't work
+
+  // Split sentence into words (keeping punctuation attached)
+  var tokens = misspelledSentence.match(/\S+/g) || [];
+  var targetIndex = -1;
+  for (var i = 0; i < tokens.length; i++) {
+    // Strip punctuation for comparison
+    var clean = tokens[i].replace(/[.,!?;:'"]+$/g, '');
+    if (clean === misspelledForm || clean.toLowerCase() === misspelledForm.toLowerCase()) {
+      targetIndex = i;
+      break;
+    }
+  }
+  if (targetIndex < 0) return null;
+
+  return {
+    sentence: misspelledSentence,
+    tokens: tokens,
+    targetIndex: targetIndex,
+    correctWord: originalForm,
+    misspelledWord: misspelledForm,
+    explanation: ms.explanation,
+    word: wordObj.word,
+    category: wordObj.category,
+    patternHint: wordObj.patternHint || '',
+    level: wordObj.level || 0
+  };
+}
+
+function startSpellingPolice() {
+  var profile = loadProfile();
+  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
+    startDiagnostic();
+    return;
+  }
+  gameMode = 'spellingpolice';
+  pendingBoss = null;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  pendingChest = false;
+
+  var targetLevel = profile.spellingLevel || 2;
+  var minLevel = Math.max(0, targetLevel - 2);
+  var pool = [];
+  for (var ci = 0; ci < profile.weakCategories.length; ci++) {
+    var cat = profile.weakCategories[ci];
+    if (!WORD_BANK[cat]) continue;
+    var words = WORD_BANK[cat].filter(function(w) {
+      return w.level >= minLevel && w.level <= targetLevel;
+    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
+    pool = pool.concat(words);
+  }
+  if (pool.length === 0) {
+    for (var ci2 = 0; ci2 < profile.weakCategories.length; ci2++) {
+      var cat2 = profile.weakCategories[ci2];
+      if (!WORD_BANK[cat2]) continue;
+      pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
+    }
+  }
+  pool = shuffle(pool);
+
+  spItems = [];
+  for (var i = 0; i < pool.length && spItems.length < 10; i++) {
+    var item = buildSpellingPoliceItem(pool[i]);
+    if (item) spItems.push(item);
+  }
+
+  if (spItems.length < 3) {
+    alert('Ikke nok s\u00E6tninger til Stavepolitiet. Pr\u00F8v en anden \u00F8velse.');
+    return;
+  }
+
+  spIndex = 0;
+  spResults = [];
+  results = [];
+
+  document.getElementById('spScoreCorrect').textContent = '0';
+  document.getElementById('spScoreWrong').textContent = '0';
+
+  hide('phase-welcome');
+  show('phase-spellingpolice');
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  updateRewardBar();
+
+  var b = document.createElement('div');
+  b.className = 'session-badge';
+  b.innerHTML = '\u{1F50D} Stavepolitiet \u2014 find den skyldige i line-up\'et!';
+  document.getElementById('phase-spellingpolice').appendChild(b);
+
+  renderSpellingPoliceWord();
+}
+
+function renderSpellingPoliceWord() {
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  var item = spItems[spIndex];
+  var total = spItems.length;
+
+  document.getElementById('spWordNum').textContent = (spResults.length + 1);
+  document.getElementById('spProgressBar').style.width = ((spResults.length / total) * 100) + '%';
+  document.getElementById('spPatternBadge').textContent = (CATEGORY_ICONS[item.category] || '\u{1F520}') + ' ' + item.category;
+  document.getElementById('spFeedbackBox').style.display = 'none';
+  document.getElementById('spNextBtn').classList.add('hidden');
+  document.getElementById('spCorrection').classList.add('hidden');
+
+  // Render sentence as suspect line-up with animal characters
+  var suspects = ['\u{1F431}','\u{1F436}','\u{1F437}','\u{1F438}','\u{1F435}','\u{1F43B}','\u{1F428}','\u{1F981}','\u{1F42D}','\u{1F430}','\u{1F99D}','\u{1F994}','\u{1F98E}','\u{1F427}','\u{1F99C}','\u{1F98A}','\u{1F40D}','\u{1F422}'];
+  var shuffledSuspects = shuffle(suspects);
+  var html = '';
+  for (var i = 0; i < item.tokens.length; i++) {
+    var animal = shuffledSuspects[i % shuffledSuspects.length];
+    html += '<span class="sp-word" data-index="' + i + '" onclick="checkSpellingPolice(' + i + ')">' +
+      '<span class="sp-suspect">' + animal + '</span>' +
+      '<span class="sp-sign"><span class="sp-text">' + item.tokens[i] + '</span></span>' +
+      '<span class="sp-number">#' + (i + 1) + '</span>' +
+      '</span>';
+  }
+  document.getElementById('spSentence').innerHTML = html;
+}
+
+function checkSpellingPolice(wordIndex) {
+  var item = spItems[spIndex];
+  var ok = (wordIndex === item.targetIndex);
+
+  // Disable all words
+  var words = document.querySelectorAll('.sp-word');
+  words.forEach(function(w) { w.classList.add('disabled'); });
+
+  // Highlight selected and target
+  var selected = document.querySelector('.sp-word[data-index="' + wordIndex + '"]');
+  var target = document.querySelector('.sp-word[data-index="' + item.targetIndex + '"]');
+
+  if (ok) {
+    selected.classList.add('selected-correct');
+  } else {
+    selected.classList.add('selected-wrong');
+    target.classList.add('reveal-target');
+  }
+
+  // Show correction
+  var corrEl = document.getElementById('spCorrection');
+  corrEl.textContent = '\u2192 ' + item.correctWord;
+  corrEl.classList.remove('hidden');
+
+  // Feedback
+  var box = document.getElementById('spFeedbackBox');
+  box.style.display = 'block';
+  if (ok) {
+    box.innerHTML = '<div class="feedback-correct">\u{1F6A8} Forbryder fanget! "' + item.misspelledWord + '" \u2192 "' + item.correctWord + '"</div>';
+  } else {
+    box.innerHTML = '<div class="feedback-wrong">\u{1F575}\uFE0F Forbryderen slap v\u00E6k! Det var: <strong>"' + item.misspelledWord + '"</strong> \u2192 <strong>"' + item.correctWord + '"</strong>' +
+      (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
+  }
+
+  // Record result
+  var result = {
+    word: item.word, correct: ok, selfCorrected: false,
+    userAnswer: item.tokens[wordIndex] || '',
+    category: item.category, patternHint: item.patternHint, level: item.level
+  };
+  spResults.push(result);
+  results.push(result);
+
+  updateSRWord(item.word, ok, item.category);
+  logAnswer(item.word, item.tokens[wordIndex] || '', ok, 1, item.category, item.level || 0);
+
+  // Gamification
+  if (ok) {
+    sessionCorrectCount++;
+    sessionCorrectStreak++;
+    if (sessionCorrectStreak >= 5) {
+      sessionCorrectStreak = 0;
+      var correctWords = spResults.filter(function(r) { return r.correct; });
+      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: item.word, category: item.category };
+      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingChest = true;
+    }
+  } else {
+    sessionCorrectStreak = 0;
+    trackCategoryError(item.category);
+  }
+
+  document.getElementById('spScoreCorrect').textContent = spResults.filter(function(r) { return r.correct; }).length;
+  document.getElementById('spScoreWrong').textContent = spResults.filter(function(r) { return !r.correct; }).length;
+
+  document.getElementById('spNextBtn').classList.remove('hidden');
+  document.getElementById('spNextBtn').focus();
+}
+
+function nextSpellingPolice() {
+  if (isMixedSession) { nextMixedItem(); return; }
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  if (pendingBoss) {
+    pendingInterruptAction = (spIndex + 1) >= spItems.length ? 'finish' : 'continue';
+    spIndex++;
+    showBossMinigame(pendingBoss);
+    return;
+  }
+
+  if (pendingChest) {
+    pendingChest = false;
+    pendingInterruptAction = (spIndex + 1) >= spItems.length ? 'finish' : 'continue';
+    spIndex++;
+    showTreasureChest();
+    return;
+  }
+
+  spIndex++;
+
+  if (spIndex >= spItems.length) {
+    finishSpellingPolice();
+  } else {
+    renderSpellingPoliceWord();
+  }
+}
+
+function finishSpellingPolice() {
+  hide('phase-spellingpolice');
+
+  var correctCount = spResults.filter(function(r) { return r.correct; }).length;
+  var totalCount = spResults.length;
+  var prevXP = loadRewardData().totalXP || 0;
+  var rewardResult = awardSessionXP(correctCount, totalCount);
+  var rewardData = loadRewardData();
+  var newXP = rewardData.totalXP || 0;
+  var prevLevel = getAvatarLevel(prevXP);
+  var newLevel = getAvatarLevel(newXP);
+  var milestone = checkMilestone(rewardData);
+  updateRewardBar();
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  if (rewardResult.dailyGoalReached) {
+    setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
+  }
+  if (milestone) {
+    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
+  }
+  if (newLevel.index > prevLevel.index) {
+    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
+  }
+  show('rewardBar');
+  show('rewardXPBarWrap');
+
+  renderSpellingPoliceResults();
+}
+
+function renderSpellingPoliceResults() {
+  show('phase-results');
+  var correct = spResults.filter(function(r) { return r.correct; }).length;
+  var wrong = spResults.filter(function(r) { return !r.correct; });
+
+  var html = '';
+  var msgs = ['Skarpt politiarbejde, betjent! \u{1F50D}', 'Mesterdetektiv! \u{1F575}\uFE0F', 'Ingen slipper forbi dig! \u{1F6A8}'];
+  html += '<div class="ai-bubble"><p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
+  html += '<p style="margin-top:8px">' + correct + ' ud af ' + spResults.length + ' forbrydere fanget!</p></div>';
+
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Fundet \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Misset \u2717</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / spResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  if (wrong.length > 0) {
+    html += '<h2 style="margin-bottom:12px;font-size:1.2rem">\u{1F4D6} Ord at \u00F8ve</h2>';
+    html += '<div style="margin-bottom:18px">';
+    wrong.forEach(function(r) {
+      html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+      html += '<span class="wrong-mark">\u2717</span></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-blue btn-full" onclick="startSpellingPolice()">\u{1F6A8} Ny runde</button>';
+  html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F4CA} Forts\u00E6t tr\u00E6ning</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ===== WORD BUILDER EXERCISE =====
+
+var DISTRACTOR_MORPHEMES = [
+  'be-', 'for-', 'u-', 'op-', 'ud-', 'af-', 'til-', 'over-', 'ind-',
+  '-lig', '-hed', '-else', '-som', '-ing', '-tion', '-dom',
+  '-er', '-en', '-et', '-ene', '-erne', '-ede', '-te'
+];
+
+function parseMorphemes(hint, word) {
+  if (!hint || hint.indexOf('+') < 0) return null;
+  var quoted = [];
+  var re = /'([^']+)'/g;
+  var match;
+  while ((match = re.exec(hint)) !== null) { quoted.push(match[1]); }
+
+  // Check if quoted parts directly reconstruct the word
+  if (quoted.length >= 2) {
+    var joined = quoted.map(function(p) { return p.replace(/^-/, '').replace(/-$/, ''); }).join('');
+    if (joined === word) return quoted;
+  }
+
+  // For affix patterns: extract known parts, derive the stem
+  if (quoted.length >= 1) {
+    var parts = [];
+    var remaining = word;
+    // Collect prefixes and middle parts from the front
+    for (var pi = 0; pi < quoted.length; pi++) {
+      var q = quoted[pi];
+      var clean = q.replace(/^-/, '').replace(/-$/, '');
+      if ((q.endsWith('-') && !q.startsWith('-')) || (!q.startsWith('-') && !q.endsWith('-'))) {
+        if (remaining.startsWith(clean)) {
+          parts.push(q);
+          remaining = remaining.slice(clean.length);
+        }
+      }
+    }
+    // Collect suffixes from the end
+    var suffixParts = [];
+    for (var si = quoted.length - 1; si >= 0; si--) {
+      var qs = quoted[si];
+      var cleanS = qs.replace(/^-/, '').replace(/-$/, '');
+      if (qs.startsWith('-') && !qs.endsWith('-') && remaining.endsWith(cleanS)) {
+        suffixParts.unshift(qs);
+        remaining = remaining.slice(0, remaining.length - cleanS.length);
+      }
+    }
+    // Whatever is left is the stem
+    if (remaining.length > 0) parts.push(remaining);
+    parts = parts.concat(suffixParts);
+
+    var testJoin = parts.map(function(p) { return p.replace(/^-/, '').replace(/-$/, ''); }).join('');
+    if (testJoin === word && parts.length >= 2) return parts;
+  }
+
+  // Format C with colon: "description: STEM + '-ending'"
+  var colonIdx = hint.lastIndexOf(':');
+  if (colonIdx >= 0) {
+    var afterColon = hint.substring(colonIdx + 1).trim();
+    var plusParts = afterColon.split('+').map(function(s) { return s.trim(); });
+    var morphemes = plusParts.map(function(p) { return p.replace(/'/g, '').replace(/\(.*\)/, '').trim(); }).filter(function(p) { return p; });
+    var testJoin2 = morphemes.map(function(p) { return p.replace(/^-/, '').replace(/-$/, ''); }).join('');
+    if (testJoin2 === word) return morphemes;
+  }
+
+  return null;
+}
+
+var wbWords = [], wbIndex = 0, wbResults = [];
+var wbCurrentMorphemes = [];
+var wbShuffled = [];
+var wbPlacedCount = 0;
+var wbMistakes = 0;
+
+function startWordBuilder() {
+  var profile = loadProfile();
+  if (!profile || !profile.weakCategories || profile.weakCategories.length === 0) {
+    startDiagnostic();
+    return;
+  }
+  gameMode = 'wordbuilder';
+  pendingBoss = null;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  pendingChest = false;
+
+  var targetLevel = profile.spellingLevel || 2;
+  var minLevel = Math.max(0, targetLevel - 2);
+
+  // Build pool from ALL categories (morphemes work best across categories)
+  var pool = [];
+  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+    var cat = ALL_CATEGORIES[ci];
+    if (!WORD_BANK[cat]) continue;
+    var words = WORD_BANK[cat].filter(function(w) {
+      return w.level >= minLevel && w.level <= targetLevel;
+    }).map(function(w) { return Object.assign({}, w, { category: cat }); });
+    pool = pool.concat(words);
+  }
+  pool = shuffle(pool);
+
+  // Filter to words with parseable morphemes, prioritize weak categories
+  var weakSet = {};
+  profile.weakCategories.forEach(function(c) { weakSet[c] = true; });
+  var weakItems = [], otherItems = [];
+  for (var i = 0; i < pool.length; i++) {
+    var m = parseMorphemes(pool[i].patternHint, pool[i].word);
+    if (m) {
+      if (weakSet[pool[i].category]) weakItems.push({ wordObj: pool[i], morphemes: m });
+      else otherItems.push({ wordObj: pool[i], morphemes: m });
+    }
+  }
+
+  wbWords = [];
+  var combined = weakItems.concat(otherItems);
+  for (var j = 0; j < combined.length && wbWords.length < 10; j++) {
+    wbWords.push(combined[j]);
+  }
+
+  if (wbWords.length < 3) {
+    alert('Ikke nok ord til Ordbyggeren. Pr\u00F8v en anden \u00F8velse.');
+    return;
+  }
+
+  wbIndex = 0;
+  wbResults = [];
+  results = [];
+
+  document.getElementById('wbScoreCorrect').textContent = '0';
+  document.getElementById('wbScoreWrong').textContent = '0';
+
+  hide('phase-welcome');
+  show('phase-wordbuilder');
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  updateRewardBar();
+
+  var b = document.createElement('div');
+  b.className = 'session-badge';
+  b.innerHTML = '\u{1F9E9} Ordbyggeren \u2014 byg ordet af klodser!';
+  document.getElementById('phase-wordbuilder').appendChild(b);
+
+  renderWBWord();
+}
+
+function renderWBWord() {
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  var item = wbWords[wbIndex];
+  var w = item.wordObj;
+  wbCurrentMorphemes = item.morphemes;
+  wbPlacedCount = 0;
+  wbMistakes = 0;
+
+  document.getElementById('wbWordNum').textContent = (wbResults.length + 1);
+  document.getElementById('wbProgressBar').style.width = ((wbResults.length / wbWords.length) * 100) + '%';
+  document.getElementById('wbPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  document.getElementById('wbFeedbackBox').style.display = 'none';
+  document.getElementById('wbNextBtn').classList.add('hidden');
+
+  // Show hint with optional emoji
+  var emoji = WORD_EMOJIS[w.word] || '';
+  if (emoji) {
+    document.getElementById('wbHint').innerHTML = '<span style="font-size:2.5rem;display:block;margin-bottom:4px">' + emoji + '</span>' + (w.hint || '');
+  } else {
+    document.getElementById('wbHint').textContent = w.hint || '';
+  }
+
+  // Render empty slots
+  var slotsHtml = '';
+  for (var i = 0; i < wbCurrentMorphemes.length; i++) {
+    var cls = i === 0 ? 'wb-slot active' : 'wb-slot';
+    slotsHtml += '<span class="' + cls + '" id="wbSlot' + i + '">___</span>';
+  }
+  document.getElementById('wbBuiltWord').innerHTML = slotsHtml;
+
+  // Build shuffled morpheme buttons with optional distractors
+  var allMorphemes = wbCurrentMorphemes.slice();
+  // Add 1-2 distractors for short words
+  if (allMorphemes.length <= 3) {
+    var available = DISTRACTOR_MORPHEMES.filter(function(d) {
+      return allMorphemes.indexOf(d) < 0;
+    });
+    available = shuffle(available);
+    var numDistractors = allMorphemes.length <= 2 ? 2 : 1;
+    for (var di = 0; di < numDistractors && di < available.length; di++) {
+      allMorphemes.push(available[di]);
+    }
+  }
+  wbShuffled = shuffle(allMorphemes);
+
+  var btnsHtml = '';
+  for (var mi = 0; mi < wbShuffled.length; mi++) {
+    btnsHtml += '<button class="wb-morph-btn" data-index="' + mi + '" onclick="tapMorpheme(' + mi + ')">' + wbShuffled[mi] + '</button>';
+  }
+  document.getElementById('wbMorphemes').innerHTML = btnsHtml;
+
+  // Play audio
+  speakWord(w.word, null);
+}
+
+function speakWBWord() {
+  var w = wbWords[wbIndex].wordObj;
+  speakWord(w.word, w.sentence || null);
+}
+
+function tapMorpheme(btnIndex) {
+  if (wbPlacedCount >= wbCurrentMorphemes.length) return;
+
+  var tapped = wbShuffled[btnIndex];
+  var expected = wbCurrentMorphemes[wbPlacedCount];
+  var btn = document.querySelector('.wb-morph-btn[data-index="' + btnIndex + '"]');
+
+  if (tapped === expected) {
+    // Correct!
+    btn.classList.add('used');
+    var slot = document.getElementById('wbSlot' + wbPlacedCount);
+    slot.textContent = tapped;
+    slot.classList.remove('active');
+    slot.classList.add('filled');
+    wbPlacedCount++;
+
+    // Highlight next slot
+    var nextSlot = document.getElementById('wbSlot' + wbPlacedCount);
+    if (nextSlot) nextSlot.classList.add('active');
+
+    // Check if word is complete
+    if (wbPlacedCount >= wbCurrentMorphemes.length) {
+      wordBuilderComplete();
+    }
+  } else {
+    // Wrong
+    wbMistakes++;
+    btn.classList.add('wrong-pick');
+    setTimeout(function() { btn.classList.remove('wrong-pick'); }, 500);
+  }
+}
+
+function wordBuilderComplete() {
+  var w = wbWords[wbIndex].wordObj;
+  var ok = (wbMistakes === 0);
+
+  // Play complete word
+  speakWord(w.word, null);
+
+  // Feedback
+  var box = document.getElementById('wbFeedbackBox');
+  box.style.display = 'block';
+  if (ok) {
+    box.innerHTML = '<div class="feedback-correct">\u2705 Perfekt! "' + w.word + '" \u{1F389}</div>';
+  } else {
+    box.innerHTML = '<div class="feedback-correct">\u{1F31F} Godt! "' + w.word + '" \u2014 ' + wbMistakes + ' forkerte fors\u00F8g</div>';
+  }
+
+  // Record result (correct if completed, even with mistakes — but track mistakes)
+  var result = {
+    word: w.word, correct: ok, selfCorrected: wbMistakes > 0 && true,
+    userAnswer: ok ? w.word : wbMistakes + ' fejl',
+    category: w.category, patternHint: w.patternHint || '', level: w.level || 0
+  };
+  wbResults.push(result);
+  results.push(result);
+
+  updateSRWord(w.word, ok, w.category);
+  logAnswer(w.word, ok ? w.word : wbMistakes + ' fejl', ok, 1, w.category, w.level || 0);
+
+  // Gamification
+  if (ok) {
+    sessionCorrectCount++;
+    sessionCorrectStreak++;
+    if (sessionCorrectStreak >= 5) {
+      sessionCorrectStreak = 0;
+      var correctWords = wbResults.filter(function(r) { return r.correct; });
+      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: w.word, category: w.category };
+      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingChest = true;
+    }
+  } else {
+    sessionCorrectStreak = 0;
+    trackCategoryError(w.category);
+  }
+
+  document.getElementById('wbScoreCorrect').textContent = wbResults.filter(function(r) { return r.correct; }).length;
+  document.getElementById('wbScoreWrong').textContent = wbResults.filter(function(r) { return !r.correct; }).length;
+
+  document.getElementById('wbNextBtn').classList.remove('hidden');
+  document.getElementById('wbNextBtn').focus();
+}
+
+function nextWBWord() {
+  if (isMixedSession) { nextMixedItem(); return; }
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  if (pendingBoss) {
+    pendingInterruptAction = (wbIndex + 1) >= wbWords.length ? 'finish' : 'continue';
+    wbIndex++;
+    showBossMinigame(pendingBoss);
+    return;
+  }
+  if (pendingChest) {
+    pendingChest = false;
+    pendingInterruptAction = (wbIndex + 1) >= wbWords.length ? 'finish' : 'continue';
+    wbIndex++;
+    showTreasureChest();
+    return;
+  }
+
+  wbIndex++;
+  if (wbIndex >= wbWords.length) {
+    finishWordBuilder();
+  } else {
+    renderWBWord();
+  }
+}
+
+function finishWordBuilder() {
+  hide('phase-wordbuilder');
+
+  var correctCount = wbResults.filter(function(r) { return r.correct; }).length;
+  var totalCount = wbResults.length;
+  var prevXP = loadRewardData().totalXP || 0;
+  var rewardResult = awardSessionXP(correctCount, totalCount);
+  var rewardData = loadRewardData();
+  var newXP = rewardData.totalXP || 0;
+  var prevLevel = getAvatarLevel(prevXP);
+  var newLevel = getAvatarLevel(newXP);
+  var milestone = checkMilestone(rewardData);
+  updateRewardBar();
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  if (rewardResult.dailyGoalReached) {
+    setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
+  }
+  if (milestone) {
+    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
+  }
+  if (newLevel.index > prevLevel.index) {
+    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
+  }
+  show('rewardBar');
+  show('rewardXPBarWrap');
+
+  renderWBResults();
+}
+
+function renderWBResults() {
+  show('phase-results');
+  var correct = wbResults.filter(function(r) { return r.correct; }).length;
+  var wrong = wbResults.filter(function(r) { return !r.correct; });
+
+  var html = '';
+  var msgs = ['Flot bygget! \u{1F9E9}', 'Du er en ordarkitekt! \u{1F3D7}\uFE0F', 'Godt samlet! \u{1F4AA}'];
+  html += '<div class="ai-bubble"><p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
+  html += '<p style="margin-top:8px">' + correct + ' ud af ' + wbResults.length + ' ord bygget uden fejl.</p></div>';
+
+  html += '<div class="score-row">';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Perfekte \u2713</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Med fejl</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / wbResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '</div>';
+
+  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
+  html += '<div style="margin-bottom:18px">';
+  wbResults.forEach(function(r) {
+    html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+    html += '<span>' + (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">' + r.userAnswer + '</span>') + '</span></div>';
+  });
+  html += '</div>';
+
+  html += '<hr class="divider">';
+  html += '<button class="btn btn-green btn-full" onclick="startWordBuilder()">\u{1F9E9} Ny runde</button>';
+  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+
+  document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ===== SENTENCE WRITING EXERCISE =====
+
+var swCurrentWord = null;
+
+function renderSentenceWord(wordObj) {
+  swCurrentWord = wordObj || mixedQueue[mixedIndex].wordObj;
+  var w = swCurrentWord;
+
+  document.getElementById('swPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  document.getElementById('swFeedbackBox').style.display = 'none';
+  document.getElementById('swCheckBtn').classList.remove('hidden');
+  document.getElementById('swNextBtn').classList.add('hidden');
+  document.getElementById('swInput').value = '';
+
+  // Show word + hint
+  var emoji = WORD_EMOJIS[w.word] || '';
+  document.getElementById('swTargetWord').textContent = w.word;
+  if (emoji) {
+    document.getElementById('swHint').innerHTML = '<span style="font-size:2rem;display:block;margin-bottom:4px">' + emoji + '</span>' + (w.hint || '');
+  } else {
+    document.getElementById('swHint').textContent = w.hint || '';
+  }
+
+  // Play audio
+  speakWord(w.word, null);
+
+  setTimeout(function() { document.getElementById('swInput').focus(); }, 300);
+}
+
+function speakSWWord() {
+  if (swCurrentWord) speakWord(swCurrentWord.word, swCurrentWord.sentence || null);
+}
+
+function checkSentence() {
+  if (!swCurrentWord) return;
+  var input = document.getElementById('swInput').value.trim();
+  if (!input) return;
+
+  var word = swCurrentWord.word.toLowerCase();
+  var inputLower = input.toLowerCase();
+
+  // Check if the word appears in the sentence (word boundary match)
+  var regex = new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+  var ok = regex.test(inputLower);
+
+  // Also check for common inflected forms (word + s, word + e, word + r, word + n, word + t, word + de, word + ede, word + er, word + en, word + et)
+  if (!ok) {
+    var inflections = [word + 's', word + 'e', word + 'r', word + 'n', word + 't', word + 'ne', word + 'en', word + 'et', word + 'er'];
+    for (var ii = 0; ii < inflections.length; ii++) {
+      var inflRegex = new RegExp('\\b' + inflections[ii].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+      if (inflRegex.test(inputLower)) { ok = true; break; }
+    }
+  }
+
+  var box = document.getElementById('swFeedbackBox');
+  box.style.display = 'block';
+
+  if (ok) {
+    // Highlight the word in the sentence
+    var highlighted = input.replace(new RegExp('(' + word + '\\w*)', 'gi'), '<span class="sw-highlight">$1</span>');
+    box.innerHTML = '<div class="feedback-correct">\u2705 Flot s\u00E6tning! ' + highlighted + '</div>';
+  } else {
+    box.innerHTML = '<div class="feedback-wrong">\u274C Hmm, jeg kan ikke finde "<strong>' + swCurrentWord.word + '</strong>" i din s\u00E6tning.<br>' +
+      '<span style="font-size:0.9rem;color:var(--muted)">Eksempel: ' + swCurrentWord.sentence + '</span></div>';
+  }
+
+  // Record result
+  var result = {
+    word: swCurrentWord.word, correct: ok, selfCorrected: false,
+    userAnswer: input, category: swCurrentWord.category,
+    patternHint: swCurrentWord.patternHint || '', level: swCurrentWord.level || 0
+  };
+  results.push(result);
+  logAnswer(swCurrentWord.word, input, ok, 1, swCurrentWord.category, swCurrentWord.level || 0);
+  updateSRWord(swCurrentWord.word, ok, swCurrentWord.category);
+
+  // Gamification
+  if (ok) {
+    sessionCorrectCount++;
+    sessionCorrectStreak++;
+    if (sessionCorrectStreak >= 5) {
+      sessionCorrectStreak = 0;
+      var correctWords = results.filter(function(r) { return r.correct; });
+      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: swCurrentWord.word, category: swCurrentWord.category };
+      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingChest = true;
+    }
+  } else {
+    sessionCorrectStreak = 0;
+    trackCategoryError(swCurrentWord.category);
+  }
+
+  document.getElementById('swScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
+  document.getElementById('swScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
+  document.getElementById('swCheckBtn').classList.add('hidden');
+  document.getElementById('swNextBtn').classList.remove('hidden');
+  document.getElementById('swNextBtn').focus();
+}
+
+function nextSentenceWord() {
+  if (isMixedSession) { nextMixedItem(); return; }
+}
+
+// Enter key for sentence input
+document.addEventListener('DOMContentLoaded', function() {
+  var swInput = document.getElementById('swInput');
+  if (swInput) {
+    swInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var nextBtn = document.getElementById('swNextBtn');
+        if (nextBtn && !nextBtn.classList.contains('hidden')) nextSentenceWord();
+        else checkSentence();
+      }
+    });
+  }
+});
+
 // Welcome buttons
 function refreshWelcomeButtons() {
   var profile = loadProfile();
@@ -4934,22 +7603,17 @@ function refreshWelcomeButtons() {
   var newDiagBtn = document.getElementById('newDiagBtn');
   var reviewBtn = document.getElementById('reviewBtn');
 
-  var fillInBtn = document.getElementById('fillInBtn');
-
   if (profile) {
     startBtn.classList.add('hidden');
     if (profile.weakCategories && profile.weakCategories.length > 0) {
       continueBtn.classList.remove('hidden');
-      fillInBtn.classList.remove('hidden');
     } else {
       continueBtn.classList.add('hidden');
-      fillInBtn.classList.add('hidden');
     }
     newDiagBtn.classList.remove('hidden');
   } else {
     startBtn.classList.remove('hidden');
     continueBtn.classList.add('hidden');
-    fillInBtn.classList.add('hidden');
     newDiagBtn.classList.add('hidden');
   }
 
@@ -4961,15 +7625,13 @@ function refreshWelcomeButtons() {
   }
 
   // Screening button always visible
-  var screeningBtn = document.getElementById('screeningBtn');
-  if (screeningBtn) screeningBtn.classList.remove('hidden');
 }
 
 // Init
 window.addEventListener('load', function() {
   window.speechSynthesis.getVoices();
   // Load word bank from JSON
-  fetch(BASE_PATH + 'words.json')
+  fetch('words.json')
     .then(function(res) { return res.json(); })
     .then(function(data) {
       WORD_BANK = data;
@@ -4984,12 +7646,11 @@ window.addEventListener('load', function() {
 
 function initApp() {
   // Load audio manifest for pre-generated audio files
-  fetch(BASE_PATH + 'audio-manifest.json')
+  fetch('audio-manifest.json')
     .then(function(res) { return res.json(); })
     .then(function(data) { audioManifest = data; console.log('Lydmanifest indlæst (' + Object.keys(data).length + ' ord)'); })
     .catch(function() { console.log('Ingen pre-genererede lydfiler fundet, bruger TTS API/browser'); });
 
-  // Load shared settings (not per-player)
   var savedKey = loadApiKey();
   var keyInput = document.getElementById('apiKeyInput');
   if (keyInput && savedKey) { keyInput.value = savedKey; updateApiStatus(savedKey); }
@@ -4999,42 +7660,25 @@ function initApp() {
   if (anthropicInput && savedAnthropicKey) { anthropicInput.value = savedAnthropicKey; updateAnthropicStatus(savedAnthropicKey); }
   setVoice(loadVoice());
 
-  // Migrate old single-player data if needed
+  // Multi-profil initialization
   var justMigrated = migrateOldData();
-
-  // Profile system: show picker or auto-select
   var players = loadPlayersList();
   var lastPlayer = '';
   try { lastPlayer = localStorage.getItem('last_player') || ''; } catch(e) {}
 
   if (justMigrated) {
-    // Just migrated from v1 — always show picker so user can set their name
     hide('phase-welcome');
     show('phase-profile-picker');
     show('migrationHint');
     renderProfilePicker();
   } else if (players.length === 1 && lastPlayer) {
-    // Only one player and they've used v2 before, auto-select
     selectPlayer(players[0]);
   } else if (players.length > 1 && lastPlayer && players.indexOf(lastPlayer) !== -1) {
-    // Multiple players, auto-select last used
     selectPlayer(lastPlayer);
   } else {
-    // No local players or first visit — check Supabase for existing profiles
     hide('phase-welcome');
     show('phase-profile-picker');
-    supabase.from('profiles').select('player').then(function(res) {
-      if (res.data && res.data.length > 0) {
-        var merged = loadPlayersList();
-        for (var i = 0; i < res.data.length; i++) {
-          if (merged.indexOf(res.data[i].player) === -1) {
-            merged.push(res.data[i].player);
-          }
-        }
-        savePlayersList(merged);
-      }
-      renderProfilePicker();
-    }).catch(function() { renderProfilePicker(); });
+    renderProfilePicker();
   }
 }
 

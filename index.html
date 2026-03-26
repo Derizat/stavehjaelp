@@ -2095,14 +2095,15 @@ function updateCategoryLevel(category, correct) {
 
   var total = cat.history.length;
   var correctCount = cat.history.filter(function(h) { return h; }).length;
+  var maxLevel = CATEGORY_MAX_LEVELS[category] !== undefined ? CATEGORY_MAX_LEVELS[category] : 4;
 
   // New player fast-track: level up after 2 correct when <5 total answers
-  if (total < 5 && correctCount >= 2 && cat.level < 4) {
+  if (total < 5 && correctCount >= 2 && cat.level < maxLevel) {
     cat.level++;
     cat.history = [];
   }
   // Normal: level up at ≥80% correct
-  else if (total >= 5 && correctCount / total >= 0.8 && cat.level < 4) {
+  else if (total >= 5 && correctCount / total >= 0.8 && cat.level < maxLevel) {
     cat.level++;
     cat.history = [];
   }
@@ -2126,6 +2127,11 @@ function buildPoolForCategory(cat, catLevel) {
   return pool.map(function(w) { return Object.assign({}, w, { category: cat }); });
 }
 
+// Categories that are "mastered" at a certain level and should stop appearing
+var CATEGORY_MAX_LEVELS = {
+  'Lydrette ord': 3
+};
+
 function buildPoolWithCategoryLevels(categories) {
   var levels = loadCategoryLevels();
   var pool = [];
@@ -2133,6 +2139,8 @@ function buildPoolWithCategoryLevels(categories) {
     var cat = categories[i];
     if (!WORD_BANK[cat]) continue;
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
+    // Skip mastered categories
+    if (CATEGORY_MAX_LEVELS[cat] !== undefined && catLevel >= CATEGORY_MAX_LEVELS[cat]) continue;
     pool = pool.concat(buildPoolForCategory(cat, catLevel));
   }
   return pool;
@@ -8421,11 +8429,14 @@ function renderCategoryLevels() {
     var hist = catData.history || [];
     var correct = hist.filter(function(h) { return h; }).length;
     var histStr = hist.length > 0 ? ' (' + correct + '/' + hist.length + ')' : '';
-    html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem">' +
+    var mastered = CATEGORY_MAX_LEVELS[cat] !== undefined && lvl >= CATEGORY_MAX_LEVELS[cat];
+    var lvlText = mastered ? 'Mestret' : 'Niv ' + lvl;
+    var lvlColor = mastered ? 'var(--green)' : levelColors[lvl];
+    html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem' + (mastered ? ';opacity:0.6' : '') + '">' +
       '<span style="width:20px;text-align:center">' + icon + '</span>' +
       '<span style="flex:1;color:var(--text)">' + cat + '</span>' +
-      '<span style="font-weight:700;color:' + levelColors[lvl] + '">Niv ' + lvl + '</span>' +
-      '<span style="color:var(--muted);font-size:0.7rem;min-width:40px;text-align:right">' + histStr + '</span>' +
+      '<span style="font-weight:700;color:' + lvlColor + '">' + lvlText + '</span>' +
+      '<span style="color:var(--muted);font-size:0.7rem;min-width:40px;text-align:right">' + (mastered ? '' : histStr) + '</span>' +
       '</div>';
   }
   html += '</div>';

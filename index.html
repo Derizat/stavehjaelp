@@ -2004,6 +2004,7 @@ function saveSRData(data) {
 
 function updateSRWord(word, correct, category) {
   var sr = loadSRData();
+  if (!sr.words) sr.words = {};
   if (!sr.words[word]) { sr.words[word] = { level: 0, nextReview: Date.now(), category: category }; }
   if (correct) { sr.words[word].level = Math.min(sr.words[word].level + 1, 4); }
   else { sr.words[word].level = 0; }
@@ -2015,6 +2016,7 @@ function updateSRWord(word, correct, category) {
 
 function getDueWords() {
   var sr = loadSRData();
+  if (!sr.words) sr.words = {};
   var now = Date.now();
   var due = [];
   for (var word in sr.words) {
@@ -2712,12 +2714,10 @@ function diffHighlight(correct, attempt) {
 
 // Check spelling
 function checkSpelling() {
-  try {
   var w = currentWords[currentIndex];
-  if (!w) { alert('DEBUG: currentWords[' + currentIndex + '] er undefined. currentWords.length=' + currentWords.length); return; }
   var inp = document.getElementById('spellingInput');
   var ans = inp.value.trim().toLowerCase();
-  if (!ans) { alert('DEBUG: tomt inputfelt'); return; }
+  if (!ans) return;
   var ok = ans === w.word.toLowerCase();
   var box = document.getElementById('feedbackBox');
   box.style.display = 'flex';
@@ -2763,7 +2763,6 @@ function checkSpelling() {
   document.getElementById('nextBtn').classList.remove('hidden');
   feedbackShown = true;
   retryAttempt = false;
-  } catch(e) { alert('DEBUG checkSpelling fejl: ' + e.message); }
 }
 
 function nextWord() {

@@ -2357,6 +2357,7 @@ function startTrainingFromProfile() {
   var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
   isMixedSession = false;
   pendingBoss = null;
+  pendingLesson = false;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
   pendingChest = false;
   wrongCountPerWord = {};
@@ -2386,10 +2387,16 @@ function startTrainingFromProfile() {
   updateRewardBar();
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
 
+  hideAllExercisePhases();
+  hide('phase-boss');
+  document.getElementById('chestOverlay').classList.add('hidden');
+
   document.getElementById('scoreCorrect').textContent = '0';
   document.getElementById('scoreWrong').textContent = '0';
   document.getElementById('testPhaseLabel').style.display = '';
   document.getElementById('testPhaseLabel').textContent = '\u{1F3AF} Tr\u00E6ning';
+  document.getElementById('wordNum').textContent = '1';
+  document.getElementById('progressBar').style.width = '0%';
   show('phase-test');
   renderWord();
 }

@@ -4915,9 +4915,8 @@ function renderBossSilentServant(word, boss, idleAnim) {
   bossState.ssWrong = 0;
   bossState.ssRound = 0;
 
-  // Build 5 rounds: mix of stumme bogstaver words (correct=with silent letter)
-  // and non-stumme words (correct=without silent letter)
-  var stummeWords = (WORD_BANK['Stumme bogstaver'] || []).slice();
+  // Build 5 rounds using words matching player's level for Stumme bogstaver
+  var stummeWords = buildPoolForCategory('Stumme bogstaver', loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1);
   for (var i = stummeWords.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t = stummeWords[i]; stummeWords[i] = stummeWords[j]; stummeWords[j] = t;

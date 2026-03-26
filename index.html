@@ -8251,8 +8251,11 @@ function checkSentence() {
   document.getElementById('swScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
   document.getElementById('swScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
   document.getElementById('swCheckBtn').classList.add('hidden');
-  document.getElementById('swNextBtn').classList.remove('hidden');
-  document.getElementById('swNextBtn').focus();
+  // Short delay before showing next button to prevent accidental skip
+  setTimeout(function() {
+    document.getElementById('swNextBtn').classList.remove('hidden');
+    document.getElementById('swNextBtn').focus();
+  }, 500);
 }
 
 function nextSentenceWord() {

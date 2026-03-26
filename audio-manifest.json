@@ -1763,11 +1763,11 @@
     "word_m": "audio/word_svoemmehal_m.mp3",
     "sentence_m": "audio/sentence_svoemmehal_m.mp3"
   },
-  "morgensmad": {
-    "word": "audio/word_morgensmad.mp3",
-    "sentence": "audio/sentence_morgensmad.mp3",
-    "word_m": "audio/word_morgensmad_m.mp3",
-    "sentence_m": "audio/sentence_morgensmad_m.mp3"
+  "arbejdsdag": {
+    "word": "audio/word_arbejdsdag.mp3",
+    "sentence": "audio/sentence_arbejdsdag.mp3",
+    "word_m": "audio/word_arbejdsdag_m.mp3",
+    "sentence_m": "audio/sentence_arbejdsdag_m.mp3"
   },
   "løbesko": {
     "word": "audio/word_loebesko.mp3",

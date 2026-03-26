@@ -2359,10 +2359,10 @@
       "category": "Sammensatte ord"
     },
     {
-      "word": "morgensmad",
-      "hint": "Første måltid om morgenen",
-      "patternHint": "'morgen' + 's' + 'mad' (fuge-s)",
-      "sentence": "Jeg spiser morgensmad klokken syv.",
+      "word": "arbejdsdag",
+      "hint": "En dag hvor man arbejder",
+      "patternHint": "sammensat med fuge-s: 'arbejds' + 'dag'",
+      "sentence": "Far har en lang arbejdsdag i dag.",
       "level": 2,
       "category": "Sammensatte ord"
     },

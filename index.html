@@ -3325,7 +3325,8 @@ var EXERCISE_TYPES = [
   { id: 'rightorwrong', emoji: '\u{2705}', name: 'Rigtigt/forkert', fn: 'startRightOrWrong' },
   { id: 'spellingpolice', emoji: '\u{1F46E}', name: 'Stavepolitiet', fn: 'startSpellingPolice' },
   { id: 'wordbuilder', emoji: '\u{1F9F1}', name: 'Ordbyggeren', fn: 'startWordBuilder' },
-  { id: 'spellpick', emoji: '\u{1F3AF}', name: 'Stavev\u00E6lger', fn: 'startSpellPick' }
+  { id: 'spellpick', emoji: '\u{1F3AF}', name: 'Stavev\u00E6lger', fn: 'startSpellPick' },
+  { id: 'sentence', emoji: '\u{1F914}', name: 'Hvad er ordet?', fn: 'startWhatIsTheWord' }
 ];
 
 function showExercisePicker() {
@@ -8115,8 +8116,75 @@ function checkSentence() {
   }, 500);
 }
 
+var swWords = [], swIndex = 0, swResults = [];
+
+function startWhatIsTheWord() {
+  var profile = loadProfile();
+  gameMode = 'sentence';
+  isMixedSession = false;
+  pendingBoss = null;
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  pendingChest = false;
+  results = [];
+
+  // Build pool from words with hints, level 1+
+  var pool = [];
+  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+    var cat = ALL_CATEGORIES[ci];
+    if (!WORD_BANK[cat]) continue;
+    pool = pool.concat(WORD_BANK[cat].filter(function(w) { return w.hint && w.level >= 1; }).map(function(w) { return Object.assign({}, w, { category: cat }); }));
+  }
+  pool = shuffle(pool);
+  swWords = pool.slice(0, 10);
+  swIndex = 0;
+  swResults = [];
+
+  if (swWords.length < 3) { alert('Ikke nok ord.'); return; }
+
+  hide('phase-welcome');
+  show('phase-sentence');
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  updateRewardBar();
+
+  renderSentenceWord(swWords[swIndex]);
+}
+
 function nextSentenceWord() {
   if (isMixedSession) { nextMixedItem(); return; }
+
+  var chestOv = document.getElementById('chestOverlay');
+  var bossOv = document.getElementById('bossOverlay');
+  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden')) || pendingLesson) return;
+
+  if (pendingBoss) {
+    pendingInterruptAction = (swIndex + 1) >= swWords.length ? 'finish' : 'continue';
+    swIndex++;
+    showBossMinigame(pendingBoss);
+    return;
+  }
+  if (pendingChest) {
+    pendingChest = false;
+    pendingInterruptAction = (swIndex + 1) >= swWords.length ? 'finish' : 'continue';
+    swIndex++;
+    showTreasureChest();
+    return;
+  }
+
+  swIndex++;
+  if (swIndex >= swWords.length) {
+    hide('phase-sentence');
+    // Show results using training results
+    var correctCount = results.filter(function(r) { return r.correct; }).length;
+    var totalCount = results.length;
+    awardSessionXP(correctCount, totalCount);
+    updateRewardBar();
+    show('rewardBar');
+    show('rewardXPBarWrap');
+    renderTrainingResults();
+  } else {
+    renderSentenceWord(swWords[swIndex]);
+  }
 }
 
 // Enter key for sentence input

@@ -1313,7 +1313,6 @@
   <div class="listen-box">
     <div id="swEmojiHint" style="font-size:3rem;margin-bottom:8px"></div>
     <p class="hint-text" id="swHint" style="font-size:1.1rem"></p>
-    <button class="btn-listen" id="swListenBtn" onclick="speakSWWord()">&#x1F508; H&#xf8;r ordet</button>
   </div>
   <p style="color:var(--accent);font-weight:700;font-size:0.95rem;margin:12px 0;text-align:center">Hvilket ord passer til beskrivelsen?</p>
   <input type="text" id="swInput" placeholder="Skriv ordet her..." autocomplete="off" autocorrect="off" spellcheck="false" style="text-align:center;letter-spacing:2px" />
@@ -8045,15 +8044,13 @@ function renderSentenceWord(wordObj) {
   document.getElementById('swNextBtn').classList.add('hidden');
   document.getElementById('swInput').value = '';
 
-  // Show ONLY hint + emoji — NOT the word!
+  // Show ONLY hint + emoji — NOT the word, NOT audio!
   var emoji = WORD_EMOJIS[w.word] || '';
   var emojiEl = document.getElementById('swEmojiHint');
   if (emojiEl) emojiEl.textContent = emoji;
   document.getElementById('swHint').textContent = w.hint || '';
 
-  // Play audio
-  speakWord(w.word, null);
-
+  // Do NOT play audio — the challenge is to figure out the word from the hint alone
   setTimeout(function() { document.getElementById('swInput').focus(); }, 300);
 }
 

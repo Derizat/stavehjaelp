@@ -1093,7 +1093,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.1.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.1.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -8214,7 +8214,8 @@ function renderCategoryLevels() {
     var hist = catData.history || [];
     var correct = hist.filter(function(h) { return h; }).length;
     var histStr = hist.length > 0 ? ' (' + correct + '/' + hist.length + ')' : '';
-    var mastered = CATEGORY_MAX_LEVELS[cat] !== undefined && lvl >= CATEGORY_MAX_LEVELS[cat];
+    var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 4;
+    var mastered = lvl >= maxLvl;
     var lvlText = mastered ? 'Mestret' : 'Niv ' + lvl;
     var lvlColor = mastered ? 'var(--green)' : levelColors[lvl];
     html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem' + (mastered ? ';opacity:0.6' : '') + '">' +

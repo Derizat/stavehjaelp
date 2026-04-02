@@ -585,47 +585,35 @@
   .sw-input::placeholder { color: #555; font-weight: 400; }
   .sw-highlight { color: var(--green); font-weight: 800; text-decoration: underline; }
 
-  /* Word memory game */
+  /* Word match game */
   .memory-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-    max-width: 300px; margin: 12px auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    max-width: 360px; margin: 12px auto;
   }
-  .memory-card {
-    aspect-ratio: 1.2; border-radius: 12px; cursor: pointer;
-    perspective: 600px; user-select: none; -webkit-user-select: none;
+  .memory-tile {
+    padding: 14px 6px; border-radius: 12px; cursor: pointer;
+    background: var(--card2); border: 3px solid #3d4270;
+    font-family: 'Fredoka One', cursive; font-size: 1rem;
+    color: var(--text); text-align: center; word-break: break-word;
+    transition: all 0.15s; user-select: none; -webkit-user-select: none;
   }
-  .memory-card-inner {
-    width: 100%; height: 100%; position: relative;
-    transition: transform 0.4s ease; transform-style: preserve-3d;
+  .memory-tile:hover { border-color: var(--accent); transform: scale(1.05); }
+  .memory-tile:active { transform: scale(0.97); }
+  .memory-tile.selected {
+    border-color: var(--accent); background: rgba(245,166,35,0.15);
+    color: var(--accent); transform: scale(1.05);
   }
-  .memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
-  .memory-card.matched .memory-card-inner { transform: rotateY(180deg); }
-  .memory-card-front, .memory-card-back {
-    position: absolute; width: 100%; height: 100%; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  }
-  .memory-card-front {
-    background: linear-gradient(135deg, var(--accent2), #5b21b6);
-    border: 2px solid rgba(124,58,237,0.5);
-    font-size: 1.5rem; color: white;
-  }
-  .memory-card-back {
-    background: var(--card2); border: 2px solid #3d4270;
-    transform: rotateY(180deg);
-    font-family: 'Fredoka One', cursive; font-size: 0.95rem;
-    color: var(--text); padding: 4px; text-align: center; word-break: break-word;
-  }
-  .memory-card.matched .memory-card-back {
+  .memory-tile.matched {
     border-color: var(--green); background: rgba(34,211,160,0.15);
-    color: var(--green);
+    color: var(--green); pointer-events: none; opacity: 0.7;
   }
-  .memory-card.wrong .memory-card-back {
+  .memory-tile.wrong {
     border-color: var(--red); background: rgba(244,63,94,0.1);
+    animation: boss-shake 0.3s ease;
   }
   .memory-matched-word {
-    text-align: center; font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem; color: var(--green); margin: 4px 0;
+    display: inline-block; font-family: 'Fredoka One', cursive;
+    font-size: 1rem; color: var(--green); margin: 3px 6px;
     animation: fillin-pop 0.3s ease;
   }
 
@@ -1137,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.2.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.2.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -8293,34 +8281,33 @@ function startWordMemory() {
   }
   pool = shuffle(pool);
 
-  // Take 6 pairs for a 3x4 grid
-  var pairs = pool.slice(0, 6);
+  // Take 8 pairs for a 4x4 grid
+  var pairs = pool.slice(0, 8);
   if (pairs.length < 4) {
-    alert('Ikke nok ord til memory-spillet.');
+    alert('Ikke nok ord til ord-match.');
     return;
   }
 
-  // Create cards: each pair becomes 2 cards
-  var cards = [];
+  // Create tiles: each pair becomes 2 tiles
+  var tiles = [];
   for (var i = 0; i < pairs.length; i++) {
-    var cleanParts = pairs[i].parts.map(function(p) { return p.replace(/^-/, '').replace(/-$/, ''); });
-    cards.push({
+    tiles.push({
       id: i * 2, pairId: i, text: pairs[i].parts[0],
       word: pairs[i].word, partIndex: 0, category: pairs[i].category, level: pairs[i].level
     });
-    cards.push({
+    tiles.push({
       id: i * 2 + 1, pairId: i, text: pairs[i].parts[1],
       word: pairs[i].word, partIndex: 1, category: pairs[i].category, level: pairs[i].level
     });
   }
-  cards = shuffle(cards);
+  tiles = shuffle(tiles);
 
   wmState = {
-    cards: cards,
-    flipped: [], // currently flipped card indices
+    tiles: tiles,
+    selected: -1, // index of currently selected tile
     matched: [], // matched pair IDs
     moves: 0,
-    locked: false, // prevent clicks during animation
+    locked: false,
     totalPairs: pairs.length
   };
 
@@ -8342,90 +8329,78 @@ function startWordMemory() {
 function renderMemoryGrid() {
   var s = wmState;
   var html = '';
-  for (var i = 0; i < s.cards.length; i++) {
-    var card = s.cards[i];
-    var isFlipped = s.flipped.indexOf(i) >= 0;
-    var isMatched = s.matched.indexOf(card.pairId) >= 0;
-    var cls = 'memory-card';
-    if (isFlipped) cls += ' flipped';
+  for (var i = 0; i < s.tiles.length; i++) {
+    var tile = s.tiles[i];
+    var isMatched = s.matched.indexOf(tile.pairId) >= 0;
+    var isSelected = s.selected === i;
+    var cls = 'memory-tile';
+    if (isSelected) cls += ' selected';
     if (isMatched) cls += ' matched';
-    html += '<div class="' + cls + '" data-index="' + i + '" onclick="wmFlip(' + i + ')">';
-    html += '<div class="memory-card-inner">';
-    html += '<div class="memory-card-front">\u2753</div>';
-    html += '<div class="memory-card-back">' + card.text + '</div>';
-    html += '</div></div>';
+    html += '<div class="' + cls + '" data-index="' + i + '" onclick="wmTap(' + i + ')">' + tile.text + '</div>';
   }
   document.getElementById('wmGrid').innerHTML = html;
 }
 
-function wmFlip(index) {
+function wmTap(index) {
   var s = wmState;
   if (!s || s.locked) return;
-  var card = s.cards[index];
+  var tile = s.tiles[index];
 
-  // Don't flip already matched or already flipped
-  if (s.matched.indexOf(card.pairId) >= 0) return;
-  if (s.flipped.indexOf(index) >= 0) return;
+  // Skip matched tiles
+  if (s.matched.indexOf(tile.pairId) >= 0) return;
 
-  // Flip the card
-  s.flipped.push(index);
-  var el = document.querySelector('.memory-card[data-index="' + index + '"]');
-  if (el) el.classList.add('flipped');
+  // First selection
+  if (s.selected < 0 || s.selected === index) {
+    s.selected = (s.selected === index) ? -1 : index; // toggle
+    renderMemoryGrid();
+    return;
+  }
 
-  // Two cards flipped?
-  if (s.flipped.length === 2) {
-    s.moves++;
-    document.getElementById('wmMoves').textContent = s.moves;
-    s.locked = true;
+  // Second selection — check match
+  s.moves++;
+  document.getElementById('wmMoves').textContent = s.moves;
+  var tile1 = s.tiles[s.selected];
+  var tile2 = tile;
+  var idx1 = s.selected;
+  var idx2 = index;
 
-    var card1 = s.cards[s.flipped[0]];
-    var card2 = s.cards[s.flipped[1]];
+  if (tile1.pairId === tile2.pairId && idx1 !== idx2) {
+    // Match!
+    s.matched.push(tile1.pairId);
+    s.selected = -1;
+    document.getElementById('wmMatched').textContent = s.matched.length;
+    document.getElementById('wmPairs').textContent = s.totalPairs - s.matched.length;
 
-    if (card1.pairId === card2.pairId) {
-      // Match!
-      s.matched.push(card1.pairId);
-      document.getElementById('wmMatched').textContent = s.matched.length;
-      document.getElementById('wmPairs').textContent = s.totalPairs - s.matched.length;
+    // Show matched word
+    var wordsDiv = document.getElementById('wmMatchedWords');
+    wordsDiv.innerHTML += '<span class="memory-matched-word">\u2705 ' + tile1.word + '</span>';
 
-      // Mark matched visually
-      var el1 = document.querySelector('.memory-card[data-index="' + s.flipped[0] + '"]');
-      var el2 = document.querySelector('.memory-card[data-index="' + s.flipped[1] + '"]');
-      if (el1) el1.classList.add('matched');
-      if (el2) el2.classList.add('matched');
+    speakWord(tile1.word, null);
 
-      // Show matched word
-      var wordsDiv = document.getElementById('wmMatchedWords');
-      wordsDiv.innerHTML += '<div class="memory-matched-word">\u2705 ' + card1.word + '</div>';
+    results.push({ word: tile1.word, correct: true, selfCorrected: false, userAnswer: tile1.word, category: tile1.category, patternHint: '', level: tile1.level });
+    logAnswer(tile1.word, tile1.word, true, 1, tile1.category, tile1.level);
+    updateSRWord(tile1.word, true, tile1.category);
 
-      // Play the word
-      speakWord(card1.word, null);
+    renderMemoryGrid();
 
-      // Record result
-      results.push({ word: card1.word, correct: true, selfCorrected: false, userAnswer: card1.word, category: card1.category, patternHint: '', level: card1.level });
-      logAnswer(card1.word, card1.word, true, 1, card1.category, card1.level);
-      updateSRWord(card1.word, true, card1.category);
-
-      s.flipped = [];
-      s.locked = false;
-
-      // Check if game is complete
-      if (s.matched.length >= s.totalPairs) {
-        setTimeout(function() { wmFinish(); }, 800);
-      }
-    } else {
-      // No match — flip back after delay
-      var el1w = document.querySelector('.memory-card[data-index="' + s.flipped[0] + '"]');
-      var el2w = document.querySelector('.memory-card[data-index="' + s.flipped[1] + '"]');
-      if (el1w) el1w.classList.add('wrong');
-      if (el2w) el2w.classList.add('wrong');
-
-      setTimeout(function() {
-        if (el1w) { el1w.classList.remove('flipped'); el1w.classList.remove('wrong'); }
-        if (el2w) { el2w.classList.remove('flipped'); el2w.classList.remove('wrong'); }
-        s.flipped = [];
-        s.locked = false;
-      }, 800);
+    if (s.matched.length >= s.totalPairs) {
+      setTimeout(function() { wmFinish(); }, 800);
     }
+  } else {
+    // No match — flash red
+    s.locked = true;
+    var el1 = document.querySelector('.memory-tile[data-index="' + idx1 + '"]');
+    var el2 = document.querySelector('.memory-tile[data-index="' + idx2 + '"]');
+    if (el1) el1.classList.add('wrong');
+    if (el2) el2.classList.add('wrong');
+
+    setTimeout(function() {
+      if (el1) el1.classList.remove('wrong');
+      if (el2) el2.classList.remove('wrong');
+      s.selected = -1;
+      s.locked = false;
+      renderMemoryGrid();
+    }, 600);
   }
 }
 
@@ -8438,14 +8413,13 @@ function wmFinish() {
 
   box.innerHTML = '<div class="feedback-correct" style="text-align:center">' +
     '<div style="font-size:2rem;margin-bottom:8px">' + stars + '</div>' +
-    '<strong>Alle par fundet!</strong><br>' +
+    '<strong>Alle ord samlet!</strong><br>' +
     wmState.matched.length + ' ord p\u00E5 ' + wmState.moves + ' fors\u00F8g' +
     '<div style="margin-top:12px">' +
     '<button class="btn btn-accent" onclick="startWordMemory()" style="margin-right:8px">\u{1F504} Spil igen</button>' +
     '<button class="btn btn-blue" onclick="goHome()">\u{1F3E0} Tilbage</button>' +
     '</div></div>';
 
-  // Award XP
   var correctCount = results.filter(function(r) { return r.correct; }).length;
   awardSessionXP(correctCount, correctCount);
   updateRewardBar();

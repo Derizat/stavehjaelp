@@ -1300,9 +1300,9 @@
   <button class="btn btn-green btn-full hidden" id="fillinNextBtn" onclick="nextFillInWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
-<!-- WHAT IS THE WORD EXERCISE -->
+<!-- CLOZE (FILL IN SENTENCE) EXERCISE -->
 <div id="phase-sentence" class="card hidden">
-  <div class="phase-label">&#x1F914; Hvad er ordet?</div>
+  <div class="phase-label">&#x1F4DD; Udfyld s&#xe6;tningen</div>
   <div class="progress-bar-wrap"><div class="progress-bar" id="swProgressBar" style="width:0%"></div></div>
   <div class="score-row">
     <div class="score-box"><div class="num num-yellow" id="swWordNum">1</div><div class="lbl">Ord nr.</div></div>
@@ -1311,11 +1311,10 @@
   </div>
   <div class="pattern-badge" id="swPatternBadge">&#x1F520; M&#xf8;nster</div>
   <div class="listen-box">
-    <div id="swEmojiHint" style="font-size:3rem;margin-bottom:8px"></div>
-    <p class="hint-text" id="swHint" style="font-size:1.1rem"></p>
+    <p id="swClozeText" style="font-size:1.2rem;line-height:2;text-align:center;margin:12px 0"></p>
+    <button class="btn-listen" onclick="speakSWWord()">&#x1F508; H&#xf8;r s&#xe6;tningen</button>
   </div>
-  <p style="color:var(--accent);font-weight:700;font-size:0.95rem;margin:12px 0;text-align:center">Hvilket ord passer til beskrivelsen?</p>
-  <input type="text" id="swInput" placeholder="Skriv ordet her..." autocomplete="off" autocorrect="off" spellcheck="false" style="text-align:center;letter-spacing:2px" />
+  <input type="text" id="swInput" placeholder="Skriv det manglende ord..." autocomplete="off" autocorrect="off" spellcheck="false" style="text-align:center;letter-spacing:2px" />
   <div id="swFeedbackBox" style="display:none; margin-top:12px;"></div>
   <button class="btn btn-primary" style="width:100%;margin-top:12px" id="swCheckBtn" onclick="checkSentence()">&#x2714;&#xFE0F; Tjek</button>
   <button class="btn btn-green btn-full hidden" id="swNextBtn" onclick="nextSentenceWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
@@ -3325,7 +3324,7 @@ var EXERCISE_TYPES = [
   { id: 'spellingpolice', emoji: '\u{1F46E}', name: 'Stavepolitiet', fn: 'startSpellingPolice' },
   { id: 'wordbuilder', emoji: '\u{1F9F1}', name: 'Ordbyggeren', fn: 'startWordBuilder' },
   { id: 'spellpick', emoji: '\u{1F3AF}', name: 'Stavev\u00E6lger', fn: 'startSpellPick' },
-  { id: 'sentence', emoji: '\u{1F914}', name: 'Hvad er ordet?', fn: 'startWhatIsTheWord' }
+  { id: 'sentence', emoji: '\u{1F4DD}', name: 'Udfyld s\u00E6tningen', fn: 'startWhatIsTheWord' }
 ];
 
 function showExercisePicker() {
@@ -8044,18 +8043,27 @@ function renderSentenceWord(wordObj) {
   document.getElementById('swNextBtn').classList.add('hidden');
   document.getElementById('swInput').value = '';
 
-  // Show ONLY hint + emoji — NOT the word, NOT audio!
-  var emoji = WORD_EMOJIS[w.word] || '';
-  var emojiEl = document.getElementById('swEmojiHint');
-  if (emojiEl) emojiEl.textContent = emoji;
-  document.getElementById('swHint').textContent = w.hint || '';
+  // Build cloze sentence: replace the word with ___
+  var sentence = w.sentence || '';
+  var wordRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+  var blank = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);color:var(--accent);font-weight:800;letter-spacing:2px;padding:2px 4px">___</span>';
+  var clozeText = sentence.replace(wordRegex, blank);
 
-  // Do NOT play audio — the challenge is to figure out the word from the hint alone
+  // If word wasn't found in sentence (edge case), just show sentence with blank at end
+  if (clozeText === sentence) {
+    clozeText = sentence + ' ' + blank;
+  }
+
+  document.getElementById('swClozeText').innerHTML = clozeText;
+
+  // Play the full sentence audio
+  speakWord(w.word, w.sentence);
+
   setTimeout(function() { document.getElementById('swInput').focus(); }, 300);
 }
 
 function speakSWWord() {
-  if (swCurrentWord) speakWord(swCurrentWord.word, null);
+  if (swCurrentWord) speakWord(swCurrentWord.word, swCurrentWord.sentence || null);
 }
 
 function checkSentence() {
@@ -8070,10 +8078,15 @@ function checkSentence() {
   var box = document.getElementById('swFeedbackBox');
   box.style.display = 'block';
 
+  // Show the complete sentence with the word highlighted
+  var sentence = swCurrentWord.sentence || '';
+  var wordRegex = new RegExp('(' + swCurrentWord.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'i');
+  var highlighted = sentence.replace(wordRegex, '<strong style="color:var(--green)">$1</strong>');
+
   if (ok) {
-    box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! <strong>' + swCurrentWord.word + '</strong> \u{1F389}</div>';
+    box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! ' + highlighted + '</div>';
   } else {
-    box.innerHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + input + '</strong><br>Rigtigt: <strong style="color:var(--green)">' + swCurrentWord.word + '</strong></div>';
+    box.innerHTML = '<div class="feedback-wrong">\u274C Du skrev: <strong>' + input + '</strong><br>' + highlighted + '</div>';
   }
 
   // Record result

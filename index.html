@@ -585,6 +585,50 @@
   .sw-input::placeholder { color: #555; font-weight: 400; }
   .sw-highlight { color: var(--green); font-weight: 800; text-decoration: underline; }
 
+  /* Word memory game */
+  .memory-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    max-width: 360px; margin: 12px auto;
+  }
+  .memory-card {
+    aspect-ratio: 1.2; border-radius: 12px; cursor: pointer;
+    perspective: 600px; user-select: none; -webkit-user-select: none;
+  }
+  .memory-card-inner {
+    width: 100%; height: 100%; position: relative;
+    transition: transform 0.4s ease; transform-style: preserve-3d;
+  }
+  .memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
+  .memory-card.matched .memory-card-inner { transform: rotateY(180deg); }
+  .memory-card-front, .memory-card-back {
+    position: absolute; width: 100%; height: 100%; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  }
+  .memory-card-front {
+    background: linear-gradient(135deg, var(--accent2), #5b21b6);
+    border: 2px solid rgba(124,58,237,0.5);
+    font-size: 1.5rem; color: white;
+  }
+  .memory-card-back {
+    background: var(--card2); border: 2px solid #3d4270;
+    transform: rotateY(180deg);
+    font-family: 'Fredoka One', cursive; font-size: 0.95rem;
+    color: var(--text); padding: 4px; text-align: center; word-break: break-word;
+  }
+  .memory-card.matched .memory-card-back {
+    border-color: var(--green); background: rgba(34,211,160,0.15);
+    color: var(--green);
+  }
+  .memory-card.wrong .memory-card-back {
+    border-color: var(--red); background: rgba(244,63,94,0.1);
+  }
+  .memory-matched-word {
+    text-align: center; font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem; color: var(--green); margin: 4px 0;
+    animation: fillin-pop 0.3s ease;
+  }
+
   /* Boss snake minigame */
   .snake-area {
     position: relative; display: inline-grid; gap: 0; border-radius: 10px;
@@ -1300,6 +1344,19 @@
   <button class="btn btn-green btn-full hidden" id="fillinNextBtn" onclick="nextFillInWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
+<!-- WORD MEMORY GAME -->
+<div id="phase-wordmemory" class="card hidden">
+  <div class="phase-label">&#x1F9E0; Ord-memory</div>
+  <div class="score-row">
+    <div class="score-box"><div class="num num-green" id="wmMatched">0</div><div class="lbl">Fundet</div></div>
+    <div class="score-box"><div class="num num-yellow" id="wmMoves">0</div><div class="lbl">Fors&#xf8;g</div></div>
+    <div class="score-box"><div class="num num-red" id="wmPairs">8</div><div class="lbl">Par tilbage</div></div>
+  </div>
+  <div id="wmMatchedWords" style="min-height:24px;margin-bottom:8px"></div>
+  <div class="memory-grid" id="wmGrid"></div>
+  <div id="wmFeedbackBox" style="display:none;margin-top:12px"></div>
+</div>
+
 <!-- CLOZE (FILL IN SENTENCE) EXERCISE -->
 <div id="phase-sentence" class="card hidden">
   <div class="phase-label">&#x1F4DD; Udfyld s&#xe6;tningen</div>
@@ -1935,7 +1992,7 @@ function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-spellpick','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-spellpick','phase-wordmemory','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
@@ -2430,7 +2487,7 @@ function startTrainingFromProfile() {
 }
 
 function hideAllExercisePhases() {
-  ['phase-test', 'phase-fillin', 'phase-rightorwrong', 'phase-spellingpolice', 'phase-wordbuilder', 'phase-sentence', 'phase-spellpick'].forEach(function(id) { hide(id); });
+  ['phase-test', 'phase-fillin', 'phase-rightorwrong', 'phase-spellingpolice', 'phase-wordbuilder', 'phase-sentence', 'phase-spellpick', 'phase-wordmemory'].forEach(function(id) { hide(id); });
 }
 
 function renderMixedItem() {
@@ -3324,7 +3381,8 @@ var EXERCISE_TYPES = [
   { id: 'spellingpolice', emoji: '\u{1F46E}', name: 'Stavepolitiet', fn: 'startSpellingPolice' },
   { id: 'wordbuilder', emoji: '\u{1F9F1}', name: 'Ordbyggeren', fn: 'startWordBuilder' },
   { id: 'spellpick', emoji: '\u{1F3AF}', name: 'Stavev\u00E6lger', fn: 'startSpellPick' },
-  { id: 'sentence', emoji: '\u{1F4DD}', name: 'Udfyld s\u00E6tningen', fn: 'startWhatIsTheWord' }
+  { id: 'sentence', emoji: '\u{1F4DD}', name: 'Udfyld s\u00E6tningen', fn: 'startWhatIsTheWord' },
+  { id: 'wordmemory', emoji: '\u{1F9E0}', name: 'Ord-memory', fn: 'startWordMemory' }
 ];
 
 function showExercisePicker() {
@@ -8210,6 +8268,188 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// ===== WORD MEMORY GAME =====
+
+var wmState = null;
+
+function startWordMemory() {
+  gameMode = 'wordmemory';
+  isMixedSession = false;
+  results = [];
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+
+  // Build pairs from words with parseable morphemes (2 parts)
+  var pool = [];
+  for (var ci = 0; ci < ALL_CATEGORIES.length; ci++) {
+    var cat = ALL_CATEGORIES[ci];
+    if (!WORD_BANK[cat]) continue;
+    WORD_BANK[cat].forEach(function(w) {
+      var m = parseMorphemes(w.patternHint, w.word);
+      if (m && m.length === 2) {
+        pool.push({ word: w.word, parts: m, category: cat, level: w.level || 0 });
+      }
+    });
+  }
+  pool = shuffle(pool);
+
+  // Take 8 pairs for a 4x4 grid
+  var pairs = pool.slice(0, 8);
+  if (pairs.length < 4) {
+    alert('Ikke nok ord til memory-spillet.');
+    return;
+  }
+
+  // Create cards: each pair becomes 2 cards
+  var cards = [];
+  for (var i = 0; i < pairs.length; i++) {
+    var cleanParts = pairs[i].parts.map(function(p) { return p.replace(/^-/, '').replace(/-$/, ''); });
+    cards.push({
+      id: i * 2, pairId: i, text: pairs[i].parts[0],
+      word: pairs[i].word, partIndex: 0, category: pairs[i].category, level: pairs[i].level
+    });
+    cards.push({
+      id: i * 2 + 1, pairId: i, text: pairs[i].parts[1],
+      word: pairs[i].word, partIndex: 1, category: pairs[i].category, level: pairs[i].level
+    });
+  }
+  cards = shuffle(cards);
+
+  wmState = {
+    cards: cards,
+    flipped: [], // currently flipped card indices
+    matched: [], // matched pair IDs
+    moves: 0,
+    locked: false, // prevent clicks during animation
+    totalPairs: pairs.length
+  };
+
+  hide('phase-welcome');
+  show('phase-wordmemory');
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  updateRewardBar();
+
+  document.getElementById('wmMatched').textContent = '0';
+  document.getElementById('wmMoves').textContent = '0';
+  document.getElementById('wmPairs').textContent = pairs.length;
+  document.getElementById('wmMatchedWords').innerHTML = '';
+  document.getElementById('wmFeedbackBox').style.display = 'none';
+
+  renderMemoryGrid();
+}
+
+function renderMemoryGrid() {
+  var s = wmState;
+  var html = '';
+  for (var i = 0; i < s.cards.length; i++) {
+    var card = s.cards[i];
+    var isFlipped = s.flipped.indexOf(i) >= 0;
+    var isMatched = s.matched.indexOf(card.pairId) >= 0;
+    var cls = 'memory-card';
+    if (isFlipped) cls += ' flipped';
+    if (isMatched) cls += ' matched';
+    html += '<div class="' + cls + '" data-index="' + i + '" onclick="wmFlip(' + i + ')">';
+    html += '<div class="memory-card-inner">';
+    html += '<div class="memory-card-front">\u2753</div>';
+    html += '<div class="memory-card-back">' + card.text + '</div>';
+    html += '</div></div>';
+  }
+  document.getElementById('wmGrid').innerHTML = html;
+}
+
+function wmFlip(index) {
+  var s = wmState;
+  if (!s || s.locked) return;
+  var card = s.cards[index];
+
+  // Don't flip already matched or already flipped
+  if (s.matched.indexOf(card.pairId) >= 0) return;
+  if (s.flipped.indexOf(index) >= 0) return;
+
+  // Flip the card
+  s.flipped.push(index);
+  var el = document.querySelector('.memory-card[data-index="' + index + '"]');
+  if (el) el.classList.add('flipped');
+
+  // Two cards flipped?
+  if (s.flipped.length === 2) {
+    s.moves++;
+    document.getElementById('wmMoves').textContent = s.moves;
+    s.locked = true;
+
+    var card1 = s.cards[s.flipped[0]];
+    var card2 = s.cards[s.flipped[1]];
+
+    if (card1.pairId === card2.pairId) {
+      // Match!
+      s.matched.push(card1.pairId);
+      document.getElementById('wmMatched').textContent = s.matched.length;
+      document.getElementById('wmPairs').textContent = s.totalPairs - s.matched.length;
+
+      // Mark matched visually
+      var el1 = document.querySelector('.memory-card[data-index="' + s.flipped[0] + '"]');
+      var el2 = document.querySelector('.memory-card[data-index="' + s.flipped[1] + '"]');
+      if (el1) el1.classList.add('matched');
+      if (el2) el2.classList.add('matched');
+
+      // Show matched word
+      var wordsDiv = document.getElementById('wmMatchedWords');
+      wordsDiv.innerHTML += '<div class="memory-matched-word">\u2705 ' + card1.word + '</div>';
+
+      // Play the word
+      speakWord(card1.word, null);
+
+      // Record result
+      results.push({ word: card1.word, correct: true, selfCorrected: false, userAnswer: card1.word, category: card1.category, patternHint: '', level: card1.level });
+      logAnswer(card1.word, card1.word, true, 1, card1.category, card1.level);
+      updateSRWord(card1.word, true, card1.category);
+
+      s.flipped = [];
+      s.locked = false;
+
+      // Check if game is complete
+      if (s.matched.length >= s.totalPairs) {
+        setTimeout(function() { wmFinish(); }, 800);
+      }
+    } else {
+      // No match — flip back after delay
+      var el1w = document.querySelector('.memory-card[data-index="' + s.flipped[0] + '"]');
+      var el2w = document.querySelector('.memory-card[data-index="' + s.flipped[1] + '"]');
+      if (el1w) el1w.classList.add('wrong');
+      if (el2w) el2w.classList.add('wrong');
+
+      setTimeout(function() {
+        if (el1w) { el1w.classList.remove('flipped'); el1w.classList.remove('wrong'); }
+        if (el2w) { el2w.classList.remove('flipped'); el2w.classList.remove('wrong'); }
+        s.flipped = [];
+        s.locked = false;
+      }, 800);
+    }
+  }
+}
+
+function wmFinish() {
+  var box = document.getElementById('wmFeedbackBox');
+  box.style.display = 'block';
+
+  var stars = wmState.moves <= wmState.totalPairs + 2 ? '\u2B50\u2B50\u2B50' :
+             wmState.moves <= wmState.totalPairs + 5 ? '\u2B50\u2B50' : '\u2B50';
+
+  box.innerHTML = '<div class="feedback-correct" style="text-align:center">' +
+    '<div style="font-size:2rem;margin-bottom:8px">' + stars + '</div>' +
+    '<strong>Alle par fundet!</strong><br>' +
+    wmState.matched.length + ' ord p\u00E5 ' + wmState.moves + ' fors\u00F8g' +
+    '<div style="margin-top:12px">' +
+    '<button class="btn btn-accent" onclick="startWordMemory()" style="margin-right:8px">\u{1F504} Spil igen</button>' +
+    '<button class="btn btn-blue" onclick="goHome()">\u{1F3E0} Tilbage</button>' +
+    '</div></div>';
+
+  // Award XP
+  var correctCount = results.filter(function(r) { return r.correct; }).length;
+  awardSessionXP(correctCount, correctCount);
+  updateRewardBar();
+}
 
 // Welcome buttons
 function renderCategoryLevels() {

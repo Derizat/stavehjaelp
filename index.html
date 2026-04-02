@@ -587,8 +587,8 @@
 
   /* Word memory game */
   .memory-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-    max-width: 360px; margin: 12px auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    max-width: 300px; margin: 12px auto;
   }
   .memory-card {
     aspect-ratio: 1.2; border-radius: 12px; cursor: pointer;
@@ -1137,7 +1137,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.2.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.2.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -8293,8 +8293,8 @@ function startWordMemory() {
   }
   pool = shuffle(pool);
 
-  // Take 8 pairs for a 4x4 grid
-  var pairs = pool.slice(0, 8);
+  // Take 6 pairs for a 3x4 grid
+  var pairs = pool.slice(0, 6);
   if (pairs.length < 4) {
     alert('Ikke nok ord til memory-spillet.');
     return;

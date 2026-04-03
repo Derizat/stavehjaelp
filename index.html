@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -5222,6 +5222,7 @@ function bossDefeated() {
 
 function continueAfterBoss() {
   pendingBoss = null;
+  sessionCorrectStreak = 0; // reset streak so boss doesn't re-trigger immediately
   hide('phase-boss');
 
   // Boss practice mode — start another fight of the same type

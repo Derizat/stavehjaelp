@@ -5342,5 +5342,417 @@
       "level": 4,
       "category": "Nutids-r"
     }
+  ],
+  "Fremmedord": [
+    {
+      "word": "pizza",
+      "hint": "Italiensk ret med tomat og ost",
+      "patternHint": "fremmedord fra italiensk: dobbelt-z",
+      "sentence": "Vi spiser pizza til aftensmad.",
+      "level": 2,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "juice",
+      "hint": "Drik lavet af frugt",
+      "patternHint": "fremmedord fra engelsk: 'j' udtales som 'dj'",
+      "sentence": "Må jeg få et glas juice til morgenmad?",
+      "level": 2,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "computer",
+      "hint": "Elektronisk maskine man kan skrive på",
+      "patternHint": "fremmedord fra engelsk: 'c' udtales som 'k'",
+      "sentence": "Far sidder ved sin computer og arbejder.",
+      "level": 2,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "tablet",
+      "hint": "Flad skærm man kan holde i hånden",
+      "patternHint": "fremmedord fra engelsk: 't' til sidst udtales blødt",
+      "sentence": "Jeg tegner gerne på min tablet.",
+      "level": 2,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "hobby",
+      "hint": "Noget man laver i sin fritid",
+      "patternHint": "fremmedord fra engelsk: dobbelt-b og 'y' til sidst",
+      "sentence": "Min hobby er at samle på frimærker.",
+      "level": 2,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "station",
+      "hint": "Sted hvor toget holder",
+      "patternHint": "fremmedord fra latin: '-tion' udtales som 'sjon'",
+      "sentence": "Vi mødes på station klokken tre.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "nation",
+      "hint": "Et land og dets folk",
+      "patternHint": "fremmedord fra latin: '-tion' udtales som 'sjon'",
+      "sentence": "Danmark er en lille nation i Nordeuropa.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "restaurant",
+      "hint": "Sted hvor man køber og spiser et måltid",
+      "patternHint": "fremmedord fra fransk: '-ant' og stumt 'au'",
+      "sentence": "Vi går ud og spiser på en restaurant i aften.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "garage",
+      "hint": "Rum hvor bilen holder",
+      "patternHint": "fremmedord fra fransk: '-age' udtales som 'asje'",
+      "sentence": "Far parkerer bilen i garage hver aften.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "chauffør",
+      "hint": "Person der kører en bil for andre",
+      "patternHint": "fremmedord fra fransk: 'ch' udtales som 'sj' og '-ør' ending",
+      "sentence": "Bussens chauffør var meget venlig.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "nervøs",
+      "hint": "En følelse af uro og bekymring",
+      "patternHint": "fremmedord fra latin: '-øs' ending fra fransk",
+      "sentence": "Jeg er lidt nervøs inden prøven.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "kontrol",
+      "hint": "At holde styr på noget",
+      "patternHint": "fremmedord fra fransk: 'k' i stedet for 'c'",
+      "sentence": "Læreren har kontrol over hele klassen.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "toilet",
+      "hint": "Rum med en kumme man sidder på",
+      "patternHint": "fremmedord fra fransk: '-et' udtales blødt",
+      "sentence": "Må jeg gå på toilet i pausen?",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "massage",
+      "hint": "Når nogen bearbejder ens muskler med hænderne",
+      "patternHint": "fremmedord fra fransk: '-age' udtales som 'asje'",
+      "sentence": "Mor fik en massage fordi hun havde ondt i ryggen.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "interview",
+      "hint": "Samtale hvor man stiller spørgsmål",
+      "patternHint": "fremmedord fra engelsk: 'iew' udtales som 'ju'",
+      "sentence": "Journalisten lavede et interview med borgmesteren.",
+      "level": 3,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "ingeniør",
+      "hint": "Person der designer broer og maskiner",
+      "patternHint": "fremmedord fra fransk: 'g' udtales blødt og '-ør' ending",
+      "sentence": "Min mor er ingeniør og bygger vindmøller.",
+      "level": 4,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "miljø",
+      "hint": "Naturen omkring os",
+      "patternHint": "fremmedord fra fransk: 'lj' og '-ø' ending",
+      "sentence": "Vi skal passe godt på vores miljø.",
+      "level": 4,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "bureau",
+      "hint": "Kontor eller skrivebord",
+      "patternHint": "fremmedord fra fransk: '-eau' udtales som 'o'",
+      "sentence": "Hun arbejder på et bureau i byen.",
+      "level": 4,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "psykolog",
+      "hint": "Person der hjælper med tanker og følelser",
+      "patternHint": "fremmedord fra græsk: stumt 'p' i 'psyk-'",
+      "sentence": "Skolens psykolog taler med eleverne om trivsel.",
+      "level": 4,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "symfoni",
+      "hint": "Langt musikstykke for et helt orkester",
+      "patternHint": "fremmedord fra græsk: 'y' og '-foni' fra græsk",
+      "sentence": "Orkestret spillede en smuk symfoni i koncerthuset.",
+      "level": 4,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "kamouflage",
+      "hint": "Farver og mønstre der skjuler noget",
+      "patternHint": "fremmedord fra fransk: 'ou' og '-age' udtales som 'asje'",
+      "sentence": "Soldaternes tøj har kamouflage så de ikke kan ses.",
+      "level": 4,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "journalist",
+      "hint": "Person der skriver nyheder",
+      "patternHint": "fremmedord fra fransk: 'j' og '-ist' ending",
+      "sentence": "En journalist fra avisen skrev om den nye skole.",
+      "level": 4,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "organisation",
+      "hint": "En gruppe mennesker der arbejder for et fælles mål",
+      "patternHint": "fremmedord fra latin: '-tion' som 'sjon' og 's' i midten",
+      "sentence": "FN er en stor international organisation.",
+      "level": 4,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "civilisation",
+      "hint": "Et samfund med kultur og regler",
+      "patternHint": "fremmedord fra latin: 'c' som 's' og '-tion' som 'sjon'",
+      "sentence": "Den egyptiske civilisation byggede pyramiderne.",
+      "level": 4,
+      "category": "Fremmedord"
+    }
+  ],
+  "Blødt d": [
+    {
+      "word": "bred",
+      "hint": "Det modsatte af smal",
+      "patternHint": "blødt 'd' til sidst i ordet",
+      "sentence": "Vejen er meget bred her i byen.",
+      "level": 1,
+      "category": "Blødt d"
+    },
+    {
+      "word": "rød",
+      "hint": "Farven på jordbær",
+      "patternHint": "blødt 'd' til sidst efter 'ø'",
+      "sentence": "Brandbilen er rød og skinnende.",
+      "level": 1,
+      "category": "Blødt d"
+    },
+    {
+      "word": "tid",
+      "hint": "Det uret viser",
+      "patternHint": "blødt 'd' til sidst i ordet",
+      "sentence": "Vi har god tid til at nå bussen.",
+      "level": 1,
+      "category": "Blødt d"
+    },
+    {
+      "word": "ked",
+      "hint": "Ikke glad, trist",
+      "patternHint": "blødt 'd' til sidst i ordet",
+      "sentence": "Hun var ked af at miste sin bold.",
+      "level": 1,
+      "category": "Blødt d"
+    },
+    {
+      "word": "vid",
+      "hint": "Stor og bred, rummelig",
+      "patternHint": "blødt 'd' til sidst i ordet",
+      "sentence": "Himlen er vid og blå over havet.",
+      "level": 1,
+      "category": "Blødt d"
+    },
+    {
+      "word": "side",
+      "hint": "Et blad i en bog",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Slå op på side tyve i bogen.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "mode",
+      "hint": "Tøjstil der er populær lige nu",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Min storesøster interesserer sig for mode.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "rede",
+      "hint": "Fuglens hjem i træet",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Fuglen byggede en rede af kviste og mos.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "blade",
+      "hint": "De grønne dele på en plante",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Om efteråret falder de gule blade ned fra træerne.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "lede",
+      "hint": "Søge efter noget",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Vi skal lede efter katten i haven.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "rode",
+      "hint": "Lave uorden og rod",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Du må ikke rode på dit værelse.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "vide",
+      "hint": "Have kendskab til noget",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Jeg vil gerne vide mere om rummet.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "ride",
+      "hint": "Sidde på en hest der bevæger sig",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Min kusine elsker at ride på sin hest.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "skade",
+      "hint": "Ødelægge eller gøre ondt på noget",
+      "patternHint": "blødt 'd' mellem to vokaler",
+      "sentence": "Pas på ikke at skade blomsten når du plukker den.",
+      "level": 2,
+      "category": "Blødt d"
+    },
+    {
+      "word": "hedde",
+      "hint": "Det man gør med sit navn",
+      "patternHint": "blødt 'd' i dobbelt-d mellem vokaler",
+      "sentence": "Hvad skal den nye hund hedde?",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "ridder",
+      "hint": "Kriger med rustning og sværd",
+      "patternHint": "blødt 'd' i dobbelt-d mellem vokaler",
+      "sentence": "Den tapre ridder red afsted på sin hest.",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "bredde",
+      "hint": "Hvor langt noget er fra side til side",
+      "patternHint": "blødt 'd' i dobbelt-d mellem vokaler",
+      "sentence": "Mål bordets bredde med en lineal.",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "redde",
+      "hint": "Hjælpe nogen ud af fare",
+      "patternHint": "blødt 'd' i dobbelt-d mellem vokaler",
+      "sentence": "Brandmanden kom for at redde katten fra træet.",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "middag",
+      "hint": "Måltid midt på dagen",
+      "patternHint": "blødt 'd' i dobbelt-d i sammensat ord",
+      "sentence": "Vi spiser middag klokken tolv i kantinen.",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "plads",
+      "hint": "Et åbent sted eller rum til noget",
+      "patternHint": "blødt 'd' før 's' i slutningen",
+      "sentence": "Er der plads til mig på bænken?",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "bedst",
+      "hint": "Den allerdygtigste eller allerhøjeste kvalitet",
+      "patternHint": "blødt 'd' før konsonant i slutningen",
+      "sentence": "Hun er bedst i klassen til at løbe.",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "vedde",
+      "hint": "Gætte om noget og sætte penge på det",
+      "patternHint": "blødt 'd' i dobbelt-d mellem vokaler",
+      "sentence": "Lad os vedde om hvem der kommer først.",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "tredive",
+      "hint": "Tallet 30",
+      "patternHint": "blødt 'd' mellem vokaler i talord",
+      "sentence": "Der er tredive elever i klassen.",
+      "level": 3,
+      "category": "Blødt d"
+    },
+    {
+      "word": "meddele",
+      "hint": "Fortælle nogen noget vigtigt",
+      "patternHint": "blødt 'd' i dobbelt-d med forstavelse 'med-'",
+      "sentence": "Læreren ville meddele resultatet af prøven.",
+      "level": 4,
+      "category": "Blødt d"
+    },
+    {
+      "word": "middelalder",
+      "hint": "Historisk periode med riddere og borge",
+      "patternHint": "blødt 'd' i dobbelt-d i sammensat ord",
+      "sentence": "I middelalder byggede man store borge af sten.",
+      "level": 4,
+      "category": "Blødt d"
+    },
+    {
+      "word": "hæderlig",
+      "hint": "En person der er ærlig og ordentlig",
+      "patternHint": "blødt 'd' mellem vokaler i afledt ord",
+      "sentence": "Han lavede et hæderlig stykke arbejde.",
+      "level": 4,
+      "category": "Blødt d"
+    },
+    {
+      "word": "meddelelse",
+      "hint": "En besked til nogen",
+      "patternHint": "blødt 'd' i dobbelt-d med forstavelse 'med-'",
+      "sentence": "Der lå en meddelelse på bordet fra mor.",
+      "level": 4,
+      "category": "Blødt d"
+    }
   ]
 }

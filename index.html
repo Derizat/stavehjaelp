@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.4</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.5</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1748,8 +1748,46 @@ function syncFromSupabase(name, callback) {
   if (!supabaseClient) { if (callback) callback(); return; }
   supabaseClient.from('profiles').select('*').eq('player', name).single().then(function(res) {
     if (res.data) {
-      if (res.data.profile_data) try { localStorage.setItem(name + '_profile_data', JSON.stringify(res.data.profile_data)); } catch(e) {}
-      if (res.data.reward_data) try { localStorage.setItem(name + '_reward_data', JSON.stringify(res.data.reward_data)); } catch(e) {}
+      // Merge profile_data: keep local categoryLevels if Supabase version has fewer trained categories
+      if (res.data.profile_data) {
+        try {
+          var local = JSON.parse(localStorage.getItem(name + '_profile_data') || 'null');
+          var remote = res.data.profile_data;
+          if (local && local.categoryLevels && remote.categoryLevels) {
+            // Keep whichever categoryLevels has more training data per category
+            var merged = {};
+            var allCats = Object.keys(local.categoryLevels).concat(Object.keys(remote.categoryLevels));
+            for (var i = 0; i < allCats.length; i++) {
+              var cat = allCats[i];
+              if (merged[cat]) continue;
+              var lc = local.categoryLevels[cat] || { level: 1, history: [] };
+              var rc = remote.categoryLevels[cat] || { level: 1, history: [] };
+              // Pick the one with higher level, or more history if same level
+              if (lc.level > rc.level || (lc.level === rc.level && (lc.history || []).length > (rc.history || []).length)) {
+                merged[cat] = lc;
+              } else {
+                merged[cat] = rc;
+              }
+            }
+            remote.categoryLevels = merged;
+          } else if (local && local.categoryLevels && !remote.categoryLevels) {
+            remote.categoryLevels = local.categoryLevels;
+          }
+          localStorage.setItem(name + '_profile_data', JSON.stringify(remote));
+        } catch(e) {}
+      }
+      if (res.data.reward_data) {
+        try {
+          // Keep higher XP/gems (don't overwrite with stale data)
+          var localR = JSON.parse(localStorage.getItem(name + '_reward_data') || 'null');
+          var remoteR = res.data.reward_data;
+          if (localR && remoteR) {
+            if ((localR.totalXP || 0) > (remoteR.totalXP || 0)) remoteR.totalXP = localR.totalXP;
+            if ((localR.gems || 0) > (remoteR.gems || 0)) remoteR.gems = localR.gems;
+          }
+          localStorage.setItem(name + '_reward_data', JSON.stringify(remoteR));
+        } catch(e) {}
+      }
       if (res.data.sr_data) try { localStorage.setItem(name + '_sr_data', JSON.stringify(res.data.sr_data)); } catch(e) {}
       if (res.data.student_grade !== null) try { localStorage.setItem(name + '_student_grade', res.data.student_grade.toString()); } catch(e) {}
     }

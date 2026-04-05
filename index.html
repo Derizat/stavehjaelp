@@ -1748,29 +1748,12 @@ function syncFromSupabase(name, callback) {
   if (!supabaseClient) { if (callback) callback(); return; }
   supabaseClient.from('profiles').select('*').eq('player', name).single().then(function(res) {
     if (res.data) {
-      // Merge profile_data: keep local categoryLevels if Supabase version has fewer trained categories
+      // Merge profile_data: Supabase categoryLevels wins (authoritative), keep local if Supabase has none
       if (res.data.profile_data) {
         try {
           var local = JSON.parse(localStorage.getItem(name + '_profile_data') || 'null');
           var remote = res.data.profile_data;
-          if (local && local.categoryLevels && remote.categoryLevels) {
-            // Keep whichever categoryLevels has more training data per category
-            var merged = {};
-            var allCats = Object.keys(local.categoryLevels).concat(Object.keys(remote.categoryLevels));
-            for (var i = 0; i < allCats.length; i++) {
-              var cat = allCats[i];
-              if (merged[cat]) continue;
-              var lc = local.categoryLevels[cat] || { level: 1, history: [] };
-              var rc = remote.categoryLevels[cat] || { level: 1, history: [] };
-              // Pick the one with higher level, or more history if same level
-              if (lc.level > rc.level || (lc.level === rc.level && (lc.history || []).length > (rc.history || []).length)) {
-                merged[cat] = lc;
-              } else {
-                merged[cat] = rc;
-              }
-            }
-            remote.categoryLevels = merged;
-          } else if (local && local.categoryLevels && !remote.categoryLevels) {
+          if (local && local.categoryLevels && !remote.categoryLevels) {
             remote.categoryLevels = local.categoryLevels;
           }
           localStorage.setItem(name + '_profile_data', JSON.stringify(remote));

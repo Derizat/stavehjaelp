@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1587,6 +1587,8 @@ function selectPlayer(name) {
 }
 
 function switchPlayer() {
+  // Flush pending sync for current player before switching
+  if (syncTimer && activePlayer) { clearTimeout(syncTimer); doSyncToSupabase(activePlayer); syncTimer = null; }
   activePlayer = '';
   hide('phase-welcome');
   var panel = document.getElementById('settingsPanel');
@@ -1710,19 +1712,22 @@ var syncTimer = null;
 
 function syncToSupabase() {
   if (!supabaseClient || !activePlayer) return;
+  var playerToSync = activePlayer;
   if (syncTimer) clearTimeout(syncTimer);
-  syncTimer = setTimeout(doSyncToSupabase, 2000);
+  syncTimer = setTimeout(function() { doSyncToSupabase(playerToSync); }, 2000);
 }
 
-function doSyncToSupabase() {
-  if (!supabaseClient || !activePlayer) return;
+function doSyncToSupabase(forPlayer) {
+  if (!supabaseClient) return;
+  var p = forPlayer || activePlayer;
+  if (!p) return;
   var profileData = null, rewardData = null, srData = null, grade = 0;
-  try { profileData = JSON.parse(localStorage.getItem(playerKey('profile_data')) || 'null'); } catch(e) {}
-  try { rewardData = JSON.parse(localStorage.getItem(playerKey('reward_data')) || 'null'); } catch(e) {}
-  try { srData = JSON.parse(localStorage.getItem(playerKey('sr_data')) || 'null'); } catch(e) {}
-  try { grade = parseInt(localStorage.getItem(playerKey('student_grade'))) || 0; } catch(e) {}
+  try { profileData = JSON.parse(localStorage.getItem(p + '_profile_data') || 'null'); } catch(e) {}
+  try { rewardData = JSON.parse(localStorage.getItem(p + '_reward_data') || 'null'); } catch(e) {}
+  try { srData = JSON.parse(localStorage.getItem(p + '_sr_data') || 'null'); } catch(e) {}
+  try { grade = parseInt(localStorage.getItem(p + '_student_grade')) || 0; } catch(e) {}
   supabaseClient.from('profiles').upsert({
-    player: activePlayer,
+    player: p,
     profile_data: profileData,
     reward_data: rewardData,
     sr_data: srData,

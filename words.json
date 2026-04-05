@@ -5535,6 +5535,126 @@
       "sentence": "Den egyptiske civilisation byggede pyramiderne.",
       "level": 4,
       "category": "Fremmedord"
+    },
+    {
+      "word": "te",
+      "hint": "Varm drik lavet af blade",
+      "patternHint": "fremmedord fra kinesisk: kort og simpelt",
+      "sentence": "Mor drikker en kop te hver aften.",
+      "level": 0,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "zoo",
+      "hint": "Sted med mange dyr",
+      "patternHint": "fremmedord fra græsk: dobbelt-o",
+      "sentence": "Vi tog i zoo og så løverne.",
+      "level": 0,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "kiwi",
+      "hint": "Grøn frugt med lodden skal",
+      "patternHint": "fremmedord fra New Zealand: staves som det lyder",
+      "sentence": "Kiwi smager sødt og surt på samme tid.",
+      "level": 0,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "ski",
+      "hint": "Lang bræt man glider på sne med",
+      "patternHint": "fremmedord fra norsk: staves som det lyder",
+      "sentence": "Om vinteren tager vi på ski i Norge.",
+      "level": 0,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "cola",
+      "hint": "Brun sodavand med bobler",
+      "patternHint": "fremmedord fra engelsk: staves som det lyder",
+      "sentence": "Må jeg få en cola til maden?",
+      "level": 0,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "menu",
+      "hint": "Liste over mad man kan bestille",
+      "patternHint": "fremmedord fra fransk: u til sidst",
+      "sentence": "Tjeneren gav os en menu med mange retter.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "taxi",
+      "hint": "Bil man kan betale for at køre i",
+      "patternHint": "fremmedord fra fransk: x i stedet for ks",
+      "sentence": "Vi tog en taxi hjem fra lufthavnen.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "kaos",
+      "hint": "Når alt er rodet og forvirret",
+      "patternHint": "fremmedord fra græsk: ao i stedet for å",
+      "sentence": "Der var totalt kaos i klassen efter frikvarteret.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "foto",
+      "hint": "Billede taget med kamera",
+      "patternHint": "fremmedord fra græsk: staves med f og o",
+      "sentence": "Far tog et foto af os alle sammen.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "robot",
+      "hint": "Maskine der kan arbejde selv",
+      "patternHint": "fremmedord fra tjekkisk: staves som det lyder",
+      "sentence": "Vi byggede en robot i teknikundervisningen.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "pasta",
+      "hint": "Italiensk mad lavet af dej",
+      "patternHint": "fremmedord fra italiensk: staves som det lyder",
+      "sentence": "Vi spiser pasta med kødsovs i aften.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "piano",
+      "hint": "Stort musikinstrument med tangenter",
+      "patternHint": "fremmedord fra italiensk: pi-a-no",
+      "sentence": "Min søster øver sig på piano hver dag.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "radio",
+      "hint": "Apparat der spiller musik og nyheder",
+      "patternHint": "fremmedord fra latin: staves med ra-di-o",
+      "sentence": "Vi lytter til radio i bilen.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "virus",
+      "hint": "Lille ting der kan gøre en syg",
+      "patternHint": "fremmedord fra latin: staves med v og u",
+      "sentence": "Et virus kan sprede sig hurtigt i skolen.",
+      "level": 1,
+      "category": "Fremmedord"
+    },
+    {
+      "word": "cafe",
+      "hint": "Sted hvor man kan købe kaffe og kage",
+      "patternHint": "fremmedord fra fransk: udtales ka-fe",
+      "sentence": "Vi mødtes på en cafe i byen.",
+      "level": 1,
+      "category": "Fremmedord"
     }
   ],
   "Blødt d": [
@@ -5752,6 +5872,46 @@
       "patternHint": "blødt 'd' i dobbelt-d med forstavelse 'med-'",
       "sentence": "Der lå en meddelelse på bordet fra mor.",
       "level": 4,
+      "category": "Blødt d"
+    },
+    {
+      "word": "fod",
+      "hint": "Den sidder for enden af benet",
+      "patternHint": "blødt d til sidst — det høres næsten ikke",
+      "sentence": "Jeg slog min fod på stolen.",
+      "level": 0,
+      "category": "Blødt d"
+    },
+    {
+      "word": "blad",
+      "hint": "Det grønne der sidder på et træ",
+      "patternHint": "blødt d til sidst — det høres næsten ikke",
+      "sentence": "Et blad faldt ned fra træet.",
+      "level": 0,
+      "category": "Blødt d"
+    },
+    {
+      "word": "had",
+      "hint": "Det modsatte af kærlighed",
+      "patternHint": "blødt d til sidst — det høres næsten ikke",
+      "sentence": "Had er en stærk følelse.",
+      "level": 0,
+      "category": "Blødt d"
+    },
+    {
+      "word": "led",
+      "hint": "Ikke pæn, grim",
+      "patternHint": "blødt d til sidst — det høres næsten ikke",
+      "sentence": "Det var en led heks i eventyret.",
+      "level": 0,
+      "category": "Blødt d"
+    },
+    {
+      "word": "mud",
+      "hint": "Blødt og vådt jord",
+      "patternHint": "blødt d til sidst — det høres næsten ikke",
+      "sentence": "Grisen rullede sig i mud.",
+      "level": 0,
       "category": "Blødt d"
     }
   ]

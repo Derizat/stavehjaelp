@@ -157,14 +157,15 @@ test('Level 0 words in Lydrette ord are simple (max 5 chars)', function() {
   assert(bad.length === 0, 'Level 0 lydrette words too long: ' + bad.map(function(w) { return w.word + '(' + w.word.length + ')'; }).join(', '));
 });
 
-test('No non-Lydrette categories have level 0 words', function() {
+test('Only expected categories have level 0 words', function() {
+  var allowedLevel0 = ['Lydrette ord', 'Fremmedord', 'Blødt d'];
   var bad = [];
   Object.entries(words).forEach(function([cat, list]) {
-    if (cat === 'Lydrette ord') return;
+    if (allowedLevel0.indexOf(cat) !== -1) return;
     var l0 = list.filter(function(w) { return w.level === 0; });
     if (l0.length > 0) bad.push(cat + ': ' + l0.map(function(w) { return w.word; }).join(', '));
   });
-  assert(bad.length === 0, 'Non-lydrette categories with level 0:\n  ' + bad.join('\n  '));
+  assert(bad.length === 0, 'Unexpected categories with level 0:\n  ' + bad.join('\n  '));
 });
 
 // === AUDIO MANIFEST TEST ===

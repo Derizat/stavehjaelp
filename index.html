@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.5</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2161,13 +2161,22 @@ function resetProfile() {
   goHome();
 }
 
+// Starting level per category — categories with level 0 words start at 0
+var CATEGORY_START_LEVELS = {
+  'Lydrette ord': 0,
+  'Fremmedord': 0,
+  'Blødt d': 0
+};
+
 // Per-category level system
 function loadCategoryLevels() {
   var profile = loadProfile();
   if (profile && profile.categoryLevels) return profile.categoryLevels;
   var levels = {};
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {
-    levels[ALL_CATEGORIES[i]] = { level: 1, history: [] };
+    var cat = ALL_CATEGORIES[i];
+    var startLevel = CATEGORY_START_LEVELS[cat] !== undefined ? CATEGORY_START_LEVELS[cat] : 1;
+    levels[cat] = { level: startLevel, history: [] };
   }
   return levels;
 }
@@ -2179,33 +2188,32 @@ function saveCategoryLevels(levels) {
   syncToSupabase();
 }
 
-function updateCategoryLevel(category, correct) {
+function updateCategoryLevel(category, correct, wordLevel) {
   if (!category || ALL_CATEGORIES.indexOf(category) === -1) return;
   var levels = loadCategoryLevels();
   if (!levels[category]) levels[category] = { level: 1, history: [] };
   var cat = levels[category];
-
-  cat.history.push(correct);
-  if (cat.history.length > 10) cat.history = cat.history.slice(-10);
-
-  var total = cat.history.length;
-  var correctCount = cat.history.filter(function(h) { return h; }).length;
   var maxLevel = CATEGORY_MAX_LEVELS[category] !== undefined ? CATEGORY_MAX_LEVELS[category] : 4;
 
-  // New player fast-track: level up after 2 correct when <5 total answers
-  if (total < 5 && correctCount >= 2 && cat.level < maxLevel) {
-    cat.level++;
-    cat.history = [];
-  }
-  // Normal: level up at ≥80% correct
-  else if (total >= 5 && correctCount / total >= 0.8 && cat.level < maxLevel) {
-    cat.level++;
-    cat.history = [];
-  }
-  // Level down at <50% correct
-  else if (total >= 5 && correctCount / total < 0.5 && cat.level > 0) {
-    cat.level--;
-    cat.history = [];
+  // Only track answers for words at the player's current level
+  var wl = (wordLevel !== undefined) ? wordLevel : cat.level;
+  if (wl === cat.level) {
+    cat.history.push(correct);
+    if (cat.history.length > 10) cat.history = cat.history.slice(-10);
+
+    var total = cat.history.length;
+    var correctCount = cat.history.filter(function(h) { return h; }).length;
+
+    // Level up at ≥80% correct with at least 5 answers
+    if (total >= 5 && correctCount / total >= 0.8 && cat.level < maxLevel) {
+      cat.level++;
+      cat.history = [];
+    }
+    // Level down at <40% correct with at least 5 answers
+    else if (total >= 5 && correctCount / total < 0.4 && cat.level > 0) {
+      cat.level--;
+      cat.history = [];
+    }
   }
 
   levels[category] = cat;
@@ -2222,9 +2230,19 @@ function buildPoolForCategory(cat, catLevel) {
   return pool.map(function(w) { return Object.assign({}, w, { category: cat }); });
 }
 
-// Categories that are "mastered" at a certain level and should stop appearing
+// Max level per category — one above highest word level (5 = mastered all level 4 words)
+// "Mastered" when player reaches this level (category stops appearing in training)
 var CATEGORY_MAX_LEVELS = {
-  'Lydrette ord': 3
+  'Lydrette ord': 5,
+  'Stumme bogstaver': 5,
+  'Dobbeltkonsonant': 5,
+  'For- og efterstavelser': 5,
+  'Sammensatte ord': 5,
+  'Verbernes bøjning': 5,
+  'Navneordsendelser': 5,
+  'Nutids-r': 5,
+  'Fremmedord': 5,
+  'Blødt d': 5
 };
 
 function buildPoolWithCategoryLevels(categories) {
@@ -2877,7 +2895,7 @@ function checkSpelling() {
   var result = { word: w.word, correct: ok, selfCorrected: false, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
   logAnswer(w.word, ans, ok, 1, w.category, w.level || 0);
-  updateCategoryLevel(w.category, ok);
+  updateCategoryLevel(w.category, ok, w.level || 0);
   updateSRWord(w.word, ok, w.category);
 
   document.getElementById('listenBox').style.visibility = 'hidden';
@@ -6700,7 +6718,7 @@ function checkFillIn(chosenIndex) {
   // SR update + Supabase
   updateSRWord(w.word, ok, w.category);
   logAnswer(w.word, chosen === '' ? '(intet)' : chosen, ok, 1, w.category, w.level || 0);
-  updateCategoryLevel(w.category, ok);
+  updateCategoryLevel(w.category, ok, w.level || 0);
 
   // Gamification — boss + chest as reward for 5 correct streak
   if (ok) {
@@ -7123,7 +7141,7 @@ function checkRightOrWrong(answeredCorrect) {
   // SR update + Supabase
   updateSRWord(item.word, ok, item.category);
   logAnswer(item.word, answeredCorrect ? 'rigtigt' : 'forkert', ok, 1, item.category, item.level || 0);
-  updateCategoryLevel(item.category, ok);
+  updateCategoryLevel(item.category, ok, item.level || 0);
 
   // Gamification
   if (ok) {
@@ -7438,7 +7456,7 @@ function checkSpellingPolice(wordIndex) {
 
   updateSRWord(item.word, ok, item.category);
   logAnswer(item.word, item.tokens[wordIndex] || '', ok, 1, item.category, item.level || 0);
-  updateCategoryLevel(item.category, ok);
+  updateCategoryLevel(item.category, ok, item.level || 0);
 
   // Gamification
   if (ok) {
@@ -7804,7 +7822,7 @@ function wordBuilderComplete() {
 
   updateSRWord(w.word, ok, w.category);
   logAnswer(w.word, ok ? w.word : wbMistakes + ' fejl', ok, 1, w.category, w.level || 0);
-  updateCategoryLevel(w.category, ok);
+  updateCategoryLevel(w.category, ok, w.level || 0);
 
   // Gamification
   if (ok) {
@@ -8047,7 +8065,7 @@ function pickSpkOption(btn, picked) {
   spkResults.push(result);
   results.push(result);
   logAnswer(w.word, picked, ok, 1, w.category, w.level || 0);
-  updateCategoryLevel(w.category, ok);
+  updateCategoryLevel(w.category, ok, w.level || 0);
   updateSRWord(w.word, ok, w.category);
 
   if (ok) {
@@ -8228,7 +8246,7 @@ function checkSentence() {
   results.push(result);
   logAnswer(swCurrentWord.word, input, ok, 1, swCurrentWord.category, swCurrentWord.level || 0);
   updateSRWord(swCurrentWord.word, ok, swCurrentWord.category);
-  updateCategoryLevel(swCurrentWord.category, ok);
+  updateCategoryLevel(swCurrentWord.category, ok, swCurrentWord.level || 0);
 
   // Gamification
   if (ok) {
@@ -8524,21 +8542,22 @@ function renderCategoryLevels() {
   var el = document.getElementById('categoryLevelsDisplay');
   if (!el || ALL_CATEGORIES.length === 0) return;
   var levels = loadCategoryLevels();
-  var levelColors = ['#9ca3af', '#22d3a0', '#f5a623', '#f97316', '#f43f5e'];
+  var levelColors = ['#9ca3af', '#60a5fa', '#22d3a0', '#f5a623', '#f97316', '#f43f5e'];
   var html = '<div style="background:var(--card2);border-radius:12px;padding:12px 14px;border:1px solid #3d4270">' +
-    '<div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:8px">Kategoriniveauer (dev)</div>';
+    '<div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:8px">Kategoriniveauer</div>';
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {
     var cat = ALL_CATEGORIES[i];
     var icon = CATEGORY_ICONS[cat] || '';
-    var catData = levels[cat] || { level: 1, history: [] };
+    var startLevel = CATEGORY_START_LEVELS[cat] !== undefined ? CATEGORY_START_LEVELS[cat] : 1;
+    var catData = levels[cat] || { level: startLevel, history: [] };
     var lvl = catData.level;
     var hist = catData.history || [];
     var correct = hist.filter(function(h) { return h; }).length;
     var histStr = hist.length > 0 ? ' (' + correct + '/' + hist.length + ')' : '';
-    var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 4;
+    var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 5;
     var mastered = lvl >= maxLvl;
-    var lvlText = mastered ? 'Mestret' : 'Niv ' + lvl;
-    var lvlColor = mastered ? 'var(--green)' : levelColors[lvl];
+    var lvlText = mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/4';
+    var lvlColor = mastered ? 'var(--green)' : levelColors[Math.min(lvl, 5)];
     html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem' + (mastered ? ';opacity:0.6' : '') + '">' +
       '<span style="width:20px;text-align:center">' + icon + '</span>' +
       '<span style="flex:1;color:var(--text)">' + cat + '</span>' +

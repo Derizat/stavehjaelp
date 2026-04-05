@@ -4139,6 +4139,96 @@
     "word_m": "audio/word_civilisation_m.mp3",
     "sentence_m": "audio/sentence_civilisation_m.mp3"
   },
+  "te": {
+    "word": "audio/word_te.mp3",
+    "sentence": "audio/sentence_te.mp3",
+    "word_m": "audio/word_te_m.mp3",
+    "sentence_m": "audio/sentence_te_m.mp3"
+  },
+  "zoo": {
+    "word": "audio/word_zoo.mp3",
+    "sentence": "audio/sentence_zoo.mp3",
+    "word_m": "audio/word_zoo_m.mp3",
+    "sentence_m": "audio/sentence_zoo_m.mp3"
+  },
+  "kiwi": {
+    "word": "audio/word_kiwi.mp3",
+    "sentence": "audio/sentence_kiwi.mp3",
+    "word_m": "audio/word_kiwi_m.mp3",
+    "sentence_m": "audio/sentence_kiwi_m.mp3"
+  },
+  "ski": {
+    "word": "audio/word_ski.mp3",
+    "sentence": "audio/sentence_ski.mp3",
+    "word_m": "audio/word_ski_m.mp3",
+    "sentence_m": "audio/sentence_ski_m.mp3"
+  },
+  "cola": {
+    "word": "audio/word_cola.mp3",
+    "sentence": "audio/sentence_cola.mp3",
+    "word_m": "audio/word_cola_m.mp3",
+    "sentence_m": "audio/sentence_cola_m.mp3"
+  },
+  "menu": {
+    "word": "audio/word_menu.mp3",
+    "sentence": "audio/sentence_menu.mp3",
+    "word_m": "audio/word_menu_m.mp3",
+    "sentence_m": "audio/sentence_menu_m.mp3"
+  },
+  "taxi": {
+    "word": "audio/word_taxi.mp3",
+    "sentence": "audio/sentence_taxi.mp3",
+    "word_m": "audio/word_taxi_m.mp3",
+    "sentence_m": "audio/sentence_taxi_m.mp3"
+  },
+  "kaos": {
+    "word": "audio/word_kaos.mp3",
+    "sentence": "audio/sentence_kaos.mp3",
+    "word_m": "audio/word_kaos_m.mp3",
+    "sentence_m": "audio/sentence_kaos_m.mp3"
+  },
+  "foto": {
+    "word": "audio/word_foto.mp3",
+    "sentence": "audio/sentence_foto.mp3",
+    "word_m": "audio/word_foto_m.mp3",
+    "sentence_m": "audio/sentence_foto_m.mp3"
+  },
+  "robot": {
+    "word": "audio/word_robot.mp3",
+    "sentence": "audio/sentence_robot.mp3",
+    "word_m": "audio/word_robot_m.mp3",
+    "sentence_m": "audio/sentence_robot_m.mp3"
+  },
+  "pasta": {
+    "word": "audio/word_pasta.mp3",
+    "sentence": "audio/sentence_pasta.mp3",
+    "word_m": "audio/word_pasta_m.mp3",
+    "sentence_m": "audio/sentence_pasta_m.mp3"
+  },
+  "piano": {
+    "word": "audio/word_piano.mp3",
+    "sentence": "audio/sentence_piano.mp3",
+    "word_m": "audio/word_piano_m.mp3",
+    "sentence_m": "audio/sentence_piano_m.mp3"
+  },
+  "radio": {
+    "word": "audio/word_radio.mp3",
+    "sentence": "audio/sentence_radio.mp3",
+    "word_m": "audio/word_radio_m.mp3",
+    "sentence_m": "audio/sentence_radio_m.mp3"
+  },
+  "virus": {
+    "word": "audio/word_virus.mp3",
+    "sentence": "audio/sentence_virus.mp3",
+    "word_m": "audio/word_virus_m.mp3",
+    "sentence_m": "audio/sentence_virus_m.mp3"
+  },
+  "cafe": {
+    "word": "audio/word_cafe.mp3",
+    "sentence": "audio/sentence_cafe.mp3",
+    "word_m": "audio/word_cafe_m.mp3",
+    "sentence_m": "audio/sentence_cafe_m.mp3"
+  },
   "bred": {
     "word": "audio/word_bred.mp3",
     "sentence": "audio/sentence_bred.mp3",
@@ -4300,5 +4390,35 @@
     "sentence": "audio/sentence_meddelelse.mp3",
     "word_m": "audio/word_meddelelse_m.mp3",
     "sentence_m": "audio/sentence_meddelelse_m.mp3"
+  },
+  "fod": {
+    "word": "audio/word_fod.mp3",
+    "sentence": "audio/sentence_fod.mp3",
+    "word_m": "audio/word_fod_m.mp3",
+    "sentence_m": "audio/sentence_fod_m.mp3"
+  },
+  "blad": {
+    "word": "audio/word_blad.mp3",
+    "sentence": "audio/sentence_blad.mp3",
+    "word_m": "audio/word_blad_m.mp3",
+    "sentence_m": "audio/sentence_blad_m.mp3"
+  },
+  "had": {
+    "word": "audio/word_had.mp3",
+    "sentence": "audio/sentence_had.mp3",
+    "word_m": "audio/word_had_m.mp3",
+    "sentence_m": "audio/sentence_had_m.mp3"
+  },
+  "led": {
+    "word": "audio/word_led.mp3",
+    "sentence": "audio/sentence_led.mp3",
+    "word_m": "audio/word_led_m.mp3",
+    "sentence_m": "audio/sentence_led_m.mp3"
+  },
+  "mud": {
+    "word": "audio/word_mud.mp3",
+    "sentence": "audio/sentence_mud.mp3",
+    "word_m": "audio/word_mud_m.mp3",
+    "sentence_m": "audio/sentence_mud_m.mp3"
   }
 }

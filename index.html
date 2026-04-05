@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1133,7 +1133,7 @@
 <div id="rewardBar" class="reward-bar hidden">
   <div class="reward-stat"><span class="reward-icon streak-fire" id="streakFire">&#x1F525;</span> <span id="rewardStreak">0</span></div>
   <div class="reward-stat"><span class="reward-icon">&#x1F48E;</span> <span id="rewardGems">0</span></div>
-  <div class="reward-stat"><span class="reward-icon">&#x26A1;</span> <span id="rewardXP">0</span>/<span id="rewardXPGoal">100</span></div>
+  <div class="reward-stat"><span class="reward-icon">&#x26A1;</span> <span id="rewardXP">0</span> XP</div>
 </div>
 <div id="rewardXPBarWrap" class="reward-xp-bar-wrap hidden">
   <div class="reward-xp-bar" id="rewardXPBar"></div>
@@ -3261,18 +3261,25 @@ function updateRewardBar() {
   document.getElementById('rewardStreak').textContent = data.streak;
   document.getElementById('rewardGems').textContent = data.gems;
 
-  var today = getTodayStr();
-  var todayXP = (data.todayDate === today) ? data.todayXP : 0;
-  document.getElementById('rewardXP').textContent = Math.min(todayXP, 999);
+  var totalXP = data.totalXP || 0;
+  document.getElementById('rewardXP').textContent = totalXP;
 
   // Fire animation if streak > 0
   var fire = document.getElementById('streakFire');
   if (data.streak > 0) fire.classList.add('active');
   else fire.classList.remove('active');
 
-  // XP bar
+  // XP bar — progress toward next avatar level
   var xpBar = document.getElementById('rewardXPBar');
-  var pct = Math.min((todayXP / 100) * 100, 100);
+  var currentMin = 0, nextMin = 100;
+  for (var li = AVATAR_LEVELS.length - 1; li >= 0; li--) {
+    if (totalXP >= AVATAR_LEVELS[li].minXP) {
+      currentMin = AVATAR_LEVELS[li].minXP;
+      nextMin = (li < AVATAR_LEVELS.length - 1) ? AVATAR_LEVELS[li + 1].minXP : AVATAR_LEVELS[li].minXP;
+      break;
+    }
+  }
+  var pct = (nextMin > currentMin) ? Math.min(((totalXP - currentMin) / (nextMin - currentMin)) * 100, 100) : 100;
   xpBar.style.width = pct + '%';
 
   // Show/hide based on current phase

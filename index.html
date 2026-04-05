@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.3.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2432,6 +2432,7 @@ function startTrainingFromProfile() {
   pendingBoss = null;
   sessionLessonCategories = [];
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionBossCount = 0;
   pendingChest = false;
   wrongCountPerWord = {};
   results = [];
@@ -2656,11 +2657,12 @@ function nextMixedItem() {
 }
 
 var finalBossDone = false;
+var sessionBossCount = 0;
 
 function finishMixedTraining() {
   hideAllExercisePhases();
 
-  // Final boss fight before results
+  // Final boss fight before results — always show one
   if (!finalBossDone && results.length > 0) {
     finalBossDone = true;
     var allWords = results.map(function(r) { return { word: r.word, category: r.category }; });
@@ -3525,6 +3527,7 @@ function testBoss(type) {
 }
 
 function showBossMinigame(bossData) {
+  sessionBossCount++;
   hide('phase-test');
   hide('phase-fillin');
   hide('phase-rightorwrong');
@@ -8004,8 +8007,17 @@ function pickSpkOption(btn, picked) {
   updateCategoryLevel(w.category, ok);
   updateSRWord(w.word, ok, w.category);
 
-  if (ok) { sessionCorrectCount++; sessionCorrectStreak++; }
-  else { sessionCorrectStreak = 0; trackCategoryError(w.category); }
+  if (ok) {
+    sessionCorrectCount++;
+    sessionCorrectStreak++;
+    if (sessionCorrectStreak >= 5) {
+      sessionCorrectStreak = 0;
+      var correctWords = results.filter(function(r) { return r.correct; });
+      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: w.word, category: w.category };
+      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingChest = true;
+    }
+  } else { sessionCorrectStreak = 0; trackCategoryError(w.category); }
 
   document.getElementById('spkScoreCorrect').textContent = spkResults.filter(function(r) { return r.correct; }).length;
   document.getElementById('spkScoreWrong').textContent = spkResults.filter(function(r) { return !r.correct; }).length;

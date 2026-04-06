@@ -5029,10 +5029,10 @@
       "category": "Lydrette ord"
     },
     {
-      "word": "krokodil",
+      "word": "krokodille",
       "hint": "Stort farligt krybdyr med mange tænder",
-      "patternHint": "Alle bogstaver lyder som de skrives",
-      "sentence": "En krokodil lå stille i floden.",
+      "patternHint": "Alle bogstaver lyder som de skrives — husk dobbelt-l og e til sidst",
+      "sentence": "En krokodille lå stille i floden.",
       "level": 3,
       "category": "Lydrette ord"
     },

@@ -3761,11 +3761,11 @@
     "word_m": "audio/word_pirat_m.mp3",
     "sentence_m": "audio/sentence_pirat_m.mp3"
   },
-  "krokodil": {
-    "word": "audio/word_krokodil.mp3",
-    "sentence": "audio/sentence_krokodil.mp3",
-    "word_m": "audio/word_krokodil_m.mp3",
-    "sentence_m": "audio/sentence_krokodil_m.mp3"
+  "krokodille": {
+    "word": "audio/word_krokodille.mp3",
+    "sentence": "audio/sentence_krokodille.mp3",
+    "word_m": "audio/word_krokodille_m.mp3",
+    "sentence_m": "audio/sentence_krokodille_m.mp3"
   },
   "pelikan": {
     "word": "audio/word_pelikan.mp3",

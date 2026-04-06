@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -6526,7 +6526,7 @@ var fillinWords = [], fillinIndex = 0, fillinResults = [], fillinBlanks = [];
 
 function startFillIn() {
   var profile = loadProfile() || {};
-  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
+  var categories = ALL_CATEGORIES;
   isMixedSession = false;
   gameMode = 'fillin';
   pendingBoss = null;
@@ -6986,7 +6986,7 @@ var rfAnswered = false;
 
 function startRightOrWrong() {
   var profile = loadProfile() || {};
-  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
+  var categories = ALL_CATEGORIES;
   isMixedSession = false;
   gameMode = 'rightorwrong';
   pendingBoss = null;
@@ -7378,7 +7378,7 @@ function buildSpellingPoliceItem(wordObj) {
 
 function startSpellingPolice() {
   var profile = loadProfile() || {};
-  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
+  var categories = ALL_CATEGORIES;
   isMixedSession = false;
   gameMode = 'spellingpolice';
   pendingBoss = null;
@@ -7984,7 +7984,7 @@ var spkWords = [], spkIndex = 0, spkResults = [];
 
 function startSpellPick() {
   var profile = loadProfile() || {};
-  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
+  var categories = ALL_CATEGORIES;
   isMixedSession = false;
   gameMode = 'spellpick';
   pendingBoss = null;

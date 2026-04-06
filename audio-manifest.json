@@ -3731,6 +3731,96 @@
     "word_m": "audio/word_top_m.mp3",
     "sentence_m": "audio/sentence_top_m.mp3"
   },
+  "kaktus": {
+    "word": "audio/word_kaktus.mp3",
+    "sentence": "audio/sentence_kaktus.mp3",
+    "word_m": "audio/word_kaktus_m.mp3",
+    "sentence_m": "audio/sentence_kaktus_m.mp3"
+  },
+  "viking": {
+    "word": "audio/word_viking.mp3",
+    "sentence": "audio/sentence_viking.mp3",
+    "word_m": "audio/word_viking_m.mp3",
+    "sentence_m": "audio/sentence_viking_m.mp3"
+  },
+  "motor": {
+    "word": "audio/word_motor.mp3",
+    "sentence": "audio/sentence_motor.mp3",
+    "word_m": "audio/word_motor_m.mp3",
+    "sentence_m": "audio/sentence_motor_m.mp3"
+  },
+  "kamel": {
+    "word": "audio/word_kamel.mp3",
+    "sentence": "audio/sentence_kamel.mp3",
+    "word_m": "audio/word_kamel_m.mp3",
+    "sentence_m": "audio/sentence_kamel_m.mp3"
+  },
+  "pirat": {
+    "word": "audio/word_pirat.mp3",
+    "sentence": "audio/sentence_pirat.mp3",
+    "word_m": "audio/word_pirat_m.mp3",
+    "sentence_m": "audio/sentence_pirat_m.mp3"
+  },
+  "krokodil": {
+    "word": "audio/word_krokodil.mp3",
+    "sentence": "audio/sentence_krokodil.mp3",
+    "word_m": "audio/word_krokodil_m.mp3",
+    "sentence_m": "audio/sentence_krokodil_m.mp3"
+  },
+  "pelikan": {
+    "word": "audio/word_pelikan.mp3",
+    "sentence": "audio/sentence_pelikan.mp3",
+    "word_m": "audio/word_pelikan_m.mp3",
+    "sentence_m": "audio/sentence_pelikan_m.mp3"
+  },
+  "flamingo": {
+    "word": "audio/word_flamingo.mp3",
+    "sentence": "audio/sentence_flamingo.mp3",
+    "word_m": "audio/word_flamingo_m.mp3",
+    "sentence_m": "audio/sentence_flamingo_m.mp3"
+  },
+  "skorpion": {
+    "word": "audio/word_skorpion.mp3",
+    "sentence": "audio/sentence_skorpion.mp3",
+    "word_m": "audio/word_skorpion_m.mp3",
+    "sentence_m": "audio/sentence_skorpion_m.mp3"
+  },
+  "mandarin": {
+    "word": "audio/word_mandarin.mp3",
+    "sentence": "audio/sentence_mandarin.mp3",
+    "word_m": "audio/word_mandarin_m.mp3",
+    "sentence_m": "audio/sentence_mandarin_m.mp3"
+  },
+  "termometer": {
+    "word": "audio/word_termometer.mp3",
+    "sentence": "audio/sentence_termometer.mp3",
+    "word_m": "audio/word_termometer_m.mp3",
+    "sentence_m": "audio/sentence_termometer_m.mp3"
+  },
+  "trampolin": {
+    "word": "audio/word_trampolin.mp3",
+    "sentence": "audio/sentence_trampolin.mp3",
+    "word_m": "audio/word_trampolin_m.mp3",
+    "sentence_m": "audio/sentence_trampolin_m.mp3"
+  },
+  "maraton": {
+    "word": "audio/word_maraton.mp3",
+    "sentence": "audio/sentence_maraton.mp3",
+    "word_m": "audio/word_maraton_m.mp3",
+    "sentence_m": "audio/sentence_maraton_m.mp3"
+  },
+  "dinosaur": {
+    "word": "audio/word_dinosaur.mp3",
+    "sentence": "audio/sentence_dinosaur.mp3",
+    "word_m": "audio/word_dinosaur_m.mp3",
+    "sentence_m": "audio/sentence_dinosaur_m.mp3"
+  },
+  "katedral": {
+    "word": "audio/word_katedral.mp3",
+    "sentence": "audio/sentence_katedral.mp3",
+    "word_m": "audio/word_katedral_m.mp3",
+    "sentence_m": "audio/sentence_katedral_m.mp3"
+  },
   "hopper": {
     "word": "audio/word_hopper.mp3",
     "sentence": "audio/sentence_hopper.mp3",
@@ -3995,6 +4085,240 @@
     "word_m": "audio/word_dokumenterer_m.mp3",
     "sentence_m": "audio/sentence_dokumenterer_m.mp3"
   },
+  "laver": {
+    "word": "audio/word_laver.mp3",
+    "sentence": "audio/sentence_laver.mp3",
+    "word_m": "audio/word_laver_m.mp3",
+    "sentence_m": "audio/sentence_laver_m.mp3"
+  },
+  "finder": {
+    "word": "audio/word_finder.mp3",
+    "sentence": "audio/sentence_finder.mp3",
+    "word_m": "audio/word_finder_m.mp3",
+    "sentence_m": "audio/sentence_finder_m.mp3"
+  },
+  "køber": {
+    "word": "audio/word_koeber.mp3",
+    "sentence": "audio/sentence_koeber.mp3",
+    "word_m": "audio/word_koeber_m.mp3",
+    "sentence_m": "audio/sentence_koeber_m.mp3"
+  },
+  "siger": {
+    "word": "audio/word_siger.mp3",
+    "sentence": "audio/sentence_siger.mp3",
+    "word_m": "audio/word_siger_m.mp3",
+    "sentence_m": "audio/sentence_siger_m.mp3"
+  },
+  "henter": {
+    "word": "audio/word_henter.mp3",
+    "sentence": "audio/sentence_henter.mp3",
+    "word_m": "audio/word_henter_m.mp3",
+    "sentence_m": "audio/sentence_henter_m.mp3"
+  },
+  "passer": {
+    "word": "audio/word_passer.mp3",
+    "sentence": "audio/sentence_passer.mp3",
+    "word_m": "audio/word_passer_m.mp3",
+    "sentence_m": "audio/sentence_passer_m.mp3"
+  },
+  "spiller": {
+    "word": "audio/word_spiller.mp3",
+    "sentence": "audio/sentence_spiller.mp3",
+    "word_m": "audio/word_spiller_m.mp3",
+    "sentence_m": "audio/sentence_spiller_m.mp3"
+  },
+  "venter": {
+    "word": "audio/word_venter.mp3",
+    "sentence": "audio/sentence_venter.mp3",
+    "word_m": "audio/word_venter_m.mp3",
+    "sentence_m": "audio/sentence_venter_m.mp3"
+  },
+  "sender": {
+    "word": "audio/word_sender.mp3",
+    "sentence": "audio/sentence_sender.mp3",
+    "word_m": "audio/word_sender_m.mp3",
+    "sentence_m": "audio/sentence_sender_m.mp3"
+  },
+  "klapper": {
+    "word": "audio/word_klapper.mp3",
+    "sentence": "audio/sentence_klapper.mp3",
+    "word_m": "audio/word_klapper_m.mp3",
+    "sentence_m": "audio/sentence_klapper_m.mp3"
+  },
+  "ønsker": {
+    "word": "audio/word_oensker.mp3",
+    "sentence": "audio/sentence_oensker.mp3",
+    "word_m": "audio/word_oensker_m.mp3",
+    "sentence_m": "audio/sentence_oensker_m.mp3"
+  },
+  "regner": {
+    "word": "audio/word_regner.mp3",
+    "sentence": "audio/sentence_regner.mp3",
+    "word_m": "audio/word_regner_m.mp3",
+    "sentence_m": "audio/sentence_regner_m.mp3"
+  },
+  "forklarer": {
+    "word": "audio/word_forklarer.mp3",
+    "sentence": "audio/sentence_forklarer.mp3",
+    "word_m": "audio/word_forklarer_m.mp3",
+    "sentence_m": "audio/sentence_forklarer_m.mp3"
+  },
+  "opdager": {
+    "word": "audio/word_opdager.mp3",
+    "sentence": "audio/sentence_opdager.mp3",
+    "word_m": "audio/word_opdager_m.mp3",
+    "sentence_m": "audio/sentence_opdager_m.mp3"
+  },
+  "beskriver": {
+    "word": "audio/word_beskriver.mp3",
+    "sentence": "audio/sentence_beskriver.mp3",
+    "word_m": "audio/word_beskriver_m.mp3",
+    "sentence_m": "audio/sentence_beskriver_m.mp3"
+  },
+  "forbinder": {
+    "word": "audio/word_forbinder.mp3",
+    "sentence": "audio/sentence_forbinder.mp3",
+    "word_m": "audio/word_forbinder_m.mp3",
+    "sentence_m": "audio/sentence_forbinder_m.mp3"
+  },
+  "anvender": {
+    "word": "audio/word_anvender.mp3",
+    "sentence": "audio/sentence_anvender.mp3",
+    "word_m": "audio/word_anvender_m.mp3",
+    "sentence_m": "audio/sentence_anvender_m.mp3"
+  },
+  "behandler": {
+    "word": "audio/word_behandler.mp3",
+    "sentence": "audio/sentence_behandler.mp3",
+    "word_m": "audio/word_behandler_m.mp3",
+    "sentence_m": "audio/sentence_behandler_m.mp3"
+  },
+  "betragter": {
+    "word": "audio/word_betragter.mp3",
+    "sentence": "audio/sentence_betragter.mp3",
+    "word_m": "audio/word_betragter_m.mp3",
+    "sentence_m": "audio/sentence_betragter_m.mp3"
+  },
+  "udfordrer": {
+    "word": "audio/word_udfordrer.mp3",
+    "sentence": "audio/sentence_udfordrer.mp3",
+    "word_m": "audio/word_udfordrer_m.mp3",
+    "sentence_m": "audio/sentence_udfordrer_m.mp3"
+  },
+  "overrasker": {
+    "word": "audio/word_overrasker.mp3",
+    "sentence": "audio/sentence_overrasker.mp3",
+    "word_m": "audio/word_overrasker_m.mp3",
+    "sentence_m": "audio/sentence_overrasker_m.mp3"
+  },
+  "fantiserer": {
+    "word": "audio/word_fantiserer.mp3",
+    "sentence": "audio/sentence_fantiserer.mp3",
+    "word_m": "audio/word_fantiserer_m.mp3",
+    "sentence_m": "audio/sentence_fantiserer_m.mp3"
+  },
+  "eksperimenterer": {
+    "word": "audio/word_eksperimenterer.mp3",
+    "sentence": "audio/sentence_eksperimenterer.mp3",
+    "word_m": "audio/word_eksperimenterer_m.mp3",
+    "sentence_m": "audio/sentence_eksperimenterer_m.mp3"
+  },
+  "kategoriserer": {
+    "word": "audio/word_kategoriserer.mp3",
+    "sentence": "audio/sentence_kategoriserer.mp3",
+    "word_m": "audio/word_kategoriserer_m.mp3",
+    "sentence_m": "audio/sentence_kategoriserer_m.mp3"
+  },
+  "demonstrerer": {
+    "word": "audio/word_demonstrerer.mp3",
+    "sentence": "audio/sentence_demonstrerer.mp3",
+    "word_m": "audio/word_demonstrerer_m.mp3",
+    "sentence_m": "audio/sentence_demonstrerer_m.mp3"
+  },
+  "kvalificerer": {
+    "word": "audio/word_kvalificerer.mp3",
+    "sentence": "audio/sentence_kvalificerer.mp3",
+    "word_m": "audio/word_kvalificerer_m.mp3",
+    "sentence_m": "audio/sentence_kvalificerer_m.mp3"
+  },
+  "symboliserer": {
+    "word": "audio/word_symboliserer.mp3",
+    "sentence": "audio/sentence_symboliserer.mp3",
+    "word_m": "audio/word_symboliserer_m.mp3",
+    "sentence_m": "audio/sentence_symboliserer_m.mp3"
+  },
+  "revolutionerer": {
+    "word": "audio/word_revolutionerer.mp3",
+    "sentence": "audio/sentence_revolutionerer.mp3",
+    "word_m": "audio/word_revolutionerer_m.mp3",
+    "sentence_m": "audio/sentence_revolutionerer_m.mp3"
+  },
+  "kører": {
+    "word": "audio/word_koerer.mp3",
+    "sentence": "audio/sentence_koerer.mp3",
+    "word_m": "audio/word_koerer_m.mp3",
+    "sentence_m": "audio/sentence_koerer_m.mp3"
+  },
+  "drikker": {
+    "word": "audio/word_drikker.mp3",
+    "sentence": "audio/sentence_drikker.mp3",
+    "word_m": "audio/word_drikker_m.mp3",
+    "sentence_m": "audio/sentence_drikker_m.mp3"
+  },
+  "holder": {
+    "word": "audio/word_holder.mp3",
+    "sentence": "audio/sentence_holder.mp3",
+    "word_m": "audio/word_holder_m.mp3",
+    "sentence_m": "audio/sentence_holder_m.mp3"
+  },
+  "skriver": {
+    "word": "audio/word_skriver.mp3",
+    "sentence": "audio/sentence_skriver.mp3",
+    "word_m": "audio/word_skriver_m.mp3",
+    "sentence_m": "audio/sentence_skriver_m.mp3"
+  },
+  "rydder": {
+    "word": "audio/word_rydder.mp3",
+    "sentence": "audio/sentence_rydder.mp3",
+    "word_m": "audio/word_rydder_m.mp3",
+    "sentence_m": "audio/sentence_rydder_m.mp3"
+  },
+  "handler": {
+    "word": "audio/word_handler.mp3",
+    "sentence": "audio/sentence_handler.mp3",
+    "word_m": "audio/word_handler_m.mp3",
+    "sentence_m": "audio/sentence_handler_m.mp3"
+  },
+  "husker": {
+    "word": "audio/word_husker.mp3",
+    "sentence": "audio/sentence_husker.mp3",
+    "word_m": "audio/word_husker_m.mp3",
+    "sentence_m": "audio/sentence_husker_m.mp3"
+  },
+  "bestemmer": {
+    "word": "audio/word_bestemmer.mp3",
+    "sentence": "audio/sentence_bestemmer.mp3",
+    "word_m": "audio/word_bestemmer_m.mp3",
+    "sentence_m": "audio/sentence_bestemmer_m.mp3"
+  },
+  "udvikler": {
+    "word": "audio/word_udvikler.mp3",
+    "sentence": "audio/sentence_udvikler.mp3",
+    "word_m": "audio/word_udvikler_m.mp3",
+    "sentence_m": "audio/sentence_udvikler_m.mp3"
+  },
+  "administrerer": {
+    "word": "audio/word_administrerer.mp3",
+    "sentence": "audio/sentence_administrerer.mp3",
+    "word_m": "audio/word_administrerer_m.mp3",
+    "sentence_m": "audio/sentence_administrerer_m.mp3"
+  },
+  "programmerer": {
+    "word": "audio/word_programmerer.mp3",
+    "sentence": "audio/sentence_programmerer.mp3",
+    "word_m": "audio/word_programmerer_m.mp3",
+    "sentence_m": "audio/sentence_programmerer_m.mp3"
+  },
   "pizza": {
     "word": "audio/word_pizza.mp3",
     "sentence": "audio/sentence_pizza.mp3",
@@ -4229,6 +4553,264 @@
     "word_m": "audio/word_cafe_m.mp3",
     "sentence_m": "audio/sentence_cafe_m.mp3"
   },
+  "banana": {
+    "word": "audio/word_banana.mp3",
+    "sentence": "audio/sentence_banana.mp3",
+    "word_m": "audio/word_banana_m.mp3",
+    "sentence_m": "audio/sentence_banana_m.mp3"
+  },
+  "salat": {
+    "word": "audio/word_salat.mp3",
+    "sentence": "audio/sentence_salat.mp3",
+    "word_m": "audio/word_salat_m.mp3",
+    "sentence_m": "audio/sentence_salat_m.mp3"
+  },
+  "musik": {
+    "word": "audio/word_musik.mp3",
+    "sentence": "audio/sentence_musik.mp3",
+    "word_m": "audio/word_musik_m.mp3",
+    "sentence_m": "audio/sentence_musik_m.mp3"
+  },
+  "karate": {
+    "word": "audio/word_karate.mp3",
+    "sentence": "audio/sentence_karate.mp3",
+    "word_m": "audio/word_karate_m.mp3",
+    "sentence_m": "audio/sentence_karate_m.mp3"
+  },
+  "safari": {
+    "word": "audio/word_safari.mp3",
+    "sentence": "audio/sentence_safari.mp3",
+    "word_m": "audio/word_safari_m.mp3",
+    "sentence_m": "audio/sentence_safari_m.mp3"
+  },
+  "sushi": {
+    "word": "audio/word_sushi.mp3",
+    "sentence": "audio/sentence_sushi.mp3",
+    "word_m": "audio/word_sushi_m.mp3",
+    "sentence_m": "audio/sentence_sushi_m.mp3"
+  },
+  "giraff": {
+    "word": "audio/word_giraff.mp3",
+    "sentence": "audio/sentence_giraff.mp3",
+    "word_m": "audio/word_giraff_m.mp3",
+    "sentence_m": "audio/sentence_giraff_m.mp3"
+  },
+  "yoghurt": {
+    "word": "audio/word_yoghurt.mp3",
+    "sentence": "audio/sentence_yoghurt.mp3",
+    "word_m": "audio/word_yoghurt_m.mp3",
+    "sentence_m": "audio/sentence_yoghurt_m.mp3"
+  },
+  "jungle": {
+    "word": "audio/word_jungle.mp3",
+    "sentence": "audio/sentence_jungle.mp3",
+    "word_m": "audio/word_jungle_m.mp3",
+    "sentence_m": "audio/sentence_jungle_m.mp3"
+  },
+  "bibliotek": {
+    "word": "audio/word_bibliotek.mp3",
+    "sentence": "audio/sentence_bibliotek.mp3",
+    "word_m": "audio/word_bibliotek_m.mp3",
+    "sentence_m": "audio/sentence_bibliotek_m.mp3"
+  },
+  "gymnasium": {
+    "word": "audio/word_gymnasium.mp3",
+    "sentence": "audio/sentence_gymnasium.mp3",
+    "word_m": "audio/word_gymnasium_m.mp3",
+    "sentence_m": "audio/sentence_gymnasium_m.mp3"
+  },
+  "astronaut": {
+    "word": "audio/word_astronaut.mp3",
+    "sentence": "audio/sentence_astronaut.mp3",
+    "word_m": "audio/word_astronaut_m.mp3",
+    "sentence_m": "audio/sentence_astronaut_m.mp3"
+  },
+  "champion": {
+    "word": "audio/word_champion.mp3",
+    "sentence": "audio/sentence_champion.mp3",
+    "word_m": "audio/word_champion_m.mp3",
+    "sentence_m": "audio/sentence_champion_m.mp3"
+  },
+  "kalkulator": {
+    "word": "audio/word_kalkulator.mp3",
+    "sentence": "audio/sentence_kalkulator.mp3",
+    "word_m": "audio/word_kalkulator_m.mp3",
+    "sentence_m": "audio/sentence_kalkulator_m.mp3"
+  },
+  "terapeut": {
+    "word": "audio/word_terapeut.mp3",
+    "sentence": "audio/sentence_terapeut.mp3",
+    "word_m": "audio/word_terapeut_m.mp3",
+    "sentence_m": "audio/sentence_terapeut_m.mp3"
+  },
+  "akrobat": {
+    "word": "audio/word_akrobat.mp3",
+    "sentence": "audio/sentence_akrobat.mp3",
+    "word_m": "audio/word_akrobat_m.mp3",
+    "sentence_m": "audio/sentence_akrobat_m.mp3"
+  },
+  "telefon": {
+    "word": "audio/word_telefon.mp3",
+    "sentence": "audio/sentence_telefon.mp3",
+    "word_m": "audio/word_telefon_m.mp3",
+    "sentence_m": "audio/sentence_telefon_m.mp3"
+  },
+  "fotografi": {
+    "word": "audio/word_fotografi.mp3",
+    "sentence": "audio/sentence_fotografi.mp3",
+    "word_m": "audio/word_fotografi_m.mp3",
+    "sentence_m": "audio/sentence_fotografi_m.mp3"
+  },
+  "strategi": {
+    "word": "audio/word_strategi.mp3",
+    "sentence": "audio/sentence_strategi.mp3",
+    "word_m": "audio/word_strategi_m.mp3",
+    "sentence_m": "audio/sentence_strategi_m.mp3"
+  },
+  "garanti": {
+    "word": "audio/word_garanti.mp3",
+    "sentence": "audio/sentence_garanti.mp3",
+    "word_m": "audio/word_garanti_m.mp3",
+    "sentence_m": "audio/sentence_garanti_m.mp3"
+  },
+  "diamant": {
+    "word": "audio/word_diamant.mp3",
+    "sentence": "audio/sentence_diamant.mp3",
+    "word_m": "audio/word_diamant_m.mp3",
+    "sentence_m": "audio/sentence_diamant_m.mp3"
+  },
+  "arkitektur": {
+    "word": "audio/word_arkitektur.mp3",
+    "sentence": "audio/sentence_arkitektur.mp3",
+    "word_m": "audio/word_arkitektur_m.mp3",
+    "sentence_m": "audio/sentence_arkitektur_m.mp3"
+  },
+  "filosofi": {
+    "word": "audio/word_filosofi.mp3",
+    "sentence": "audio/sentence_filosofi.mp3",
+    "word_m": "audio/word_filosofi_m.mp3",
+    "sentence_m": "audio/sentence_filosofi_m.mp3"
+  },
+  "revolution": {
+    "word": "audio/word_revolution.mp3",
+    "sentence": "audio/sentence_revolution.mp3",
+    "word_m": "audio/word_revolution_m.mp3",
+    "sentence_m": "audio/sentence_revolution_m.mp3"
+  },
+  "teknologi": {
+    "word": "audio/word_teknologi.mp3",
+    "sentence": "audio/sentence_teknologi.mp3",
+    "word_m": "audio/word_teknologi_m.mp3",
+    "sentence_m": "audio/sentence_teknologi_m.mp3"
+  },
+  "meditation": {
+    "word": "audio/word_meditation.mp3",
+    "sentence": "audio/sentence_meditation.mp3",
+    "word_m": "audio/word_meditation_m.mp3",
+    "sentence_m": "audio/sentence_meditation_m.mp3"
+  },
+  "meteorologi": {
+    "word": "audio/word_meteorologi.mp3",
+    "sentence": "audio/sentence_meteorologi.mp3",
+    "word_m": "audio/word_meteorologi_m.mp3",
+    "sentence_m": "audio/sentence_meteorologi_m.mp3"
+  },
+  "vaccination": {
+    "word": "audio/word_vaccination.mp3",
+    "sentence": "audio/sentence_vaccination.mp3",
+    "word_m": "audio/word_vaccination_m.mp3",
+    "sentence_m": "audio/sentence_vaccination_m.mp3"
+  },
+  "præsentation": {
+    "word": "audio/word_praesentation.mp3",
+    "sentence": "audio/sentence_praesentation.mp3",
+    "word_m": "audio/word_praesentation_m.mp3",
+    "sentence_m": "audio/sentence_praesentation_m.mp3"
+  },
+  "koreografi": {
+    "word": "audio/word_koreografi.mp3",
+    "sentence": "audio/sentence_koreografi.mp3",
+    "word_m": "audio/word_koreografi_m.mp3",
+    "sentence_m": "audio/sentence_koreografi_m.mp3"
+  },
+  "xylofon": {
+    "word": "audio/word_xylofon.mp3",
+    "sentence": "audio/sentence_xylofon.mp3",
+    "word_m": "audio/word_xylofon_m.mp3",
+    "sentence_m": "audio/sentence_xylofon_m.mp3"
+  },
+  "encyclopædi": {
+    "word": "audio/word_encyclopaedi.mp3",
+    "sentence": "audio/sentence_encyclopaedi.mp3",
+    "word_m": "audio/word_encyclopaedi_m.mp3",
+    "sentence_m": "audio/sentence_encyclopaedi_m.mp3"
+  },
+  "psykologi": {
+    "word": "audio/word_psykologi.mp3",
+    "sentence": "audio/sentence_psykologi.mp3",
+    "word_m": "audio/word_psykologi_m.mp3",
+    "sentence_m": "audio/sentence_psykologi_m.mp3"
+  },
+  "renaissance": {
+    "word": "audio/word_renaissance.mp3",
+    "sentence": "audio/sentence_renaissance.mp3",
+    "word_m": "audio/word_renaissance_m.mp3",
+    "sentence_m": "audio/sentence_renaissance_m.mp3"
+  },
+  "balkon": {
+    "word": "audio/word_balkon.mp3",
+    "sentence": "audio/sentence_balkon.mp3",
+    "word_m": "audio/word_balkon_m.mp3",
+    "sentence_m": "audio/sentence_balkon_m.mp3"
+  },
+  "parfume": {
+    "word": "audio/word_parfume.mp3",
+    "sentence": "audio/sentence_parfume.mp3",
+    "word_m": "audio/word_parfume_m.mp3",
+    "sentence_m": "audio/sentence_parfume_m.mp3"
+  },
+  "akvarium": {
+    "word": "audio/word_akvarium.mp3",
+    "sentence": "audio/sentence_akvarium.mp3",
+    "word_m": "audio/word_akvarium_m.mp3",
+    "sentence_m": "audio/sentence_akvarium_m.mp3"
+  },
+  "synonym": {
+    "word": "audio/word_synonym.mp3",
+    "sentence": "audio/sentence_synonym.mp3",
+    "word_m": "audio/word_synonym_m.mp3",
+    "sentence_m": "audio/sentence_synonym_m.mp3"
+  },
+  "hieroglyf": {
+    "word": "audio/word_hieroglyf.mp3",
+    "sentence": "audio/sentence_hieroglyf.mp3",
+    "word_m": "audio/word_hieroglyf_m.mp3",
+    "sentence_m": "audio/sentence_hieroglyf_m.mp3"
+  },
+  "monolog": {
+    "word": "audio/word_monolog.mp3",
+    "sentence": "audio/sentence_monolog.mp3",
+    "word_m": "audio/word_monolog_m.mp3",
+    "sentence_m": "audio/sentence_monolog_m.mp3"
+  },
+  "labyrint": {
+    "word": "audio/word_labyrint.mp3",
+    "sentence": "audio/sentence_labyrint.mp3",
+    "word_m": "audio/word_labyrint_m.mp3",
+    "sentence_m": "audio/sentence_labyrint_m.mp3"
+  },
+  "termin": {
+    "word": "audio/word_termin.mp3",
+    "sentence": "audio/sentence_termin.mp3",
+    "word_m": "audio/word_termin_m.mp3",
+    "sentence_m": "audio/sentence_termin_m.mp3"
+  },
+  "kreativ": {
+    "word": "audio/word_kreativ.mp3",
+    "sentence": "audio/sentence_kreativ.mp3",
+    "word_m": "audio/word_kreativ_m.mp3",
+    "sentence_m": "audio/sentence_kreativ_m.mp3"
+  },
   "bred": {
     "word": "audio/word_bred.mp3",
     "sentence": "audio/sentence_bred.mp3",
@@ -4420,5 +5002,305 @@
     "sentence": "audio/sentence_mud.mp3",
     "word_m": "audio/word_mud_m.mp3",
     "sentence_m": "audio/sentence_mud_m.mp3"
+  },
+  "bod": {
+    "word": "audio/word_bod.mp3",
+    "sentence": "audio/sentence_bod.mp3",
+    "word_m": "audio/word_bod_m.mp3",
+    "sentence_m": "audio/sentence_bod_m.mp3"
+  },
+  "rad": {
+    "word": "audio/word_rad.mp3",
+    "sentence": "audio/sentence_rad.mp3",
+    "word_m": "audio/word_rad_m.mp3",
+    "sentence_m": "audio/sentence_rad_m.mp3"
+  },
+  "sod": {
+    "word": "audio/word_sod.mp3",
+    "sentence": "audio/sentence_sod.mp3",
+    "word_m": "audio/word_sod_m.mp3",
+    "sentence_m": "audio/sentence_sod_m.mp3"
+  },
+  "sted": {
+    "word": "audio/word_sted.mp3",
+    "sentence": "audio/sentence_sted.mp3",
+    "word_m": "audio/word_sted_m.mp3",
+    "sentence_m": "audio/sentence_sted_m.mp3"
+  },
+  "vred": {
+    "word": "audio/word_vred.mp3",
+    "sentence": "audio/sentence_vred.mp3",
+    "word_m": "audio/word_vred_m.mp3",
+    "sentence_m": "audio/sentence_vred_m.mp3"
+  },
+  "tråd": {
+    "word": "audio/word_traad.mp3",
+    "sentence": "audio/sentence_traad.mp3",
+    "word_m": "audio/word_traad_m.mp3",
+    "sentence_m": "audio/sentence_traad_m.mp3"
+  },
+  "fred": {
+    "word": "audio/word_fred.mp3",
+    "sentence": "audio/sentence_fred.mp3",
+    "word_m": "audio/word_fred_m.mp3",
+    "sentence_m": "audio/sentence_fred_m.mp3"
+  },
+  "hud": {
+    "word": "audio/word_hud.mp3",
+    "sentence": "audio/sentence_hud.mp3",
+    "word_m": "audio/word_hud_m.mp3",
+    "sentence_m": "audio/sentence_hud_m.mp3"
+  },
+  "bud": {
+    "word": "audio/word_bud.mp3",
+    "sentence": "audio/sentence_bud.mp3",
+    "word_m": "audio/word_bud_m.mp3",
+    "sentence_m": "audio/sentence_bud_m.mp3"
+  },
+  "skud": {
+    "word": "audio/word_skud.mp3",
+    "sentence": "audio/sentence_skud.mp3",
+    "word_m": "audio/word_skud_m.mp3",
+    "sentence_m": "audio/sentence_skud_m.mp3"
+  },
+  "flade": {
+    "word": "audio/word_flade.mp3",
+    "sentence": "audio/sentence_flade.mp3",
+    "word_m": "audio/word_flade_m.mp3",
+    "sentence_m": "audio/sentence_flade_m.mp3"
+  },
+  "glade": {
+    "word": "audio/word_glade.mp3",
+    "sentence": "audio/sentence_glade.mp3",
+    "word_m": "audio/word_glade_m.mp3",
+    "sentence_m": "audio/sentence_glade_m.mp3"
+  },
+  "fade": {
+    "word": "audio/word_fade.mp3",
+    "sentence": "audio/sentence_fade.mp3",
+    "word_m": "audio/word_fade_m.mp3",
+    "sentence_m": "audio/sentence_fade_m.mp3"
+  },
+  "steder": {
+    "word": "audio/word_steder.mp3",
+    "sentence": "audio/sentence_steder.mp3",
+    "word_m": "audio/word_steder_m.mp3",
+    "sentence_m": "audio/sentence_steder_m.mp3"
+  },
+  "fader": {
+    "word": "audio/word_fader.mp3",
+    "sentence": "audio/sentence_fader.mp3",
+    "word_m": "audio/word_fader_m.mp3",
+    "sentence_m": "audio/sentence_fader_m.mp3"
+  },
+  "moder": {
+    "word": "audio/word_moder.mp3",
+    "sentence": "audio/sentence_moder.mp3",
+    "word_m": "audio/word_moder_m.mp3",
+    "sentence_m": "audio/sentence_moder_m.mp3"
+  },
+  "broder": {
+    "word": "audio/word_broder.mp3",
+    "sentence": "audio/sentence_broder.mp3",
+    "word_m": "audio/word_broder_m.mp3",
+    "sentence_m": "audio/sentence_broder_m.mp3"
+  },
+  "kode": {
+    "word": "audio/word_kode.mp3",
+    "sentence": "audio/sentence_kode.mp3",
+    "word_m": "audio/word_kode_m.mp3",
+    "sentence_m": "audio/sentence_kode_m.mp3"
+  },
+  "gadder": {
+    "word": "audio/word_gadder.mp3",
+    "sentence": "audio/sentence_gadder.mp3",
+    "word_m": "audio/word_gadder_m.mp3",
+    "sentence_m": "audio/sentence_gadder_m.mp3"
+  },
+  "madder": {
+    "word": "audio/word_madder.mp3",
+    "sentence": "audio/sentence_madder.mp3",
+    "word_m": "audio/word_madder_m.mp3",
+    "sentence_m": "audio/sentence_madder_m.mp3"
+  },
+  "buddet": {
+    "word": "audio/word_buddet.mp3",
+    "sentence": "audio/sentence_buddet.mp3",
+    "word_m": "audio/word_buddet_m.mp3",
+    "sentence_m": "audio/sentence_buddet_m.mp3"
+  },
+  "sidder": {
+    "word": "audio/word_sidder.mp3",
+    "sentence": "audio/sentence_sidder.mp3",
+    "word_m": "audio/word_sidder_m.mp3",
+    "sentence_m": "audio/sentence_sidder_m.mp3"
+  },
+  "fodrer": {
+    "word": "audio/word_fodrer.mp3",
+    "sentence": "audio/sentence_fodrer.mp3",
+    "word_m": "audio/word_fodrer_m.mp3",
+    "sentence_m": "audio/sentence_fodrer_m.mp3"
+  },
+  "videre": {
+    "word": "audio/word_videre.mp3",
+    "sentence": "audio/sentence_videre.mp3",
+    "word_m": "audio/word_videre_m.mp3",
+    "sentence_m": "audio/sentence_videre_m.mp3"
+  },
+  "bredere": {
+    "word": "audio/word_bredere.mp3",
+    "sentence": "audio/sentence_bredere.mp3",
+    "word_m": "audio/word_bredere_m.mp3",
+    "sentence_m": "audio/sentence_bredere_m.mp3"
+  },
+  "ledder": {
+    "word": "audio/word_ledder.mp3",
+    "sentence": "audio/sentence_ledder.mp3",
+    "word_m": "audio/word_ledder_m.mp3",
+    "sentence_m": "audio/sentence_ledder_m.mp3"
+  },
+  "fodtøj": {
+    "word": "audio/word_fodtoej.mp3",
+    "sentence": "audio/sentence_fodtoej.mp3",
+    "word_m": "audio/word_fodtoej_m.mp3",
+    "sentence_m": "audio/sentence_fodtoej_m.mp3"
+  },
+  "stedvis": {
+    "word": "audio/word_stedvis.mp3",
+    "sentence": "audio/sentence_stedvis.mp3",
+    "word_m": "audio/word_stedvis_m.mp3",
+    "sentence_m": "audio/sentence_stedvis_m.mp3"
+  },
+  "rødlig": {
+    "word": "audio/word_roedlig.mp3",
+    "sentence": "audio/sentence_roedlig.mp3",
+    "word_m": "audio/word_roedlig_m.mp3",
+    "sentence_m": "audio/sentence_roedlig_m.mp3"
+  },
+  "bladene": {
+    "word": "audio/word_bladene.mp3",
+    "sentence": "audio/sentence_bladene.mp3",
+    "word_m": "audio/word_bladene_m.mp3",
+    "sentence_m": "audio/sentence_bladene_m.mp3"
+  },
+  "eddike": {
+    "word": "audio/word_eddike.mp3",
+    "sentence": "audio/sentence_eddike.mp3",
+    "word_m": "audio/word_eddike_m.mp3",
+    "sentence_m": "audio/sentence_eddike_m.mp3"
+  },
+  "rødder": {
+    "word": "audio/word_roedder.mp3",
+    "sentence": "audio/sentence_roedder.mp3",
+    "word_m": "audio/word_roedder_m.mp3",
+    "sentence_m": "audio/sentence_roedder_m.mp3"
+  },
+  "broderskab": {
+    "word": "audio/word_broderskab.mp3",
+    "sentence": "audio/sentence_broderskab.mp3",
+    "word_m": "audio/word_broderskab_m.mp3",
+    "sentence_m": "audio/sentence_broderskab_m.mp3"
+  },
+  "moderskab": {
+    "word": "audio/word_moderskab.mp3",
+    "sentence": "audio/sentence_moderskab.mp3",
+    "word_m": "audio/word_moderskab_m.mp3",
+    "sentence_m": "audio/sentence_moderskab_m.mp3"
+  },
+  "faderskab": {
+    "word": "audio/word_faderskab.mp3",
+    "sentence": "audio/sentence_faderskab.mp3",
+    "word_m": "audio/word_faderskab_m.mp3",
+    "sentence_m": "audio/sentence_faderskab_m.mp3"
+  },
+  "kodesprog": {
+    "word": "audio/word_kodesprog.mp3",
+    "sentence": "audio/sentence_kodesprog.mp3",
+    "word_m": "audio/word_kodesprog_m.mp3",
+    "sentence_m": "audio/sentence_kodesprog_m.mp3"
+  },
+  "fredstid": {
+    "word": "audio/word_fredstid.mp3",
+    "sentence": "audio/sentence_fredstid.mp3",
+    "word_m": "audio/word_fredstid_m.mp3",
+    "sentence_m": "audio/sentence_fredstid_m.mp3"
+  },
+  "rødgrød": {
+    "word": "audio/word_roedgroed.mp3",
+    "sentence": "audio/sentence_roedgroed.mp3",
+    "word_m": "audio/word_roedgroed_m.mp3",
+    "sentence_m": "audio/sentence_roedgroed_m.mp3"
+  },
+  "stedfortræder": {
+    "word": "audio/word_stedfortraeder.mp3",
+    "sentence": "audio/sentence_stedfortraeder.mp3",
+    "word_m": "audio/word_stedfortraeder_m.mp3",
+    "sentence_m": "audio/sentence_stedfortraeder_m.mp3"
+  },
+  "fodaftryk": {
+    "word": "audio/word_fodaftryk.mp3",
+    "sentence": "audio/sentence_fodaftryk.mp3",
+    "word_m": "audio/word_fodaftryk_m.mp3",
+    "sentence_m": "audio/sentence_fodaftryk_m.mp3"
+  },
+  "bid": {
+    "word": "audio/word_bid.mp3",
+    "sentence": "audio/sentence_bid.mp3",
+    "word_m": "audio/word_bid_m.mp3",
+    "sentence_m": "audio/sentence_bid_m.mp3"
+  },
+  "rod": {
+    "word": "audio/word_rod.mp3",
+    "sentence": "audio/sentence_rod.mp3",
+    "word_m": "audio/word_rod_m.mp3",
+    "sentence_m": "audio/sentence_rod_m.mp3"
+  },
+  "nød": {
+    "word": "audio/word_noed.mp3",
+    "sentence": "audio/sentence_noed.mp3",
+    "word_m": "audio/word_noed_m.mp3",
+    "sentence_m": "audio/sentence_noed_m.mp3"
+  },
+  "brod": {
+    "word": "audio/word_brod.mp3",
+    "sentence": "audio/sentence_brod.mp3",
+    "word_m": "audio/word_brod_m.mp3",
+    "sentence_m": "audio/sentence_brod_m.mp3"
+  },
+  "glæde": {
+    "word": "audio/word_glaede.mp3",
+    "sentence": "audio/sentence_glaede.mp3",
+    "word_m": "audio/word_glaede_m.mp3",
+    "sentence_m": "audio/sentence_glaede_m.mp3"
+  },
+  "fodbolden": {
+    "word": "audio/word_fodbolden.mp3",
+    "sentence": "audio/sentence_fodbolden.mp3",
+    "word_m": "audio/word_fodbolden_m.mp3",
+    "sentence_m": "audio/sentence_fodbolden_m.mp3"
+  },
+  "gladere": {
+    "word": "audio/word_gladere.mp3",
+    "sentence": "audio/sentence_gladere.mp3",
+    "word_m": "audio/word_gladere_m.mp3",
+    "sentence_m": "audio/sentence_gladere_m.mp3"
+  },
+  "hædersmand": {
+    "word": "audio/word_haedersmand.mp3",
+    "sentence": "audio/sentence_haedersmand.mp3",
+    "word_m": "audio/word_haedersmand_m.mp3",
+    "sentence_m": "audio/sentence_haedersmand_m.mp3"
+  },
+  "hudpleje": {
+    "word": "audio/word_hudpleje.mp3",
+    "sentence": "audio/sentence_hudpleje.mp3",
+    "word_m": "audio/word_hudpleje_m.mp3",
+    "sentence_m": "audio/sentence_hudpleje_m.mp3"
+  },
+  "tilbedelse": {
+    "word": "audio/word_tilbedelse.mp3",
+    "sentence": "audio/sentence_tilbedelse.mp3",
+    "word_m": "audio/word_tilbedelse_m.mp3",
+    "sentence_m": "audio/sentence_tilbedelse_m.mp3"
   }
 }

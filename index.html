@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1445,6 +1445,11 @@
     <button class="rf-btn rf-btn-wrong" onclick="checkRightOrWrong(false)">&#x274C; Forkert</button>
   </div>
   <div id="rfFeedbackBox" style="display:none; margin-top:12px;"></div>
+  <div id="rfCorrectionBox" class="hidden" style="margin-top:12px;text-align:center">
+    <p style="font-weight:700;color:var(--accent);margin-bottom:8px">Godt spottet! Skriv det rigtigt:</p>
+    <input type="text" id="rfCorrectionInput" class="spelling-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="max-width:280px;margin:0 auto" onkeydown="if(event.key==='Enter')checkRFCorrection()">
+    <button class="btn btn-green" id="rfCorrectionBtn" onclick="checkRFCorrection()" style="margin-top:8px">Tjek</button>
+  </div>
   <button class="btn btn-green btn-full hidden" id="rfNextBtn" onclick="nextRightOrWrongWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
@@ -7052,9 +7057,11 @@ function renderRightOrWrongWord() {
   document.getElementById('rfProgressBar').style.width = ((rfResults.length / total) * 100) + '%';
   document.getElementById('rfPatternBadge').textContent = (CATEGORY_ICONS[item.category] || '\u{1F520}') + ' ' + item.category;
   document.getElementById('rfFeedbackBox').style.display = 'none';
+  document.getElementById('rfCorrectionBox').classList.add('hidden');
   document.getElementById('rfNextBtn').classList.add('hidden');
   document.getElementById('rfWordDisplay').textContent = item.displayed;
   document.getElementById('rfHint').textContent = 'Er dette ord stavet rigtigt?';
+  rfPendingCorrection = null;
 
   // Reset flash
   var card = document.getElementById('phase-rightorwrong');
@@ -7087,7 +7094,7 @@ function checkRightOrWrong(answeredCorrect) {
   rfAnswered = true;
 
   var item = rfItems[rfIndex];
-  var ok = (answeredCorrect === item.isCorrect);
+  var identifiedCorrectly = (answeredCorrect === item.isCorrect);
 
   // Disable buttons
   var btns = document.querySelectorAll('.rf-btn');
@@ -7095,11 +7102,54 @@ function checkRightOrWrong(answeredCorrect) {
 
   // Flash feedback
   var card = document.getElementById('phase-rightorwrong');
-  if (ok) {
+
+  // If player correctly identified a misspelling → ask them to write the correct spelling
+  if (identifiedCorrectly && !item.isCorrect) {
+    card.classList.add('rf-flash-correct');
+    document.getElementById('rfFeedbackBox').style.display = 'none';
+    document.getElementById('rfCorrectionBox').classList.remove('hidden');
+    var inp = document.getElementById('rfCorrectionInput');
+    inp.value = '';
+    inp.focus();
+    // Store state for correction check
+    rfPendingCorrection = item;
+    return;
+  }
+
+  // All other cases: resolve immediately
+  if (identifiedCorrectly) {
     card.classList.add('rf-flash-correct');
   } else {
     card.classList.add('rf-flash-wrong');
   }
+  resolveRightOrWrong(identifiedCorrectly, answeredCorrect, null);
+}
+
+var rfPendingCorrection = null;
+
+function checkRFCorrection() {
+  var item = rfPendingCorrection;
+  if (!item) return;
+  rfPendingCorrection = null;
+
+  var inp = document.getElementById('rfCorrectionInput');
+  var answer = inp.value.trim().toLowerCase();
+  var correctionOk = (answer === item.word.toLowerCase());
+
+  document.getElementById('rfCorrectionBox').classList.add('hidden');
+
+  var card = document.getElementById('phase-rightorwrong');
+  if (!correctionOk) {
+    card.classList.remove('rf-flash-correct');
+    card.classList.add('rf-flash-wrong');
+  }
+
+  // Player spotted the error but must also spell it right to get full credit
+  resolveRightOrWrong(correctionOk, false, answer);
+}
+
+function resolveRightOrWrong(ok, answeredCorrect, correctionAnswer) {
+  var item = rfItems[rfIndex];
 
   // Feedback
   var box = document.getElementById('rfFeedbackBox');
@@ -7108,10 +7158,14 @@ function checkRightOrWrong(answeredCorrect) {
     if (item.isCorrect) {
       box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! "' + item.word + '" er korrekt stavet</div>';
     } else {
-      box.innerHTML = '<div class="feedback-correct">\u2705 Godt spottet! Det rigtige er: <strong>' + item.word + '</strong></div>';
+      box.innerHTML = '<div class="feedback-correct">\u2705 Perfekt! Du stavede det rigtigt: <strong>' + item.word + '</strong></div>';
     }
   } else {
-    if (item.isCorrect) {
+    if (correctionAnswer !== null) {
+      // Player spotted the error but spelled the correction wrong
+      box.innerHTML = '<div class="feedback-wrong">\u274C T\u00E6t p\u00E5! Du skrev "' + correctionAnswer + '" \u2014 det rigtige er: <strong>' + item.word + '</strong>' +
+        (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
+    } else if (item.isCorrect) {
       box.innerHTML = '<div class="feedback-wrong">\u274C "' + item.word + '" er faktisk stavet rigtigt!</div>';
     } else {
       box.innerHTML = '<div class="feedback-wrong">\u274C Det er forkert stavet! Rigtigt: <strong>' + item.word + '</strong>' +
@@ -7120,9 +7174,10 @@ function checkRightOrWrong(answeredCorrect) {
   }
 
   // Record result
+  var userAnswer = correctionAnswer || (answeredCorrect ? 'rigtigt' : 'forkert');
   var result = {
     word: item.word, correct: ok, selfCorrected: false,
-    userAnswer: answeredCorrect ? 'rigtigt' : 'forkert',
+    userAnswer: userAnswer,
     category: item.category, patternHint: item.patternHint, level: item.level
   };
   rfResults.push(result);
@@ -7130,7 +7185,7 @@ function checkRightOrWrong(answeredCorrect) {
 
   // SR update + Supabase
   updateSRWord(item.word, ok, item.category);
-  logAnswer(item.word, answeredCorrect ? 'rigtigt' : 'forkert', ok, 1, item.category, item.level || 0);
+  logAnswer(item.word, userAnswer, ok, 1, item.category, item.level || 0);
   updateCategoryLevel(item.category, ok, item.level || 0);
 
   // Gamification

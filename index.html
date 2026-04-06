@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.4.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2192,8 +2192,8 @@ function updateCategoryLevel(category, correct, wordLevel) {
       cat.level++;
       cat.history = [];
     }
-    // Level down at <40% correct with at least 5 answers
-    else if (total >= 5 && correctCount / total < 0.4 && cat.level > 0) {
+    // Level down at <40% correct with at least 5 answers (never below start level)
+    else if (total >= 5 && correctCount / total < 0.4 && cat.level > (CATEGORY_START_LEVELS[category] !== undefined ? CATEGORY_START_LEVELS[category] : 1)) {
       cat.level--;
       cat.history = [];
     }

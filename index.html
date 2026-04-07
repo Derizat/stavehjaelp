@@ -136,7 +136,8 @@
   .retry-word { background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); border-radius: 99px; padding: 3px 10px; font-size: 0.85rem; font-weight: 700; color: #fca5a5; }
 
   .ai-bubble { background: linear-gradient(135deg, #1e1060, #0d1b4b); border: 1px solid #3d4270; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; position: relative; }
-  .ai-bubble::before { content: '\01F98A'; position: absolute; top: -14px; left: 16px; font-size: 1.6rem; }
+  .ai-bubble::before { content: ''; display: none; }
+  .ai-bubble-avatar { position: absolute; top: -14px; left: 16px; width: 1.8rem; height: 1.8rem; object-fit: contain; }
   .ai-bubble p { font-size: 0.95rem; line-height: 1.65; color: var(--text); margin-top: 6px; }
 
   .spinner { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--muted); font-size: 0.95rem; padding: 20px 0; }
@@ -1125,7 +1126,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3019,7 +3020,7 @@ function renderTrainingResults() {
 
   var html = '';
   var encouragements = ['Godt gået med træningen! \u{1F4AA}', 'Flot indsats! Du bliver bedre og bedre \u{1F31F}', 'Stærkt! Øvelse gør mester \u2B50'];
-  html += '<div class="ai-bubble"><p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
+  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
   html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige i træningen.</p></div>';
 
   html += '<div class="score-row">';
@@ -5550,6 +5551,14 @@ function getAvatarLevel(totalXP) {
   return { emoji: level.emoji, title: level.title, desc: level.desc, titleStyle: level.titleStyle || '', index: idx, progress: progress, nextXP: nextLevel ? nextLevel.minXP : null, currentXP: totalXP };
 }
 
+function getCurrentAvatarImg(cssClass) {
+  var data = loadRewardData();
+  var idx = data.displayedLevel || 0;
+  var lvl = AVATAR_LEVELS[idx] || AVATAR_LEVELS[0];
+  if (lvl.image) return '<img src="' + lvl.image + '" class="' + (cssClass || '') + '">';
+  return '<span class="' + (cssClass || '') + '">' + (lvl.emoji || '\u{1F98A}') + '</span>';
+}
+
 function updateWelcomeAvatar() {
   var data = loadRewardData();
   var displayedIdx = data.displayedLevel || 0;
@@ -6820,7 +6829,7 @@ function renderFillInResults() {
 
   var html = '';
   var encouragements = ['Godt g\u00E5et! \u{1F4AA}', 'Flot indsats med bogstaverne! \u{1F31F}', 'Du bliver skarpere! \u2B50'];
-  html += '<div class="ai-bubble"><p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
+  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
   html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + fillinResults.length + ' rigtige i udfyld-\u00F8velsen.</p></div>';
 
   html += '<div class="score-row">';
@@ -7291,7 +7300,7 @@ function renderRightOrWrongResults() {
   var wrong = rfResults.filter(function(r) { return !r.correct; });
 
   var html = '';
-  html += '<div class="ai-bubble"><p><strong>';
+  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>';
   if (correct / rfResults.length >= 0.8) html += 'Skarpt \u00F8je! Du er god til at se fejl! \u{1F31F}';
   else if (correct / rfResults.length >= 0.5) html += 'Godt g\u00E5et! \u00D8velse g\u00F8r mester \u{1F4AA}';
   else html += 'Bliv ved! Det bliver lettere med \u00F8velse \u{1F680}';
@@ -7602,7 +7611,7 @@ function renderSpellingPoliceResults() {
 
   var html = '';
   var msgs = ['Skarpt politiarbejde, betjent! \u{1F50D}', 'Mesterdetektiv! \u{1F575}\uFE0F', 'Ingen slipper forbi dig! \u{1F6A8}'];
-  html += '<div class="ai-bubble"><p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
+  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
   html += '<p style="margin-top:8px">' + correct + ' ud af ' + spResults.length + ' forbrydere fanget!</p></div>';
 
   html += '<div class="score-row">';
@@ -7966,7 +7975,7 @@ function renderWBResults() {
 
   var html = '';
   var msgs = ['Flot bygget! \u{1F9E9}', 'Du er en ordarkitekt! \u{1F3D7}\uFE0F', 'Godt samlet! \u{1F4AA}'];
-  html += '<div class="ai-bubble"><p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
+  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
   html += '<p style="margin-top:8px">' + correct + ' ud af ' + wbResults.length + ' ord bygget uden fejl.</p></div>';
 
   html += '<div class="score-row">';
@@ -8210,7 +8219,7 @@ function renderSpkResults() {
 
   var html = '';
   var msgs = ['Godt valgt! \u{1F3AF}', 'Skarpt \u00F8je! \u{1F441}\uFE0F', 'Flot stavning! \u{1F4AA}'];
-  html += '<div class="ai-bubble"><p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
+  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
   html += '<p style="margin-top:8px">' + correct + ' ud af ' + spkResults.length + ' ord valgt rigtigt.</p></div>';
 
   html += '<div class="score-row">';

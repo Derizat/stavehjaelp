@@ -1125,7 +1125,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2003,6 +2003,18 @@ var CATEGORY_ICONS = {
 
 var ALL_CATEGORIES = [];
 
+// Show category badge for levels 0-3, hide for 4+
+function updatePatternBadge(badgeId, category, wordLevel) {
+  var el = document.getElementById(badgeId);
+  if (!el) return;
+  if (wordLevel !== undefined && wordLevel >= 4) {
+    el.style.display = 'none';
+  } else {
+    el.style.display = '';
+    el.textContent = (CATEGORY_ICONS[category] || '\u{1F520}') + ' ' + category;
+  }
+}
+
 var LEVEL_LABELS = {
   0: { text: "\u26AA Niveau 0", bg: "rgba(255,255,255,0.1)", color: "#ccc" },
   1: { text: "\u{1F7E2} Niveau 1", bg: "rgba(34,211,160,0.15)", color: "var(--green)" },
@@ -2787,7 +2799,7 @@ function renderWord() {
   var total = currentWords.length;
   document.getElementById('wordNum').textContent = (results.length + 1);
   document.getElementById('progressBar').style.width = ((results.length / Math.max(total, results.length + 1)) * 100) + '%';
-  document.getElementById('patternBadge').style.display = 'none';
+  updatePatternBadge('patternBadge', w.category, w.level);
   document.getElementById('spellingInput').value = '';
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('listenBox').style.visibility = '';
@@ -6601,7 +6613,7 @@ function renderFillInWord() {
 
   document.getElementById('fillinWordNum').textContent = (fillinResults.length + 1);
   document.getElementById('fillinProgressBar').style.width = ((fillinResults.length / total) * 100) + '%';
-  document.getElementById('fillinPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  updatePatternBadge('fillinPatternBadge', w.category, w.level);
   document.getElementById('fillinFeedbackBox').style.display = 'none';
   document.getElementById('fillinNextBtn').classList.add('hidden');
 
@@ -7055,7 +7067,7 @@ function renderRightOrWrongWord() {
 
   document.getElementById('rfWordNum').textContent = (rfResults.length + 1);
   document.getElementById('rfProgressBar').style.width = ((rfResults.length / total) * 100) + '%';
-  document.getElementById('rfPatternBadge').textContent = (CATEGORY_ICONS[item.category] || '\u{1F520}') + ' ' + item.category;
+  updatePatternBadge('rfPatternBadge', item.category, item.level);
   document.getElementById('rfFeedbackBox').style.display = 'none';
   document.getElementById('rfCorrectionBox').classList.add('hidden');
   document.getElementById('rfNextBtn').classList.add('hidden');
@@ -7436,7 +7448,7 @@ function renderSpellingPoliceWord() {
 
   document.getElementById('spWordNum').textContent = (spResults.length + 1);
   document.getElementById('spProgressBar').style.width = ((spResults.length / total) * 100) + '%';
-  document.getElementById('spPatternBadge').textContent = (CATEGORY_ICONS[item.category] || '\u{1F520}') + ' ' + item.category;
+  updatePatternBadge('spPatternBadge', item.category, item.level);
   document.getElementById('spFeedbackBox').style.display = 'none';
   document.getElementById('spNextBtn').classList.add('hidden');
   document.getElementById('spCorrection').classList.add('hidden');
@@ -7758,7 +7770,7 @@ function renderWBWord() {
 
   document.getElementById('wbWordNum').textContent = (wbResults.length + 1);
   document.getElementById('wbProgressBar').style.width = ((wbResults.length / wbWords.length) * 100) + '%';
-  document.getElementById('wbPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  updatePatternBadge('wbPatternBadge', w.category, w.level);
   document.getElementById('wbFeedbackBox').style.display = 'none';
   document.getElementById('wbNextBtn').classList.add('hidden');
 
@@ -8230,7 +8242,7 @@ function renderSentenceWord(wordObj) {
   swCurrentWord = wordObj || mixedQueue[mixedIndex].wordObj;
   var w = swCurrentWord;
 
-  document.getElementById('swPatternBadge').textContent = (CATEGORY_ICONS[w.category] || '\u{1F520}') + ' ' + w.category;
+  updatePatternBadge('swPatternBadge', w.category, w.level);
   document.getElementById('swFeedbackBox').style.display = 'none';
   document.getElementById('swCheckBtn').classList.remove('hidden');
   document.getElementById('swNextBtn').classList.add('hidden');

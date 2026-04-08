@@ -3676,9 +3676,9 @@ function showBossMinigame(bossData) {
 // --- Shared boss UI helpers ---
 function renderBossHeader(boss, idleAnim, hp, maxHP) {
   return '<div style="text-align:center">' +
-    '<div id="bossMonster" class="boss-monster ' + idleAnim + '">' + boss.emoji + '</div>' +
     '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>' +
-    '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:14px" id="bossHPText">HP: ' + hp + '/' + maxHP + '</div>' +
+    '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:4px" id="bossHPText">HP: ' + hp + '/' + maxHP + '</div>' +
+    '<div id="bossMonster" class="boss-monster ' + idleAnim + '">' + boss.emoji + '</div>' +
     '</div>';
 }
 

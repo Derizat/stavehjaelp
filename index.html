@@ -1126,7 +1126,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.5</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.6</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3189,23 +3189,23 @@ function awardSessionXP(correctCount, totalCount) {
   }
 
   var xpEarned = 0;
-  // +10 XP per correct word
-  xpEarned += correctCount * 10;
-  // +5 XP per incorrect word (rewards effort)
-  xpEarned += (totalCount - correctCount) * 5;
+  // +5 XP per correct word
+  xpEarned += correctCount * 5;
+  // +2 XP per incorrect word (rewards effort)
+  xpEarned += (totalCount - correctCount) * 2;
   // +3 XP bonus per self-corrected answer
   var selfCorrectedCount = results.filter(function(r) { return r.selfCorrected; }).length;
   xpEarned += selfCorrectedCount * 3;
-  // +20 XP bonus for completing session
-  xpEarned += 20;
-  // +10 XP bonus if streak day
+  // +10 XP bonus for completing session
+  xpEarned += 10;
+  // +5 XP bonus if streak day
   if (data.streak > 0) {
-    xpEarned += 10;
+    xpEarned += 5;
   }
 
   var gemsEarned = 0;
-  // 5 gems for completing session
-  gemsEarned += 5;
+  // 2 gems for completing session
+  gemsEarned += 2;
 
   var dailyGoalReached = false;
   var prevTodayXP = data.todayXP;
@@ -5449,25 +5449,25 @@ function proceedAfterInterrupt() {
 // ===== TREASURE CHESTS =====
 
 var CHEST_REWARDS = {
-  common:   { weight: 60, rewards: [
-    { type: 'xp', amount: 10, text: '+10 XP', emoji: '\u2728' },
-    { type: 'xp', amount: 15, text: '+15 XP', emoji: '\u2728' },
-    { type: 'message', text: 'Godt g\u00E5et!', emoji: '\uD83D\uDC4D' }
-  ]},
-  uncommon: { weight: 25, rewards: [
-    { type: 'xp', amount: 25, text: '+25 XP', emoji: '\uD83D\uDCA5' },
-    { type: 'gems', amount: 2, text: '+2 Diamanter', emoji: '\uD83D\uDC8E' },
+  common:   { weight: 55, rewards: [
+    { type: 'xp', amount: 20, text: '+20 XP', emoji: '\u2728' },
+    { type: 'xp', amount: 30, text: '+30 XP', emoji: '\u2728' },
     { type: 'gems', amount: 3, text: '+3 Diamanter', emoji: '\uD83D\uDC8E' }
   ]},
-  rare:     { weight: 10, rewards: [
-    { type: 'xp', amount: 40, text: '+40 XP', emoji: '\uD83D\uDD25' },
+  uncommon: { weight: 25, rewards: [
+    { type: 'xp', amount: 50, text: '+50 XP', emoji: '\uD83D\uDCA5' },
     { type: 'gems', amount: 5, text: '+5 Diamanter', emoji: '\uD83D\uDC8E' },
+    { type: 'combo', xp: 25, gems: 3, text: '+25 XP & +3 \uD83D\uDC8E', emoji: '\uD83C\uDF08' }
+  ]},
+  rare:     { weight: 13, rewards: [
+    { type: 'xp', amount: 80, text: '+80 XP', emoji: '\uD83D\uDD25' },
+    { type: 'gems', amount: 10, text: '+10 Diamanter', emoji: '\uD83D\uDC8E' },
     { type: 'streakFreeze', amount: 1, text: 'Streak Freeze!', emoji: '\u2744\uFE0F' }
   ]},
-  epic:     { weight: 5, rewards: [
-    { type: 'xp', amount: 75, text: '+75 XP!', emoji: '\uD83C\uDF1F' },
-    { type: 'gems', amount: 8, text: '+8 Diamanter!', emoji: '\uD83D\uDC8E' },
-    { type: 'combo', xp: 30, gems: 3, text: '+30 XP & +3 \uD83D\uDC8E', emoji: '\uD83C\uDF08' }
+  epic:     { weight: 7, rewards: [
+    { type: 'xp', amount: 150, text: '+150 XP!', emoji: '\uD83C\uDF1F' },
+    { type: 'gems', amount: 15, text: '+15 Diamanter!', emoji: '\uD83D\uDC8E' },
+    { type: 'combo', xp: 75, gems: 8, text: '+75 XP & +8 \uD83D\uDC8E', emoji: '\uD83C\uDF08' }
   ]}
 };
 

@@ -1126,7 +1126,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3661,6 +3661,13 @@ function testBoss(type) {
 }
 
 function showBossMinigame(bossData) {
+  // Hard limit: max 2 bosses per session to prevent loops
+  if (sessionBossCount >= 2) {
+    pendingBoss = null;
+    pendingChest = false;
+    proceedAfterInterrupt();
+    return;
+  }
   sessionBossCount++;
   hide('phase-test');
   hide('phase-fillin');

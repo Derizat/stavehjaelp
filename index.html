@@ -1126,7 +1126,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.6</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1961,10 +1961,81 @@ var sessionLessonCategories = [];
 function trackCategoryError(category) {
   if (!sessionCategoryErrors[category]) sessionCategoryErrors[category] = 0;
   sessionCategoryErrors[category]++;
-  if (sessionCategoryErrors[category] >= 3 && sessionLessonCategories.indexOf(category) === -1) {
+  // Check accumulated history for this category — trigger lesson if struggling
+  checkLessonTrigger(category);
+}
+
+function checkLessonTrigger(category) {
+  if (!CATEGORY_LESSONS[category]) return;
+  if (sessionLessonCategories.indexOf(category) !== -1) return; // already triggered this session
+
+  var levels = loadCategoryLevels();
+  var cat = levels[category];
+  if (!cat || !cat.history || cat.history.length < 3) return;
+
+  var total = cat.history.length;
+  var correct = cat.history.filter(function(h) { return h; }).length;
+  var pct = correct / total;
+
+  // Trigger lesson if <60% correct over accumulated history (min 3 answers)
+  if (pct < 0.6) {
+    // Check if we already showed this lesson at this level
+    var profile = loadProfile() || {};
+    var shownLessons = profile.shownLessons || {};
+    var key = category + '_' + cat.level;
+    if (shownLessons[key]) return; // already shown at this level
+
+    // Mark as shown
+    shownLessons[key] = true;
+    profile.shownLessons = shownLessons;
+    try { localStorage.setItem(playerKey('profile_data'), JSON.stringify(profile)); } catch(e) {}
+
     sessionLessonCategories.push(category);
+    showLessonPopup(category);
   }
 }
+
+function showLessonPopup(category) {
+  var lesson = CATEGORY_LESSONS[category];
+  if (!lesson) return;
+
+  var overlay = document.getElementById('lessonOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'lessonOverlay';
+    overlay.className = 'milestone-overlay';
+    document.body.appendChild(overlay);
+  }
+
+  var html = '<div style="background:var(--card);border-radius:16px;padding:24px;max-width:380px;margin:0 auto;border:2px solid var(--accent);text-align:center">';
+  html += '<div style="font-size:2.5rem;margin-bottom:8px">' + lesson.emoji + '</div>';
+  html += '<h3 style="color:var(--accent);margin-bottom:12px">' + lesson.title + '</h3>';
+  html += '<div style="background:var(--card2);border-radius:10px;padding:12px;margin-bottom:12px;text-align:left">';
+  html += '<p style="font-size:0.95rem;line-height:1.6;color:var(--text)">' + lesson.rule + '</p></div>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px">';
+  for (var i = 0; i < lesson.examples.length; i++) {
+    var ex = lesson.examples[i];
+    html += '<div style="background:var(--card2);border-radius:8px;padding:8px 12px;text-align:center">';
+    html += '<div style="font-size:1.1rem;font-weight:700">' + ex.word + '</div>';
+    html += '<div style="font-size:0.7rem;color:var(--muted);margin-top:2px">' + ex.note + '</div></div>';
+  }
+  html += '</div>';
+  html += '<div style="background:rgba(34,211,160,0.1);border-radius:8px;padding:10px;margin-bottom:14px;font-size:0.85rem;color:var(--green)">' + lesson.tip + '</div>';
+  html += '<button class="btn btn-accent" onclick="dismissLessonPopup()">Forst\u00E5et! \u{1F4AA}</button>';
+  html += '</div>';
+
+  overlay.innerHTML = html;
+  overlay.classList.remove('hidden');
+  pendingLesson = true;
+}
+
+function dismissLessonPopup() {
+  var overlay = document.getElementById('lessonOverlay');
+  if (overlay) overlay.classList.add('hidden');
+  pendingLesson = false;
+}
+
+var pendingLesson = false;
 
 function renderLessonInline(category) {
   var lesson = CATEGORY_LESSONS[category];

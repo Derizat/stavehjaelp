@@ -1126,7 +1126,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2554,7 +2554,8 @@ var isMixedSession = false;
 
 function startTrainingFromProfile() {
   var profile = loadProfile() || {};
-  var categories = (profile.weakCategories && profile.weakCategories.length > 0) ? profile.weakCategories : ALL_CATEGORIES;
+  // Use all categories — weakCategories from diagnostik is too narrow and gets stale
+  var categories = ALL_CATEGORIES;
   isMixedSession = true;
   pendingBoss = null;
   sessionLessonCategories = [];

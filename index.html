@@ -1979,16 +1979,10 @@ function checkLessonTrigger(category) {
 
   // Trigger lesson if <60% correct over accumulated history (min 3 answers)
   if (pct < 0.6) {
-    // Check if we already showed this lesson at this level
-    var profile = loadProfile() || {};
-    var shownLessons = profile.shownLessons || {};
-    var key = category + '_' + cat.level;
-    if (shownLessons[key]) return; // already shown at this level
-
-    // Mark as shown
-    shownLessons[key] = true;
-    profile.shownLessons = shownLessons;
-    try { localStorage.setItem(playerKey('profile_data'), JSON.stringify(profile)); } catch(e) {}
+    // Reset history so the count starts fresh after the lesson
+    cat.history = [];
+    levels[category] = cat;
+    saveCategoryLevels(levels);
 
     sessionLessonCategories.push(category);
     showLessonPopup(category);

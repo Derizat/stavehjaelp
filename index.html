@@ -1126,7 +1126,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.5.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -5127,7 +5127,7 @@ function renderBossSilentServant(word, boss, idleAnim) {
     if (mis && mis.misspelled && mis.misspelled.toLowerCase() !== sw.word.toLowerCase()) {
       if (usedWords[sw.word.toLowerCase()]) continue;
       usedWords[sw.word.toLowerCase()] = true;
-      rounds.push({ correct: sw.word.toLowerCase(), wrong: mis.misspelled.toLowerCase(), hasSilent: true });
+      rounds.push({ correct: sw.word.toLowerCase(), wrong: mis.misspelled.toLowerCase(), hasSilent: true, hint: sw.hint || '' });
     }
   }
 
@@ -5139,6 +5139,12 @@ function renderBossSilentServant(word, boss, idleAnim) {
     var ot = otherWords[oi]; otherWords[oi] = otherWords[oj]; otherWords[oj] = ot;
   }
 
+  // Build a set of all known words to avoid fake versions that are real words
+  var allKnownWords = {};
+  Object.keys(WORD_BANK).forEach(function(cat) {
+    WORD_BANK[cat].forEach(function(w) { allKnownWords[w.word.toLowerCase()] = true; });
+  });
+
   for (var ni = 0; ni < otherWords.length && rounds.length < 5; ni++) {
     var nw = otherWords[ni].word.toLowerCase();
     if (usedWords[nw]) continue;
@@ -5146,9 +5152,10 @@ function renderBossSilentServant(word, boss, idleAnim) {
     if (nw.match(/^v/) && !nw.match(/^hv/)) fakeVersion = 'h' + nw;
     else if (nw.match(/^j/) && !nw.match(/^hj/)) fakeVersion = 'h' + nw;
     else continue;
-    if (fakeVersion && fakeVersion !== nw) {
+    // Skip if fake version is also a real word (e.g. jul -> hjul)
+    if (fakeVersion && fakeVersion !== nw && !allKnownWords[fakeVersion]) {
       usedWords[nw] = true;
-      rounds.push({ correct: nw, wrong: fakeVersion, hasSilent: false });
+      rounds.push({ correct: nw, wrong: fakeVersion, hasSilent: false, hint: otherWords[ni].hint || '' });
     }
   }
 
@@ -5158,7 +5165,7 @@ function renderBossSilentServant(word, boss, idleAnim) {
     var mis2 = generateMisspelling(sw2);
     if (mis2 && mis2.misspelled) {
       usedWords[sw2.word.toLowerCase()] = true;
-      rounds.push({ correct: sw2.word.toLowerCase(), wrong: mis2.misspelled.toLowerCase(), hasSilent: true });
+      rounds.push({ correct: sw2.word.toLowerCase(), wrong: mis2.misspelled.toLowerCase(), hasSilent: true, hint: sw2.hint || '' });
     }
   }
 
@@ -5187,6 +5194,9 @@ function buildSilentServantRound() {
   var content = document.getElementById('bossContent');
   var html = renderCoatRack(bossState.ssCorrect, bossState.ssWrong);
   html += '<p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:10px 0">Hvilken stavem\u00E5de er rigtig?</p>';
+  if (round.hint) {
+    html += '<p style="text-align:center;color:var(--accent);font-size:0.9rem;margin-bottom:10px;font-style:italic">' + round.hint + '</p>';
+  }
 
   var opts = [round.correct, round.wrong];
   if (Math.random() > 0.5) { opts = [round.wrong, round.correct]; }

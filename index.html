@@ -135,9 +135,9 @@
   .retry-words { display: flex; flex-wrap: wrap; gap: 6px; }
   .retry-word { background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); border-radius: 99px; padding: 3px 10px; font-size: 0.85rem; font-weight: 700; color: #fca5a5; }
 
-  .ai-bubble { background: linear-gradient(135deg, #1e1060, #0d1b4b); border: 1px solid #3d4270; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; position: relative; }
+  .ai-bubble { background: linear-gradient(135deg, #1e1060, #0d1b4b); border: 1px solid #3d4270; border-radius: 12px; padding: 16px 20px; padding-right: 70px; margin-bottom: 16px; position: relative; overflow: hidden; }
   .ai-bubble::before { content: ''; display: none; }
-  .ai-bubble-avatar { position: absolute; top: -14px; left: 16px; width: 1.8rem; height: 1.8rem; object-fit: contain; }
+  .ai-bubble-avatar { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 3.2rem; height: 3.2rem; object-fit: contain; }
   .ai-bubble p { font-size: 0.95rem; line-height: 1.65; color: var(--text); margin-top: 6px; }
 
   .spinner { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--muted); font-size: 0.95rem; padding: 20px 0; }

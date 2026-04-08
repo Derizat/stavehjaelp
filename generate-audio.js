@@ -40,10 +40,20 @@ function sanitizeFilename(word) {
     .replace(/[^a-z0-9]/g, '_');
 }
 
+// Words that need pronunciation override for Danish TTS
+const PRONUNCIATION_OVERRIDES = {
+  'zoo': 'suu'
+};
+
 function synthesize(text, speakingRate) {
   return new Promise((resolve, reject) => {
+    // Check for pronunciation override (only for single-word inputs)
+    const override = PRONUNCIATION_OVERRIDES[text.toLowerCase()];
+    const inputField = override
+      ? { ssml: '<speak><phoneme alphabet="x-sampa" ph="s u:">' + text + '</phoneme></speak>' }
+      : { text };
     const body = JSON.stringify({
-      input: { text },
+      input: inputField,
       voice: { languageCode: 'da-DK', name: VOICE },
       audioConfig: { audioEncoding: 'MP3', speakingRate }
     });

@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.6</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.7</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3887,7 +3887,6 @@ function renderTrainingResults() {
   show('phase-results');
   var correct = results.filter(function(r) { return r.correct; }).length;
   var wrong = results.filter(function(r) { return !r.correct; });
-  var sr = loadSRData();
 
   var html = '';
   var encouragements = ['Godt gået med træningen! \u{1F4AA}', 'Flot indsats! Du bliver bedre og bedre \u{1F31F}', 'Stærkt! Øvelse gør mester \u2B50'];
@@ -3903,15 +3902,10 @@ function renderTrainingResults() {
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
   html += '<div style="margin-bottom:18px">';
   results.forEach(function(r) {
-    var srWord = sr.words[r.word];
-    var level = srWord ? srWord.level : 0;
-    var levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
-    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
     html += '<div class="word-attempt">';
     html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
     html += '<span>';
     html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
-    html += ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
     html += '</span></div>';
   });
   html += '</div>';
@@ -7634,7 +7628,6 @@ function renderFillInResults() {
   show('phase-results');
   var correct = fillinResults.filter(function(r) { return r.correct; }).length;
   var wrong = fillinResults.filter(function(r) { return !r.correct; });
-  var sr = loadSRData();
 
   var html = '';
   var encouragements = ['Godt g\u00E5et! \u{1F4AA}', 'Flot indsats med bogstaverne! \u{1F31F}', 'Du bliver skarpere! \u2B50'];
@@ -7650,15 +7643,10 @@ function renderFillInResults() {
   html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
   html += '<div style="margin-bottom:18px">';
   fillinResults.forEach(function(r) {
-    var srWord = sr.words[r.word];
-    var level = srWord ? srWord.level : 0;
-    var levelNames = ['Nyt', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
-    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
     html += '<div class="word-attempt">';
     html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
     html += '<span>';
     html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
-    html += ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
     html += '</span></div>';
   });
   html += '</div>';
@@ -9292,7 +9280,7 @@ function renderCategoryLevels() {
     var isFrench = (cat === 'Ord fra Fransk');
     var isFrench2 = (cat === 'Ord fra Fransk 2');
     var isAnyFrench = isFrench || isFrench2;
-    var hideThreshold = isFrench ? 1 : isFrench2 ? 3 : 0;
+    var hideThreshold = isFrench ? 1 : isFrench2 ? 2 : 0;
     var lockThreshold = isFrench ? 2 : isFrench2 ? 4 : 0;
     if (isAnyFrench && masteredCount < hideThreshold) continue;
     var locked = isAnyFrench && masteredCount < lockThreshold;

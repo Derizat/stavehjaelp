@@ -1169,6 +1169,37 @@
   .teacher-toggle-wrap input[type="checkbox"] {
     width: 18px; height: 18px; accent-color: var(--accent2); cursor: pointer;
   }
+  .student-detail-header {
+    text-align: center; padding: 16px 0 12px; border-bottom: 1px solid #2d3158; margin-bottom: 14px;
+  }
+  .student-detail-header h3 {
+    font-family: 'Fredoka One', cursive; color: var(--accent); margin: 4px 0 0;
+  }
+  .student-stat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 8px; margin-bottom: 16px;
+  }
+  .student-stat-box {
+    background: var(--card2); border-radius: 10px; padding: 10px 8px; text-align: center;
+    border: 1px solid #2d3158;
+  }
+  .student-stat-box .stat-val {
+    font-size: 1.2rem; font-weight: 700; color: var(--accent);
+  }
+  .student-stat-box .stat-lbl {
+    font-size: 0.72rem; color: var(--muted); margin-top: 2px;
+  }
+  .cat-progress-row {
+    display: flex; align-items: center; gap: 8px; padding: 6px 0;
+    border-bottom: 1px solid #1e2140; font-size: 0.82rem;
+  }
+  .cat-progress-row:last-child { border-bottom: none; }
+  .cat-progress-bar {
+    height: 6px; border-radius: 3px; background: #2d3158; flex: 1; min-width: 40px; overflow: hidden;
+  }
+  .cat-progress-bar-fill {
+    height: 100%; border-radius: 3px; transition: width 0.3s ease;
+  }
 </style>
 </head>
 <body>
@@ -1247,6 +1278,7 @@
   <!-- Dev: category levels display -->
   <div id="categoryLevelsDisplay" style="margin-top:12px;width:100%;max-width:360px;margin-left:auto;margin-right:auto"></div>
 
+  <button class="settings-toggle" id="dashboardBtn" style="display:none;background:var(--accent2);color:white;border-color:var(--accent2)" onclick="openDashboard()">&#x1F3EB; L&#xe6;rer-dashboard</button>
   <button class="settings-toggle" onclick="showExercisePicker()">&#x1F4DD; &#xD8;velser</button>
   <button class="settings-toggle" onclick="showBossPicker()">&#x1F47E; Boss-kampe</button>
   <button class="settings-toggle" onclick="switchPlayer()">&#x1F465; Skift spiller</button>
@@ -1590,10 +1622,27 @@
   </div>
 </div>
 
-<!-- CLASS DASHBOARD OVERLAY -->
-<div id="classDashboardOverlay" class="chest-overlay hidden" style="z-index:999">
-  <div class="card" style="max-width:720px;width:95%;margin:auto;padding:24px;max-height:90vh;overflow-y:auto">
-    <div id="classDashboardContent"></div>
+<!-- TEACHER DASHBOARD -->
+<div id="phase-dashboard" class="card hidden" style="max-width:720px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div class="phase-label" style="margin-bottom:0">&#x1F3EB; L&#xe6;rer-dashboard</div>
+    <button class="btn" style="font-size:0.8rem;padding:6px 14px;background:#3d4270;color:var(--text)" onclick="goHome()">&#x2190; Tilbage</button>
+  </div>
+  <div style="margin-bottom:14px">
+    <label style="font-size:0.82rem;font-weight:700;color:var(--accent);display:block;margin-bottom:4px">V&#xe6;lg klasse</label>
+    <select id="dashboardClassSelect" onchange="onDashboardClassChange()" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid #3d4270;background:var(--card2);color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem">
+      <option value="">Indl&#xe6;ser...</option>
+    </select>
+  </div>
+  <div id="dashboardClassOverview"></div>
+  <div id="dashboardStudentSection" style="display:none;margin-top:16px">
+    <div style="margin-bottom:14px">
+      <label style="font-size:0.82rem;font-weight:700;color:var(--accent);display:block;margin-bottom:4px">V&#xe6;lg elev</label>
+      <select id="dashboardStudentSelect" onchange="onDashboardStudentChange()" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid #3d4270;background:var(--card2);color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem">
+        <option value="">-- V&#xe6;lg en elev --</option>
+      </select>
+    </div>
+    <div id="dashboardStudentDetail"></div>
   </div>
 </div>
 
@@ -1647,6 +1696,7 @@ function selectPlayer(name) {
     updateWelcomeAvatar();
     renderCategoryLevels();
     restoreGradeSelection();
+    updateDashboardButton();
     var rewardData = loadRewardData();
     rewardData = checkStreak(rewardData);
     saveRewardData(rewardData);
@@ -1851,7 +1901,7 @@ var JOIN_CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
 function generateJoinCode() {
   var code = '';
-  for (var i = 0; i < 6; i++) {
+  for (var i = 0; i < 3; i++) {
     code += JOIN_CODE_CHARS.charAt(Math.floor(Math.random() * JOIN_CODE_CHARS.length));
   }
   return code;
@@ -1867,6 +1917,12 @@ function toggleTeacherMode() {
   rd.isTeacher = !rd.isTeacher;
   saveRewardData(rd);
   renderClassSettings();
+  updateDashboardButton();
+}
+
+function updateDashboardButton() {
+  var btn = document.getElementById('dashboardBtn');
+  if (btn) btn.style.display = isTeacher() ? 'block' : 'none';
 }
 
 async function createClass(name) {
@@ -1937,7 +1993,10 @@ async function removeStudentFromClass(groupId, playerName, groupName) {
   if (!confirm('Fjern "' + playerName + '" fra "' + groupName + '"?')) return;
   if (!supabaseClient) return;
   await supabaseClient.from('group_members').delete().eq('group_id', groupId).eq('player', playerName);
-  showClassDashboard(groupId, groupName);
+  // Reload current class overview if on dashboard
+  if (dashboardCurrentClass && dashboardCurrentClass.id === groupId) {
+    loadClassOverview(groupId, dashboardTimeFilter);
+  }
 }
 
 function copyJoinCode(code) {
@@ -2011,7 +2070,7 @@ async function renderClassSettings() {
 
   html += '<div style="margin-top:14px;margin-bottom:6px;font-size:0.85rem;font-weight:700;color:var(--accent)">Tilmeld klasse</div>';
   html += '<div style="display:flex;gap:6px">' +
-    '<input type="text" id="joinCodeInput" class="settings-input" placeholder="Indtast klassekode" style="flex:1;margin:0;text-transform:uppercase;letter-spacing:2px" maxlength="6" />' +
+    '<input type="text" id="joinCodeInput" class="settings-input" placeholder="Indtast klassekode" style="flex:1;margin:0;text-transform:uppercase;letter-spacing:2px" maxlength="3" />' +
     '<button class="btn btn-accent" style="font-size:0.8rem;padding:8px 14px;white-space:nowrap" onclick="joinClass(document.getElementById(\'joinCodeInput\').value)">Tilmeld</button>' +
     '</div>';
 
@@ -2032,28 +2091,68 @@ async function renderClassSettings() {
   container.innerHTML = html;
 }
 
-// ===== KLASSE-DASHBOARD =====
+// ===== KLASSE-DASHBOARD (FASE) =====
+var dashboardClasses = [];
+var dashboardCurrentClass = null;
+var dashboardStudents = [];
+var dashboardTimeFilter = 'all';
 
-function showClassDashboard(groupId, groupName) {
-  var overlay = document.getElementById('classDashboardOverlay');
-  var content = document.getElementById('classDashboardContent');
-  content.innerHTML = '<p style="text-align:center;color:var(--muted);padding:40px 0">Indl\u00e6ser dashboard...</p>';
-  overlay.classList.remove('hidden');
-  loadDashboardData(groupId, groupName, 'all');
+async function openDashboard() {
+  if (!supabaseClient) { alert('Kr\u00e6ver internetforbindelse'); return; }
+  hide('phase-welcome');
+  show('phase-dashboard');
+  document.getElementById('dashboardClassOverview').innerHTML = '';
+  document.getElementById('dashboardStudentSection').style.display = 'none';
+  document.getElementById('dashboardStudentDetail').innerHTML = '';
+
+  // Load teacher's classes
+  var select = document.getElementById('dashboardClassSelect');
+  select.innerHTML = '<option value="">Indl\u00e6ser...</option>';
+
+  var memRes = await supabaseClient.from('group_members').select('group_id, role, groups(id, name, join_code)').eq('player', activePlayer).eq('role', 'teacher');
+  dashboardClasses = (memRes.data || []).map(function(m) { return m.groups; });
+
+  if (dashboardClasses.length === 0) {
+    select.innerHTML = '<option value="">Ingen klasser oprettet</option>';
+    document.getElementById('dashboardClassOverview').innerHTML = '<p style="text-align:center;color:var(--muted);padding:20px 0">Opret en klasse i Indstillinger f\u00f8rst.</p>';
+    return;
+  }
+
+  select.innerHTML = '<option value="">-- V\u00e6lg klasse --</option>';
+  for (var i = 0; i < dashboardClasses.length; i++) {
+    var c = dashboardClasses[i];
+    select.innerHTML += '<option value="' + c.id + '">' + escapeHtml(c.name) + '</option>';
+  }
+
+  // Auto-select if only one class
+  if (dashboardClasses.length === 1) {
+    select.value = dashboardClasses[0].id;
+    onDashboardClassChange();
+  }
 }
 
-function hideClassDashboard() {
-  document.getElementById('classDashboardOverlay').classList.add('hidden');
+async function onDashboardClassChange() {
+  var select = document.getElementById('dashboardClassSelect');
+  var groupId = select.value;
+  document.getElementById('dashboardStudentSection').style.display = 'none';
+  document.getElementById('dashboardStudentDetail').innerHTML = '';
+  document.getElementById('dashboardClassOverview').innerHTML = '';
+
+  if (!groupId) return;
+  dashboardCurrentClass = dashboardClasses.find(function(c) { return c.id === groupId; });
+  dashboardTimeFilter = 'all';
+  await loadClassOverview(groupId, 'all');
 }
 
-async function loadDashboardData(groupId, groupName, timeFilter) {
+async function loadClassOverview(groupId, timeFilter) {
   if (!supabaseClient) return;
-  var content = document.getElementById('classDashboardContent');
+  dashboardTimeFilter = timeFilter;
+  var container = document.getElementById('dashboardClassOverview');
+  container.innerHTML = '<p style="text-align:center;color:var(--muted);padding:16px 0">Indl\u00e6ser...</p>';
 
   var memRes = await supabaseClient.from('group_members').select('player, role').eq('group_id', groupId);
   if (memRes.error || !memRes.data) {
-    content.innerHTML = '<p style="color:var(--red)">Kunne ikke hente klassedata.</p>' +
-      '<button class="btn btn-primary" style="margin-top:16px;width:100%" onclick="hideClassDashboard()">Luk</button>';
+    container.innerHTML = '<p style="color:var(--red)">Kunne ikke hente klassedata.</p>';
     return;
   }
 
@@ -2061,30 +2160,37 @@ async function loadDashboardData(groupId, groupName, timeFilter) {
   var studentNames = students.map(function(m) { return m.player; });
 
   if (studentNames.length === 0) {
-    renderDashboard(groupId, groupName, [], timeFilter);
+    container.innerHTML = '<p style="text-align:center;color:var(--muted);padding:20px 0">Ingen elever tilmeldt endnu.<br><span style="font-size:0.82rem">Del klassekoden s\u00e5 elever kan tilmelde sig.</span></p>';
+    document.getElementById('dashboardStudentSection').style.display = 'none';
     return;
   }
 
-  var profilesPromise = supabaseClient.from('profiles').select('player, reward_data, student_grade, updated_at').in('player', studentNames);
-
-  var answersQuery = supabaseClient.from('answers').select('player, correct').in('player', studentNames);
+  // Fetch profiles and answers in parallel
+  var profilesPromise = supabaseClient.from('profiles').select('player, reward_data, profile_data, student_grade, updated_at').in('player', studentNames);
+  var answersQuery = supabaseClient.from('answers').select('player, correct, category').in('player', studentNames);
   if (timeFilter === 'week') {
     answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 7 * 86400000).toISOString());
   } else if (timeFilter === 'month') {
     answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString());
   }
-  var answersPromise = answersQuery.limit(10000);
 
-  var results = await Promise.all([profilesPromise, answersPromise]);
+  var results = await Promise.all([profilesPromise, answersQuery.limit(10000)]);
   var profiles = results[0].data || [];
   var answers = results[1].data || [];
 
+  // Aggregate answer stats per player
   var answerStats = {};
   for (var a = 0; a < answers.length; a++) {
     var row = answers[a];
-    if (!answerStats[row.player]) answerStats[row.player] = { total: 0, correct: 0 };
+    if (!answerStats[row.player]) answerStats[row.player] = { total: 0, correct: 0, cats: {} };
     answerStats[row.player].total++;
     if (row.correct) answerStats[row.player].correct++;
+    // Per-category stats
+    if (row.category) {
+      if (!answerStats[row.player].cats[row.category]) answerStats[row.player].cats[row.category] = { total: 0, correct: 0 };
+      answerStats[row.player].cats[row.category].total++;
+      if (row.correct) answerStats[row.player].cats[row.category].correct++;
+    }
   }
 
   var profileMap = {};
@@ -2092,10 +2198,10 @@ async function loadDashboardData(groupId, groupName, timeFilter) {
     profileMap[profiles[p].player] = profiles[p];
   }
 
-  var studentData = studentNames.map(function(name) {
+  dashboardStudents = studentNames.map(function(name) {
     var prof = profileMap[name] || {};
     var rd = prof.reward_data || {};
-    var stats = answerStats[name] || { total: 0, correct: 0 };
+    var stats = answerStats[name] || { total: 0, correct: 0, cats: {} };
     var pct = stats.total > 0 ? Math.round(100 * stats.correct / stats.total) : 0;
     var avatarIdx = rd.displayedLevel || 0;
     var avatarTitle = (typeof AVATAR_LEVELS !== 'undefined' && AVATAR_LEVELS[avatarIdx]) ? AVATAR_LEVELS[avatarIdx].title : '-';
@@ -2109,12 +2215,147 @@ async function loadDashboardData(groupId, groupName, timeFilter) {
       avatar: avatarTitle,
       correctPct: pct,
       totalAnswers: stats.total,
-      lastActive: lastActive
+      lastActive: lastActive,
+      catStats: stats.cats,
+      profileData: prof.profile_data || {},
+      rewardData: rd
     };
   });
 
-  studentData.sort(function(a, b) { return b.xp - a.xp; });
-  renderDashboard(groupId, groupName, studentData, timeFilter);
+  dashboardStudents.sort(function(a, b) { return b.xp - a.xp; });
+  renderClassOverview(groupId, dashboardStudents, timeFilter);
+
+  // Populate student selector
+  var studentSelect = document.getElementById('dashboardStudentSelect');
+  studentSelect.innerHTML = '<option value="">-- V\u00e6lg en elev --</option>';
+  for (var s = 0; s < dashboardStudents.length; s++) {
+    studentSelect.innerHTML += '<option value="' + escapeHtml(dashboardStudents[s].name) + '">' + escapeHtml(dashboardStudents[s].name) + '</option>';
+  }
+  document.getElementById('dashboardStudentSection').style.display = 'block';
+  document.getElementById('dashboardStudentDetail').innerHTML = '';
+}
+
+function renderClassOverview(groupId, students, timeFilter) {
+  var html = '';
+
+  // Time filter
+  html += '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">';
+  var filters = [
+    { key: 'week', label: 'Denne uge' },
+    { key: 'month', label: 'Denne m\u00e5ned' },
+    { key: 'all', label: 'Alt' }
+  ];
+  for (var f = 0; f < filters.length; f++) {
+    var active = timeFilter === filters[f].key ? ' active' : '';
+    html += '<button class="time-filter-btn' + active + '" onclick="loadClassOverview(\'' + groupId + '\', \'' + filters[f].key + '\')">' + filters[f].label + '</button>';
+  }
+  html += '</div>';
+
+  // Table
+  html += '<div style="overflow-x:auto;border-radius:10px;border:1px solid #3d4270">';
+  html += '<table class="dashboard-table"><thead><tr>' +
+    '<th>Navn</th><th>Kl.</th><th>XP</th><th>Streak</th><th>Rigtige</th><th>Svar</th><th>Sidst aktiv</th><th></th>' +
+    '</tr></thead><tbody>';
+
+  for (var s = 0; s < students.length; s++) {
+    var st = students[s];
+    var pctColor = st.correctPct >= 80 ? 'var(--green)' : st.correctPct >= 50 ? 'var(--accent)' : 'var(--red)';
+    html += '<tr>' +
+      '<td style="font-weight:700">' + escapeHtml(st.name) + '</td>' +
+      '<td>' + (st.grade > 0 ? st.grade + '.' : '-') + '</td>' +
+      '<td style="color:var(--accent)">' + st.xp + '</td>' +
+      '<td>' + st.streak + ' d</td>' +
+      '<td style="color:' + pctColor + ';font-weight:700">' + st.correctPct + '%</td>' +
+      '<td>' + st.totalAnswers + '</td>' +
+      '<td style="font-size:0.78rem;color:var(--muted)">' + st.lastActive + '</td>' +
+      '<td><button class="btn" style="font-size:0.7rem;padding:3px 8px;background:var(--red);color:white" onclick="removeStudentFromClass(\'' + groupId + '\', \'' + escapeHtml(st.name).replace(/'/g, "\\'") + '\', \'' + escapeHtml(dashboardCurrentClass.name).replace(/'/g, "\\'") + '\')">Fjern</button></td>' +
+      '</tr>';
+  }
+
+  html += '</tbody></table></div>';
+  document.getElementById('dashboardClassOverview').innerHTML = html;
+}
+
+function onDashboardStudentChange() {
+  var select = document.getElementById('dashboardStudentSelect');
+  var name = select.value;
+  var detail = document.getElementById('dashboardStudentDetail');
+  if (!name) { detail.innerHTML = ''; return; }
+
+  var student = dashboardStudents.find(function(s) { return s.name === name; });
+  if (!student) { detail.innerHTML = ''; return; }
+  renderStudentDetail(student);
+}
+
+function renderStudentDetail(student) {
+  var detail = document.getElementById('dashboardStudentDetail');
+  var html = '';
+
+  // Header
+  var avatarIdx = student.rewardData.displayedLevel || 0;
+  var avatarLevel = (typeof AVATAR_LEVELS !== 'undefined' && AVATAR_LEVELS[avatarIdx]) ? AVATAR_LEVELS[avatarIdx] : null;
+  var avatarImg = avatarLevel && avatarLevel.image ? '<img src="' + avatarLevel.image + '" style="width:3.5rem;height:3.5rem;object-fit:contain">' : '';
+
+  html += '<div class="student-detail-header">' +
+    avatarImg +
+    '<h3>' + escapeHtml(student.name) + '</h3>' +
+    '<span style="font-size:0.82rem;color:var(--muted)">' + (student.avatar || '') + ' &middot; ' + (student.grade > 0 ? student.grade + '. klasse' : 'Ingen klasse valgt') + '</span>' +
+    '</div>';
+
+  // Stat boxes
+  var pctColor = student.correctPct >= 80 ? 'var(--green)' : student.correctPct >= 50 ? 'var(--accent)' : 'var(--red)';
+  html += '<div class="student-stat-grid">' +
+    '<div class="student-stat-box"><div class="stat-val">' + student.xp + '</div><div class="stat-lbl">XP</div></div>' +
+    '<div class="student-stat-box"><div class="stat-val">' + student.streak + '</div><div class="stat-lbl">Streak (dage)</div></div>' +
+    '<div class="student-stat-box"><div class="stat-val" style="color:' + pctColor + '">' + student.correctPct + '%</div><div class="stat-lbl">Rigtige</div></div>' +
+    '<div class="student-stat-box"><div class="stat-val">' + student.totalAnswers + '</div><div class="stat-lbl">Svar i alt</div></div>' +
+    '</div>';
+
+  // Category breakdown
+  html += '<div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270">';
+  html += '<div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:10px">Kategorier</div>';
+
+  var catLevels = student.profileData.categoryLevels || {};
+  var levelColors = ['#9ca3af', '#60a5fa', '#22d3a0', '#f5a623', '#f97316', '#f43f5e'];
+
+  if (ALL_CATEGORIES.length === 0) {
+    html += '<p style="font-size:0.82rem;color:var(--muted)">Kategorier indl\u00e6ses...</p>';
+  } else {
+    for (var i = 0; i < ALL_CATEGORIES.length; i++) {
+      var cat = ALL_CATEGORIES[i];
+      var icon = CATEGORY_ICONS[cat] || '';
+      var catData = catLevels[cat] || { level: 0, history: [] };
+      var lvl = catData.level;
+      var maxLvl = (typeof CATEGORY_MAX_LEVELS !== 'undefined' && CATEGORY_MAX_LEVELS[cat] !== undefined) ? CATEGORY_MAX_LEVELS[cat] : 5;
+      var mastered = lvl >= maxLvl;
+      var lvlText = mastered ? 'Mestret' : 'Niv ' + lvl + '/4';
+      var lvlColor = mastered ? 'var(--green)' : levelColors[Math.min(lvl, 5)];
+
+      // Answer stats for this category
+      var catStat = student.catStats[cat] || { total: 0, correct: 0 };
+      var catPct = catStat.total > 0 ? Math.round(100 * catStat.correct / catStat.total) : -1;
+      var barColor = catPct >= 80 ? 'var(--green)' : catPct >= 50 ? 'var(--accent)' : 'var(--red)';
+
+      html += '<div class="cat-progress-row">' +
+        '<span style="width:22px;text-align:center">' + icon + '</span>' +
+        '<span style="flex:1;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + cat + '</span>' +
+        '<span style="font-weight:700;font-size:0.78rem;color:' + lvlColor + ';min-width:50px;text-align:right">' + lvlText + '</span>';
+
+      if (catPct >= 0) {
+        html += '<div class="cat-progress-bar" style="min-width:50px;max-width:80px">' +
+          '<div class="cat-progress-bar-fill" style="width:' + catPct + '%;background:' + barColor + '"></div></div>' +
+          '<span style="font-size:0.75rem;font-weight:700;color:' + barColor + ';min-width:35px;text-align:right">' + catPct + '%</span>' +
+          '<span style="font-size:0.7rem;color:var(--muted);min-width:25px;text-align:right">(' + catStat.total + ')</span>';
+      } else {
+        html += '<span style="font-size:0.75rem;color:var(--muted);min-width:110px;text-align:right">Ingen svar</span>';
+      }
+
+      html += '</div>';
+    }
+  }
+
+  html += '</div>';
+  detail.innerHTML = html;
 }
 
 function formatRelativeTime(isoStr) {
@@ -2130,56 +2371,9 @@ function formatRelativeTime(isoStr) {
   return new Date(isoStr).toLocaleDateString('da-DK');
 }
 
-function renderDashboard(groupId, groupName, students, timeFilter) {
-  var content = document.getElementById('classDashboardContent');
-  var html = '';
-
-  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">' +
-    '<h2 style="font-family:\'Fredoka One\',cursive;color:var(--accent);margin:0;font-size:1.2rem">' + escapeHtml(groupName) + '</h2>' +
-    '<button class="btn" style="font-size:0.8rem;padding:6px 14px;background:#3d4270;color:var(--text)" onclick="hideClassDashboard()">Luk</button>' +
-    '</div>';
-
-  html += '<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">';
-  var filters = [
-    { key: 'week', label: 'Denne uge' },
-    { key: 'month', label: 'Denne m\u00e5ned' },
-    { key: 'all', label: 'Alt' }
-  ];
-  for (var f = 0; f < filters.length; f++) {
-    var active = timeFilter === filters[f].key ? ' active' : '';
-    html += '<button class="time-filter-btn' + active + '" onclick="loadDashboardData(\'' + groupId + '\', \'' + escapeHtml(groupName).replace(/'/g, "\\'") + '\', \'' + filters[f].key + '\')">' + filters[f].label + '</button>';
-  }
-  html += '</div>';
-
-  if (students.length === 0) {
-    html += '<p style="text-align:center;color:var(--muted);padding:20px 0">Ingen elever tilmeldt endnu.<br><span style="font-size:0.82rem">Del klassekoden s\u00e5 elever kan tilmelde sig.</span></p>';
-  } else {
-    html += '<div style="overflow-x:auto;border-radius:10px;border:1px solid #3d4270">';
-    html += '<table class="dashboard-table"><thead><tr>' +
-      '<th>Navn</th><th>Kl.</th><th>XP</th><th>Streak</th><th>Avatar</th><th>Rigtige</th><th>Svar</th><th>Sidst aktiv</th><th></th>' +
-      '</tr></thead><tbody>';
-
-    for (var s = 0; s < students.length; s++) {
-      var st = students[s];
-      var pctColor = st.correctPct >= 80 ? 'var(--green)' : st.correctPct >= 50 ? 'var(--accent)' : 'var(--red)';
-      html += '<tr>' +
-        '<td style="font-weight:700">' + escapeHtml(st.name) + '</td>' +
-        '<td>' + (st.grade > 0 ? st.grade + '.' : '-') + '</td>' +
-        '<td style="color:var(--accent)">' + st.xp + '</td>' +
-        '<td>' + st.streak + ' d</td>' +
-        '<td style="font-size:0.78rem">' + st.avatar + '</td>' +
-        '<td style="color:' + pctColor + ';font-weight:700">' + st.correctPct + '%</td>' +
-        '<td>' + st.totalAnswers + '</td>' +
-        '<td style="font-size:0.78rem;color:var(--muted)">' + st.lastActive + '</td>' +
-        '<td><button class="btn" style="font-size:0.7rem;padding:3px 8px;background:var(--red);color:white" onclick="removeStudentFromClass(\'' + groupId + '\', \'' + escapeHtml(st.name).replace(/'/g, "\\'") + '\', \'' + escapeHtml(groupName).replace(/'/g, "\\'") + '\')">Fjern</button></td>' +
-        '</tr>';
-    }
-
-    html += '</tbody></table></div>';
-  }
-
-  content.innerHTML = html;
-}
+// Legacy aliases for settings panel
+function showClassDashboard(groupId, groupName) { openDashboard(); }
+function hideClassDashboard() { goHome(); }
 
 // Word bank loaded from words.json
 var WORD_BANK = {};
@@ -2517,9 +2711,8 @@ function hide(id) { document.getElementById(id).classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-spellpick','phase-wordmemory','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-spellpick','phase-wordmemory','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker','phase-dashboard'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
-  document.getElementById('classDashboardOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
   cleanupHighway();
@@ -2531,6 +2724,7 @@ function goHome() {
   updateWelcomeStreak();
   updateWelcomeAvatar();
   renderCategoryLevels();
+  updateDashboardButton();
   // Hide reward bar on welcome (welcome has its own streak display)
 }
 

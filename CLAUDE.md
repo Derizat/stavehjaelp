@@ -113,21 +113,31 @@ Lærere kan oprette klasser, elever tilmelder sig via 6-tegns delekode. Ingen au
 - Lærer slår "Jeg er lærer" til i settings → kan oprette klasser
 - System genererer 6-tegns kode (charset: `ABCDEFGHJKMNPQRSTUVWXYZ23456789`)
 - Elev indtaster kode i settings → tilmeldes klassen
-- Lærer åbner dashboard-overlay med elevers fremgang
+- Lærer-dashboard er sin egen fase (`phase-dashboard`) med klasse- og elev-dropdowns
 
 ### Funktioner
 - `generateJoinCode()` — 6-tegns unik kode
 - `isTeacher()` / `toggleTeacherMode()` — lærer-toggle i reward_data
+- `updateDashboardButton()` — viser/skjuler dashboard-knap på welcome
 - `createClass(name)` / `deleteClass(groupId)` — CRUD for klasser
 - `joinClass(joinCode)` / `leaveClass(groupId)` — elev tilmelding
 - `removeStudentFromClass(groupId, player)` — lærer fjerner elev
 - `renderClassSettings()` — bygger klasse-UI i settings
-- `showClassDashboard(groupId, name)` / `hideClassDashboard()` — dashboard overlay
-- `loadDashboardData(groupId, name, timeFilter)` — henter profiler + svar-statistik
-- `renderDashboard(groupId, name, students, timeFilter)` — tabel med tidsfilter
 
-### Dashboard-kolonner
-Navn, Klassetrin, XP, Streak, Avatar, Rigtige %, Antal svar, Sidst aktiv, [Fjern]
+### Dashboard (phase-dashboard)
+- `openDashboard()` — åbner dashboard-fasen, henter lærerens klasser
+- `onDashboardClassChange()` — klasse valgt i dropdown
+- `loadClassOverview(groupId, timeFilter)` — henter profiler + svar med kategoridata
+- `renderClassOverview(groupId, students, timeFilter)` — klassetabel med tidsfilter
+- `onDashboardStudentChange()` — elev valgt i dropdown
+- `renderStudentDetail(student)` — detaljeret elevvisning med kategori-breakdown
+
+### Klasseoversigt-kolonner
+Navn, Klassetrin, XP, Streak, Rigtige %, Antal svar, Sidst aktiv, [Fjern]
+
+### Elevdetaljer
+- Stat-boxes: XP, Streak, Rigtige %, Svar i alt
+- Kategori-breakdown: ikon, navn, niveau, progress-bar med korrektprocent, antal svar
 
 ### Tidsfilter
 - `'week'` — seneste 7 dage

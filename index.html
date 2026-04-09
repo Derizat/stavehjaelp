@@ -9145,7 +9145,7 @@ function renderSentenceWord(wordObj) {
   // Build cloze sentence: replace the word with ___
   var sentence = w.sentence || '';
   var wordRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
-  var blank = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);color:var(--accent);font-weight:800;letter-spacing:2px;padding:2px 4px">___</span>';
+  var blank = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);padding:2px 4px">&nbsp;</span>';
   var clozeText = sentence.replace(wordRegex, blank);
 
   // If word wasn't found in sentence (edge case), just show sentence with blank at end

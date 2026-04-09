@@ -2923,6 +2923,40 @@ function renderWord() {
 
 // Enter key handler
 var lastSpaceTime = 0;
+// Global Enter key: dismiss overlays and continue buttons
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+
+  // Chest overlay: open if unopened, close if opened
+  var chestOv = document.getElementById('chestOverlay');
+  if (chestOv && !chestOv.classList.contains('hidden')) {
+    e.preventDefault();
+    var closeBtn = document.getElementById('chestCloseBtn');
+    if (closeBtn && !closeBtn.classList.contains('hidden')) { closeChest(); }
+    else { openChest(); }
+    return;
+  }
+
+  // Boss phase: click visible Fortsæt button
+  var bossPhase = document.getElementById('phase-boss');
+  if (bossPhase && !bossPhase.classList.contains('hidden')) {
+    var bossBtn = bossPhase.querySelector('.btn-green[onclick*="continueAfterBoss"]');
+    if (bossBtn) { e.preventDefault(); continueAfterBoss(); return; }
+  }
+
+  // Milestone popup
+  var milestoneOv = document.getElementById('milestoneOverlay');
+  if (milestoneOv && !milestoneOv.classList.contains('hidden')) {
+    e.preventDefault(); dismissMilestone(); return;
+  }
+
+  // Category lesson popup
+  var lessonOv = document.getElementById('lessonOverlay');
+  if (lessonOv && !lessonOv.classList.contains('hidden')) {
+    e.preventDefault(); dismissLessonPopup(); return;
+  }
+});
+
 document.addEventListener('keydown', function(e) {
   var testPhase = document.getElementById('phase-test');
   if (!testPhase || testPhase.classList.contains('hidden')) return;

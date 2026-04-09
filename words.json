@@ -4504,15 +4504,6 @@
       "misspelling": "nasion"
     },
     {
-      "word": "restaurant",
-      "hint": "Sted hvor man køber og spiser et måltid",
-      "patternHint": "fremmedord fra fransk: '-ant' og stumt 'au'",
-      "sentence": "Vi går ud og spiser på en restaurant i aften.",
-      "level": 3,
-      "category": "Fremmedord",
-      "misspelling": "restaruant"
-    },
-    {
       "word": "garage",
       "hint": "Rum hvor bilen holder",
       "patternHint": "fremmedord fra fransk: '-age' udtales som 'asje'",
@@ -4585,15 +4576,6 @@
       "misspelling": "milgø"
     },
     {
-      "word": "bureau",
-      "hint": "Kontor eller skrivebord",
-      "patternHint": "fremmedord fra fransk: '-eau' udtales som 'o'",
-      "sentence": "Hun arbejder på et bureau i byen.",
-      "level": 4,
-      "category": "Fremmedord",
-      "misspelling": "burø"
-    },
-    {
       "word": "psykolog",
       "hint": "Person der hjælper med tanker og følelser",
       "patternHint": "fremmedord fra græsk: stumt 'p' i 'psyk-'",
@@ -4607,7 +4589,7 @@
       "hint": "Langt musikstykke for et helt orkester",
       "patternHint": "fremmedord fra græsk: 'y' og '-foni' fra græsk",
       "sentence": "Orkestret spillede en smuk symfoni i koncerthuset.",
-      "level": 4,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "simfoni"
     },
@@ -4706,7 +4688,7 @@
       "hint": "Japansk kampsport med spark og slag",
       "patternHint": "Fremmedord fra japansk — staves med 'k' og ender på 'e'",
       "sentence": "Min bror træner karate to gange om ugen.",
-      "level": 3,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "karat"
     },
@@ -4796,7 +4778,7 @@
       "hint": "Meget dyrt og hårdt krystal",
       "patternHint": "Fremmedord fra græsk — staves med 'di' og 'a' i midten",
       "sentence": "En diamant er den hårdeste sten i verden.",
-      "level": 3,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "diaamnt"
     },
@@ -4805,7 +4787,7 @@
       "hint": "Kunsten at tegne og bygge huse",
       "patternHint": "Fremmedord fra græsk/latin — staves med 'k' og 'tur' til sidst",
       "sentence": "Byen er kendt for sin smukke arkitektur.",
-      "level": 4,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "arkitketur"
     },
@@ -4814,7 +4796,7 @@
       "hint": "At tænke dybe tanker om livet",
       "patternHint": "Fremmedord fra græsk — 'f' bruges i stedet for 'ph', ender på 'i'",
       "sentence": "Vi lærte om filosofi i skolen.",
-      "level": 4,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "filoosfi"
     },
@@ -4832,7 +4814,7 @@
       "hint": "Viden om maskiner og computere",
       "patternHint": "Fremmedord fra græsk — 'tekno' betyder kunst/færdighed, ender på 'gi'",
       "sentence": "Ny teknologi gør hverdagen lettere.",
-      "level": 4,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "teknloogi"
     },
@@ -4877,7 +4859,7 @@
       "hint": "Planlagte dansetrin til musik",
       "patternHint": "Fremmedord fra græsk — 'koreo' plus 'grafi', staves med 'e' og 'o'",
       "sentence": "Danserne øvede koreografien til showet.",
-      "level": 4,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "koreorgafi"
     },
@@ -4949,7 +4931,7 @@
       "hint": "Ord der betyder det samme som et andet",
       "patternHint": "Fremmedord fra græsk — staves med 'y' to gange",
       "sentence": "Glad og lykkelig er et synonym.",
-      "level": 4,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "sinonym"
     },
@@ -4967,7 +4949,7 @@
       "hint": "Forvirrende system af gange",
       "patternHint": "Fremmedord fra græsk — staves med 'y' i midten",
       "sentence": "Vi gik vild i den store labyrint.",
-      "level": 3,
+      "level": 2,
       "category": "Fremmedord",
       "misspelling": "labirint"
     },

@@ -1169,7 +1169,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.7.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.7.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -4391,8 +4391,11 @@ function renderBossMemory(word, boss, idleAnim) {
     var found = WORD_BANK[ALL_CATEGORIES[ci]].find(function(w) { return w.word === word; });
     if (found) { wordHint = found.hint || ''; break; }
   }
+  bossState.memHint = wordHint;
+  bossState.memAttempts = 2;
 
   var html = renderBossHeader(boss, idleAnim, word.length, word.length);
+  html += '<div id="memLives" style="text-align:center;margin:6px 0;font-size:1.3rem">\u2764\uFE0F \u2764\uFE0F</div>';
   html += '<div style="text-align:center;margin:20px 0">';
   html += '<p style="color:var(--accent);font-size:1.1rem;font-weight:800;margin-bottom:12px">\u{1F9E0} Husk dette ord!</p>';
   html += '<div class="boss-memory-word" id="bossMemoryWord">' + word + '</div>';
@@ -4401,7 +4404,7 @@ function renderBossMemory(word, boss, idleAnim) {
   html += renderBossWordSlots(word);
   if (wordHint) html += '<p style="text-align:center;color:var(--accent);font-size:0.95rem;margin:8px 0">\u{1F4A1} ' + wordHint + '</p>';
   html += '<p style="text-align:center;color:var(--muted);font-size:0.9rem;margin:8px 0">\u270F\uFE0F Stav ordet fra hukommelsen!</p>';
-  html += '<input type="text" id="bossMemInput" placeholder="Skriv ordet her..." style="margin-bottom:12px" autocomplete="off" autocapitalize="off" />';
+  html += '<input type="text" id="bossMemInput" placeholder="Skriv ordet her..." style="margin-bottom:12px" autocomplete="off" autocapitalize="off" onkeydown="if(event.key===\'Enter\')checkBossMemory()" />';
   html += '<button class="btn btn-primary btn-full" onclick="checkBossMemory()">\u2714\uFE0F Tjek</button>';
   html += '</div>';
   document.getElementById('bossContent').innerHTML = html;
@@ -4432,37 +4435,65 @@ function checkBossMemory() {
   if (!answer) return;
 
   if (answer === bossState.word) {
-    // All correct at once!
+    // All correct!
     for (var i = 0; i < bossState.word.length; i++) {
       revealBossSlot(i, bossState.word[i]);
     }
     bossState.hp = 0;
     updateBossHP(); bossHitAnim();
     setTimeout(function() { bossDefeated(); }, 300);
-  } else {
-    // Show which letters were correct, deal partial damage
-    var correct = 0;
-    for (var j = 0; j < bossState.word.length; j++) {
-      if (j < answer.length && answer[j] === bossState.word[j]) {
-        revealBossSlot(j, bossState.word[j]);
-        correct++;
-      }
-    }
-    bossState.hp = Math.max(0, bossState.hp - correct);
-    bossState.letterIndex = bossState.word.length; // prevent further slot updates
-    updateBossHP();
-    bossAttackAnim();
-
-    if (bossState.hp <= 0) {
-      setTimeout(function() { bossDefeated(); }, 300);
-    } else {
-      // Give another try
-      inp.value = '';
-      inp.classList.add('input-retry');
-      setTimeout(function() { inp.classList.remove('input-retry'); }, 600);
-      inp.focus();
-    }
+    return;
   }
+
+  // Wrong — lose a life
+  bossState.memAttempts--;
+  bossAttackAnim();
+
+  // Update lives display
+  var livesEl = document.getElementById('memLives');
+  if (livesEl) {
+    var livesHtml = '';
+    for (var li = 0; li < 2; li++) {
+      livesHtml += li < bossState.memAttempts ? '\u2764\uFE0F ' : '\u{1F5A4} ';
+    }
+    livesEl.innerHTML = livesHtml;
+  }
+
+  if (bossState.memAttempts <= 0) {
+    // Lost — reveal the word, no chest reward
+    pendingChest = false;
+    for (var ri = 0; ri < bossState.word.length; ri++) {
+      revealBossSlot(ri, bossState.word[ri]);
+    }
+    var content = document.getElementById('bossContent');
+    content.innerHTML += '<div style="text-align:center;margin-top:16px">' +
+      '<p style="color:var(--red);font-weight:700;margin-bottom:8px">Du tabte! Ordet var: ' + bossState.word + '</p>' +
+      '<button class="btn btn-green" onclick="continueAfterBoss()" style="margin-top:8px">\u27A1\uFE0F Forts\u00E6t</button></div>';
+    return;
+  }
+
+  // First mistake — show the word again for 3 seconds
+  inp.value = '';
+  inp.disabled = true;
+  var wordEl = document.getElementById('bossMemoryWord');
+  if (wordEl) {
+    wordEl.style.opacity = '0';
+    setTimeout(function() {
+      wordEl.textContent = bossState.word;
+      wordEl.style.opacity = '1';
+    }, 300);
+  }
+  setTimeout(function() {
+    if (wordEl) {
+      wordEl.style.opacity = '0';
+      setTimeout(function() {
+        wordEl.textContent = '\u{1F50D}';
+        wordEl.style.opacity = '1';
+      }, 300);
+    }
+    inp.disabled = false;
+    inp.focus();
+  }, 3300);
 }
 
 // --- Type 4: REVERSE (word shown backwards, type it correctly) ---
@@ -4826,6 +4857,7 @@ function pacmanCaught() {
   cleanupPacman();
 
   // Player caught — deal remaining damage and continue (boss wins this round)
+  pendingChest = false; // no chest reward for losing
   var content = document.getElementById('bossContent');
   if (!content) return;
 
@@ -5148,7 +5180,8 @@ function castCard(cardIndex) {
       livesEl.innerHTML = livesHtml;
     }
     if (bossState.ccLives <= 0) {
-      // Lost — reveal word and let player continue
+      // Lost — reveal word, no chest reward
+      pendingChest = false;
       var hearts = document.getElementById('ccHearts');
       if (hearts) {
         for (var ri = 0; ri < bossState.word.length; ri++) {
@@ -5404,6 +5437,7 @@ function renderSnakeGrid() {
 function snakeDeath() {
   if (!snakeState) return;
   snakeState.alive = false;
+  pendingChest = false; // no chest reward for losing
   cleanupSnake();
 
   var collected = snakeState.letterIndex;
@@ -5809,6 +5843,7 @@ function pickSilentOption(btn, picked) {
 
 function bossLost() {
   bossState = null;
+  pendingChest = false; // no chest reward for losing
   var content = document.getElementById('bossContent');
   content.innerHTML = '<div style="text-align:center;padding:30px">' +
     '<div style="font-size:4rem;margin-bottom:12px">\u{1F614}</div>' +

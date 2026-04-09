@@ -5869,15 +5869,6 @@
       "misspelling": "sjalu"
     },
     {
-      "word": "mayonnaise",
-      "hint": "Hvid, cremet sovs til mad",
-      "patternHint": "mayo + nn + aise",
-      "sentence": "Vil du have mayonnaise på din sandwich?",
-      "level": 5,
-      "category": "Ord fra Fransk",
-      "misspelling": "majonæse"
-    },
-    {
       "word": "chauffør",
       "hint": "Person der kører bil som arbejde",
       "patternHint": "ch som sj, au, ff + ør",
@@ -5912,15 +5903,6 @@
       "level": 5,
       "category": "Ord fra Fransk",
       "misspelling": "buro"
-    },
-    {
-      "word": "silhuet",
-      "hint": "En mørk skygge af en figur",
-      "patternHint": "sil + hu + et (stumt h)",
-      "sentence": "Man kunne se silhuetten af et træ mod himlen.",
-      "level": 5,
-      "category": "Ord fra Fransk",
-      "misspelling": "siluet"
     }
   ]
 }

@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.3.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2736,6 +2736,7 @@ var sessionCorrectCount = 0;
 var sessionCorrectStreak = 0; // consecutive correct answers for boss trigger
 var pendingChest = false;
 var pendingInterruptAction = null; // stores what to do after boss/chest
+var sessionUsedWords = {}; // tracks words used in session to prevent repeats
 
 // Utility
 function show(id) { document.getElementById(id).classList.remove('hidden'); }
@@ -2956,6 +2957,46 @@ function buildPoolForCategory(cat, catLevel) {
     });
   }
   return pool.map(function(w) { return Object.assign({}, w, { category: cat }); });
+}
+
+// Pick a boss word from one level higher than player's current level, excluding used words
+function pickBossWord(fallbackWord) {
+  var levels = loadCategoryLevels();
+  var pool = [];
+  for (var i = 0; i < ALL_CATEGORIES.length; i++) {
+    var cat = ALL_CATEGORIES[i];
+    if (!WORD_BANK[cat] || cat === 'Ord fra Fransk') continue;
+    var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
+    var maxLvl = CATEGORY_MAX_LEVELS[cat] || 5;
+    if (catLevel >= maxLvl) continue; // skip mastered
+    var nextLevel = catLevel + 1;
+    var words = WORD_BANK[cat].filter(function(w) { return w.level === nextLevel; });
+    for (var j = 0; j < words.length; j++) {
+      if (!sessionUsedWords[words[j].word.toLowerCase()]) {
+        pool.push({ word: words[j].word, category: cat });
+      }
+    }
+  }
+  // Fallback: current level, unused words
+  if (pool.length === 0) {
+    for (var i = 0; i < ALL_CATEGORIES.length; i++) {
+      var cat = ALL_CATEGORIES[i];
+      if (!WORD_BANK[cat] || cat === 'Ord fra Fransk') continue;
+      var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
+      var words = WORD_BANK[cat].filter(function(w) { return w.level === catLevel; });
+      for (var j = 0; j < words.length; j++) {
+        if (!sessionUsedWords[words[j].word.toLowerCase()]) {
+          pool.push({ word: words[j].word, category: cat });
+        }
+      }
+    }
+  }
+  if (pool.length > 0) {
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    sessionUsedWords[pick.word.toLowerCase()] = true;
+    return pick;
+  }
+  return fallbackWord;
 }
 
 // Max level per category — one above highest word level (5 = mastered all level 4 words)
@@ -3263,6 +3304,7 @@ function startTrainingFromProfile() {
   sessionBossCount = 0;
   pendingChest = false;
   wrongCountPerWord = {};
+  sessionUsedWords = {};
   results = [];
 
   var pool = buildPoolWithCategoryLevels(categories);
@@ -3282,6 +3324,7 @@ function startTrainingFromProfile() {
     var exerciseTypes = ['fillin', 'rightorwrong', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
     for (var i = 0; i < pool.length && mixedQueue.length < 10; i++) {
       var w = pool[i];
+      if (sessionUsedWords[w.word.toLowerCase()]) continue; // skip duplicates
       var isExerciseSlot = (mixedQueue.length % 2 === 1);
       var chosenType = 'diktat';
 
@@ -3307,6 +3350,7 @@ function startTrainingFromProfile() {
         }
       }
 
+      sessionUsedWords[w.word.toLowerCase()] = true;
       mixedQueue.push({
         wordObj: w,
         type: chosenType,
@@ -3493,8 +3537,8 @@ function finishMixedTraining() {
   // Final boss fight before results — always show one
   if (!finalBossDone && results.length > 0) {
     finalBossDone = true;
-    var allWords = results.map(function(r) { return { word: r.word, category: r.category }; });
-    var bossWord = allWords[Math.floor(Math.random() * allWords.length)];
+    var fallback = { word: results[0].word, category: results[0].category };
+    var bossWord = pickBossWord(fallback);
     pendingInterruptAction = 'finish-final';
     isMixedSession = true; // keep mixed so proceedAfterInterrupt routes back
     pendingChest = true; // chest after final boss too
@@ -3530,6 +3574,7 @@ function startReview() {
   wrongCountPerWord = {};
   pendingBoss = null;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionUsedWords = {};
   pendingChest = false;
   currentWords = shuffle(getDueWords());
   if (currentWords.length === 0) {
@@ -3723,10 +3768,7 @@ function checkSpelling() {
     // Boss + chest triggered as reward after 5 correct in a row
     if (sessionCorrectStreak >= 5) {
       sessionCorrectStreak = 0;
-      // Pick a random correct word from this session for the boss fight
-      var correctWords = results.filter(function(r) { return r.correct; });
-      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: w.word, category: w.category };
-      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true; // chest awarded after boss is defeated
     }
   } else {
@@ -7288,6 +7330,7 @@ function startFillIn() {
   pendingBoss = null;
   sessionLessonCategories = [];
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionUsedWords = {};
   pendingChest = false;
 
   var pool = buildPoolWithCategoryLevels(categories);
@@ -7330,6 +7373,7 @@ function startFillIn() {
   fillinIndex = 0;
   fillinResults = [];
   results = []; // shared results array for finishTest
+  for (var fi = 0; fi < fillinWords.length; fi++) sessionUsedWords[fillinWords[fi].word.toLowerCase()] = true;
 
   document.getElementById('fillinScoreCorrect').textContent = '0';
   document.getElementById('fillinScoreWrong').textContent = '0';
@@ -7477,9 +7521,7 @@ function checkFillIn(chosenIndex) {
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= 5) {
       sessionCorrectStreak = 0;
-      var correctWords = fillinResults.filter(function(r) { return r.correct; });
-      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: w.word, category: w.category };
-      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true;
     }
   } else {
@@ -7609,6 +7651,7 @@ function startRightOrWrong() {
   pendingBoss = null;
   sessionLessonCategories = [];
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionUsedWords = {};
   pendingChest = false;
 
   var pool = buildPoolWithCategoryLevels(categories);
@@ -7647,6 +7690,7 @@ function startRightOrWrong() {
     results = [];
     rfCombo = 0;
     rfMaxCombo = 0;
+    for (var ri = 0; ri < rfItems.length; ri++) sessionUsedWords[rfItems[ri].word.toLowerCase()] = true;
 
     document.getElementById('rfScoreCorrect').textContent = '0';
     document.getElementById('rfScoreWrong').textContent = '0';
@@ -7815,9 +7859,7 @@ function resolveRightOrWrong(ok, answeredCorrect, correctionAnswer) {
     if (rfCombo > rfMaxCombo) rfMaxCombo = rfCombo;
     if (sessionCorrectStreak >= 5) {
       sessionCorrectStreak = 0;
-      var correctWords = rfResults.filter(function(r) { return r.correct; });
-      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: item.word, category: item.category };
-      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingBoss = pickBossWord({ word: item.word, category: item.category });
       pendingChest = true;
     }
   } else {
@@ -8000,6 +8042,7 @@ function startSpellingPolice() {
   pendingBoss = null;
   sessionLessonCategories = [];
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionUsedWords = {};
   pendingChest = false;
 
   var pool = buildPoolWithCategoryLevels(categories);
@@ -8026,6 +8069,7 @@ function startSpellingPolice() {
   spIndex = 0;
   spResults = [];
   results = [];
+  for (var si2 = 0; si2 < spItems.length; si2++) sessionUsedWords[spItems[si2].word.toLowerCase()] = true;
 
   document.getElementById('spScoreCorrect').textContent = '0';
   document.getElementById('spScoreWrong').textContent = '0';
@@ -8125,9 +8169,7 @@ function checkSpellingPolice(wordIndex) {
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= 5) {
       sessionCorrectStreak = 0;
-      var correctWords = spResults.filter(function(r) { return r.correct; });
-      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: item.word, category: item.category };
-      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingBoss = pickBossWord({ word: item.word, category: item.category });
       pendingChest = true;
     }
   } else {
@@ -8309,6 +8351,7 @@ function startWordBuilder() {
   pendingBoss = null;
   sessionLessonCategories = [];
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionUsedWords = {};
   pendingChest = false;
 
   // Build pool from ALL categories (morphemes work best across categories)
@@ -8341,6 +8384,7 @@ function startWordBuilder() {
   wbIndex = 0;
   wbResults = [];
   results = [];
+  for (var wi = 0; wi < wbWords.length; wi++) sessionUsedWords[wbWords[wi].wordObj.word.toLowerCase()] = true;
 
   document.getElementById('wbScoreCorrect').textContent = '0';
   document.getElementById('wbScoreWrong').textContent = '0';
@@ -8487,9 +8531,7 @@ function wordBuilderComplete() {
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= 5) {
       sessionCorrectStreak = 0;
-      var correctWords = wbResults.filter(function(r) { return r.correct; });
-      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: w.word, category: w.category };
-      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true;
     }
   } else {
@@ -8598,6 +8640,7 @@ function startSpellPick() {
   pendingBoss = null;
   sessionLessonCategories = [];
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionUsedWords = {};
   pendingChest = false;
 
   var pool = buildPoolWithCategoryLevels(categories);
@@ -8619,6 +8662,7 @@ function startSpellPick() {
   spkIndex = 0;
   spkResults = [];
   results = [];
+  for (var ski = 0; ski < spkWords.length; ski++) sessionUsedWords[spkWords[ski].word.toLowerCase()] = true;
 
   document.getElementById('spkScoreCorrect').textContent = '0';
   document.getElementById('spkScoreWrong').textContent = '0';
@@ -8729,9 +8773,7 @@ function pickSpkOption(btn, picked) {
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= 5) {
       sessionCorrectStreak = 0;
-      var correctWords = results.filter(function(r) { return r.correct; });
-      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: w.word, category: w.category };
-      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true;
     }
   } else { sessionCorrectStreak = 0; trackCategoryError(w.category); }
@@ -8906,9 +8948,7 @@ function checkSentence() {
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= 5) {
       sessionCorrectStreak = 0;
-      var correctWords = results.filter(function(r) { return r.correct; });
-      var bossWord = correctWords.length > 0 ? correctWords[Math.floor(Math.random() * correctWords.length)] : { word: swCurrentWord.word, category: swCurrentWord.category };
-      pendingBoss = { word: bossWord.word, category: bossWord.category };
+      pendingBoss = pickBossWord({ word: swCurrentWord.word, category: swCurrentWord.category });
       pendingChest = true;
     }
   } else {
@@ -8934,6 +8974,7 @@ function startWhatIsTheWord() {
   isMixedSession = false;
   pendingBoss = null;
   sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionUsedWords = {};
   pendingChest = false;
   results = [];
 
@@ -8948,6 +8989,7 @@ function startWhatIsTheWord() {
   swWords = pool.slice(0, 10);
   swIndex = 0;
   swResults = [];
+  for (var swi = 0; swi < swWords.length; swi++) sessionUsedWords[swWords[swi].word.toLowerCase()] = true;
 
   if (swWords.length < 3) { alert('Ikke nok ord.'); return; }
 

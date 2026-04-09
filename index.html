@@ -5896,12 +5896,10 @@ function buildSpellpickRound() {
     if (options.indexOf(dbMis[dbi]) < 0) options.push(dbMis[dbi]);
   }
 
-  // Fill with category-aware misspelling
-  if (options.length < 4) {
-    var mis = generateMisspelling(wordObj);
-    if (mis && mis.misspelled && options.indexOf(mis.misspelled.toLowerCase()) < 0) {
-      options.push(mis.misspelled.toLowerCase());
-    }
+  // Fill with hardcoded misspelling
+  if (options.length < 4 && wordObj.misspelling) {
+    var hcMis = wordObj.misspelling.toLowerCase();
+    if (options.indexOf(hcMis) < 0) options.push(hcMis);
   }
 
   // Fill remaining with fallback misspellings
@@ -6018,12 +6016,10 @@ function renderBossSilentServant(word, boss, idleAnim) {
 
   for (var si = 0; si < stummeWords.length && rounds.length < 3; si++) {
     var sw = stummeWords[si];
-    var mis = generateMisspelling(sw);
-    if (mis && mis.misspelled && mis.misspelled.toLowerCase() !== sw.word.toLowerCase()) {
-      if (usedWords[sw.word.toLowerCase()]) continue;
-      usedWords[sw.word.toLowerCase()] = true;
-      rounds.push({ correct: sw.word.toLowerCase(), wrong: mis.misspelled.toLowerCase(), hasSilent: true, hint: sw.hint || '' });
-    }
+    if (!sw.misspelling) continue;
+    if (usedWords[sw.word.toLowerCase()]) continue;
+    usedWords[sw.word.toLowerCase()] = true;
+    rounds.push({ correct: sw.word.toLowerCase(), wrong: sw.misspelling.toLowerCase(), hasSilent: true, hint: sw.hint || '' });
   }
 
   var otherCats = Object.keys(WORD_BANK).filter(function(c) { return c !== 'Stumme bogstaver'; });
@@ -6056,12 +6052,9 @@ function renderBossSilentServant(word, boss, idleAnim) {
 
   for (var si2 = 0; si2 < stummeWords.length && rounds.length < 5; si2++) {
     var sw2 = stummeWords[si2];
-    if (usedWords[sw2.word.toLowerCase()]) continue;
-    var mis2 = generateMisspelling(sw2);
-    if (mis2 && mis2.misspelled) {
-      usedWords[sw2.word.toLowerCase()] = true;
-      rounds.push({ correct: sw2.word.toLowerCase(), wrong: mis2.misspelled.toLowerCase(), hasSilent: true, hint: sw2.hint || '' });
-    }
+    if (usedWords[sw2.word.toLowerCase()] || !sw2.misspelling) continue;
+    usedWords[sw2.word.toLowerCase()] = true;
+    rounds.push({ correct: sw2.word.toLowerCase(), wrong: sw2.misspelling.toLowerCase(), hasSilent: true, hint: sw2.hint || '' });
   }
 
   for (var ri = rounds.length - 1; ri > 0; ri--) {
@@ -7771,141 +7764,6 @@ function renderFillInResults() {
 
 // ===== RIGHT OR WRONG EXERCISE =====
 
-function generateMisspelling(wordObj) {
-  var word = wordObj.word;
-  var cat = wordObj.category;
-  var hint = wordObj.patternHint || '';
-
-  // --- Stumme bogstaver: remove the silent letter ---
-  if (cat === 'Stumme bogstaver') {
-    var stmMatch = hint.match(/stumt '(\w+)' i '(\w+)'/);
-    if (stmMatch) {
-      var silent = stmMatch[1].toLowerCase();
-      var cluster = stmMatch[2].toLowerCase();
-      var pos = word.toLowerCase().indexOf(cluster);
-      if (pos >= 0) {
-        var misspelled = word.substring(0, pos) + word.substring(pos + silent.length);
-        return { misspelled: misspelled, explanation: '"' + silent + '" er stumt i "' + cluster + '" \u2014 det skal skrives!' };
-      }
-    }
-    var stmSimple = hint.match(/stumt '(\w+)'/);
-    if (stmSimple) {
-      var sl = stmSimple[1].toLowerCase();
-      var slPos = word.toLowerCase().indexOf(sl);
-      if (slPos >= 0) {
-        var ms = word.substring(0, slPos) + word.substring(slPos + sl.length);
-        if (ms !== word && ms.length > 1) {
-          return { misspelled: ms, explanation: '"' + sl + '" er stumt \u2014 man kan ikke h\u00F8re det, men det skal skrives!' };
-        }
-      }
-    }
-    return null;
-  }
-
-  // --- Dobbeltkonsonant: single instead of double (or vice versa) ---
-  if (cat === 'Dobbeltkonsonant') {
-    var dblMatch = hint.match(/dobbelt[- ]'?(\w)'?/);
-    if (dblMatch) {
-      var letter = dblMatch[1].toLowerCase();
-      var dbl = letter + letter;
-      var dblPos = word.toLowerCase().indexOf(dbl);
-      if (dblPos >= 0) {
-        var ms2 = word.substring(0, dblPos) + letter + word.substring(dblPos + 2);
-        return { misspelled: ms2, explanation: 'Her skal der dobbelt-' + letter + ' fordi vokalen er kort' };
-      }
-    }
-    var snglMatch = hint.match(/enkelt[- ]'?(\w)'?/);
-    if (snglMatch && snglMatch[1] !== 'k') {
-      var sLetter = snglMatch[1].toLowerCase();
-      for (var si = 0; si < word.length; si++) {
-        if (word[si].toLowerCase() === sLetter && (si + 1 >= word.length || word[si + 1].toLowerCase() !== sLetter)) {
-          var ms3 = word.substring(0, si) + sLetter + sLetter + word.substring(si + 1);
-          return { misspelled: ms3, explanation: 'Her er vokalen lang, s\u00E5 kun enkelt-' + sLetter };
-        }
-      }
-    }
-    return null;
-  }
-
-  // --- Nutids-r: remove trailing -r ---
-  if (cat === 'Nutids-r') {
-    if (word.endsWith('r')) {
-      return { misspelled: word.slice(0, -1), explanation: 'Verber i nutid ender p\u00E5 -r: "han hoppe-r"' };
-    }
-    return null;
-  }
-
-  // --- Verbernes bøjning ---
-  if (cat === 'Verbernes b\u00F8jning') {
-    if (hint.indexOf('-ede') >= 0 && word.indexOf('ede') > 0) {
-      var ms4 = word.replace(/ede([^a-z\u00E6\u00F8\u00E5]*)$/, 'te$1');
-      if (ms4 !== word) return { misspelled: ms4, explanation: 'Datid af dette verbum er med "-ede", ikke "-te"' };
-    }
-    if (hint.indexOf("'-te'") >= 0 || (hint.indexOf('-te') >= 0 && hint.indexOf('-ede') < 0)) {
-      var tePos = word.lastIndexOf('te');
-      if (tePos > 0 && word.indexOf('ede') < 0) {
-        var ms5 = word.substring(0, tePos) + 'ede';
-        return { misspelled: ms5, explanation: 'Datid af dette verbum er med "-te", ikke "-ede"' };
-      }
-    }
-    if ((hint.indexOf('-et') >= 0 || hint.indexOf('till\u00E6gsform') >= 0) && word.endsWith('et')) {
-      return { misspelled: word.slice(0, -2) + 't', explanation: 'Till\u00E6gsformen ender p\u00E5 "-et", ikke "-t"' };
-    }
-    return null;
-  }
-
-  // --- Navneordsendelser ---
-  if (cat === 'Navneordsendelser') {
-    if (word.endsWith('en') && hint.indexOf('-en') >= 0) {
-      return { misspelled: word.slice(0, -2) + 'et', explanation: 'Dette er et f\u00E6llesk\u00F8nsord \u2014 bestemt form er "-en"' };
-    }
-    if (word.endsWith('et') && hint.indexOf('-et') >= 0) {
-      return { misspelled: word.slice(0, -2) + 'en', explanation: 'Dette er et intetk\u00F8nsord \u2014 bestemt form er "-et"' };
-    }
-    if (word.endsWith('erne') && hint.indexOf('-erne') >= 0) {
-      return { misspelled: word.slice(0, -4) + 'ene', explanation: 'Bestemt flertal er her "-erne", ikke "-ene"' };
-    }
-    if (word.endsWith('ene') && hint.indexOf('-ene') >= 0) {
-      return { misspelled: word.slice(0, -3) + 'erne', explanation: 'Bestemt flertal er her "-ene", ikke "-erne"' };
-    }
-    return null;
-  }
-
-  // --- For- og efterstavelser ---
-  if (cat === 'For- og efterstavelser') {
-    if (hint.indexOf('-lig') >= 0 && word.indexOf('lig') > 0) {
-      return { misspelled: word.replace(/lig([^a-z\u00E6\u00F8\u00E5]*)$/, 'leg$1'), explanation: 'Efterstavelsen staves "-lig", ikke "-leg"' };
-    }
-    if (hint.indexOf('-hed') >= 0 && word.indexOf('hed') > 0) {
-      return { misspelled: word.replace(/hed([^a-z\u00E6\u00F8\u00E5]*)$/, 'het$1'), explanation: 'Efterstavelsen staves "-hed", ikke "-het"' };
-    }
-    if (hint.indexOf('-else') >= 0 && word.indexOf('else') > 0) {
-      return { misspelled: word.replace(/else([^a-z\u00E6\u00F8\u00E5]*)$/, '\u00E6lse$1'), explanation: 'Efterstavelsen staves "-else", ikke "-\u00E6lse"' };
-    }
-    return null;
-  }
-
-  // --- Sammensatte ord: fuge-s ---
-  if (cat === 'Sammensatte ord') {
-    if (hint.indexOf('fuge-s') >= 0 || hint.indexOf("'s'") >= 0) {
-      var parts = hint.match(/'([^']+)'/g);
-      if (parts && parts.length >= 2) {
-        var firstPart = parts[0].replace(/'/g, '').toLowerCase();
-        var fPos = word.toLowerCase().indexOf(firstPart);
-        if (fPos >= 0) {
-          var fugePos = fPos + firstPart.length;
-          if (word[fugePos] === 's') {
-            var ms6 = word.substring(0, fugePos) + word.substring(fugePos + 1);
-            return { misspelled: ms6, explanation: 'Her skal der fuge-s mellem orddelene' };
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  return null;
-}
 
 // Right or wrong state
 var rfItems = [], rfIndex = 0, rfResults = [];
@@ -8248,10 +8106,8 @@ var spItems = [], spIndex = 0, spResults = [];
 
 function buildSpellingPoliceItem(wordObj) {
   if (!wordObj.sentence) return null;
-  var ms = wordObj.misspelling
-    ? { misspelled: wordObj.misspelling, explanation: '' }
-    : generateMisspelling(wordObj);
-  if (!ms) return null;
+  if (!wordObj.misspelling) return null;
+  var ms = { misspelled: wordObj.misspelling, explanation: '' };
 
   var word = wordObj.word;
   var sentence = wordObj.sentence;
@@ -8998,11 +8854,9 @@ function renderSpkWord() {
   }
 
   // Fallback: ensure at least 2 options
-  if (options.length < 2) {
-    var mis = generateMisspelling(w);
-    if (mis && mis.misspelled && options.indexOf(mis.misspelled.toLowerCase()) < 0) {
-      options.push(mis.misspelled.toLowerCase());
-    }
+  if (options.length < 2 && w.misspelling) {
+    var hcFallback = w.misspelling.toLowerCase();
+    if (options.indexOf(hcFallback) < 0) options.push(hcFallback);
   }
   if (options.length < 2) {
     var fallbacks = generateFallbackMisspellings(word);

@@ -3246,60 +3246,61 @@ function startTrainingFromProfile() {
   }
   pool = shuffle(pool);
 
-  // Build mixed queue: diktat by default, random exercise every 3rd question
-  mixedQueue = [];
-  var exerciseTypes = ['fillin', 'rightorwrong', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
-  for (var i = 0; i < pool.length && mixedQueue.length < 10; i++) {
-    var w = pool[i];
-    var isExerciseSlot = (mixedQueue.length % 2 === 1); // every other word is an exercise (positions 2, 4, 6, 8, 10)
-    var chosenType = 'diktat';
+  // Fetch DB misspellings first, then build mixed queue
+  var wordList = pool.map(function(w) { return w.word.toLowerCase(); });
+  fetchMisspellings(wordList, function(misByWord) {
+    mixedQueue = [];
+    var exerciseTypes = ['fillin', 'rightorwrong', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
+    for (var i = 0; i < pool.length && mixedQueue.length < 10; i++) {
+      var w = pool[i];
+      var isExerciseSlot = (mixedQueue.length % 2 === 1);
+      var chosenType = 'diktat';
 
-    // Pre-compute exercise data once (avoid double-calling non-deterministic functions)
-    var blanksData = generateBlanks(w);
-    var misspellingData = generateMisspelling(w);
-    var spItemData = buildSpellingPoliceItem(w);
-    var morphemesData = parseMorphemes(w.patternHint, w.word);
+      var blanksData = generateBlanks(w);
+      var dbMis = misByWord[w.word.toLowerCase()] || [];
+      var spItemData = buildSpellingPoliceItem(w);
+      var morphemesData = parseMorphemes(w.patternHint, w.word);
 
-    if (isExerciseSlot) {
-      // Try random exercise types until one is compatible
-      var shuffledTypes = exerciseTypes.slice();
-      for (var st = shuffledTypes.length - 1; st > 0; st--) {
-        var sj = Math.floor(Math.random() * (st + 1));
-        var tmp = shuffledTypes[st]; shuffledTypes[st] = shuffledTypes[sj]; shuffledTypes[sj] = tmp;
+      if (isExerciseSlot) {
+        var shuffledTypes = exerciseTypes.slice();
+        for (var st = shuffledTypes.length - 1; st > 0; st--) {
+          var sj = Math.floor(Math.random() * (st + 1));
+          var tmp = shuffledTypes[st]; shuffledTypes[st] = shuffledTypes[sj]; shuffledTypes[sj] = tmp;
+        }
+        for (var ti = 0; ti < shuffledTypes.length; ti++) {
+          var t = shuffledTypes[ti];
+          if (t === 'fillin' && blanksData) { chosenType = t; break; }
+          else if (t === 'rightorwrong' && dbMis.length > 0) { chosenType = t; break; }
+          else if (t === 'spellingpolice' && spItemData) { chosenType = t; break; }
+          else if (t === 'wordbuilder' && morphemesData) { chosenType = t; break; }
+          else if (t === 'spellpick') { chosenType = t; break; }
+          else if (t === 'sentence' && w.hint && w.level >= 1) { chosenType = t; break; }
+        }
       }
-      for (var ti = 0; ti < shuffledTypes.length; ti++) {
-        var t = shuffledTypes[ti];
-        if (t === 'fillin' && blanksData) { chosenType = t; break; }
-        else if (t === 'rightorwrong' && misspellingData) { chosenType = t; break; }
-        else if (t === 'spellingpolice' && spItemData) { chosenType = t; break; }
-        else if (t === 'wordbuilder' && morphemesData) { chosenType = t; break; }
-        else if (t === 'spellpick') { chosenType = t; break; }
-        else if (t === 'sentence' && w.hint && w.level >= 1) { chosenType = t; break; }
-      }
+
+      mixedQueue.push({
+        wordObj: w,
+        type: chosenType,
+        blanks: blanksData,
+        dbMisspelling: dbMis.length > 0 ? dbMis[0] : null,
+        spItem: spItemData,
+        morphemes: morphemesData
+      });
+    }
+    console.log('Mixed queue types:', mixedQueue.map(function(q) { return q.type; }));
+
+    if (mixedQueue.length === 0) {
+      alert('Ingen ord fundet til tr\u00E6ning.');
+      return;
     }
 
-    mixedQueue.push({
-      wordObj: w,
-      type: chosenType,
-      blanks: blanksData,
-      misspelling: misspellingData,
-      spItem: spItemData,
-      morphemes: morphemesData
-    });
-  }
-  console.log('Mixed queue types:', mixedQueue.map(function(q) { return q.type; }));
+    mixedIndex = 0;
+    hide('phase-welcome');
+    updateRewardBar();
+    document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
 
-  if (mixedQueue.length === 0) {
-    alert('Ingen ord fundet til tr\u00E6ning.');
-    return;
-  }
-
-  mixedIndex = 0;
-  hide('phase-welcome');
-  updateRewardBar();
-  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
-
-  renderMixedItem();
+    renderMixedItem();
+  });
 }
 
 function hideAllExercisePhases() {
@@ -3344,13 +3345,12 @@ function renderMixedItem() {
 
     case 'rightorwrong':
       gameMode = 'rightorwrong';
-      var ms = item.misspelling;
       var showCorrect = Math.random() < 0.5;
       rfItems = [{
         word: item.wordObj.word,
-        displayed: showCorrect ? item.wordObj.word : ms.misspelled,
+        displayed: showCorrect ? item.wordObj.word : item.dbMisspelling,
         isCorrect: showCorrect,
-        explanation: ms.explanation,
+        explanation: '',
         category: item.wordObj.category,
         patternHint: item.wordObj.patternHint || '',
         level: item.wordObj.level || 0

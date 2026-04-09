@@ -5840,14 +5840,14 @@
       "misspelling": "udtrygge"
     }
   ],
-  "Svære ord": [
+  "Ord fra Fransk": [
     {
       "word": "prestige",
       "hint": "Høj anseelse og respekt",
       "patternHint": "pre + stige (ige som isje)",
       "sentence": "Skolen har stor prestige i byen.",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "prestisje"
     },
     {
@@ -5856,7 +5856,7 @@
       "patternHint": "ou som u, illon",
       "sentence": "Mor lavede bouillon til den syge.",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "buljon"
     },
     {
@@ -5865,7 +5865,7 @@
       "patternHint": "j som sj, oux",
       "sentence": "Han blev jaloux da hun snakkede med andre.",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "sjalu"
     },
     {
@@ -5874,7 +5874,7 @@
       "patternHint": "mayo + nn + aise",
       "sentence": "Vil du have mayonnaise på din sandwich?",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "majonæse"
     },
     {
@@ -5883,7 +5883,7 @@
       "patternHint": "ch som sj, au, ff + ør",
       "sentence": "Chaufføren kørte bussen til skolen.",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "sjåfør"
     },
     {
@@ -5892,7 +5892,7 @@
       "patternHint": "rest + au + rant",
       "sentence": "Vi spiste på en italiensk restaurant.",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "restarant"
     },
     {
@@ -5901,7 +5901,7 @@
       "patternHint": "cr + oi + ss + ant",
       "sentence": "Til morgenmad fik vi croissant med smør.",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "kroisant"
     },
     {
@@ -5910,7 +5910,7 @@
       "patternHint": "bu + reau (eau som o)",
       "sentence": "Hun arbejder på et rejsebureau.",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "buro"
     },
     {
@@ -5919,7 +5919,7 @@
       "patternHint": "sil + hu + et (stumt h)",
       "sentence": "Man kunne se silhuetten af et træ mod himlen.",
       "level": 5,
-      "category": "Svære ord",
+      "category": "Ord fra Fransk",
       "misspelling": "siluet"
     }
   ]

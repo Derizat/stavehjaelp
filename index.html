@@ -2809,6 +2809,7 @@ function saveSRData(data) {
 }
 
 function updateSRWord(word, correct, category) {
+  if (category === 'Ord fra Fransk') trackFrenchWord(word, correct);
   var sr = loadSRData();
   if (!sr.words) sr.words = {};
   if (!sr.words[word]) { sr.words[word] = { level: 0, nextReview: Date.now(), category: category }; }
@@ -2893,8 +2894,26 @@ function saveCategoryLevels(levels) {
   syncToSupabase();
 }
 
+function trackFrenchWord(word, correct) {
+  if (!correct) return;
+  var data = loadRewardData();
+  if (!data.frenchCorrectWords) data.frenchCorrectWords = [];
+  var w = word.toLowerCase();
+  if (data.frenchCorrectWords.indexOf(w) === -1) {
+    data.frenchCorrectWords.push(w);
+    saveRewardData(data);
+  }
+}
+
+function getFrenchProgress() {
+  var data = loadRewardData();
+  return (data.frenchCorrectWords || []).length;
+}
+
 function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelling) {
   if (!category || ALL_CATEGORIES.indexOf(category) === -1) return;
+  // Ord fra Fransk: track unique correct words instead of normal level system
+  if (category === 'Ord fra Fransk') return;
   // Only count wrong answers as category errors if the mistake matches the category-specific misspelling
   if (!correct && misspelling && userAnswer) {
     if (userAnswer.toLowerCase().trim() !== misspelling.toLowerCase()) return;
@@ -2990,7 +3009,11 @@ function buildPoolWithCategoryLevels(categories) {
     var cat = categories[i];
     if (!WORD_BANK[cat]) continue;
     // Ord fra Fransk: requires 3 mastered categories + purchased with gems
-    if (cat === 'Ord fra Fransk' && !isFrenchUnlocked()) continue;
+    if (cat === 'Ord fra Fransk') {
+      if (!isFrenchUnlocked()) continue;
+      var frenchTotal = (WORD_BANK['Ord fra Fransk'] || []).length;
+      if (getFrenchProgress() >= frenchTotal) continue;
+    }
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
     // Skip mastered categories
     if (CATEGORY_MAX_LEVELS[cat] !== undefined && catLevel >= CATEGORY_MAX_LEVELS[cat]) continue;
@@ -9186,15 +9209,20 @@ function renderCategoryLevels() {
     var histStr = hist.length > 0 ? ' (' + correct + '/' + hist.length + ')' : '';
     var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 5;
     var mastered = lvl >= maxLvl;
-    // Ord fra Fransk: locked → purchasable → open
+    // Ord fra Fransk: locked → purchasable → open (track unique correct words)
     var isFrench = (cat === 'Ord fra Fransk');
     var locked = isFrench && masteredCount < 3;
     var purchasable = isFrench && !locked && !isFrenchUnlocked();
+    var frenchCount = isFrench ? getFrenchProgress() : 0;
+    var frenchTotal = isFrench ? (WORD_BANK['Ord fra Fransk'] || []).length : 0;
+    var frenchMastered = isFrench && isFrenchUnlocked() && frenchCount >= frenchTotal;
+    if (isFrench) mastered = frenchMastered;
     var dimmed = mastered || locked || purchasable;
     var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/3)' :
                   purchasable ? '\u{1F48E} 10 gems' :
+                  isFrench ? (frenchMastered ? 'Mestret \u2B50' : frenchCount + '/' + frenchTotal) :
                   (mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/' + (maxLvl - 1));
-    var lvlColor = locked ? '#9ca3af' : purchasable ? 'var(--blue)' : (mastered ? 'var(--green)' : levelColors[Math.min(lvl, 5)]);
+    var lvlColor = locked ? '#9ca3af' : purchasable ? 'var(--blue)' : (frenchMastered || mastered) ? 'var(--green)' : isFrench ? 'var(--accent)' : levelColors[Math.min(lvl, 5)];
     var clickAttr = purchasable ? ' onclick="purchaseFrench()" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem;opacity:0.8;cursor:pointer"' :
       ' style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem' + (dimmed ? ';opacity:0.6' : '') + '"';
     html += '<div' + clickAttr + '>' +

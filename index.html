@@ -1230,6 +1230,9 @@
   <div class="lesson-card" id="lessonContent"></div>
 </div>
 
+<!-- LESSONS SLIDESHOW OVERLAY -->
+<div id="lessonsSlideshow" class="milestone-overlay hidden"></div>
+
 <!-- PROFILE PICKER -->
 <div id="phase-profile-picker" class="card">
   <div style="text-align:center;margin-bottom:16px">
@@ -1281,6 +1284,7 @@
   <button class="settings-toggle" id="dashboardBtn" style="display:none;background:var(--accent2);color:white;border-color:var(--accent2)" onclick="openDashboard()">&#x1F3EB; L&#xe6;rer-dashboard</button>
   <button class="settings-toggle" onclick="showExercisePicker()">&#x1F4DD; &#xD8;velser</button>
   <button class="settings-toggle" onclick="showBossPicker()">&#x1F47E; Boss-kampe</button>
+  <button class="settings-toggle" onclick="showLessonsOverview()">&#x1F4D6; Lektioner</button>
   <button class="settings-toggle" onclick="switchPlayer()">&#x1F465; Skift spiller</button>
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
   <div class="settings-panel" id="settingsPanel">
@@ -2624,6 +2628,74 @@ function dismissLessonPopup() {
 }
 
 var pendingLesson = false;
+
+// --- Lessons slideshow ---
+var lessonSlideIndex = 0;
+
+function showLessonsOverview() {
+  lessonSlideIndex = 0;
+  renderLessonSlide();
+  document.getElementById('lessonsSlideshow').classList.remove('hidden');
+}
+
+function hideLessonsSlideshow() {
+  document.getElementById('lessonsSlideshow').classList.add('hidden');
+}
+
+function nextLessonSlide() {
+  var keys = Object.keys(CATEGORY_LESSONS);
+  lessonSlideIndex = (lessonSlideIndex + 1) % keys.length;
+  renderLessonSlide();
+}
+
+function prevLessonSlide() {
+  var keys = Object.keys(CATEGORY_LESSONS);
+  lessonSlideIndex = (lessonSlideIndex - 1 + keys.length) % keys.length;
+  renderLessonSlide();
+}
+
+function renderLessonSlide() {
+  var keys = Object.keys(CATEGORY_LESSONS);
+  var category = keys[lessonSlideIndex];
+  var lesson = CATEGORY_LESSONS[category];
+  if (!lesson) return;
+
+  var html = '<div style="background:var(--card);border-radius:16px;padding:24px;max-width:420px;margin:0 auto;border:2px solid var(--accent);position:relative">';
+  // Close button
+  html += '<button onclick="hideLessonsSlideshow()" style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;padding:4px 10px">\u2715</button>';
+  // Progress dots
+  html += '<div style="display:flex;justify-content:center;gap:6px;margin-bottom:14px">';
+  for (var i = 0; i < keys.length; i++) {
+    var dotColor = i === lessonSlideIndex ? 'var(--accent)' : '#3d4270';
+    html += '<span style="width:8px;height:8px;border-radius:50%;background:' + dotColor + '"></span>';
+  }
+  html += '</div>';
+  // Lesson content
+  html += '<div style="text-align:center">';
+  html += '<div style="font-size:3rem;margin-bottom:8px">' + lesson.emoji + '</div>';
+  html += '<h3 style="color:var(--accent);margin-bottom:14px;font-size:1.3rem">' + lesson.title + '</h3>';
+  html += '<div style="background:var(--card2);border-radius:10px;padding:14px;margin-bottom:12px;text-align:left">';
+  html += '<p style="font-size:0.95rem;line-height:1.6;color:var(--text)">' + lesson.rule + '</p></div>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px">';
+  for (var ei = 0; ei < lesson.examples.length; ei++) {
+    var ex = lesson.examples[ei];
+    html += '<div style="background:var(--card2);border-radius:8px;padding:8px 12px;text-align:center">';
+    html += '<div style="font-size:1.1rem;font-weight:700">' + ex.word + '</div>';
+    html += '<div style="font-size:0.7rem;color:var(--muted);margin-top:2px">' + ex.note + '</div></div>';
+  }
+  html += '</div>';
+  html += '<div style="background:rgba(34,211,160,0.1);border-radius:8px;padding:10px;margin-bottom:14px;font-size:0.85rem;color:var(--green)">' + lesson.tip + '</div>';
+  html += '</div>';
+  // Navigation
+  html += '<div style="display:flex;justify-content:space-between;gap:8px;margin-top:8px">';
+  html += '<button class="btn" onclick="prevLessonSlide()" style="flex:1">\u2B05\uFE0F Forrige</button>';
+  html += '<button class="btn btn-accent" onclick="nextLessonSlide()" style="flex:1">N\u00E6ste \u27A1\uFE0F</button>';
+  html += '</div>';
+  html += '<div style="text-align:center;margin-top:8px;font-size:0.75rem;color:var(--muted)">' + (lessonSlideIndex + 1) + ' / ' + keys.length + '</div>';
+  html += '</div>';
+
+  document.getElementById('lessonsSlideshow').innerHTML = html;
+}
 
 function renderLessonInline(category) {
   var lesson = CATEGORY_LESSONS[category];

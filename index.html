@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.7</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.8</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2929,6 +2929,8 @@ function purchaseFrench2() {
   data.french2Unlocked = true;
   saveRewardData(data);
   updateRewardBar();
+  var gemsEl = document.getElementById('welcomeGemsDisplay');
+  if (gemsEl) gemsEl.innerHTML = '\u{1F48E} ' + data.gems;
   renderCategoryLevels();
   return true;
 }
@@ -3049,6 +3051,8 @@ function purchaseFrench() {
   data.frenchUnlocked = true;
   saveRewardData(data);
   updateRewardBar();
+  var gemsEl = document.getElementById('welcomeGemsDisplay');
+  if (gemsEl) gemsEl.innerHTML = '\u{1F48E} ' + data.gems;
   renderCategoryLevels();
   return true;
 }

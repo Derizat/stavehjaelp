@@ -1389,15 +1389,6 @@
       "misspelling": "alerede"
     },
     {
-      "word": "moppe",
-      "hint": "Redskab til gulvvask",
-      "patternHint": "dobbelt 'p' efter kort vokal",
-      "sentence": "Hun brugte en moppe til at vaske gulvet.",
-      "level": 3,
-      "category": "Dobbeltkonsonant",
-      "misspelling": "mope"
-    },
-    {
       "word": "kassere",
       "hint": "Smide noget ud",
       "patternHint": "dobbelt 's' efter kort vokal",
@@ -7973,6 +7964,17 @@
       "level": 4,
       "category": "Blødt d",
       "misspelling": "tilbeelse"
+    }
+  ],
+  "Konsonantlyde": [
+    {
+      "word": "moppe",
+      "hint": "Redskab til gulvvask",
+      "patternHint": "dobbelt 'p' efter kort vokal",
+      "sentence": "Hun brugte en moppe til at vaske gulvet.",
+      "level": 3,
+      "category": "Konsonantlyde",
+      "misspelling": "mobbe"
     }
   ]
 }

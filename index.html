@@ -2553,6 +2553,9 @@ var mixedIndex = 0;
 var isMixedSession = false;
 
 function startTrainingFromProfile() {
+  hide('phase-results');
+  var resultsEl = document.getElementById('resultsContent');
+  if (resultsEl) resultsEl.innerHTML = '';
   var profile = loadProfile() || {};
   // Use all categories — weakCategories from diagnostik is too narrow and gets stale
   var categories = ALL_CATEGORIES;

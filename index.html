@@ -681,12 +681,7 @@
     font-family: 'Fredoka One', cursive; font-size: 1.05rem; color: var(--text);
   }
   .reward-bar .reward-stat .reward-icon { font-size: 1.2rem; }
-  .reward-bar .streak-fire { display: inline-block; }
-  .reward-bar .streak-fire.active { animation: fire-pulse 0.6s infinite alternate; }
-  @keyframes fire-pulse {
-    from { transform: scale(1); filter: brightness(1); }
-    to { transform: scale(1.2); filter: brightness(1.3); }
-  }
+
   .reward-xp-bar-wrap {
     width: 100%; max-width: 640px; background: #2d3158; border-radius: 99px;
     height: 5px; overflow: hidden; margin-bottom: 12px; margin-top: -8px;
@@ -697,37 +692,6 @@
     transition: width 0.5s ease; width: 0%;
   }
 
-  /* Streak freeze badge */
-  .streak-freeze-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.3);
-    color: var(--blue); border-radius: 99px; padding: 3px 10px;
-    font-size: 0.78rem; font-weight: 700;
-  }
-
-  /* Welcome streak display */
-  .welcome-streak-section {
-    text-align: center; padding: 16px; margin-bottom: 14px;
-    background: linear-gradient(135deg, rgba(245,166,35,0.08), rgba(244,63,94,0.08));
-    border: 1px solid rgba(245,166,35,0.2); border-radius: 12px;
-  }
-  .welcome-streak-section .streak-big {
-    font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--accent);
-    margin-bottom: 4px;
-  }
-  .welcome-streak-section .streak-msg {
-    font-size: 0.9rem; color: var(--muted); font-weight: 600;
-  }
-  .welcome-streak-section .streak-msg.urgent { color: var(--accent); }
-  .btn-freeze {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.3);
-    color: var(--blue); border-radius: 10px; padding: 8px 16px;
-    font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 700;
-    cursor: pointer; transition: all 0.15s; margin-top: 8px;
-  }
-  .btn-freeze:hover { background: rgba(14,165,233,0.25); border-color: var(--blue); }
-  .btn-freeze:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* Milestone popup */
   .milestone-overlay {
@@ -787,7 +751,6 @@
   }
   .reward-overlay-text .xp-line { color: var(--accent); }
   .reward-overlay-text .gem-line { color: var(--blue); }
-  .reward-overlay-text .streak-line { color: var(--red); }
 
   /* Floating reward notification */
   .reward-float {
@@ -1205,13 +1168,12 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.2.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
 <!-- REWARD BAR -->
 <div id="rewardBar" class="reward-bar hidden">
-  <div class="reward-stat"><span class="reward-icon streak-fire" id="streakFire">&#x1F525;</span> <span id="rewardStreak">0</span></div>
   <div class="reward-stat"><span class="reward-icon">&#x1F48E;</span> <span id="rewardGems">0</span></div>
   <div class="reward-stat"><span class="reward-icon">&#x26A1;</span> <span id="rewardXP">0</span> XP</div>
 </div>
@@ -1263,14 +1225,6 @@
     <div id="avatarProgressLabel" style="font-size:0.75rem;color:var(--muted)"></div>
     <div id="welcomeGemsDisplay" style="font-size:0.85rem;color:var(--blue);font-weight:700;margin-top:6px">&#x1F48E; 0</div>
     <button class="btn btn-accent hidden" id="levelUpBtn" onclick="doLevelUp()" style="margin-top:10px;padding:12px 28px;font-size:1.1rem">&#x2B50; Level Up!</button>
-  </div>
-
-  <!-- Welcome streak section (dynamic) -->
-  <div id="welcomeStreakSection" class="welcome-streak-section hidden">
-    <div class="streak-big" id="welcomeStreakBig">&#x1F525; 0 dages streak</div>
-    <div class="streak-msg" id="welcomeStreakMsg"></div>
-    <div id="welcomeStreakFreeze" style="margin-top:6px"></div>
-    <div id="welcomeFreezeBtn"></div>
   </div>
 
 
@@ -1325,9 +1279,9 @@
         <strong style="font-size:0.9rem">Nulstil data</strong>
       </div>
       <button class="btn btn-full" onclick="resetProfile()" style="background:#e67e22;color:white;font-size:0.85rem;padding:10px">&#x1F504; Nulstil stavespil-resultat</button>
-      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter dit niveau og svage kategorier, s&aring; du kan tage stavespillet forfra. XP, streak og &oslash;veord beholdes.</p>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter dit niveau og svage kategorier, s&aring; du kan tage stavespillet forfra. XP og &oslash;veord beholdes.</p>
       <button class="btn btn-full" onclick="resetAll()" style="background:#e74c3c;color:white;font-size:0.85rem;padding:10px;margin-top:8px">&#x1F5D1;&#xFE0F; Nulstil alt</button>
-      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter ALT &mdash; stavespil, XP, streak og &oslash;veord. Du starter helt forfra.</p>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter ALT &mdash; stavespil, XP og &oslash;veord. Du starter helt forfra.</p>
     </div>
     <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-top:10px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
@@ -1696,14 +1650,10 @@ function selectPlayer(name) {
     var nameEl = document.getElementById('playerNameDisplay');
     if (nameEl) nameEl.textContent = activePlayer;
     refreshWelcomeButtons();
-    updateWelcomeStreak();
     updateWelcomeAvatar();
     renderCategoryLevels();
     restoreGradeSelection();
     updateDashboardButton();
-    var rewardData = loadRewardData();
-    rewardData = checkStreak(rewardData);
-    saveRewardData(rewardData);
     updateRewardBar();
   });
 }
@@ -2215,7 +2165,6 @@ async function loadClassOverview(groupId, timeFilter) {
       name: name,
       grade: prof.student_grade || 0,
       xp: rd.totalXP || 0,
-      streak: rd.streak || 0,
       avatar: avatarTitle,
       correctPct: pct,
       totalAnswers: stats.total,
@@ -2258,7 +2207,7 @@ function renderClassOverview(groupId, students, timeFilter) {
   // Table
   html += '<div style="overflow-x:auto;border-radius:10px;border:1px solid #3d4270">';
   html += '<table class="dashboard-table"><thead><tr>' +
-    '<th>Navn</th><th>Kl.</th><th>XP</th><th>Streak</th><th>Rigtige</th><th>Svar</th><th>Sidst aktiv</th><th></th>' +
+    '<th>Navn</th><th>Kl.</th><th>XP</th><th>Rigtige</th><th>Svar</th><th>Sidst aktiv</th><th></th>' +
     '</tr></thead><tbody>';
 
   for (var s = 0; s < students.length; s++) {
@@ -2268,7 +2217,6 @@ function renderClassOverview(groupId, students, timeFilter) {
       '<td style="font-weight:700">' + escapeHtml(st.name) + '</td>' +
       '<td>' + (st.grade > 0 ? st.grade + '.' : '-') + '</td>' +
       '<td style="color:var(--accent)">' + st.xp + '</td>' +
-      '<td>' + st.streak + ' d</td>' +
       '<td style="color:' + pctColor + ';font-weight:700">' + st.correctPct + '%</td>' +
       '<td>' + st.totalAnswers + '</td>' +
       '<td style="font-size:0.78rem;color:var(--muted)">' + st.lastActive + '</td>' +
@@ -2310,7 +2258,6 @@ function renderStudentDetail(student) {
   var pctColor = student.correctPct >= 80 ? 'var(--green)' : student.correctPct >= 50 ? 'var(--accent)' : 'var(--red)';
   html += '<div class="student-stat-grid">' +
     '<div class="student-stat-box"><div class="stat-val">' + student.xp + '</div><div class="stat-lbl">XP</div></div>' +
-    '<div class="student-stat-box"><div class="stat-val">' + student.streak + '</div><div class="stat-lbl">Streak (dage)</div></div>' +
     '<div class="student-stat-box"><div class="stat-val" style="color:' + pctColor + '">' + student.correctPct + '%</div><div class="stat-lbl">Rigtige</div></div>' +
     '<div class="student-stat-box"><div class="stat-val">' + student.totalAnswers + '</div><div class="stat-lbl">Svar i alt</div></div>' +
     '</div>';
@@ -2806,11 +2753,9 @@ function goHome() {
   if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
   show('phase-welcome');
   refreshWelcomeButtons();
-  updateWelcomeStreak();
   updateWelcomeAvatar();
   renderCategoryLevels();
   updateDashboardButton();
-  // Hide reward bar on welcome (welcome has its own streak display)
 }
 
 // Grade selector
@@ -3027,7 +2972,7 @@ function buildPoolWithCategoryLevels(categories) {
 }
 
 function resetAll() {
-  if (!confirm('Er du HELT sikker? ALT bliver slettet \u2014 stavespil, XP, streak og \u00F8veord.')) return;
+  if (!confirm('Er du HELT sikker? ALT bliver slettet \u2014 stavespil, XP og \u00F8veord.')) return;
   localStorage.removeItem(playerKey('profile_data'));
   localStorage.removeItem(playerKey('reward_data'));
   localStorage.removeItem(playerKey('sr_data'));
@@ -3517,14 +3462,10 @@ function finishMixedTraining() {
   var newXP = rewardData.totalXP || 0;
   var prevLevel = getAvatarLevel(prevXP);
   var newLevel = getAvatarLevel(newXP);
-  var milestone = checkMilestone(rewardData);
   updateRewardBar();
-  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned);
   if (rewardResult.dailyGoalReached) {
     setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
-  }
-  if (milestone) {
-    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
   }
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
@@ -3787,7 +3728,7 @@ function nextWord() {
 function finishTest() {
   hide('phase-test');
 
-  // === Reward system: award XP and update streak ===
+  // === Reward system: award XP ===
   var correctCount = results.filter(function(r) { return r.correct; }).length;
   var totalCount = results.length;
   var prevXP = loadRewardData().totalXP || 0;
@@ -3796,20 +3737,14 @@ function finishTest() {
   var newXP = rewardData.totalXP || 0;
   var prevLevel = getAvatarLevel(prevXP);
   var newLevel = getAvatarLevel(newXP);
-  var milestone = checkMilestone(rewardData);
   updateRewardBar();
 
   // Show reward overlay briefly before continuing
-  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned);
 
   // Show floating notifications
   if (rewardResult.dailyGoalReached) {
     setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
-  }
-
-  // Show milestone after reward overlay fades
-  if (milestone) {
-    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
   }
 
   // Show level-up popup if avatar level changed
@@ -3929,14 +3864,11 @@ function loadRewardData() {
     if (raw) return JSON.parse(raw);
   } catch(e) {}
   return {
-    streak: 0,
     lastSessionDate: '',
     gems: 0,
     totalXP: 0,
     todayXP: 0,
     todayDate: '',
-    streakFreezes: 0,
-    milestonesSeen: [],
     displayedLevel: 0
   };
 }
@@ -3962,37 +3894,6 @@ function dateDiffDays(dateStr1, dateStr2) {
   return Math.round((d2 - d1) / 86400000);
 }
 
-function checkStreak(data) {
-  var today = getTodayStr();
-  // Reset todayXP if it's a new day
-  if (data.todayDate !== today) {
-    data.todayXP = 0;
-    data.todayDate = today;
-  }
-  if (!data.lastSessionDate) {
-    // No previous session, streak stays at 0
-    return data;
-  }
-  var diff = dateDiffDays(data.lastSessionDate, today);
-  if (diff === 0) {
-    // Same day, streak already counted
-    return data;
-  } else if (diff === 1) {
-    // Yesterday — streak continues (will be incremented on session completion)
-    return data;
-  } else if (diff === 2 && data.streakFreezes > 0) {
-    // 2 days ago, use streak freeze
-    data.streakFreezes--;
-    // Streak survives, treat as if yesterday
-    return data;
-  } else if (diff > 1) {
-    // Too many days passed, reset streak
-    data.streak = 0;
-    return data;
-  }
-  return data;
-}
-
 function awardSessionXP(correctCount, totalCount) {
   var data = loadRewardData();
   var today = getTodayStr();
@@ -4013,10 +3914,6 @@ function awardSessionXP(correctCount, totalCount) {
   xpEarned += selfCorrectedCount * 3;
   // +10 XP bonus for completing session
   xpEarned += 10;
-  // +5 XP bonus if streak day
-  if (data.streak > 0) {
-    xpEarned += 5;
-  }
 
   var gemsEarned = 0;
   // 2 gems for completing session
@@ -4034,55 +3931,10 @@ function awardSessionXP(correctCount, totalCount) {
   }
 
   data.gems += gemsEarned;
-
-  // Update streak: if first session today, increment streak
-  if (data.lastSessionDate !== today) {
-    var diff = dateDiffDays(data.lastSessionDate, today);
-    if (diff <= 1 || data.lastSessionDate === '') {
-      data.streak++;
-    }
-    // If diff === 2 and freeze was used in checkStreak, streak was preserved, now increment
-    else if (diff === 2) {
-      data.streak++;
-    }
-    data.lastSessionDate = today;
-  }
+  data.lastSessionDate = today;
 
   saveRewardData(data);
   return { xpEarned: xpEarned, gemsEarned: gemsEarned, dailyGoalReached: dailyGoalReached };
-}
-
-function checkMilestone(data) {
-  var MILESTONES = {
-    3:   { text: "God start!", emoji: "\u{1F525}", gems: 0 },
-    7:   { text: "1 uge i streg!", emoji: "\u{1F31F}", gems: 10 },
-    14:  { text: "2 uger i streg!", emoji: "\u{1F4AA}", gems: 15 },
-    30:  { text: "1 hel m\u00E5ned!", emoji: "\u{1F3C6}", gems: 25 },
-    50:  { text: "Stave-mester!", emoji: "\u{1F98A}", gems: 30 },
-    100: { text: "Legend\u00E6risk!", emoji: "\u2B50", gems: 50 }
-  };
-  var streak = data.streak;
-  if (MILESTONES[streak]) {
-    if (!data.milestonesSeen) data.milestonesSeen = [];
-    if (data.milestonesSeen.indexOf(streak) === -1) {
-      // Award milestone gems
-      var ms = MILESTONES[streak];
-      data.gems += ms.gems;
-      data.milestonesSeen.push(streak);
-      saveRewardData(data);
-      return { day: streak, text: ms.text, emoji: ms.emoji, gems: ms.gems };
-    }
-  }
-  return null;
-}
-
-function buyStreakFreeze(data) {
-  if (data.gems < 20) return false;
-  if (data.streakFreezes >= 1) return false;
-  data.gems -= 20;
-  data.streakFreezes = 1;
-  saveRewardData(data);
-  return true;
 }
 
 function updateRewardBar() {
@@ -4091,16 +3943,10 @@ function updateRewardBar() {
   var xpBarWrap = document.getElementById('rewardXPBarWrap');
   if (!bar) return;
 
-  document.getElementById('rewardStreak').textContent = data.streak;
   document.getElementById('rewardGems').textContent = data.gems;
 
   var totalXP = data.totalXP || 0;
   document.getElementById('rewardXP').textContent = totalXP;
-
-  // Fire animation if streak > 0
-  var fire = document.getElementById('streakFire');
-  if (data.streak > 0) fire.classList.add('active');
-  else fire.classList.remove('active');
 
   // XP bar — progress toward next avatar level
   var xpBar = document.getElementById('rewardXPBar');
@@ -4126,94 +3972,16 @@ function updateRewardBar() {
   }
 }
 
-function updateWelcomeStreak() {
-  var data = loadRewardData();
-  var section = document.getElementById('welcomeStreakSection');
-  var bigEl = document.getElementById('welcomeStreakBig');
-  var msgEl = document.getElementById('welcomeStreakMsg');
-  var freezeEl = document.getElementById('welcomeStreakFreeze');
-  var freezeBtnEl = document.getElementById('welcomeFreezeBtn');
-
-  section.classList.remove('hidden');
-
-  bigEl.textContent = '\u{1F525} ' + data.streak + ' dages streak';
-
-  var today = getTodayStr();
-  if (data.lastSessionDate === today) {
-    msgEl.textContent = 'Du har allerede \u00F8vet i dag! Forts\u00E6t det gode arbejde.';
-    msgEl.className = 'streak-msg';
-  } else if (data.streak > 0) {
-    msgEl.textContent = '\u00D8v i dag for at beholde din streak! \u{1F525}';
-    msgEl.className = 'streak-msg urgent';
-  } else {
-    msgEl.textContent = 'Start en \u00F8velse for at bygge din streak op!';
-    msgEl.className = 'streak-msg';
-  }
-
-  // Streak freeze badge
-  if (data.streakFreezes > 0) {
-    freezeEl.innerHTML = '<span class="streak-freeze-badge">\u2744\uFE0F ' + data.streakFreezes + ' streak freeze</span>';
-  } else {
-    freezeEl.innerHTML = '';
-  }
-
-  // Buy streak freeze button
-  if (data.gems >= 20 && data.streakFreezes === 0) {
-    freezeBtnEl.innerHTML = '<button class="btn-freeze" onclick="handleBuyFreeze()">\u2744\uFE0F K\u00F8b streak freeze (20 \u{1F48E})</button>';
-  } else {
-    freezeBtnEl.innerHTML = '';
-  }
-}
-
-function handleBuyFreeze() {
-  var data = loadRewardData();
-  var success = buyStreakFreeze(data);
-  if (success) {
-    updateWelcomeStreak();
-    updateRewardBar();
-  }
-}
-
-function showMilestonePopup(milestone) {
-  var overlay = document.getElementById('milestoneOverlay');
-  var confettiHTML = '<div class="confetti-container">';
-  var colors = ['#f5a623','#7c3aed','#22d3a0','#f43f5e','#0ea5e9','#f97316','#c4b5fd'];
-  for (var i = 0; i < 30; i++) {
-    var color = colors[i % colors.length];
-    var left = Math.random() * 100;
-    var delay = Math.random() * 1.5;
-    var duration = 1.5 + Math.random() * 1.5;
-    var size = 5 + Math.random() * 8;
-    confettiHTML += '<div class="confetti-dot" style="left:' + left + '%;background:' + color +
-      ';animation-delay:' + delay + 's;animation-duration:' + duration + 's;width:' + size + 'px;height:' + size + 'px"></div>';
-  }
-  confettiHTML += '</div>';
-
-  var gemsText = milestone.gems > 0 ? '<div class="milestone-gems">+' + milestone.gems + ' \u{1F48E}</div>' : '';
-
-  overlay.innerHTML = '<div class="milestone-card">' + confettiHTML +
-    '<div class="milestone-emoji">' + milestone.emoji + '</div>' +
-    '<div class="milestone-text">' + milestone.text + '</div>' +
-    gemsText +
-    '<button class="milestone-dismiss" onclick="dismissMilestone()">Fedt! \u{1F389}</button>' +
-    '</div>';
-  overlay.classList.remove('hidden');
-
-  // Auto-dismiss after 5 seconds
-  setTimeout(function() { dismissMilestone(); }, 5000);
-}
-
 function dismissMilestone() {
   var overlay = document.getElementById('milestoneOverlay');
   if (overlay) overlay.classList.add('hidden');
 }
 
-function showRewardOverlay(xpEarned, gemsEarned, streakCount) {
+function showRewardOverlay(xpEarned, gemsEarned) {
   var overlay = document.getElementById('rewardOverlay');
   overlay.innerHTML = '<div class="reward-overlay-text">' +
     '<div class="xp-line">+' + xpEarned + ' XP \u26A1</div>' +
     '<div class="gem-line">+' + gemsEarned + ' \u{1F48E}</div>' +
-    '<div class="streak-line">\u{1F525} Streak: ' + streakCount + ' dage!</div>' +
     '</div>';
   overlay.classList.remove('hidden');
 
@@ -6336,8 +6104,7 @@ var CHEST_REWARDS = {
   ]},
   rare:     { weight: 13, rewards: [
     { type: 'xp', amount: 80, text: '+80 XP', emoji: '\uD83D\uDD25' },
-    { type: 'gems', amount: 10, text: '+10 Diamanter', emoji: '\uD83D\uDC8E' },
-    { type: 'streakFreeze', amount: 1, text: 'Streak Freeze!', emoji: '\u2744\uFE0F' }
+    { type: 'gems', amount: 10, text: '+10 Diamanter', emoji: '\uD83D\uDC8E' }
   ]},
   epic:     { weight: 7, rewards: [
     { type: 'xp', amount: 150, text: '+150 XP!', emoji: '\uD83C\uDF1F' },
@@ -6393,7 +6160,6 @@ function applyChestReward(result) {
   var r = result.reward;
   if (r.type === 'xp') { data.totalXP += r.amount; data.todayXP += r.amount; }
   else if (r.type === 'gems') { data.gems += r.amount; }
-  else if (r.type === 'streakFreeze') { data.streakFreezes = Math.min((data.streakFreezes || 0) + r.amount, 3); }
   else if (r.type === 'combo') { data.totalXP += r.xp; data.todayXP += r.xp; data.gems += r.gems; }
   // 'message' type = no reward, just encouragement
   saveRewardData(data);
@@ -7722,14 +7488,10 @@ function finishFillIn() {
   var newXP = rewardData.totalXP || 0;
   var prevLevel = getAvatarLevel(prevXP);
   var newLevel = getAvatarLevel(newXP);
-  var milestone = checkMilestone(rewardData);
   updateRewardBar();
-  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned);
   if (rewardResult.dailyGoalReached) {
     setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
-  }
-  if (milestone) {
-    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
   }
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
@@ -8063,14 +7825,10 @@ function finishRightOrWrong() {
   var newXP = rewardData.totalXP || 0;
   var prevLevel = getAvatarLevel(prevXP);
   var newLevel = getAvatarLevel(newXP);
-  var milestone = checkMilestone(rewardData);
   updateRewardBar();
-  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned);
   if (rewardResult.dailyGoalReached) {
     setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
-  }
-  if (milestone) {
-    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
   }
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
@@ -8374,14 +8132,10 @@ function finishSpellingPolice() {
   var newXP = rewardData.totalXP || 0;
   var prevLevel = getAvatarLevel(prevXP);
   var newLevel = getAvatarLevel(newXP);
-  var milestone = checkMilestone(rewardData);
   updateRewardBar();
-  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned);
   if (rewardResult.dailyGoalReached) {
     setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
-  }
-  if (milestone) {
-    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
   }
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
@@ -8738,14 +8492,10 @@ function finishWordBuilder() {
   var newXP = rewardData.totalXP || 0;
   var prevLevel = getAvatarLevel(prevXP);
   var newLevel = getAvatarLevel(newXP);
-  var milestone = checkMilestone(rewardData);
   updateRewardBar();
-  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned);
   if (rewardResult.dailyGoalReached) {
     setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
-  }
-  if (milestone) {
-    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
   }
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
@@ -8985,14 +8735,10 @@ function finishSpellPick() {
   var newXP = rewardData.totalXP || 0;
   var prevLevel = getAvatarLevel(prevXP);
   var newLevel = getAvatarLevel(newXP);
-  var milestone = checkMilestone(rewardData);
   updateRewardBar();
-  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned, rewardData.streak);
+  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned);
   if (rewardResult.dailyGoalReached) {
     setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
-  }
-  if (milestone) {
-    setTimeout(function() { showMilestonePopup(milestone); }, 1800);
   }
   if (newLevel.index > prevLevel.index) {
     setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);

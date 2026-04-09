@@ -3561,7 +3561,18 @@ function renderWord() {
 
   // Hint always shown
   hintEl.textContent = '\u{1F4A1} ' + w.hint;
-  if (sentEl) sentEl.textContent = '';
+  // Show sentence with blank for the word
+  if (sentEl) {
+    if (w.sentence) {
+      var sentRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+      var blankSpan = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);padding:2px 4px">&nbsp;</span>';
+      var cloze = w.sentence.replace(sentRegex, blankSpan);
+      if (cloze === w.sentence) cloze = w.sentence + ' ' + blankSpan;
+      sentEl.innerHTML = cloze;
+    } else {
+      sentEl.textContent = '';
+    }
+  }
 
   if (gameMode === 'training') {
     // TRAINING: Pure dictation — hear the word, spell it

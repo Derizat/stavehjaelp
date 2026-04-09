@@ -5842,13 +5842,13 @@
   ],
   "Svære ord": [
     {
-      "word": "cognac",
-      "hint": "En type fransk brændevin",
-      "patternHint": "co + gnac (gn som nj)",
-      "sentence": "Bedstefar drikker cognac efter middagen.",
+      "word": "prestige",
+      "hint": "Høj anseelse og respekt",
+      "patternHint": "pre + stige (ige som isje)",
+      "sentence": "Skolen har stor prestige i byen.",
       "level": 5,
       "category": "Svære ord",
-      "misspelling": "konjak"
+      "misspelling": "prestisje"
     },
     {
       "word": "bouillon",

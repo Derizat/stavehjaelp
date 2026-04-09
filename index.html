@@ -2393,7 +2393,8 @@ var PATTERN_RULES = {
   "Nutids-r": "<b>Pr\u00F8v at s\u00E6tte \u201Dhan\u201D foran!</b><br>Han hoppe<span style='color:var(--green);font-weight:800'>r</span>, hun spise<span style='color:var(--green);font-weight:800'>r</span>, de lege<span style='color:var(--green);font-weight:800'>r</span><br>Passer \u201Dhan/hun\u201D foran? S\u00E5 skal der <span style='color:var(--green);font-weight:800'>-r</span> p\u00E5!",
   "Fremmedord": "<b>L\u00E5neord fra andre sprog!</b><br>Mange ord kommer fra <span style='color:var(--accent)'>fransk</span> (restaurant, garage), <span style='color:var(--accent)'>engelsk</span> (computer, juice) eller <span style='color:var(--accent)'>latin</span> (station, nation).<br>De f\u00F8lger ikke danske staveregler!",
   "Bl\u00F8dt d": "<b>D'et er bl\u00F8dt!</b><br>Mange danske ord har et <span style='color:var(--accent)'>d</span> man n\u00E6sten ikke kan h\u00F8re.<br>r\u00F8<span style='color:var(--green);font-weight:800'>d</span>, ba<span style='color:var(--green);font-weight:800'>d</span>e, ri<span style='color:var(--green);font-weight:800'>dd</span>er<br>Husk: d'et er der \u2014 ogs\u00E5 selv om det lyder bl\u00F8dt!",
-  "Konsonantlyde": "<b>Lyt til konsonanten!</b><br>Nogle konsonanter lyder ens men staves forskelligt.<br><span style='color:var(--accent)'>p/b</span>, <span style='color:var(--accent)'>k/g</span>, <span style='color:var(--accent)'>g/j</span> \u2014 hvilken er det?"
+  "Konsonantlyde": "<b>Lyt til konsonanten!</b><br>Nogle konsonanter lyder ens men staves forskelligt.<br><span style='color:var(--accent)'>p/b</span>, <span style='color:var(--accent)'>k/g</span>, <span style='color:var(--accent)'>g/j</span> \u2014 hvilken er det?",
+  "Sv\u00E6re ord": "<b>Mesterklassen!</b><br>Disse ord er ekstra sv\u00E6re \u2014 mange er l\u00E5neord fra andre sprog.<br>Her g\u00E6lder det om at huske de specielle stavem\u00E5der!"
 };
 
 // Emoji illustrations for fill-in exercise (words with clear visual representation)
@@ -2744,7 +2745,8 @@ var CATEGORY_ICONS = {
   "Nutids-r": "\u00AE\uFE0F",
   "Fremmedord": "\u{1F30D}",
   "Bl\u00F8dt d": "\u{1F4AC}",
-  "Konsonantlyde": "\u{1F442}"
+  "Konsonantlyde": "\u{1F442}",
+  "Sv\u00E6re ord": "\u{1F480}"
 };
 
 var ALL_CATEGORIES = [];
@@ -2753,12 +2755,9 @@ var ALL_CATEGORIES = [];
 function updatePatternBadge(badgeId, category, wordLevel) {
   var el = document.getElementById(badgeId);
   if (!el) return;
-  if (wordLevel !== undefined && wordLevel >= 4) {
-    el.style.display = 'none';
-  } else {
-    el.style.display = '';
-    el.textContent = (CATEGORY_ICONS[category] || '\u{1F520}') + ' ' + category;
-  }
+  el.style.display = '';
+  var lvlStr = (wordLevel !== undefined) ? ' \u2014 niveau ' + wordLevel : '';
+  el.textContent = (CATEGORY_ICONS[category] || '\u{1F520}') + ' ' + category + lvlStr;
 }
 
 var LEVEL_LABELS = {
@@ -2912,8 +2911,9 @@ function resetProfile() {
 // Starting level per category — categories with level 0 words start at 0
 var CATEGORY_START_LEVELS = {
   'Lydrette ord': 0,
-  'Fremmedord': 0,
-  'Blødt d': 0
+  'Fremmedord': 3,
+  'Blødt d': 0,
+  'Sv\u00E6re ord': 5
 };
 
 // Per-category level system
@@ -2976,7 +2976,7 @@ function buildPoolForCategory(cat, catLevel) {
   var pool = (WORD_BANK[cat] || []).filter(function(w) { return w.level === catLevel; });
   if (pool.length < 3) {
     pool = (WORD_BANK[cat] || []).filter(function(w) {
-      return w.level >= Math.max(0, catLevel - 1) && w.level <= Math.min(4, catLevel + 1);
+      return w.level >= Math.max(0, catLevel - 1) && w.level <= catLevel + 1;
     });
   }
   return pool.map(function(w) { return Object.assign({}, w, { category: cat }); });
@@ -2988,22 +2988,36 @@ var CATEGORY_MAX_LEVELS = {
   'Lydrette ord': 5,
   'Stumme bogstaver': 5,
   'Dobbeltkonsonant': 5,
-  'For- og efterstavelser': 5,
-  'Sammensatte ord': 5,
+  'Sammensatte ord': 3,
   'Verbernes bøjning': 5,
-  'Navneordsendelser': 5,
   'Nutids-r': 5,
   'Fremmedord': 5,
   'Blødt d': 5,
-  'Konsonantlyde': 5
+  'Konsonantlyde': 4,
+  'Sv\u00E6re ord': 6
 };
+
+function countMasteredCategories(levels) {
+  var count = 0;
+  for (var i = 0; i < ALL_CATEGORIES.length; i++) {
+    var cat = ALL_CATEGORIES[i];
+    if (cat === 'Sv\u00E6re ord') continue;
+    var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
+    var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 5;
+    if (catLevel >= maxLvl) count++;
+  }
+  return count;
+}
 
 function buildPoolWithCategoryLevels(categories) {
   var levels = loadCategoryLevels();
+  var masteredCount = countMasteredCategories(levels);
   var pool = [];
   for (var i = 0; i < categories.length; i++) {
     var cat = categories[i];
     if (!WORD_BANK[cat]) continue;
+    // Svære ord unlocks after mastering 3 other categories
+    if (cat === 'Sv\u00E6re ord' && masteredCount < 3) continue;
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
     // Skip mastered categories
     if (CATEGORY_MAX_LEVELS[cat] !== undefined && catLevel >= CATEGORY_MAX_LEVELS[cat]) continue;
@@ -9386,6 +9400,7 @@ function renderCategoryLevels() {
   var levelColors = ['#9ca3af', '#60a5fa', '#22d3a0', '#f5a623', '#f97316', '#f43f5e'];
   var html = '<div style="background:var(--card2);border-radius:12px;padding:12px 14px;border:1px solid #3d4270">' +
     '<div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:8px">Kategoriniveauer</div>';
+  var masteredCount = countMasteredCategories(levels);
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {
     var cat = ALL_CATEGORIES[i];
     var icon = CATEGORY_ICONS[cat] || '';
@@ -9397,13 +9412,15 @@ function renderCategoryLevels() {
     var histStr = hist.length > 0 ? ' (' + correct + '/' + hist.length + ')' : '';
     var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 5;
     var mastered = lvl >= maxLvl;
-    var lvlText = mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/4';
-    var lvlColor = mastered ? 'var(--green)' : levelColors[Math.min(lvl, 5)];
-    html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem' + (mastered ? ';opacity:0.6' : '') + '">' +
+    // Svære ord: show locked state if not enough mastered categories
+    var locked = (cat === 'Sv\u00E6re ord' && masteredCount < 3);
+    var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/3)' : (mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/4');
+    var lvlColor = locked ? '#9ca3af' : (mastered ? 'var(--green)' : levelColors[Math.min(lvl, 5)]);
+    html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem' + (mastered || locked ? ';opacity:0.6' : '') + '">' +
       '<span style="width:20px;text-align:center">' + icon + '</span>' +
       '<span style="flex:1;color:var(--text)">' + cat + '</span>' +
       '<span style="font-weight:700;color:' + lvlColor + '">' + lvlText + '</span>' +
-      '<span style="color:var(--muted);font-size:0.7rem;min-width:40px;text-align:right">' + (mastered ? '' : histStr) + '</span>' +
+      '<span style="color:var(--muted);font-size:0.7rem;min-width:40px;text-align:right">' + (mastered || locked ? '' : histStr) + '</span>' +
       '</div>';
   }
   html += '</div>';

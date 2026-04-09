@@ -1,15 +1,6 @@
 {
   "Stumme bogstaver": [
     {
-      "word": "hjem",
-      "hint": "Der hvor man bor",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Jeg vil gerne gå hjem nu.",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "jem"
-    },
-    {
       "word": "hjemme",
       "hint": "I sit eget hus",
       "patternHint": "stumt 'h' i 'hj'",
@@ -23,7 +14,7 @@
       "hint": "Rund ting på en cykel",
       "patternHint": "stumt 'h' i 'hj'",
       "sentence": "Cyklen har to hjul.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver",
       "misspelling": "jul"
     },
@@ -50,7 +41,7 @@
       "hint": "Stort dyr i havet",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Vi så en stor hval fra båden.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver",
       "misspelling": "val"
     },
@@ -68,7 +59,7 @@
       "hint": "Alle sammen, én ad gangen",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Hver dag går vi i skole.",
-      "level": 1,
+      "level": 2,
       "category": "Stumme bogstaver",
       "misspelling": "ver"
     },
@@ -80,15 +71,6 @@
       "level": 1,
       "category": "Stumme bogstaver",
       "misspelling": "vid"
-    },
-    {
-      "word": "hvidt",
-      "hint": "Farven på sne, i intetkøn",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Huset er hvidt med rødt tag.",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "vidt"
     },
     {
       "word": "hvil",
@@ -329,7 +311,7 @@
       "hint": "Noget der snurrer rundt",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Bladene dansede i en hvirvel.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver",
       "misspelling": "virvel"
     },
@@ -370,20 +352,11 @@
       "misspelling": "vornår"
     },
     {
-      "word": "hvæs",
-      "hint": "Lyden en slange laver",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Slangen sagde hvæs!",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "væs"
-    },
-    {
       "word": "hvæse",
       "hint": "Lave en slangelyd",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Slangen begyndte at hvæse ad os.",
-      "level": 2,
+      "level": 3,
       "category": "Stumme bogstaver",
       "misspelling": "væse"
     },
@@ -467,15 +440,6 @@
       "level": 2,
       "category": "Stumme bogstaver",
       "misspelling": "hvælge"
-    },
-    {
-      "word": "dværg",
-      "hint": "Lille eventyrfigur",
-      "patternHint": "stumt 'v' i 'dv'",
-      "sentence": "I eventyret bor der en dværg i skoven.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "dvær"
     },
     {
       "word": "halvanden",
@@ -586,15 +550,6 @@
       "misspelling": "vileplads"
     },
     {
-      "word": "hvilestol",
-      "hint": "Behagelig stol man slapper af i",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Bedstefar sov i sin hvilestol.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vilestol"
-    },
-    {
       "word": "hvin",
       "hint": "Skinger lyd fra bremser",
       "patternHint": "stumt 'h' i 'hv'",
@@ -658,15 +613,6 @@
       "misspelling": "vælv"
     },
     {
-      "word": "hvæsse",
-      "hint": "Gøre skarp",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Du skal hvæsse din blyant inden timen.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "væsse"
-    },
-    {
       "word": "skulder",
       "hint": "Kropsdel mellem hals og arm",
       "patternHint": "stumt 'l' i udtalen",
@@ -689,7 +635,7 @@
       "hint": "Faktisk, i virkeligheden",
       "patternHint": "stumt 'g'",
       "sentence": "Hvad vil du egentlig lave når du bliver stor?",
-      "level": 4,
+      "level": 3,
       "category": "Stumme bogstaver",
       "misspelling": "entlig"
     },
@@ -698,25 +644,16 @@
       "hint": "Helt og aldeles",
       "patternHint": "stumt 'd' i 'fuld'",
       "sentence": "Værelset var fuldstændig rodet.",
-      "level": 4,
+      "level": 3,
       "category": "Stumme bogstaver",
       "misspelling": "fulstændig"
-    },
-    {
-      "word": "hvælvet",
-      "hint": "En buet form",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Loftet i kirken er hvælvet.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "vælvet"
     },
     {
       "word": "hvælving",
       "hint": "Buet loft eller tag",
       "patternHint": "stumt 'h' i 'hv'",
       "sentence": "Kirkens hvælving var flot dekoreret.",
-      "level": 4,
+      "level": 3,
       "category": "Stumme bogstaver",
       "misspelling": "vælving"
     },
@@ -725,29 +662,245 @@
       "hint": "Naturligvis",
       "patternHint": "'selv'+'følge'+'lig'",
       "sentence": "Du må selvfølgelig gerne komme med os.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "selfølgelig"
+    },
+    {
+      "word": "hund",
+      "hint": "Et kæledyr der logrer",
+      "patternHint": "stumt 'd' i '-nd'",
+      "sentence": "Vi har en lille hund derhjemme.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "hun"
+    },
+    {
+      "word": "land",
+      "hint": "Et område med grænser",
+      "patternHint": "stumt 'd' i '-nd'",
+      "sentence": "Danmark er et dejligt land.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "lan"
+    },
+    {
+      "word": "bold",
+      "hint": "Man sparker til den",
+      "patternHint": "stumt 'd' i '-ld'",
+      "sentence": "Børnene spiller bold i haven.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "bol"
+    },
+    {
+      "word": "sand",
+      "hint": "Findes på stranden",
+      "patternHint": "stumt 'd' i '-nd'",
+      "sentence": "Der er sand på stranden.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "san"
+    },
+    {
+      "word": "rund",
+      "hint": "Formen på en bold",
+      "patternHint": "stumt 'd' i '-nd'",
+      "sentence": "Bolden er helt rund.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "run"
+    },
+    {
+      "word": "kold",
+      "hint": "Det modsatte af varm",
+      "patternHint": "stumt 'd' i '-ld'",
+      "sentence": "Suppen er kold nu.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "kol"
+    },
+    {
+      "word": "vild",
+      "hint": "Ikke tam",
+      "patternHint": "stumt 'd' i '-ld'",
+      "sentence": "Han blev helt vild af glæde.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "vil"
+    },
+    {
+      "word": "mild",
+      "hint": "Blid og skånsom",
+      "patternHint": "stumt 'd' i '-ld'",
+      "sentence": "Sæben er mild mod huden.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "mil"
+    },
+    {
+      "word": "grund",
+      "hint": "Et stykke jord",
+      "patternHint": "stumt 'd' i '-nd'",
+      "sentence": "Vi har en stor grund med græs.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "grun"
+    },
+    {
+      "word": "blind",
+      "hint": "Kan ikke se",
+      "patternHint": "stumt 'd' i '-nd'",
+      "sentence": "Manden var blind og brugte en stok.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "blin"
+    },
+    {
+      "word": "faldgrube",
+      "hint": "En skjult fælde",
+      "patternHint": "stumt 'd' i '-ld'",
+      "sentence": "Pas på, det kan være en faldgrube.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "falgrube"
+    },
+    {
+      "word": "rent",
+      "hint": "Uden snavs",
+      "patternHint": "ingen stumt 'd' — ren + t",
+      "sentence": "Værelset er rent og pænt.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "rendt"
+    },
+    {
+      "word": "pænt",
+      "hint": "Flot og ordentligt",
+      "patternHint": "ingen stumt 'd' — pæn + t",
+      "sentence": "Du har tegnet meget pænt.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "pændt"
+    },
+    {
+      "word": "fint",
+      "hint": "Godt og i orden",
+      "patternHint": "ingen stumt 'd' — fin + t",
+      "sentence": "Det er fint vejr i dag.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "findt"
+    },
+    {
+      "word": "grønt",
+      "hint": "Farven på græs",
+      "patternHint": "ingen stumt 'd' — grøn + t",
+      "sentence": "Lyset er grønt, nu kan vi gå.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "grøndt"
+    },
+    {
+      "word": "brunt",
+      "hint": "Farven på chokolade",
+      "patternHint": "ingen stumt 'd' — brun + t",
+      "sentence": "Bordet er brunt.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "brundt"
+    },
+    {
+      "word": "salt",
+      "hint": "Hvidt krydderi til maden",
+      "patternHint": "ingen stumt 'd' — salt, ikke saldt",
+      "sentence": "Suppen er for salt.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "saldt"
+    },
+    {
+      "word": "helt",
+      "hint": "Fuldstændig",
+      "patternHint": "ingen stumt 'd' — hel + t",
+      "sentence": "Jeg er helt sikker.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "heldt"
+    },
+    {
+      "word": "lunt",
+      "hint": "Behageligt varmt",
+      "patternHint": "ingen stumt 'd' — lun + t",
+      "sentence": "Vejret er lunt i aften.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "lundt"
+    },
+    {
+      "word": "kønt",
+      "hint": "Smukt og pænt",
+      "patternHint": "ingen stumt 'd' — køn + t",
+      "sentence": "Det var et kønt maleri.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "køndt"
+    },
+    {
+      "word": "vist",
+      "hint": "Sandsynligvis",
+      "patternHint": "ingen stumt 'd' — vis + t, ikke vidst",
+      "sentence": "Det er vist rigtigt.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "vidst"
+    },
+    {
+      "word": "psykolog",
+      "hint": "En person man snakker med om følelser",
+      "patternHint": "stumt p i ps-",
+      "sentence": "Hun gik til psykolog for at få det bedre.",
       "level": 4,
       "category": "Stumme bogstaver",
-      "misspelling": "sevfølgelig"
+      "misspelling": "sykolog"
+    },
+    {
+      "word": "spaghetti",
+      "hint": "Lange, tynde nudler fra Italien",
+      "patternHint": "stumt h i gh",
+      "sentence": "Vi fik spaghetti med kødsovs til aftensmad.",
+      "level": 4,
+      "category": "Stumme bogstaver",
+      "misspelling": "spagetti"
+    },
+    {
+      "word": "grøntsager",
+      "hint": "Gulerødder, broccoli og andet sundt",
+      "patternHint": "stumt t i -nts-",
+      "sentence": "Husk at spise dine grøntsager.",
+      "level": 4,
+      "category": "Stumme bogstaver",
+      "misspelling": "grønsager"
     }
   ],
   "Dobbeltkonsonant": [
     {
-      "word": "kok",
-      "hint": "Person der laver mad",
-      "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Min onkel arbejder som kok på en restaurant.",
+      "word": "kokken",
+      "hint": "Personen der laver maden",
+      "patternHint": "ko_ken → kk",
+      "sentence": "Kokken lavede den bedste suppe.",
       "level": 1,
       "category": "Dobbeltkonsonant",
-      "misspelling": "kkok"
+      "misspelling": "koken"
     },
     {
-      "word": "tap",
-      "hint": "Man åbner for vand",
-      "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Drej på tap for at få vand.",
+      "word": "tappe",
+      "hint": "Hælde væske fra en beholder",
+      "patternHint": "ta_pe → pp",
+      "sentence": "Far skal tappe øl fra tønden.",
       "level": 2,
       "category": "Dobbeltkonsonant",
-      "misspelling": "tpa"
+      "misspelling": "tape"
     },
     {
       "word": "hoppe",
@@ -1056,15 +1209,6 @@
       "misspelling": "komission"
     },
     {
-      "word": "nødvendig",
-      "hint": "Noget der skal til",
-      "patternHint": "enkelt-d (lang vokal 'ø')",
-      "sentence": "Det er nødvendig at øve sig hver dag.",
-      "level": 4,
-      "category": "Dobbeltkonsonant",
-      "misspelling": "nøddvendig"
-    },
-    {
       "word": "effektiv",
       "hint": "Dygtig og hurtig",
       "patternHint": "dobbelt-f efter kort 'e'",
@@ -1335,49 +1479,49 @@
       "misspelling": "zepelin"
     },
     {
-      "word": "hak",
-      "hint": "Et lille snit",
-      "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Der er et hak i kanten.",
+      "word": "hakke",
+      "hint": "Skære i små stykker",
+      "patternHint": "ha_ke → kk",
+      "sentence": "Kan du hakke løget i små tern?",
       "level": 1,
       "category": "Dobbeltkonsonant",
-      "misspelling": "hakk"
+      "misspelling": "hake"
     },
     {
-      "word": "puf",
-      "hint": "Et lille skub",
-      "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Hun gav ham et puf i siden.",
+      "word": "puffe",
+      "hint": "Give et lille skub",
+      "patternHint": "pu_fe → ff",
+      "sentence": "Du må ikke puffe til de andre i køen.",
       "level": 1,
       "category": "Dobbeltkonsonant",
-      "misspelling": "pfu"
+      "misspelling": "pufe"
     },
     {
-      "word": "dip",
-      "hint": "Sovs man dypper i",
-      "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Vil du have dip til dine gulerødder?",
+      "word": "dippe",
+      "hint": "Dyppe mad i sovs",
+      "patternHint": "di_pe → pp",
+      "sentence": "Man kan dippe grøntsager i hummus.",
       "level": 1,
       "category": "Dobbeltkonsonant",
-      "misspelling": "dpi"
+      "misspelling": "dipe"
     },
     {
-      "word": "buk",
-      "hint": "En dyb hilsen",
-      "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Han lavede et fint buk efter showet.",
+      "word": "bukke",
+      "hint": "Bøje sig ned som hilsen",
+      "patternHint": "bu_ke → kk",
+      "sentence": "Skuespillerne skal bukke efter forestillingen.",
       "level": 1,
       "category": "Dobbeltkonsonant",
-      "misspelling": "bukk"
+      "misspelling": "buke"
     },
     {
-      "word": "nik",
+      "word": "nikke",
       "hint": "Bevæge hovedet op og ned",
-      "patternHint": "enkelt konsonant, kort ord",
-      "sentence": "Han gav et nik med hovedet.",
+      "patternHint": "ni_ke → kk",
+      "sentence": "Hun begyndte at nikke til musikken.",
       "level": 1,
       "category": "Dobbeltkonsonant",
-      "misspelling": "nikk"
+      "misspelling": "nike"
     },
     {
       "word": "brumme",
@@ -1578,845 +1722,6 @@
       "misspelling": "meneske"
     }
   ],
-  "For- og efterstavelser": [
-    {
-      "word": "slem",
-      "hint": "Ikke sød, lidt ond",
-      "patternHint": "enkelt kort ord — bruges som basis",
-      "sentence": "Trolden i eventyret er slem.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "slme"
-    },
-    {
-      "word": "venlig",
-      "hint": "Rar og sød",
-      "patternHint": "efterstavelse '-lig'",
-      "sentence": "Den nye dreng er meget venlig.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "venleg"
-    },
-    {
-      "word": "langsom",
-      "hint": "Ikke hurtig",
-      "patternHint": "efterstavelse '-som'",
-      "sentence": "Sneglen er meget langsom.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "langsum"
-    },
-    {
-      "word": "umulig",
-      "hint": "Kan ikke lade sig gøre",
-      "patternHint": "forstavelse 'u-'",
-      "sentence": "Denne opgave er næsten umulig at løse.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "umuleg"
-    },
-    {
-      "word": "dejlig",
-      "hint": "Rigtig rart",
-      "patternHint": "efterstavelse '-lig'",
-      "sentence": "Det er en dejlig dag i dag.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "dejleg"
-    },
-    {
-      "word": "farlig",
-      "hint": "Kan gøre ondt",
-      "patternHint": "efterstavelse '-lig'",
-      "sentence": "Det er farlig at løbe på isen.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "farleg"
-    },
-    {
-      "word": "rigtig",
-      "hint": "Korrekt og sandt",
-      "patternHint": "efterstavelse '-ig'",
-      "sentence": "Dit svar er helt rigtig.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "rigteg"
-    },
-    {
-      "word": "uheld",
-      "hint": "Noget dårligt der sker",
-      "patternHint": "forstavelse 'u-'",
-      "sentence": "Der skete et uheld ude på vejen.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "uhled"
-    },
-    {
-      "word": "lykkelig",
-      "hint": "Meget glad",
-      "patternHint": "efterstavelse '-lig'",
-      "sentence": "Hun blev lykkelig for gaven.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "lykkeleg"
-    },
-    {
-      "word": "fredelig",
-      "hint": "Stille og roligt",
-      "patternHint": "efterstavelse '-lig'",
-      "sentence": "Det er så fredelig ude ved søen.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "fredeleg"
-    },
-    {
-      "word": "begynde",
-      "hint": "Starte på noget",
-      "patternHint": "forstavelse 'be-'",
-      "sentence": "Vi skal begynde med den første opgave.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "bigynde"
-    },
-    {
-      "word": "kærlig",
-      "hint": "Viser varme og omsorg",
-      "patternHint": "efterstavelse '-lig'",
-      "sentence": "Hunden er meget kærlig mod børnene.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "kærleg"
-    },
-    {
-      "word": "fordi",
-      "hint": "Angiver en grund",
-      "patternHint": "forstavelse 'for-'",
-      "sentence": "Vi blev inde fordi det regnede.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "foredi"
-    },
-    {
-      "word": "heldig",
-      "hint": "Har god lykke",
-      "patternHint": "efterstavelse '-ig'",
-      "sentence": "Du var heldig at finde en fjerboldt.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "heldeg"
-    },
-    {
-      "word": "undskylde",
-      "hint": "Bede om tilgivelse",
-      "patternHint": "forstavelse 'und-'",
-      "sentence": "Jeg vil gerne undskylde for min opførsel.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "unskylde"
-    },
-    {
-      "word": "forsigtig",
-      "hint": "Passer meget på",
-      "patternHint": "'for-' + '-ig'",
-      "sentence": "Vær forsigtig når du klatrer i træet.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "foresigtig"
-    },
-    {
-      "word": "uventet",
-      "hint": "Noget man ikke regnede med",
-      "patternHint": "forstavelse 'u-' + '-et'",
-      "sentence": "Besøget var helt uventet.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "uvetnet"
-    },
-    {
-      "word": "forsinket",
-      "hint": "Komme for sent",
-      "patternHint": "forstavelse 'for-'",
-      "sentence": "Toget er desværre forsinket i dag.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "foresinket"
-    },
-    {
-      "word": "tålmodig",
-      "hint": "Kan vente uden at blive sur",
-      "patternHint": "efterstavelse '-ig'",
-      "sentence": "Du skal være tålmodig når du fisker.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "tålmodeg"
-    },
-    {
-      "word": "bekymret",
-      "hint": "Urolig for noget",
-      "patternHint": "forstavelse 'be-'",
-      "sentence": "Læreren er bekymret for den nye elev.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "bikymret"
-    },
-    {
-      "word": "forklaring",
-      "hint": "Når noget bliver gjort tydeligt",
-      "patternHint": "'for-' + '-ing'",
-      "sentence": "Kan du give en forklaring på hvad der skete?",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "foreklaring"
-    },
-    {
-      "word": "kærlighed",
-      "hint": "Dyb følelse for nogen",
-      "patternHint": "efterstavelse '-hed'",
-      "sentence": "Forældrenes kærlighed er ubetinget.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "kærlgihed"
-    },
-    {
-      "word": "behandling",
-      "hint": "Hjælp fra en læge",
-      "patternHint": "'be-' + '-ling'",
-      "sentence": "Patienten fik den rette behandling.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "bihandling"
-    },
-    {
-      "word": "udvikling",
-      "hint": "Forandring over tid",
-      "patternHint": "'ud-' + '-ling'",
-      "sentence": "Barnets udvikling går rigtig godt.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "uvikling"
-    },
-    {
-      "word": "udfordring",
-      "hint": "Noget svært man prøver",
-      "patternHint": "'ud-' + '-ing'",
-      "sentence": "Matematikken var en stor udfordring.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "ufordring"
-    },
-    {
-      "word": "ensomhed",
-      "hint": "Følelsen af at være alene",
-      "patternHint": "efterstavelse '-hed'",
-      "sentence": "Ensomhed kan være svær at bære.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "ensomhet"
-    },
-    {
-      "word": "forståelse",
-      "hint": "At begribe noget",
-      "patternHint": "'for-' + '-else'",
-      "sentence": "Vi skal have forståelse for hinanden.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "forståælse"
-    },
-    {
-      "word": "opmærksom",
-      "hint": "Lægger godt mærke til ting",
-      "patternHint": "'op-' + '-som'",
-      "sentence": "Hunden er meget opmærksom på lyde.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "opmærksum"
-    },
-    {
-      "word": "forberedelse",
-      "hint": "Gøre sig klar",
-      "patternHint": "'for-' + 'bered' + '-else'",
-      "sentence": "Forberedelse til eksamen tager lang tid.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "forberedælse"
-    },
-    {
-      "word": "vanskelighed",
-      "hint": "Noget der er svært",
-      "patternHint": "'vanskel' + '-ig' + '-hed'",
-      "sentence": "Den største vanskelighed var de mange regler.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "vanskeilghed"
-    },
-    {
-      "word": "beskyttelse",
-      "hint": "At holde nogen sikker",
-      "patternHint": "'be-' + 'skyt' + '-else'",
-      "sentence": "Hjelmen giver beskyttelse når du cykler.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "beskyttælse"
-    },
-    {
-      "word": "uafhængig",
-      "hint": "Klarer sig selv",
-      "patternHint": "'u-' + 'af-' + '-ig'",
-      "sentence": "Hun er en meget uafhængig pige.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "uafhængeg"
-    },
-    {
-      "word": "utilfreds",
-      "hint": "Ikke glad for noget",
-      "patternHint": "'u-' + 'til-'",
-      "sentence": "Kunden var utilfreds med maden.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "utilrfeds"
-    },
-    {
-      "word": "bevidsthed",
-      "hint": "At være vågen og klar",
-      "patternHint": "'be-' + '-hed'",
-      "sentence": "Han mistede bevidsthed et kort øjeblik.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "bevidsthet"
-    },
-    {
-      "word": "hensynsfuld",
-      "hint": "Tænker på andre og passer på dem",
-      "patternHint": "'hensyn' + '-s-' + '-fuld'",
-      "sentence": "Det er vigtigt at være hensynsfuld i trafikken.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "hensysnfuld"
-    },
-    {
-      "word": "tilgængelighed",
-      "hint": "Hvor let noget kan nås",
-      "patternHint": "'til-' + '-lig' + '-hed'",
-      "sentence": "Bygningens tilgængelighed er blevet forbedret.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "tilgængleighed"
-    },
-    {
-      "word": "uforglemmelig",
-      "hint": "Noget man aldrig glemmer",
-      "patternHint": "'u-' + 'for-' + '-lig'",
-      "sentence": "Det var en uforglemmelig oplevelse.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "uforglemmeleg"
-    },
-    {
-      "word": "vedligeholdelse",
-      "hint": "Passe på og reparere",
-      "patternHint": "'ved-' + 'lige' + '-holde' + '-else'",
-      "sentence": "Huset kræver løbende vedligeholdelse.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "vedligeohldelse"
-    },
-    {
-      "word": "ulige",
-      "hint": "Ikke lige, uens",
-      "patternHint": "forstavelsen 'u-' betyder ikke/modsat",
-      "sentence": "Tre er et ulige tal.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "ulgie"
-    },
-    {
-      "word": "synlig",
-      "hint": "Noget man kan se",
-      "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
-      "sentence": "Månen er synlig på himlen i aften.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "synleg"
-    },
-    {
-      "word": "ærlig",
-      "hint": "Taler sandt",
-      "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
-      "sentence": "Det er vigtigt at være ærlig.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "ærleg"
-    },
-    {
-      "word": "rolig",
-      "hint": "Stille og fredfyldt",
-      "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
-      "sentence": "Vær rolig, alt bliver godt.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "roleg"
-    },
-    {
-      "word": "sygdom",
-      "hint": "Når kroppen ikke har det godt",
-      "patternHint": "efterstavelsen '-dom' danner navneord",
-      "sentence": "Han var hjemme på grund af sygdom.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "sygodm"
-    },
-    {
-      "word": "frihed",
-      "hint": "At kunne gøre hvad man vil",
-      "patternHint": "efterstavelsen '-hed' danner navneord",
-      "sentence": "Fuglene nyder deres frihed i naturen.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "frihet"
-    },
-    {
-      "word": "modig",
-      "hint": "Ikke bange",
-      "patternHint": "efterstavelsen '-ig' gør ord til tillægsord",
-      "sentence": "Du er meget modig når du prøver noget nyt.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "modeg"
-    },
-    {
-      "word": "ulykke",
-      "hint": "Noget slemt der sker",
-      "patternHint": "forstavelsen 'u-' betyder ikke/modsat",
-      "sentence": "Der var en ulykke på vejen.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "ulykke"
-    },
-    {
-      "word": "usynlig",
-      "hint": "Kan ikke ses",
-      "patternHint": "forstavelsen 'u-' + efterstavelsen '-lig'",
-      "sentence": "Vinden er usynlig, men man kan mærke den.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "usynleg"
-    },
-    {
-      "word": "forlade",
-      "hint": "Gå væk fra",
-      "patternHint": "forstavelsen 'for-' ændrer ordets betydning",
-      "sentence": "Vi måtte forlade huset i en fart.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "forelade"
-    },
-    {
-      "word": "indgang",
-      "hint": "Stedet man går ind",
-      "patternHint": "forstavelsen 'ind-' angiver retning",
-      "sentence": "Vi mødes ved indgang til parken.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "ingang"
-    },
-    {
-      "word": "udgang",
-      "hint": "Stedet man går ud",
-      "patternHint": "forstavelsen 'ud-' angiver retning",
-      "sentence": "Find nærmeste udgang og gå den vej.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "ugang"
-    },
-    {
-      "word": "omvej",
-      "hint": "En længere vej rundt",
-      "patternHint": "forstavelsen 'om-' betyder rundt om",
-      "sentence": "Vi tog en omvej gennem parken.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "åmvej"
-    },
-    {
-      "word": "afstand",
-      "hint": "Hvor langt der er",
-      "patternHint": "forstavelsen 'af-' ændrer betydning",
-      "sentence": "Der er lang afstand til skolen.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "avstand"
-    },
-    {
-      "word": "overgang",
-      "hint": "Sted man krydser over",
-      "patternHint": "forstavelsen 'over-' angiver retning",
-      "sentence": "Brug den sikre overgang ved skolen.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "åvergang"
-    },
-    {
-      "word": "underlig",
-      "hint": "Mærkelig og sær",
-      "patternHint": "forstavelsen 'under-' + efterstavelsen '-lig'",
-      "sentence": "Der var en underlig lyd i kælderen.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "underleg"
-    },
-    {
-      "word": "bevægelse",
-      "hint": "At flytte sig",
-      "patternHint": "forstavelsen 'be-' + efterstavelsen '-else'",
-      "sentence": "Katten lå helt stille uden bevægelse.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "bevægælse"
-    },
-    {
-      "word": "forekomst",
-      "hint": "At noget optræder",
-      "patternHint": "forstavelsen 'fore-' angiver forud",
-      "sentence": "Der er stor forekomst af allergi i Danmark.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "foreekomst"
-    },
-    {
-      "word": "indflydelse",
-      "hint": "Påvirkning af andre",
-      "patternHint": "forstavelsen 'ind-' + efterstavelsen '-else'",
-      "sentence": "Læreren havde stor indflydelse på eleverne.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "indflydælse"
-    },
-    {
-      "word": "overraskelse",
-      "hint": "Noget uventet",
-      "patternHint": "forstavelsen 'over-' + efterstavelsen '-else'",
-      "sentence": "Festen var en stor overraskelse for ham.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "overraskælse"
-    },
-    {
-      "word": "uforsigtig",
-      "hint": "Ikke forsigtig",
-      "patternHint": "forstavelsen 'u-' gør ordet til modsat",
-      "sentence": "Vær ikke uforsigtig med saksen.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "uforsigteg"
-    },
-    {
-      "word": "opdragelse",
-      "hint": "At lære børn god opførsel",
-      "patternHint": "forstavelsen 'op-' + efterstavelsen '-else'",
-      "sentence": "God opdragelse er vigtig for alle børn.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "opdragælse"
-    },
-    {
-      "word": "ansvarlig",
-      "hint": "Skal sørge for at tingene er i orden",
-      "patternHint": "efterstavelsen '-lig' gør ord til tillægsord",
-      "sentence": "Hun er ansvarlig for at låse døren.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "ansvarleg"
-    },
-    {
-      "word": "udbredelse",
-      "hint": "At noget spreder sig",
-      "patternHint": "forstavelsen 'ud-' + efterstavelsen '-else'",
-      "sentence": "Sygdommens udbredelse blev bremset.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "udbredælse"
-    },
-    {
-      "word": "utilregnelig",
-      "hint": "Ikke ansvarlig for handlinger",
-      "patternHint": "forstavelsen 'u-' + 'til-' + efterstavelsen '-lig'",
-      "sentence": "Manden blev erklæret utilregnelig af retten.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "utilregneleg"
-    },
-    {
-      "word": "omstændighed",
-      "hint": "De forhold noget sker under",
-      "patternHint": "forstavelsen 'om-' + efterstavelsen '-hed'",
-      "sentence": "Det var en heldig omstændighed for os.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "omstændighet"
-    },
-    {
-      "word": "uigennemskuelig",
-      "hint": "Svært at forstå",
-      "patternHint": "forstavelsen 'u-' + 'igennem-' + efterstavelsen '-lig'",
-      "sentence": "Denne tekst er helt uigennemskuelig for mig.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "uigennemskueleg"
-    },
-    {
-      "word": "undertrykkelse",
-      "hint": "At holde nogen nede",
-      "patternHint": "forstavelsen 'under-' + efterstavelsen '-else'",
-      "sentence": "Undertrykkelse af ytringsfriheden er forkert.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "undertrykkælse"
-    },
-    {
-      "word": "overbevisning",
-      "hint": "Stærk tro på noget",
-      "patternHint": "forstavelsen 'over-' + efterstavelsen '-ning'",
-      "sentence": "Hun handlede ud fra sin overbevisning.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "overbevisnig"
-    },
-    {
-      "word": "afhængighed",
-      "hint": "Ikke at kunne klare sig uden noget",
-      "patternHint": "forstavelsen 'af-' + efterstavelsen '-hed'",
-      "sentence": "Afhængighed af telefonen er et problem.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "afhængighet"
-    },
-    {
-      "word": "ny",
-      "hint": "Ikke gammel",
-      "patternHint": "enkelt kort ord — bruges som basis",
-      "sentence": "Jeg fik en ny taske i går.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "nyy"
-    },
-    {
-      "word": "sød",
-      "hint": "Behagelig som sukker",
-      "patternHint": "enkelt kort ord — bruges som basis",
-      "sentence": "Kagen smager rigtig sød.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "sdø"
-    },
-    {
-      "word": "glad",
-      "hint": "En god følelse indeni",
-      "patternHint": "enkelt kort ord — bruges som basis",
-      "sentence": "Hun blev meget glad for gaven.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "glda"
-    },
-    {
-      "word": "lille",
-      "hint": "Ikke stor",
-      "patternHint": "enkelt kort ord — bruges som basis",
-      "sentence": "Den lille kat sov i kurven.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "lille"
-    },
-    {
-      "word": "varm",
-      "hint": "Det modsatte af kold",
-      "patternHint": "enkelt kort ord — bruges som basis",
-      "sentence": "Suppen er dejlig varm.",
-      "level": 1,
-      "category": "For- og efterstavelser",
-      "misspelling": "vamr"
-    },
-    {
-      "word": "skadelig",
-      "hint": "Noget der kan gøre ondt",
-      "patternHint": "efterstavelse '-lig'",
-      "sentence": "For meget slik er skadelig for tænderne.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "skadeleg"
-    },
-    {
-      "word": "barnlig",
-      "hint": "Som en lille person opfører sig",
-      "patternHint": "efterstavelse '-lig'",
-      "sentence": "Hans glæde var helt barnlig og smittende.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "barnleg"
-    },
-    {
-      "word": "frygtsom",
-      "hint": "Bange for mange ting",
-      "patternHint": "efterstavelse '-som'",
-      "sentence": "Den lille kanin er frygtsom og sky.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "frygtsum"
-    },
-    {
-      "word": "uheldig",
-      "hint": "Har ikke held med sig",
-      "patternHint": "forstavelse 'u-'",
-      "sentence": "Det var uheldig at vi glemte nøglen.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "uheldeg"
-    },
-    {
-      "word": "visdom",
-      "hint": "Det at være klog",
-      "patternHint": "efterstavelsen '-dom' danner navneord",
-      "sentence": "Bedstemor er fuld af visdom.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "visodm"
-    },
-    {
-      "word": "udrejse",
-      "hint": "Rejse væk fra et land",
-      "patternHint": "forstavelsen 'ud-' angiver retning",
-      "sentence": "Familien planlagde en udrejse til Spanien.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "urejse"
-    },
-    {
-      "word": "opgang",
-      "hint": "Trappen i en boligblok",
-      "patternHint": "forstavelsen 'op-' + efterstavelsen '-else'",
-      "sentence": "Vi bor i den tredje opgang.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "åpgang"
-    },
-    {
-      "word": "indstille",
-      "hint": "Justere noget til det rigtige",
-      "patternHint": "forstavelsen 'ind-' angiver retning",
-      "sentence": "Du skal indstille uret til den rigtige tid.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "instille"
-    },
-    {
-      "word": "tillade",
-      "hint": "Give lov til noget",
-      "patternHint": "forstavelse 'til-'",
-      "sentence": "Mor vil ikke tillade det.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "tellade"
-    },
-    {
-      "word": "besøge",
-      "hint": "Komme på gæstevisit",
-      "patternHint": "forstavelse 'be-'",
-      "sentence": "Vi skal besøge mormor i weekenden.",
-      "level": 2,
-      "category": "For- og efterstavelser",
-      "misspelling": "bisøge"
-    },
-    {
-      "word": "medlidenhed",
-      "hint": "Medfølelse med andre",
-      "patternHint": "efterstavelse '-hed'",
-      "sentence": "Hun følte medlidenhed med den syge hund.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "medlidenhet"
-    },
-    {
-      "word": "tilpasning",
-      "hint": "At ændre sig så det passer",
-      "patternHint": "'til-' + '-ning'",
-      "sentence": "Tilpasning til den nye skole tog tid.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "tilpasnig"
-    },
-    {
-      "word": "forventning",
-      "hint": "Noget man regner med sker",
-      "patternHint": "'for-' + '-ning'",
-      "sentence": "Han havde stor forventning til fødselsdagen.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "forventnig"
-    },
-    {
-      "word": "begejstring",
-      "hint": "Stor glæde og iver",
-      "patternHint": "forstavelse 'be-'",
-      "sentence": "Børnene jublede af begejstring.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "bigejstring"
-    },
-    {
-      "word": "underholdning",
-      "hint": "Noget sjovt man ser eller laver",
-      "patternHint": "forstavelsen 'under-' + efterstavelsen '-ning'",
-      "sentence": "Der var god underholdning til festen.",
-      "level": 3,
-      "category": "For- og efterstavelser",
-      "misspelling": "underholdnig"
-    },
-    {
-      "word": "uigenkaldelig",
-      "hint": "Kan ikke trækkes tilbage",
-      "patternHint": "forstavelsen 'u-' + 'igen-' + efterstavelsen '-lig'",
-      "sentence": "Beslutningen var uigenkaldelig.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "uigenkaldeleg"
-    },
-    {
-      "word": "utilsigtet",
-      "hint": "Ikke gjort med vilje",
-      "patternHint": "forstavelse 'u-' + '-et'",
-      "sentence": "Det var en utilsigtet fejl.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "utilsgitet"
-    },
-    {
-      "word": "gennemsigtighed",
-      "hint": "At man kan se igennem",
-      "patternHint": "efterstavelse '-hed'",
-      "sentence": "Politikerne lovede mere gennemsigtighed.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "gennemsigtighet"
-    },
-    {
-      "word": "overensstemmelse",
-      "hint": "Når ting passer sammen",
-      "patternHint": "forstavelsen 'over-' + efterstavelsen '-else'",
-      "sentence": "Der var overensstemmelse mellem de to svar.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "overensstemmælse"
-    },
-    {
-      "word": "underbevidsthed",
-      "hint": "Den del af tankerne man ikke styrer",
-      "patternHint": "forstavelsen 'under-' + efterstavelsen '-hed'",
-      "sentence": "Din underbevidsthed arbejder mens du sover.",
-      "level": 4,
-      "category": "For- og efterstavelser",
-      "misspelling": "underbevidsthet"
-    }
-  ],
   "Sammensatte ord": [
     {
       "word": "fodbold",
@@ -2581,168 +1886,6 @@
       "misspelling": "bordstennis"
     },
     {
-      "word": "skolearbejde",
-      "hint": "Lektier og opgaver",
-      "patternHint": "'skole' + 'arbejde'",
-      "sentence": "Vi har meget skolearbejde for i dag.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "skolesarbejde"
-    },
-    {
-      "word": "hjemmeopgave",
-      "hint": "Lektie man laver efter skole",
-      "patternHint": "'hjemme' + 'opgave'",
-      "sentence": "Husk at lave din hjemmeopgave inden i morgen.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "hjemmesopgave"
-    },
-    {
-      "word": "verdensrekord",
-      "hint": "Bedst i hele verden",
-      "patternHint": "'verden' + 's' + 'rekord' (fuge-s)",
-      "sentence": "Hun satte verdensrekord i svømning.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "verdenrekord"
-    },
-    {
-      "word": "fødselsdagsgave",
-      "hint": "Gave til fødselsdagen",
-      "patternHint": "'fødselsdag' + 's' + 'gave' (fuge-s)",
-      "sentence": "Jeg har pakket en fødselsdagsgave ind.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "fødselsdaggave"
-    },
-    {
-      "word": "eftermiddagsmad",
-      "hint": "Mad sent på dagen",
-      "patternHint": "'eftermiddag' + 's' + 'mad' (fuge-s)",
-      "sentence": "Børnene spiser eftermiddagsmad klokken tre.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "eftermiddagmad"
-    },
-    {
-      "word": "klasseværelse",
-      "hint": "Rum i skolen",
-      "patternHint": "'klasse' + 'værelse'",
-      "sentence": "Vores klasseværelse er på anden sal.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "klassesværelse"
-    },
-    {
-      "word": "håndboldkamp",
-      "hint": "Kamp i håndbold",
-      "patternHint": "'hånd' + 'bold' + 'kamp'",
-      "sentence": "Vi skal se en håndboldkamp i hallen.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "håndsboldkamp"
-    },
-    {
-      "word": "sommerfugl",
-      "hint": "Farverigt insekt med vinger",
-      "patternHint": "'sommer' + 'fugl'",
-      "sentence": "En smuk sommerfugl landede på blomsten.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "sommersfugl"
-    },
-    {
-      "word": "kartoffelsuppe",
-      "hint": "Suppe lavet af kartofler",
-      "patternHint": "'kartoffel' + 'suppe'",
-      "sentence": "Bedstemor laver den bedste kartoffelsuppe.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "kartoffeluppe"
-    },
-    {
-      "word": "ungdomsuddannelse",
-      "hint": "Uddannelse efter folkeskolen",
-      "patternHint": "'ungdom' + 's' + 'uddannelse'",
-      "sentence": "Hun starter på en ungdomsuddannelse til sommer.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "ungdomuddannelse"
-    },
-    {
-      "word": "biblioteket",
-      "hint": "Bygning med bøger",
-      "patternHint": "'bibliotek' + '-et'",
-      "sentence": "Vi besøger biblioteket hver tirsdag.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "bibliotekset"
-    },
-    {
-      "word": "arbejdsmarkedet",
-      "hint": "Hvor folk har jobs",
-      "patternHint": "'arbejd' + 's' + 'marked' + '-et'",
-      "sentence": "Det er svært at komme ind på arbejdsmarkedet.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "arbejdmarkedet"
-    },
-    {
-      "word": "sundhedssystem",
-      "hint": "Systemet for læger og hospitaler",
-      "patternHint": "'sundhed' + 's' + 'system' (fuge-s)",
-      "sentence": "Det danske sundhedssystem er kendt i verden.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "sundhedsystem"
-    },
-    {
-      "word": "samfundsfag",
-      "hint": "Skolefag om samfundet",
-      "patternHint": "'samfund' + 's' + 'fag' (fuge-s)",
-      "sentence": "I samfundsfag lærer vi om demokrati.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "samfundfag"
-    },
-    {
-      "word": "uddannelsesinstitution",
-      "hint": "Sted hvor man uddannes",
-      "patternHint": "'uddannelse' + 's' + 'institution' (fuge-s)",
-      "sentence": "Skolen er en vigtig uddannelsesinstitution.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "uddannelseinstitution"
-    },
-    {
-      "word": "menneskerettigheder",
-      "hint": "Rettigheder alle mennesker har",
-      "patternHint": "'menneske' + 'rettigheder'",
-      "sentence": "Vi lærte om menneskerettigheder i skolen.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "menneskesrettigheder"
-    },
-    {
-      "word": "erhvervsuddannelse",
-      "hint": "Praktisk uddannelse til et fag",
-      "patternHint": "'erhverv' + 's' + 'uddannelse' (fuge-s)",
-      "sentence": "Han valgte en erhvervsuddannelse som tømrer.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "erhvervuddannelse"
-    },
-    {
-      "word": "naturvidenskab",
-      "hint": "Videnskab om naturen",
-      "patternHint": "'natur' + 'videnskab'",
-      "sentence": "Hun interesserer sig for naturvidenskab.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "natursvidenskab"
-    },
-    {
       "word": "cykelsti",
       "hint": "Sti kun til cykler",
       "patternHint": "'cykel' + 'sti'",
@@ -2869,15 +2012,6 @@
       "misspelling": "dyresparken"
     },
     {
-      "word": "barnepige",
-      "hint": "En der passer børn",
-      "patternHint": "sammensat med fuge-e: 'barne' + 'pige'",
-      "sentence": "Vores barnepige leger altid med os.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "barnespige"
-    },
-    {
       "word": "madlavning",
       "hint": "At lave mad",
       "patternHint": "sammensat af 'mad' + 'lavning'",
@@ -2885,141 +2019,6 @@
       "level": 2,
       "category": "Sammensatte ord",
       "misspelling": "madslavning"
-    },
-    {
-      "word": "landsmand",
-      "hint": "Person fra samme land",
-      "patternHint": "sammensat med fuge-s: 'lands' + 'mand'",
-      "sentence": "Han mødte en landsmand på rejsen.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "landssmand"
-    },
-    {
-      "word": "arbejdsplads",
-      "hint": "Sted hvor man arbejder",
-      "patternHint": "sammensat med fuge-s: 'arbejds' + 'plads'",
-      "sentence": "Mors arbejdsplads ligger i byen.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "arbejdssplads"
-    },
-    {
-      "word": "døgnrytme",
-      "hint": "Kroppens daglige rytme",
-      "patternHint": "sammensat af 'døgn' + 'rytme'",
-      "sentence": "Jetlag forstyrrer din døgnrytme.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "døgnsrytme"
-    },
-    {
-      "word": "vandreturisme",
-      "hint": "Turisme med vandring",
-      "patternHint": "sammensat af 'vandre' + 'turisme'",
-      "sentence": "Vandreturisme er populært i Norge.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "vandresturisme"
-    },
-    {
-      "word": "sportsklub",
-      "hint": "Klub for sport",
-      "patternHint": "sammensat med fuge-s: 'sports' + 'klub'",
-      "sentence": "Han er medlem af den lokale sportsklub.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "sportssklub"
-    },
-    {
-      "word": "familiemedlem",
-      "hint": "Person i familien",
-      "patternHint": "sammensat med fuge-e: 'familie' + 'medlem'",
-      "sentence": "Hvert familiemedlem fik en gave.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "familiesmedlem"
-    },
-    {
-      "word": "drikkevand",
-      "hint": "Vand man kan drikke",
-      "patternHint": "sammensat med fuge-e: 'drikke' + 'vand'",
-      "sentence": "Rent drikkevand er vigtigt for sundheden.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "drikkesvand"
-    },
-    {
-      "word": "havneområde",
-      "hint": "Område ved havnen",
-      "patternHint": "sammensat med fuge-e: 'havne' + 'område'",
-      "sentence": "Der er et stort havneområde i byen.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "havnesområde"
-    },
-    {
-      "word": "trafiksikkerhed",
-      "hint": "Sikkerhed i trafikken",
-      "patternHint": "sammensat af 'trafik' + 'sikkerhed'",
-      "sentence": "Trafiksikkerhed er vigtigt for alle.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "trafikikkerhed"
-    },
-    {
-      "word": "miljøbeskyttelse",
-      "hint": "Beskyttelse af naturen",
-      "patternHint": "sammensat af 'miljø' + 'beskyttelse'",
-      "sentence": "Miljøbeskyttelse kræver en fælles indsats.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "miljøsbeskyttelse"
-    },
-    {
-      "word": "grundlovsdag",
-      "hint": "Dansk nationaldag",
-      "patternHint": "sammensat med fuge-s: 'grundlovs' + 'dag'",
-      "sentence": "Grundlovsdag fejres den 5. juni.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "grundlovssdag"
-    },
-    {
-      "word": "udenrigsministerium",
-      "hint": "Ministerium for udenrigspolitik",
-      "patternHint": "sammensat af 'udenrigs' + 'ministerium'",
-      "sentence": "Et udenrigsministerium tager sig af internationale relationer.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "udenrigssministerium"
-    },
-    {
-      "word": "oversvømmelsesfare",
-      "hint": "Risiko for oversvømmelse",
-      "patternHint": "sammensat med fuge-s: 'oversvømmelses' + 'fare'",
-      "sentence": "Der er oversvømmelsesfare ved kysten.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "oversvømmelsessfare"
-    },
-    {
-      "word": "verdensanskuelse",
-      "hint": "Syn på verden",
-      "patternHint": "sammensat med fuge-s: 'verdens' + 'anskuelse'",
-      "sentence": "Alle har deres egen verdensanskuelse.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "verdenssanskuelse"
-    },
-    {
-      "word": "informationsteknologi",
-      "hint": "IT og computere",
-      "patternHint": "sammensat med fuge-s: 'informations' + 'teknologi'",
-      "sentence": "Informationsteknologi fylder meget i dag.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "informationssteknologi"
     },
     {
       "word": "solhat",
@@ -3155,96 +2154,6 @@
       "level": 2,
       "category": "Sammensatte ord",
       "misspelling": "postskasse"
-    },
-    {
-      "word": "forældremøde",
-      "hint": "Samling på skolen for mødre og fædre",
-      "patternHint": "sammensat med fuge-e: 'forældre' + 'møde'",
-      "sentence": "Der er forældremøde i næste uge.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "forældresmøde"
-    },
-    {
-      "word": "skibsværft",
-      "hint": "Sted hvor man bygger skibe",
-      "patternHint": "sammensat med fuge-s: 'skibs' + 'værft'",
-      "sentence": "Det store skibsværft ligger ved havnen.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "skibssværft"
-    },
-    {
-      "word": "livredder",
-      "hint": "Person der redder folk fra at drukne",
-      "patternHint": "'liv' + 'redder'",
-      "sentence": "Der sidder en livredder ved bassinet.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "livsredder"
-    },
-    {
-      "word": "drikkedunk",
-      "hint": "Beholder man har vand i med sig",
-      "patternHint": "sammensat med fuge-e: 'drikke' + 'dunk'",
-      "sentence": "Husk din drikkedunk til fodbold.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "drikkesdunk"
-    },
-    {
-      "word": "tilstandsrapport",
-      "hint": "Dokument der beskriver noget kvalitet",
-      "patternHint": "sammensat med fuge-s: 'tilstands' + 'rapport'",
-      "sentence": "Vi fik en tilstandsrapport på huset.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "tilstandssrapport"
-    },
-    {
-      "word": "sikkerhedsbælte",
-      "hint": "Rem i en bil der beskytter passagerer",
-      "patternHint": "sammensat med fuge-s: 'sikkerheds' + 'bælte'",
-      "sentence": "Husk at spænde dit sikkerhedsbælte i bilen.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "sikkerhedssbælte"
-    },
-    {
-      "word": "foreningsarbejde",
-      "hint": "Frivilligt arbejde i en klub",
-      "patternHint": "sammensat med fuge-s: 'forenings' + 'arbejde'",
-      "sentence": "Han brugte mange timer på foreningsarbejde.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "foreningssarbejde"
-    },
-    {
-      "word": "kommunalbestyrelse",
-      "hint": "Politisk organ der styrer en kommune",
-      "patternHint": "sammensat af 'kommunal' + 'bestyrelse'",
-      "sentence": "En kommunalbestyrelse styrer en kommune.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "kommunalsbestyrelse"
-    },
-    {
-      "word": "uddannelsesforløb",
-      "hint": "Et helt skoleforløb fra start til slut",
-      "patternHint": "sammensat med fuge-s: 'uddannelses' + 'forløb'",
-      "sentence": "Hendes uddannelsesforløb varer tre år.",
-      "level": 4,
-      "category": "Sammensatte ord",
-      "misspelling": "uddannelsessforløb"
-    },
-    {
-      "word": "vejarbejde",
-      "hint": "Reparation af veje",
-      "patternHint": "'vej' + 'arbejde'",
-      "sentence": "Der var vejarbejde på motorvejen.",
-      "level": 3,
-      "category": "Sammensatte ord",
-      "misspelling": "vejsarbejde"
     }
   ],
   "Verbernes bøjning": [
@@ -4066,827 +2975,6 @@
       "level": 4,
       "category": "Verbernes bøjning",
       "misspelling": "argumenterede"
-    }
-  ],
-  "Navneordsendelser": [
-    {
-      "word": "hunde",
-      "hint": "Flere firbenede kæledyr der gør",
-      "patternHint": "flertal: '-e'",
-      "sentence": "Der er to hunde i parken.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "hunder"
-    },
-    {
-      "word": "huset",
-      "hint": "Bygningen man bor i, bestemt",
-      "patternHint": "bestemt: '-et'",
-      "sentence": "Huset er rødt med hvide vinduer.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "husen"
-    },
-    {
-      "word": "stolen",
-      "hint": "Møblet man sidder på, bestemt",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Stolen står ved bordet.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "stolet"
-    },
-    {
-      "word": "katten",
-      "hint": "Mjav-dyret, bestemt form",
-      "patternHint": "bestemt: '-ten'",
-      "sentence": "Katten sover på sofaen.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "kattet"
-    },
-    {
-      "word": "bogen",
-      "hint": "Det man læser i, bestemt",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Bogen handler om en prinsesse.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "boget"
-    },
-    {
-      "word": "drengen",
-      "hint": "En ung fyr, bestemt form",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Drengen løber ned ad gaden.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "drenget"
-    },
-    {
-      "word": "bolde",
-      "hint": "Flere runde ting man leger med",
-      "patternHint": "flertal: '-e'",
-      "sentence": "Der ligger tre bolde i skuret.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "bolder"
-    },
-    {
-      "word": "blomster",
-      "hint": "Flere der gror i haven og dufter",
-      "patternHint": "flertal: '-er'",
-      "sentence": "Haven er fuld af smukke blomster.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "blomste"
-    },
-    {
-      "word": "fuglen",
-      "hint": "Dyret med fjer og vinger, bestemt",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Fuglen synger i træet.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "fuglet"
-    },
-    {
-      "word": "lamper",
-      "hint": "Flere ting der giver lys",
-      "patternHint": "flertal: '-er'",
-      "sentence": "Alle lamper i stuen var tændt.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "lampe"
-    },
-    {
-      "word": "bøger",
-      "hint": "Flere ting man læser i",
-      "patternHint": "uregelmæssigt: 'o'->'ø'",
-      "sentence": "Jeg har læst tre bøger i ferien.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "bøge"
-    },
-    {
-      "word": "børnene",
-      "hint": "Bestemt flertal af 'barn'",
-      "patternHint": "uregelmæssigt + '-ene'",
-      "sentence": "Børnene legede ude i solen.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "børnerne"
-    },
-    {
-      "word": "drengene",
-      "hint": "Flere unge fyre, bestemt form",
-      "patternHint": "flertal: '-ene'",
-      "sentence": "Drengene spiller fodbold i gården.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "drengerne"
-    },
-    {
-      "word": "pigerne",
-      "hint": "Flere unge damer, bestemt form",
-      "patternHint": "flertal: '-erne'",
-      "sentence": "Pigerne danser i gymnastiksalen.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "pigene"
-    },
-    {
-      "word": "læreren",
-      "hint": "Den der underviser, bestemt form",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Læreren forklarede opgaven tydeligt.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "læreret"
-    },
-    {
-      "word": "æbler",
-      "hint": "Flere runde frugter fra et træ",
-      "patternHint": "flertal: '-er' (intetkøn)",
-      "sentence": "Der hænger røde æbler på træet.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "æble"
-    },
-    {
-      "word": "husene",
-      "hint": "Flere bygninger man bor i, bestemt",
-      "patternHint": "flertal: '-ene'",
-      "sentence": "Husene i gaden er meget gamle.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "huserne"
-    },
-    {
-      "word": "venner",
-      "hint": "Flere man holder af og leger med",
-      "patternHint": "flertal: '-ner'",
-      "sentence": "Jeg har mange gode venner i skolen.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "venne"
-    },
-    {
-      "word": "mænd",
-      "hint": "Flertal af 'mand'",
-      "patternHint": "uregelmæssigt: 'a'->'æ'",
-      "sentence": "De to mænd ventede ved indgangen.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "mædn"
-    },
-    {
-      "word": "princippet",
-      "hint": "En grundregel, bestemt form",
-      "patternHint": "dobbelt-p + '-et'",
-      "sentence": "Princippet bag forsøget er faktisk simpelt.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "princippen"
-    },
-    {
-      "word": "gymnasiet",
-      "hint": "Skolen efter folkeskolen, bestemt",
-      "patternHint": "'-ium' -> '-iet'",
-      "sentence": "Min storesøster går på gymnasiet i Odense.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "gymnasien"
-    },
-    {
-      "word": "tøjet",
-      "hint": "Det man har på kroppen, bestemt",
-      "patternHint": "bestemt: '-et'",
-      "sentence": "Hæng venligst tøjet op på bøjler.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "tøjen"
-    },
-    {
-      "word": "brødet",
-      "hint": "Det man laver sandwich af, bestemt",
-      "patternHint": "bestemt: '-et'",
-      "sentence": "Brødet er bagt i dag.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "brøden"
-    },
-    {
-      "word": "nettet",
-      "hint": "Maskeværket man fanger med, bestemt",
-      "patternHint": "dobbelt-t + '-et'",
-      "sentence": "Bolden gik i nettet ved det sidste spark.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "netten"
-    },
-    {
-      "word": "kvinder",
-      "hint": "Flere voksne damer",
-      "patternHint": "flertal: '-er'",
-      "sentence": "Mange kvinder deltog i løbet.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "kvinde"
-    },
-    {
-      "word": "museer",
-      "hint": "Flere steder med udstillinger",
-      "patternHint": "'-um' -> '-eer'",
-      "sentence": "København har mange spændende museer.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "musee"
-    },
-    {
-      "word": "fødder",
-      "hint": "Flertal af 'fod'",
-      "patternHint": "uregelmæssigt: 'o'->'ø' + '-der'",
-      "sentence": "Mine fødder gør ondt efter vandreturen.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "fødde"
-    },
-    {
-      "word": "laboratoriet",
-      "hint": "Stedet hvor forskere arbejder, bestemt",
-      "patternHint": "'-ium' -> '-iet'",
-      "sentence": "Vi lavede forsøg i laboratoriet.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "laboratorien"
-    },
-    {
-      "word": "vanskelighederne",
-      "hint": "De svære ting, bestemt flertal",
-      "patternHint": "'-hed' + '-er' + '-ne'",
-      "sentence": "Vanskelighederne blev større og større.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "vanskelighedene"
-    },
-    {
-      "word": "seværdighederne",
-      "hint": "Stederne turister besøger, bestemt",
-      "patternHint": "'se' + 'værdig' + '-hed' + '-er' + '-ne'",
-      "sentence": "Vi besøgte alle seværdighederne i byen.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "seværdighedene"
-    },
-    {
-      "word": "universiteterne",
-      "hint": "De høje læreanstalter, bestemt",
-      "patternHint": "flertal: '-er' + '-ne'",
-      "sentence": "De danske universiteterne er meget anerkendte.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "universitetene"
-    },
-    {
-      "word": "principperne",
-      "hint": "Grundreglerne, bestemt flertal",
-      "patternHint": "dobbelt-p + '-erne'",
-      "sentence": "Principperne bag demokratiet er vigtige.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "princippene"
-    },
-    {
-      "word": "mulighederne",
-      "hint": "Chancerne, bestemt flertal",
-      "patternHint": "'-hed' + '-er' + '-ne'",
-      "sentence": "Vi undersøger mulighederne for en ny bane.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "mulighedene"
-    },
-    {
-      "word": "ministeriet",
-      "hint": "Regeringens kontor, bestemt",
-      "patternHint": "'-ium' -> '-iet'",
-      "sentence": "Ministeriet arbejder på en ny lov.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "ministerien"
-    },
-    {
-      "word": "egenskaberne",
-      "hint": "Tingenes særlige træk, bestemt",
-      "patternHint": "flertal: '-er' + '-ne'",
-      "sentence": "Materialets egenskaberne blev testet grundigt.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "egenskabene"
-    },
-    {
-      "word": "omgivelserne",
-      "hint": "Alt det der er rundt om en, bestemt",
-      "patternHint": "flertal: '-er' + '-ne'",
-      "sentence": "De smukke omgivelserne inspirerede kunstneren.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "omgivelsene"
-    },
-    {
-      "word": "pigen",
-      "hint": "En ung dame, bestemt form",
-      "patternHint": "bestemt form ental: pige + '-n'",
-      "sentence": "Pigen leger med sin bold.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "piget"
-    },
-    {
-      "word": "biler",
-      "hint": "Flere køretøjer med fire hjul",
-      "patternHint": "flertal: bil + '-er'",
-      "sentence": "Der holder mange biler på vejen.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "bile"
-    },
-    {
-      "word": "hesten",
-      "hint": "Det store ridedyr, bestemt form",
-      "patternHint": "bestemt form ental: hest + '-en'",
-      "sentence": "Hesten løber rundt på marken.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "hestet"
-    },
-    {
-      "word": "træet",
-      "hint": "Den store plante med stamme, bestemt",
-      "patternHint": "bestemt form ental intetkøn: træ + '-et'",
-      "sentence": "Træet har mange grønne blade.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "træen"
-    },
-    {
-      "word": "fiske",
-      "hint": "Flere dyr med finner i vandet",
-      "patternHint": "flertal: fisk + '-e'",
-      "sentence": "Der svømmer mange fiske i søen.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "fisker"
-    },
-    {
-      "word": "gaven",
-      "hint": "Det man får til fødselsdag, bestemt",
-      "patternHint": "bestemt form ental: gave + '-n'",
-      "sentence": "Gaven var pakket ind i rødt papir.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "gavet"
-    },
-    {
-      "word": "lampen",
-      "hint": "Tingen der lyser, bestemt form",
-      "patternHint": "bestemt form ental: lampe + '-n'",
-      "sentence": "Lampen lyser over bordet.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "lampet"
-    },
-    {
-      "word": "skyer",
-      "hint": "Flere hvide klatter på himlen",
-      "patternHint": "flertal: sky + '-er'",
-      "sentence": "Der er mange skyer på himlen i dag.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "skye"
-    },
-    {
-      "word": "bilerne",
-      "hint": "Bestemt form flertal",
-      "patternHint": "bestemt flertal: bil + '-erne'",
-      "sentence": "Bilerne holder i kø på motorvejen.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "bilene"
-    },
-    {
-      "word": "hestene",
-      "hint": "Bestemt form flertal",
-      "patternHint": "bestemt flertal: hest + '-ene'",
-      "sentence": "Hestene græsser på engen.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "hesterne"
-    },
-    {
-      "word": "dagene",
-      "hint": "Bestemt form flertal",
-      "patternHint": "bestemt flertal: dag + '-ene'",
-      "sentence": "Dagene bliver længere om foråret.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "dagerne"
-    },
-    {
-      "word": "fuglene",
-      "hint": "Bestemt form flertal",
-      "patternHint": "bestemt flertal: fugl + '-ene'",
-      "sentence": "Fuglene synger tidligt om morgenen.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "fuglerne"
-    },
-    {
-      "word": "vinduet",
-      "hint": "Bestemt form intetkøn",
-      "patternHint": "bestemt ental intetkøn: vindue + '-t'",
-      "sentence": "Vinduet står åbent i stuen.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "vinduen"
-    },
-    {
-      "word": "blomsterne",
-      "hint": "Bestemt form flertal",
-      "patternHint": "bestemt flertal: blomst + '-erne'",
-      "sentence": "Blomsterne i haven dufter dejligt.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "blomstene"
-    },
-    {
-      "word": "gaverne",
-      "hint": "Bestemt form flertal",
-      "patternHint": "bestemt flertal: gave + '-rne'",
-      "sentence": "Gaverne lå under juletræet.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "gavene"
-    },
-    {
-      "word": "opgaver",
-      "hint": "Flere stykker arbejde man skal lave",
-      "patternHint": "flertal: opgave + '-r'",
-      "sentence": "Vi fik mange opgaver for i matematik.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "opgave"
-    },
-    {
-      "word": "ænder",
-      "hint": "Flere fugle der siger rap",
-      "patternHint": "flertal med vokalskifte: and → ænder",
-      "sentence": "Vi fodrede ænder nede ved søen.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "ænde"
-    },
-    {
-      "word": "gæster",
-      "hint": "Flere der er på besøg",
-      "patternHint": "flertal: gæst + '-er'",
-      "sentence": "Der kom mange gæster til festen.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "gæste"
-    },
-    {
-      "word": "natten",
-      "hint": "Tiden hvor det er mørkt, bestemt",
-      "patternHint": "bestemt ental: nat + '-ten'",
-      "sentence": "Natten var kold og stille.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "nattet"
-    },
-    {
-      "word": "kunderne",
-      "hint": "Bestemt form flertal",
-      "patternHint": "bestemt flertal: kunde + '-rne'",
-      "sentence": "Kunderne ventede tålmodigt i køen.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "kundene"
-    },
-    {
-      "word": "bønder",
-      "hint": "Flere der arbejder på en gård",
-      "patternHint": "flertal med vokalskifte: bonde → bønder",
-      "sentence": "Mange bønder dyrker korn på markerne.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "bønde"
-    },
-    {
-      "word": "redskabet",
-      "hint": "Bestemt form intetkøn",
-      "patternHint": "bestemt ental intetkøn: redskab + '-et'",
-      "sentence": "Redskabet ligger i skuret.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "redskaben"
-    },
-    {
-      "word": "brødrene",
-      "hint": "Bestemt flertal af bror",
-      "patternHint": "uregelmæssig flertal: bror → brødre → brødrene",
-      "sentence": "Brødrene legede sammen i haven.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "brødrerne"
-    },
-    {
-      "word": "fænomenerne",
-      "hint": "Bestemt flertal",
-      "patternHint": "bestemt flertal: fænomen + '-erne'",
-      "sentence": "Fænomenerne i naturen er fascinerende at studere.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "fænomenene"
-    },
-    {
-      "word": "argumenterne",
-      "hint": "Bestemt flertal",
-      "patternHint": "bestemt flertal: argument + '-erne'",
-      "sentence": "Argumenterne i debatten var stærke.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "argumentene"
-    },
-    {
-      "word": "traditioner",
-      "hint": "Skikke man holder fast i år efter år",
-      "patternHint": "flertal: tradition + '-er'",
-      "sentence": "Danske traditioner er vigtige for mange.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "traditione"
-    },
-    {
-      "word": "individerne",
-      "hint": "Bestemt flertal",
-      "patternHint": "bestemt flertal: individ + '-erne'",
-      "sentence": "Individerne i gruppen arbejdede godt sammen.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "individene"
-    },
-    {
-      "word": "perspektivet",
-      "hint": "Bestemt form intetkøn",
-      "patternHint": "bestemt ental intetkøn: perspektiv + '-et'",
-      "sentence": "Perspektivet ændrede sig efter samtalen.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "perspektiven"
-    },
-    {
-      "word": "konsekvenserne",
-      "hint": "Bestemt flertal",
-      "patternHint": "bestemt flertal: konsekvens + '-erne'",
-      "sentence": "Konsekvenserne af beslutningen var store.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "konsekvensene"
-    },
-    {
-      "word": "dimensionerne",
-      "hint": "Bestemt flertal",
-      "patternHint": "bestemt flertal: dimension + '-erne'",
-      "sentence": "Dimensionerne på rummet var imponerende.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "dimensionene"
-    },
-    {
-      "word": "bilen",
-      "hint": "Køretøj med fire hjul (bestemt form)",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Bilen holder parkeret udenfor.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "bilet"
-    },
-    {
-      "word": "koen",
-      "hint": "Dyr der giver mælk (bestemt form)",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Koen stod og spiste græs.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "koet"
-    },
-    {
-      "word": "søen",
-      "hint": "Vand i naturen (bestemt form)",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Søen var helt stille.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "søet"
-    },
-    {
-      "word": "musen",
-      "hint": "Lille dyr med lang hale (bestemt form)",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Musen løb ind under skabet.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "muset"
-    },
-    {
-      "word": "lammet",
-      "hint": "Ungt får (bestemt form)",
-      "patternHint": "bestemt: '-et'",
-      "sentence": "Lammet løb rundt på marken.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "lammen"
-    },
-    {
-      "word": "sengen",
-      "hint": "Møbel man sover i (bestemt form)",
-      "patternHint": "bestemt form ental: seng + '-en'",
-      "sentence": "Sengen var dejlig blød.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "senget"
-    },
-    {
-      "word": "bordet",
-      "hint": "Møbel man spiser ved (bestemt form)",
-      "patternHint": "bestemt: '-et'",
-      "sentence": "Bordet var dækket til middag.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "borden"
-    },
-    {
-      "word": "tasken",
-      "hint": "Beholder man bærer ting i (bestemt form)",
-      "patternHint": "bestemt form ental: taske + '-n'",
-      "sentence": "Tasken var tung af bøger.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "tasket"
-    },
-    {
-      "word": "kosten",
-      "hint": "Redskab man fejer med (bestemt form)",
-      "patternHint": "bestemt: '-en'",
-      "sentence": "Kosten stod i hjørnet af køkkenet.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "kostet"
-    },
-    {
-      "word": "jakken",
-      "hint": "Overtøj med lynlås (bestemt form)",
-      "patternHint": "bestemt form ental: jakke + '-n'",
-      "sentence": "Jakken hang på knagen.",
-      "level": 1,
-      "category": "Navneordsendelser",
-      "misspelling": "jakket"
-    },
-    {
-      "word": "tallerkner",
-      "hint": "Flade ting man spiser af (flertal)",
-      "patternHint": "flertal: '-er'",
-      "sentence": "Der stod fem tallerkner på bordet.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "tallerkne"
-    },
-    {
-      "word": "dørene",
-      "hint": "Man går igennem dem (bestemt flertal)",
-      "patternHint": "bestemt flertal: dør + '-ene'",
-      "sentence": "Alle dørene var låste.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "dørerne"
-    },
-    {
-      "word": "stolene",
-      "hint": "Møbler man sidder på (bestemt flertal)",
-      "patternHint": "bestemt flertal: stol + '-ene'",
-      "sentence": "Stolene stod rundt om bordet.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "stolerne"
-    },
-    {
-      "word": "gardinerne",
-      "hint": "Stof der hænger foran vinduet (bestemt flertal)",
-      "patternHint": "bestemt flertal: gardin + '-erne'",
-      "sentence": "Gardinerne var trukket for.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "gardinene"
-    },
-    {
-      "word": "væggene",
-      "hint": "Siderne af et rum (bestemt flertal)",
-      "patternHint": "bestemt flertal: væg + '-ene'",
-      "sentence": "Væggene var malet hvide.",
-      "level": 2,
-      "category": "Navneordsendelser",
-      "misspelling": "væggerne"
-    },
-    {
-      "word": "biblioteker",
-      "hint": "Steder med mange bøger (flertal)",
-      "patternHint": "flertal: '-er'",
-      "sentence": "Byen har tre biblioteker.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "biblioteke"
-    },
-    {
-      "word": "værkstedet",
-      "hint": "Sted hvor man reparerer ting (bestemt form)",
-      "patternHint": "bestemt ental intetkøn: værksted + '-et'",
-      "sentence": "Bilen er på værkstedet.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "værksteden"
-    },
-    {
-      "word": "instrumentet",
-      "hint": "Redskab man spiller musik på (bestemt form)",
-      "patternHint": "bestemt ental intetkøn: instrument + '-et'",
-      "sentence": "Instrumentet lå i sin kasse.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "instrumenten"
-    },
-    {
-      "word": "øjeblikket",
-      "hint": "Et kort nu (bestemt form)",
-      "patternHint": "bestemt ental intetkøn: øjeblik + '-ket'",
-      "sentence": "I øjeblikket har vi ferie.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "øjeblikken"
-    },
-    {
-      "word": "fællesskabet",
-      "hint": "Når man hører sammen (bestemt form)",
-      "patternHint": "bestemt ental intetkøn: fællesskab + '-et'",
-      "sentence": "Fællesskabet i klassen er godt.",
-      "level": 3,
-      "category": "Navneordsendelser",
-      "misspelling": "fællesskaben"
-    },
-    {
-      "word": "organisationerne",
-      "hint": "Foreninger og forbund (bestemt flertal)",
-      "patternHint": "bestemt flertal: organisation + '-erne'",
-      "sentence": "Organisationerne samarbejdede om projektet.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "organisationene"
-    },
-    {
-      "word": "institutionerne",
-      "hint": "Offentlige steder som skoler og hospitaler (bestemt flertal)",
-      "patternHint": "bestemt flertal: institution + '-erne'",
-      "sentence": "Institutionerne holdt lukket i ferien.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "institutionene"
-    },
-    {
-      "word": "problemstillingerne",
-      "hint": "Spørgsmål der skal løses (bestemt flertal)",
-      "patternHint": "bestemt flertal: problemstilling + '-erne'",
-      "sentence": "De vigtigste problemstillingerne blev drøftet.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "problemstillingene"
-    },
-    {
-      "word": "dokumenterne",
-      "hint": "Vigtige papirer (bestemt flertal)",
-      "patternHint": "bestemt flertal: dokument + '-erne'",
-      "sentence": "Dokumenterne lå spredt ud over bordet.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "dokumentene"
-    },
-    {
-      "word": "civilisationerne",
-      "hint": "Store historiske samfund (bestemt flertal)",
-      "patternHint": "bestemt flertal: civilisation + '-erne'",
-      "sentence": "De gamle civilisationerne havde avanceret viden.",
-      "level": 4,
-      "category": "Navneordsendelser",
-      "misspelling": "civilisationene"
     }
   ],
   "Lydrette ord": [
@@ -6393,7 +4481,7 @@
       "hint": "Italiensk ret med tomat og ost",
       "patternHint": "fremmedord fra italiensk: dobbelt-z",
       "sentence": "Vi spiser pizza til aftensmad.",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "piza"
     },
@@ -6402,7 +4490,7 @@
       "hint": "Drik lavet af frugt",
       "patternHint": "fremmedord fra engelsk: 'j' udtales som 'dj'",
       "sentence": "Må jeg få et glas juice til morgenmad?",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "juike"
     },
@@ -6411,25 +4499,16 @@
       "hint": "Elektronisk maskine man kan skrive på",
       "patternHint": "fremmedord fra engelsk: 'c' udtales som 'k'",
       "sentence": "Far sidder ved sin computer og arbejder.",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "komputer"
-    },
-    {
-      "word": "tablet",
-      "hint": "Flad skærm man kan holde i hånden",
-      "patternHint": "fremmedord fra engelsk: 't' til sidst udtales blødt",
-      "sentence": "Jeg tegner gerne på min tablet.",
-      "level": 2,
-      "category": "Fremmedord",
-      "misspelling": "tabelt"
     },
     {
       "word": "hobby",
       "hint": "Noget man laver i sin fritid",
       "patternHint": "fremmedord fra engelsk: dobbelt-b og 'y' til sidst",
       "sentence": "Min hobby er at samle på frimærker.",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "hobbi"
     },
@@ -6486,15 +4565,6 @@
       "level": 3,
       "category": "Fremmedord",
       "misspelling": "nerøvs"
-    },
-    {
-      "word": "kontrol",
-      "hint": "At holde styr på noget",
-      "patternHint": "fremmedord fra fransk: 'k' i stedet for 'c'",
-      "sentence": "Læreren har kontrol over hele klassen.",
-      "level": 3,
-      "category": "Fremmedord",
-      "misspelling": "konrtol"
     },
     {
       "word": "toilet",
@@ -6605,47 +4675,20 @@
       "misspelling": "civilisasion"
     },
     {
-      "word": "te",
-      "hint": "Varm drik lavet af blade",
-      "patternHint": "fremmedord fra kinesisk: kort og simpelt",
-      "sentence": "Mor drikker en kop te hver aften.",
-      "level": 0,
-      "category": "Fremmedord",
-      "misspelling": "tundefinede"
-    },
-    {
-      "word": "zoo",
-      "hint": "Sted med mange dyr",
-      "patternHint": "fremmedord fra græsk: dobbelt-o",
-      "sentence": "Vi tog i zoo og så løverne.",
-      "level": 0,
-      "category": "Fremmedord",
-      "misspelling": "zo"
-    },
-    {
       "word": "kiwi",
       "hint": "Grøn frugt med lodden skal",
       "patternHint": "fremmedord fra New Zealand: staves som det lyder",
       "sentence": "Kiwi smager sødt og surt på samme tid.",
-      "level": 0,
+      "level": 3,
       "category": "Fremmedord",
-      "misspelling": "kiiw"
-    },
-    {
-      "word": "ski",
-      "hint": "Lang bræt man glider på sne med",
-      "patternHint": "fremmedord fra norsk: staves som det lyder",
-      "sentence": "Om vinteren tager vi på ski i Norge.",
-      "level": 0,
-      "category": "Fremmedord",
-      "misspelling": "sik"
+      "misspelling": "kivi"
     },
     {
       "word": "cola",
       "hint": "Brun sodavand med bobler",
       "patternHint": "fremmedord fra engelsk: staves som det lyder",
       "sentence": "Må jeg få en cola til maden?",
-      "level": 0,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "kola"
     },
@@ -6654,7 +4697,7 @@
       "hint": "Liste over mad man kan bestille",
       "patternHint": "fremmedord fra fransk: u til sidst",
       "sentence": "Tjeneren gav os en menu med mange retter.",
-      "level": 1,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "meun"
     },
@@ -6663,151 +4706,52 @@
       "hint": "Bil man kan betale for at køre i",
       "patternHint": "fremmedord fra fransk: x i stedet for ks",
       "sentence": "Vi tog en taxi hjem fra lufthavnen.",
-      "level": 1,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "taksi"
-    },
-    {
-      "word": "kaos",
-      "hint": "Når alt er rodet og forvirret",
-      "patternHint": "fremmedord fra græsk: ao i stedet for å",
-      "sentence": "Der var totalt kaos i klassen efter frikvarteret.",
-      "level": 1,
-      "category": "Fremmedord",
-      "misspelling": "kaso"
-    },
-    {
-      "word": "foto",
-      "hint": "Billede taget med kamera",
-      "patternHint": "fremmedord fra græsk: staves med f og o",
-      "sentence": "Far tog et foto af os alle sammen.",
-      "level": 1,
-      "category": "Fremmedord",
-      "misspelling": "foot"
     },
     {
       "word": "robot",
       "hint": "Maskine der kan arbejde selv",
       "patternHint": "fremmedord fra tjekkisk: staves som det lyder",
       "sentence": "Vi byggede en robot i teknikundervisningen.",
-      "level": 1,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "roobt"
-    },
-    {
-      "word": "pasta",
-      "hint": "Italiensk mad lavet af dej",
-      "patternHint": "fremmedord fra italiensk: staves som det lyder",
-      "sentence": "Vi spiser pasta med kødsovs i aften.",
-      "level": 1,
-      "category": "Fremmedord",
-      "misspelling": "patsa"
-    },
-    {
-      "word": "piano",
-      "hint": "Stort musikinstrument med tangenter",
-      "patternHint": "fremmedord fra italiensk: pi-a-no",
-      "sentence": "Min søster øver sig på piano hver dag.",
-      "level": 1,
-      "category": "Fremmedord",
-      "misspelling": "pinao"
-    },
-    {
-      "word": "radio",
-      "hint": "Apparat der spiller musik og nyheder",
-      "patternHint": "fremmedord fra latin: staves med ra-di-o",
-      "sentence": "Vi lytter til radio i bilen.",
-      "level": 1,
-      "category": "Fremmedord",
-      "misspelling": "raido"
-    },
-    {
-      "word": "virus",
-      "hint": "Lille ting der kan gøre en syg",
-      "patternHint": "fremmedord fra latin: staves med v og u",
-      "sentence": "Et virus kan sprede sig hurtigt i skolen.",
-      "level": 1,
-      "category": "Fremmedord",
-      "misspelling": "viurs"
     },
     {
       "word": "cafe",
       "hint": "Sted hvor man kan købe kaffe og kage",
       "patternHint": "fremmedord fra fransk: udtales ka-fe",
       "sentence": "Vi mødtes på en cafe i byen.",
-      "level": 1,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "kafe"
-    },
-    {
-      "word": "banana",
-      "hint": "Gul kroget frugt",
-      "patternHint": "Fremmedord fra spansk/portugisisk — staves med 'a' ligesom på originalsproget",
-      "sentence": "Jeg spiste en banana til frokost.",
-      "level": 2,
-      "category": "Fremmedord",
-      "misspelling": "bannaa"
-    },
-    {
-      "word": "salat",
-      "hint": "Grøn ret med grøntsager",
-      "patternHint": "Fremmedord fra italiensk — staves med enkelt 'l'",
-      "sentence": "Vi fik salat som tilbehør til maden.",
-      "level": 2,
-      "category": "Fremmedord",
-      "misspelling": "saalt"
-    },
-    {
-      "word": "musik",
-      "hint": "Lyde der er sat sammen til melodier",
-      "patternHint": "Fremmedord fra græsk/latin — staves med 'k' til sidst",
-      "sentence": "Jeg elsker at lytte til musik.",
-      "level": 2,
-      "category": "Fremmedord",
-      "misspelling": "muisk"
     },
     {
       "word": "karate",
       "hint": "Japansk kampsport med spark og slag",
       "patternHint": "Fremmedord fra japansk — staves med 'k' og ender på 'e'",
       "sentence": "Min bror træner karate to gange om ugen.",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "karat"
-    },
-    {
-      "word": "safari",
-      "hint": "Tur i naturen for at se vilde dyr",
-      "patternHint": "Fremmedord fra swahili — staves med 'f' og ender på 'i'",
-      "sentence": "Vi var på safari og så løver.",
-      "level": 2,
-      "category": "Fremmedord",
-      "misspelling": "safrai"
     },
     {
       "word": "sushi",
       "hint": "Japansk mad med ris og fisk",
       "patternHint": "Fremmedord fra japansk — 'sh' udtales som 'sj'",
       "sentence": "Vi spiste sushi i en japansk restaurant.",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "suhsi"
-    },
-    {
-      "word": "giraff",
-      "hint": "Meget højt dyr med lang hals",
-      "patternHint": "Fremmedord fra arabisk — staves med 'ff' til sidst og 'g' udtales som 'sj'",
-      "sentence": "En giraff kan blive over 5 meter høj.",
-      "level": 2,
-      "category": "Fremmedord",
-      "misspelling": "giraf"
     },
     {
       "word": "yoghurt",
       "hint": "Syrlig mælkeprodukt",
       "patternHint": "Fremmedord fra tyrkisk — staves med 'gh' som er stumt",
       "sentence": "Jeg spiser yoghurt med müsli til morgenmad.",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "yoguhrt"
     },
@@ -6816,7 +4760,7 @@
       "hint": "Tæt tropisk skov",
       "patternHint": "Fremmedord fra hindi/engelsk — 'j' udtales som 'dj'",
       "sentence": "Der bor mange dyr i junglen.",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "jungl"
     },
@@ -6848,15 +4792,6 @@
       "misspelling": "astrnoaut"
     },
     {
-      "word": "champion",
-      "hint": "Den der vinder mesterskabet",
-      "patternHint": "Fremmedord fra fransk/engelsk — 'ch' udtales som 'tj'",
-      "sentence": "Holdet blev champion i turneringen.",
-      "level": 3,
-      "category": "Fremmedord",
-      "misspelling": "kampion"
-    },
-    {
       "word": "kalkulator",
       "hint": "Maskine der regner for dig",
       "patternHint": "Fremmedord fra latin — staves med 'k' to gange, ikke 'c'",
@@ -6875,33 +4810,6 @@
       "misspelling": "teraeput"
     },
     {
-      "word": "akrobat",
-      "hint": "Person der laver kunster med kroppen",
-      "patternHint": "Fremmedord fra græsk — staves med 'k' og 'b'",
-      "sentence": "Akrobaten lavede saltoer i cirkus.",
-      "level": 3,
-      "category": "Fremmedord",
-      "misspelling": "akrboat"
-    },
-    {
-      "word": "telefon",
-      "hint": "Apparat man ringer med",
-      "patternHint": "Fremmedord fra græsk — 'tele' betyder fjern, 'fon' betyder lyd",
-      "sentence": "Min telefon ringede midt i timen.",
-      "level": 3,
-      "category": "Fremmedord",
-      "misspelling": "telfeon"
-    },
-    {
-      "word": "fotografi",
-      "hint": "Billede taget med et kamera",
-      "patternHint": "Fremmedord fra græsk — 'foto' betyder lys, 'grafi' betyder at skrive",
-      "sentence": "Jeg tog et flot fotografi af solnedgangen.",
-      "level": 3,
-      "category": "Fremmedord",
-      "misspelling": "fotorgafi"
-    },
-    {
       "word": "strategi",
       "hint": "En klog plan for at nå et mål",
       "patternHint": "Fremmedord fra græsk — staves med 'str' i starten og 'gi' til sidst",
@@ -6909,15 +4817,6 @@
       "level": 3,
       "category": "Fremmedord",
       "misspelling": "straetgi"
-    },
-    {
-      "word": "garanti",
-      "hint": "Løfte om at noget virker som det skal",
-      "patternHint": "Fremmedord fra fransk — staves med 'g' og ender på 'i'",
-      "sentence": "Computeren har to års garanti.",
-      "level": 3,
-      "category": "Fremmedord",
-      "misspelling": "garnati"
     },
     {
       "word": "diamant",
@@ -7050,7 +4949,7 @@
       "hint": "Lille udendørs platform på en bygning",
       "patternHint": "Fremmedord fra italiensk — staves med 'k' ikke 'c'",
       "sentence": "Vi sad på balkonen og nød solen.",
-      "level": 2,
+      "level": 3,
       "category": "Fremmedord",
       "misspelling": "balokn"
     },
@@ -7091,15 +4990,6 @@
       "misspelling": "hieroglif"
     },
     {
-      "word": "monolog",
-      "hint": "Når én person taler alene",
-      "patternHint": "Fremmedord fra græsk — 'mono' betyder én, 'log' betyder tale",
-      "sentence": "Skuespilleren holdt en lang monolog på scenen.",
-      "level": 3,
-      "category": "Fremmedord",
-      "misspelling": "monloog"
-    },
-    {
       "word": "labyrint",
       "hint": "Forvirrende system af gange",
       "patternHint": "Fremmedord fra græsk — staves med 'y' i midten",
@@ -7109,22 +4999,22 @@
       "misspelling": "labirint"
     },
     {
-      "word": "termin",
-      "hint": "Bestemt tidspunkt eller deadline",
-      "patternHint": "Fremmedord fra latin — staves med 'ter' og 'in'",
-      "sentence": "Vi har termin for opgaven på fredag.",
-      "level": 2,
-      "category": "Fremmedord",
-      "misspelling": "terimn"
-    },
-    {
-      "word": "kreativ",
-      "hint": "Opfindsom og fuld af idéer",
-      "patternHint": "Fremmedord fra latin — staves med 'kr' og 'iv' til sidst",
-      "sentence": "Hun er meget kreativ når hun tegner.",
+      "word": "zoologisk",
+      "hint": "Noget der handler om dyr og dyreliv",
+      "patternHint": "zoo (z som s)",
+      "sentence": "Vi tog i den zoologiske have i går.",
       "level": 3,
       "category": "Fremmedord",
-      "misspelling": "kretaiv"
+      "misspelling": "sooologisk"
+    },
+    {
+      "word": "champignon",
+      "hint": "En hvid svamp man spiser",
+      "patternHint": "ch som sj, gn som nj",
+      "sentence": "Der er champignon på pizzaen.",
+      "level": 3,
+      "category": "Fremmedord",
+      "misspelling": "sjampinjon"
     }
   ],
   "Blødt d": [
@@ -7154,24 +5044,6 @@
       "level": 1,
       "category": "Blødt d",
       "misspelling": "ti"
-    },
-    {
-      "word": "ked",
-      "hint": "Ikke glad, trist",
-      "patternHint": "blødt 'd' til sidst i ordet",
-      "sentence": "Hun var ked af at miste sin bold.",
-      "level": 1,
-      "category": "Blødt d",
-      "misspelling": "ke"
-    },
-    {
-      "word": "vid",
-      "hint": "Stor og bred, rummelig",
-      "patternHint": "blødt 'd' til sidst i ordet",
-      "sentence": "Himlen er vid og blå over havet.",
-      "level": 1,
-      "category": "Blødt d",
-      "misspelling": "vi"
     },
     {
       "word": "side",
@@ -7316,15 +5188,6 @@
       "level": 3,
       "category": "Blødt d",
       "misspelling": "best"
-    },
-    {
-      "word": "vedde",
-      "hint": "Gætte om noget og sætte penge på det",
-      "patternHint": "blødt 'd' i dobbelt-d mellem vokaler",
-      "sentence": "Lad os vedde om hvem der kommer først.",
-      "level": 3,
-      "category": "Blødt d",
-      "misspelling": "vede"
     },
     {
       "word": "tredive",
@@ -7516,60 +5379,6 @@
       "misspelling": "flae"
     },
     {
-      "word": "glade",
-      "hint": "Flere personer der er lykkelige",
-      "patternHint": "Blødt 'd' i midten — flertal af 'glad', 'd' udtales blødt",
-      "sentence": "Børnene var glade for gaven.",
-      "level": 2,
-      "category": "Blødt d",
-      "misspelling": "glae"
-    },
-    {
-      "word": "fade",
-      "hint": "Store flade tallerkner til mad",
-      "patternHint": "Blødt 'd' i midten — 'd' mellem vokaler udtales blødt",
-      "sentence": "Mor satte to store fade på bordet.",
-      "level": 2,
-      "category": "Blødt d",
-      "misspelling": "fae"
-    },
-    {
-      "word": "steder",
-      "hint": "Flere forskellige lokationer",
-      "patternHint": "Blødt 'd' i midten — 'd' bevares i bøjningen",
-      "sentence": "Vi besøgte mange spændende steder.",
-      "level": 2,
-      "category": "Blødt d",
-      "misspelling": "steer"
-    },
-    {
-      "word": "fader",
-      "hint": "Et andet ord for far",
-      "patternHint": "Blødt 'd' i midten — 'd' mellem vokaler udtales blødt",
-      "sentence": "Min fader arbejder på et kontor.",
-      "level": 2,
-      "category": "Blødt d",
-      "misspelling": "faer"
-    },
-    {
-      "word": "moder",
-      "hint": "Et gammelt ord for mor",
-      "patternHint": "Blødt 'd' i midten — 'd' mellem vokaler udtales blødt",
-      "sentence": "Moderen tog sig kærligt af sine børn.",
-      "level": 2,
-      "category": "Blødt d",
-      "misspelling": "moer"
-    },
-    {
-      "word": "broder",
-      "hint": "Et gammelt ord for bror",
-      "patternHint": "Blødt 'd' i midten — 'd' mellem vokaler udtales blødt",
-      "sentence": "Min broder og jeg leger sammen hver dag.",
-      "level": 2,
-      "category": "Blødt d",
-      "misspelling": "broer"
-    },
-    {
       "word": "kode",
       "hint": "Hemmelige tegn eller programmeringssprog",
       "patternHint": "Blødt 'd' i midten — 'd' mellem vokaler udtales blødt",
@@ -7624,51 +5433,6 @@
       "misspelling": "forer"
     },
     {
-      "word": "videre",
-      "hint": "At fortsætte fremad",
-      "patternHint": "Blødt 'd' i midten — 'd' mellem vokaler udtales blødt",
-      "sentence": "Vi skal videre til næste opgave.",
-      "level": 3,
-      "category": "Blødt d",
-      "misspelling": "viere"
-    },
-    {
-      "word": "bredere",
-      "hint": "Mere bred — komparativ form",
-      "patternHint": "Blødt 'd' i midten — 'd' bevares i gradbøjningen",
-      "sentence": "Vejen blev bredere efter svinget.",
-      "level": 3,
-      "category": "Blødt d",
-      "misspelling": "breere"
-    },
-    {
-      "word": "ledder",
-      "hint": "Led og bevæger kroppen",
-      "patternHint": "Dobbelt 'd' — 'dd' markerer kort vokal før blødt d",
-      "sentence": "Hun ledder efter sin tabte nøgle.",
-      "level": 3,
-      "category": "Blødt d",
-      "misspelling": "leder"
-    },
-    {
-      "word": "fodtøj",
-      "hint": "Sko, støvler og sandaler",
-      "patternHint": "Blødt 'd' i 'fod' — udtales blødt selv i sammensat ord",
-      "sentence": "Husk at tage varmt fodtøj på om vinteren.",
-      "level": 3,
-      "category": "Blødt d",
-      "misspelling": "fotøj"
-    },
-    {
-      "word": "stedvis",
-      "hint": "Nogle steder men ikke alle",
-      "patternHint": "Blødt 'd' i 'sted' — bevares i det sammensatte ord",
-      "sentence": "Det regnede stedvis i løbet af dagen.",
-      "level": 3,
-      "category": "Blødt d",
-      "misspelling": "stevis"
-    },
-    {
       "word": "rødlig",
       "hint": "Lidt rød i farven",
       "patternHint": "Blødt 'd' i 'rød' — bevares når '-lig' tilføjes",
@@ -7703,33 +5467,6 @@
       "level": 3,
       "category": "Blødt d",
       "misspelling": "røder"
-    },
-    {
-      "word": "broderskab",
-      "hint": "Et stærkt fællesskab mellem brødre eller venner",
-      "patternHint": "Blødt 'd' i 'broder' — bevares i det lange ord",
-      "sentence": "De havde et stærkt broderskab.",
-      "level": 4,
-      "category": "Blødt d",
-      "misspelling": "broerskab"
-    },
-    {
-      "word": "moderskab",
-      "hint": "Det at være mor til et barn",
-      "patternHint": "Blødt 'd' i 'moder' — bevares i afledningen",
-      "sentence": "Moderskab er en stor opgave.",
-      "level": 4,
-      "category": "Blødt d",
-      "misspelling": "moerskab"
-    },
-    {
-      "word": "faderskab",
-      "hint": "Det at være far til et barn",
-      "patternHint": "Blødt 'd' i 'fader' — bevares i afledningen",
-      "sentence": "Han tog sit faderskab meget seriøst.",
-      "level": 4,
-      "category": "Blødt d",
-      "misspelling": "faerskab"
     },
     {
       "word": "kodesprog",
@@ -7804,15 +5541,6 @@
       "misspelling": "nø"
     },
     {
-      "word": "brod",
-      "hint": "Spids ting som en bi stikker med",
-      "patternHint": "Blødt 'd' til sidst — udtales næsten som 'broð'",
-      "sentence": "Bien stak med sin brod.",
-      "level": 1,
-      "category": "Blødt d",
-      "misspelling": "bro"
-    },
-    {
       "word": "glæde",
       "hint": "En følelse af lykke og tilfredshed",
       "patternHint": "Blødt 'd' i midten — 'd' mellem vokaler udtales blødt",
@@ -7829,33 +5557,6 @@
       "level": 3,
       "category": "Blødt d",
       "misspelling": "fodbolen"
-    },
-    {
-      "word": "gladere",
-      "hint": "Mere lykkelig end før",
-      "patternHint": "Blødt 'd' i midten — 'd' fra 'glad' bevares i gradbøjningen",
-      "sentence": "Han blev gladere da solen kom frem.",
-      "level": 3,
-      "category": "Blødt d",
-      "misspelling": "glaere"
-    },
-    {
-      "word": "hædersmand",
-      "hint": "En ærlig og respekteret person",
-      "patternHint": "Blødt 'd' i 'hæder' — bevares i sammensat ord",
-      "sentence": "Bedstefar var en rigtig hædersmand.",
-      "level": 4,
-      "category": "Blødt d",
-      "misspelling": "hædersman"
-    },
-    {
-      "word": "hudpleje",
-      "hint": "At passe godt på huden med creme",
-      "patternHint": "Blødt 'd' i 'hud' — bevares i det sammensatte ord",
-      "sentence": "Mor bruger hudpleje hver aften.",
-      "level": 4,
-      "category": "Blødt d",
-      "misspelling": "hupleje"
     },
     {
       "word": "tilbedelse",
@@ -8049,15 +5750,6 @@
       "misspelling": "lije"
     },
     {
-      "word": "vuge",
-      "hint": "Bevæge blidt frem og tilbage",
-      "patternHint": "g ikke j",
-      "sentence": "Mor vugger babyen i søvn.",
-      "level": 2,
-      "category": "Konsonantlyde",
-      "misspelling": "vuje"
-    },
-    {
       "word": "mage",
       "hint": "En der ligner en anden præcis",
       "patternHint": "g ikke j",
@@ -8134,7 +5826,7 @@
       "hint": "Lægge ting ned i en kasse eller taske",
       "patternHint": "kk ikke gg",
       "sentence": "Vi skal pakke kufferten inden rejsen.",
-      "level": 4,
+      "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "pagge"
     },
@@ -8143,9 +5835,92 @@
       "hint": "Sige eller vise hvad man føler",
       "patternHint": "kk ikke gg",
       "sentence": "Det kan være svært at udtrykke sine følelser.",
-      "level": 4,
+      "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "udtrygge"
+    }
+  ],
+  "Svære ord": [
+    {
+      "word": "yacht",
+      "hint": "En stor, flot sejlbåd",
+      "patternHint": "y som j, ch stumt",
+      "sentence": "Der lå en stor yacht i havnen.",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "jagt"
+    },
+    {
+      "word": "bouillon",
+      "hint": "Klar suppe lavet på kød eller grøntsager",
+      "patternHint": "ou som u, illon",
+      "sentence": "Mor lavede bouillon til den syge.",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "buljon"
+    },
+    {
+      "word": "jaloux",
+      "hint": "Misundelig på andre",
+      "patternHint": "j som sj, oux",
+      "sentence": "Han blev jaloux da hun snakkede med andre.",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "sjalu"
+    },
+    {
+      "word": "mayonnaise",
+      "hint": "Hvid, cremet sovs til mad",
+      "patternHint": "mayo + nn + aise",
+      "sentence": "Vil du have mayonnaise på din sandwich?",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "majonæse"
+    },
+    {
+      "word": "chauffør",
+      "hint": "Person der kører bil som arbejde",
+      "patternHint": "ch som sj, au, ff + ør",
+      "sentence": "Chaufføren kørte bussen til skolen.",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "sjåfør"
+    },
+    {
+      "word": "restaurant",
+      "hint": "Et sted hvor man spiser ude",
+      "patternHint": "rest + au + rant",
+      "sentence": "Vi spiste på en italiensk restaurant.",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "restarant"
+    },
+    {
+      "word": "croissant",
+      "hint": "Halvmåneformet brød fra Frankrig",
+      "patternHint": "cr + oi + ss + ant",
+      "sentence": "Til morgenmad fik vi croissant med smør.",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "kroisant"
+    },
+    {
+      "word": "bureau",
+      "hint": "Et kontor eller skrivebord",
+      "patternHint": "bu + reau (eau som o)",
+      "sentence": "Hun arbejder på et rejsebureau.",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "buro"
+    },
+    {
+      "word": "silhuet",
+      "hint": "En mørk skygge af en figur",
+      "patternHint": "sil + hu + et (stumt h)",
+      "sentence": "Man kunne se silhuetten af et træ mod himlen.",
+      "level": 5,
+      "category": "Svære ord",
+      "misspelling": "siluet"
     }
   ]
 }

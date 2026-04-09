@@ -1121,12 +1121,55 @@
     display: inline-block; min-width: 1.4em; text-align: center; margin: 0 2px;
     border-bottom: 4px solid var(--red); color: var(--red); text-decoration: line-through;
   }
+
+  /* Klasser & Dashboard */
+  .dashboard-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.82rem; }
+  .dashboard-table th {
+    background: var(--card); color: var(--accent); font-weight: 700; text-align: left;
+    padding: 8px 10px; border-bottom: 2px solid #3d4270; white-space: nowrap;
+  }
+  .dashboard-table td {
+    padding: 7px 10px; border-bottom: 1px solid #2d3158; color: var(--text); vertical-align: middle;
+  }
+  .dashboard-table tr:last-child td { border-bottom: none; }
+  .dashboard-table tr:hover td { background: rgba(124,58,237,0.08); }
+  .time-filter-btn {
+    background: var(--card2); border: 1px solid #3d4270; border-radius: 8px;
+    color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 700;
+    padding: 6px 14px; cursor: pointer; transition: all 0.15s;
+  }
+  .time-filter-btn:hover { border-color: var(--accent2); color: var(--text); }
+  .time-filter-btn.active { background: var(--accent2); border-color: var(--accent2); color: white; }
+  .join-code-display {
+    font-family: 'Courier New', monospace; font-size: 1.4rem; font-weight: 700;
+    letter-spacing: 4px; color: var(--accent); background: var(--card);
+    border: 2px dashed #3d4270; border-radius: 10px; padding: 10px 16px;
+    text-align: center; cursor: pointer; transition: all 0.15s; user-select: all;
+  }
+  .join-code-display:hover { border-color: var(--accent); }
+  .teacher-badge {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 8px;
+    border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .teacher-badge.teacher { background: var(--accent2); color: white; }
+  .teacher-badge.student { background: #3d4270; color: var(--muted); }
+  .class-item {
+    background: var(--card); border-radius: 10px; padding: 12px 14px;
+    border: 1px solid #2d3158; margin-bottom: 8px;
+  }
+  .teacher-toggle-wrap {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 8px 0; font-size: 0.88rem; color: var(--text);
+  }
+  .teacher-toggle-wrap input[type="checkbox"] {
+    width: 18px; height: 18px; accent-color: var(--accent2); cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.4</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.7.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1260,6 +1303,13 @@
         <button class="btn btn-full" onclick="testBoss('cardcast')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F0CF; Cardcast</button>
         <button class="btn btn-full" onclick="testBoss('snake')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F40D; Snake</button>
       </div>
+    </div>
+    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-top:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:1.2rem">&#x1F3EB;</span>
+        <strong style="font-size:0.9rem">Klasser</strong>
+      </div>
+      <div id="classSettingsContent"><p style="font-size:0.82rem;color:var(--muted)">Indl&#xe6;ser...</p></div>
     </div>
   </div>
 </div>
@@ -1535,6 +1585,13 @@
   </div>
 </div>
 
+<!-- CLASS DASHBOARD OVERLAY -->
+<div id="classDashboardOverlay" class="chest-overlay hidden" style="z-index:999">
+  <div class="card" style="max-width:720px;width:95%;margin:auto;padding:24px;max-height:90vh;overflow-y:auto">
+    <div id="classDashboardContent"></div>
+  </div>
+</div>
+
 <!-- TREASURE CHEST OVERLAY -->
 <div id="chestOverlay" class="chest-overlay hidden"></div>
 
@@ -1782,6 +1839,341 @@ function syncFromSupabase(name, callback) {
     }
     if (callback) callback();
   }).catch(function() { if (callback) callback(); });
+}
+
+// ===== KLASSER (CLASSES) =====
+var JOIN_CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+
+function generateJoinCode() {
+  var code = '';
+  for (var i = 0; i < 6; i++) {
+    code += JOIN_CODE_CHARS.charAt(Math.floor(Math.random() * JOIN_CODE_CHARS.length));
+  }
+  return code;
+}
+
+function isTeacher() {
+  var rd = loadRewardData();
+  return rd.isTeacher || false;
+}
+
+function toggleTeacherMode() {
+  var rd = loadRewardData();
+  rd.isTeacher = !rd.isTeacher;
+  saveRewardData(rd);
+  renderClassSettings();
+}
+
+async function createClass(name) {
+  if (!supabaseClient) { alert('Kr\u00e6ver internetforbindelse'); return; }
+  if (!name || !name.trim()) { alert('Indtast et klassenavn'); return; }
+  name = name.trim();
+
+  var code, exists = true;
+  for (var attempt = 0; attempt < 10 && exists; attempt++) {
+    code = generateJoinCode();
+    var check = await supabaseClient.from('groups').select('id').eq('join_code', code);
+    exists = check.data && check.data.length > 0;
+  }
+  if (exists) { alert('Kunne ikke generere unik kode. Pr\u00f8v igen.'); return; }
+
+  var res = await supabaseClient.from('groups').insert({
+    name: name, join_code: code, type: 'class', created_by: activePlayer
+  }).select().single();
+
+  if (res.error) { alert('Fejl: ' + res.error.message); return; }
+
+  await supabaseClient.from('group_members').insert({
+    group_id: res.data.id, player: activePlayer, role: 'teacher'
+  });
+
+  renderClassSettings();
+}
+
+async function deleteClass(groupId, groupName) {
+  if (!confirm('Slet klassen "' + groupName + '"? Alle elever fjernes.')) return;
+  if (!supabaseClient) return;
+  await supabaseClient.from('groups').delete().eq('id', groupId);
+  renderClassSettings();
+}
+
+async function joinClass(joinCode) {
+  if (!supabaseClient) { alert('Kr\u00e6ver internetforbindelse'); return; }
+  if (!joinCode || joinCode.trim().length < 3) { alert('Indtast en gyldig klassekode'); return; }
+  joinCode = joinCode.trim().toUpperCase();
+
+  var res = await supabaseClient.from('groups').select('id, name').eq('join_code', joinCode).single();
+  if (res.error || !res.data) { alert('Ingen klasse fundet med koden "' + joinCode + '"'); return; }
+
+  var memberRes = await supabaseClient.from('group_members').insert({
+    group_id: res.data.id, player: activePlayer, role: 'student'
+  });
+  if (memberRes.error) {
+    if (memberRes.error.message.indexOf('duplicate') !== -1 || memberRes.error.code === '23505') {
+      alert('Du er allerede tilmeldt denne klasse');
+    } else {
+      alert('Fejl: ' + memberRes.error.message);
+    }
+    return;
+  }
+
+  alert('Tilmeldt klassen "' + res.data.name + '"!');
+  renderClassSettings();
+}
+
+async function leaveClass(groupId, groupName) {
+  if (!confirm('Forlad klassen "' + groupName + '"?')) return;
+  if (!supabaseClient) return;
+  await supabaseClient.from('group_members').delete().eq('group_id', groupId).eq('player', activePlayer);
+  renderClassSettings();
+}
+
+async function removeStudentFromClass(groupId, playerName, groupName) {
+  if (!confirm('Fjern "' + playerName + '" fra "' + groupName + '"?')) return;
+  if (!supabaseClient) return;
+  await supabaseClient.from('group_members').delete().eq('group_id', groupId).eq('player', playerName);
+  showClassDashboard(groupId, groupName);
+}
+
+function copyJoinCode(code) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code).then(function() {
+      var el = document.getElementById('copyFeedback_' + code);
+      if (el) { el.textContent = 'Kopieret!'; setTimeout(function() { el.textContent = ''; }, 2000); }
+    });
+  } else {
+    prompt('Kopier denne kode:', code);
+  }
+}
+
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+async function renderClassSettings() {
+  var container = document.getElementById('classSettingsContent');
+  if (!container) return;
+
+  var html = '';
+
+  html += '<label class="teacher-toggle-wrap">' +
+    '<input type="checkbox" onchange="toggleTeacherMode()" ' + (isTeacher() ? 'checked' : '') + '>' +
+    '<span>Jeg er l\u00e6rer</span></label>';
+
+  if (!supabaseClient) {
+    html += '<p style="font-size:0.82rem;color:var(--muted);margin-top:8px">Klassefunktionen kr\u00e6ver internetforbindelse.</p>';
+    container.innerHTML = html;
+    return;
+  }
+
+  var memberships = [];
+  try {
+    var memRes = await supabaseClient.from('group_members').select('group_id, role, groups(id, name, join_code, type, created_by)').eq('player', activePlayer);
+    if (memRes.data) memberships = memRes.data;
+  } catch(e) {}
+
+  var teacherClasses = memberships.filter(function(m) { return m.role === 'teacher'; });
+  var studentClasses = memberships.filter(function(m) { return m.role === 'student'; });
+
+  if (isTeacher()) {
+    html += '<div style="margin-top:12px;margin-bottom:6px;font-size:0.85rem;font-weight:700;color:var(--accent)">Mine klasser</div>';
+
+    if (teacherClasses.length === 0) {
+      html += '<p style="font-size:0.82rem;color:var(--muted)">Du har ingen klasser endnu.</p>';
+    }
+    for (var i = 0; i < teacherClasses.length; i++) {
+      var g = teacherClasses[i].groups;
+      html += '<div class="class-item">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+        '<strong style="font-size:0.9rem;color:var(--text)">' + escapeHtml(g.name) + '</strong>' +
+        '<span class="teacher-badge teacher">L\u00e6rer</span></div>' +
+        '<div class="join-code-display" onclick="copyJoinCode(\'' + g.join_code + '\')" title="Klik for at kopiere">' +
+        g.join_code + '</div>' +
+        '<span id="copyFeedback_' + g.join_code + '" style="font-size:0.75rem;color:var(--green);display:block;text-align:center;min-height:1.2em"></span>' +
+        '<div style="display:flex;gap:6px;margin-top:6px">' +
+        '<button class="btn btn-blue" style="flex:1;font-size:0.8rem;padding:8px" onclick="showClassDashboard(\'' + g.id + '\', \'' + escapeHtml(g.name).replace(/'/g, "\\'") + '\')">Dashboard</button>' +
+        '<button class="btn" style="flex:0;font-size:0.8rem;padding:8px;background:var(--red);color:white" onclick="deleteClass(\'' + g.id + '\', \'' + escapeHtml(g.name).replace(/'/g, "\\'") + '\')">Slet</button>' +
+        '</div></div>';
+    }
+
+    html += '<div style="margin-top:10px;display:flex;gap:6px">' +
+      '<input type="text" id="newClassNameInput" class="settings-input" placeholder="Klassenavn, fx &#34;6b Skovskolen&#34;" style="flex:1;margin:0" />' +
+      '<button class="btn btn-green" style="font-size:0.8rem;padding:8px 14px;white-space:nowrap" onclick="createClass(document.getElementById(\'newClassNameInput\').value)">Opret</button>' +
+      '</div>';
+  }
+
+  html += '<div style="margin-top:14px;margin-bottom:6px;font-size:0.85rem;font-weight:700;color:var(--accent)">Tilmeld klasse</div>';
+  html += '<div style="display:flex;gap:6px">' +
+    '<input type="text" id="joinCodeInput" class="settings-input" placeholder="Indtast klassekode" style="flex:1;margin:0;text-transform:uppercase;letter-spacing:2px" maxlength="6" />' +
+    '<button class="btn btn-accent" style="font-size:0.8rem;padding:8px 14px;white-space:nowrap" onclick="joinClass(document.getElementById(\'joinCodeInput\').value)">Tilmeld</button>' +
+    '</div>';
+
+  if (studentClasses.length > 0) {
+    html += '<div style="margin-top:12px;margin-bottom:6px;font-size:0.85rem;font-weight:700;color:var(--accent)">Tilmeldte klasser</div>';
+    for (var j = 0; j < studentClasses.length; j++) {
+      var sg = studentClasses[j].groups;
+      html += '<div class="class-item">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+        '<strong style="font-size:0.88rem;color:var(--text)">' + escapeHtml(sg.name) + '</strong>' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+        '<span class="teacher-badge student">Elev</span>' +
+        '<button class="btn" style="font-size:0.75rem;padding:4px 10px;background:var(--red);color:white" onclick="leaveClass(\'' + sg.id + '\', \'' + escapeHtml(sg.name).replace(/'/g, "\\'") + '\')">Forlad</button>' +
+        '</div></div></div>';
+    }
+  }
+
+  container.innerHTML = html;
+}
+
+// ===== KLASSE-DASHBOARD =====
+
+function showClassDashboard(groupId, groupName) {
+  var overlay = document.getElementById('classDashboardOverlay');
+  var content = document.getElementById('classDashboardContent');
+  content.innerHTML = '<p style="text-align:center;color:var(--muted);padding:40px 0">Indl\u00e6ser dashboard...</p>';
+  overlay.classList.remove('hidden');
+  loadDashboardData(groupId, groupName, 'all');
+}
+
+function hideClassDashboard() {
+  document.getElementById('classDashboardOverlay').classList.add('hidden');
+}
+
+async function loadDashboardData(groupId, groupName, timeFilter) {
+  if (!supabaseClient) return;
+  var content = document.getElementById('classDashboardContent');
+
+  var memRes = await supabaseClient.from('group_members').select('player, role').eq('group_id', groupId);
+  if (memRes.error || !memRes.data) {
+    content.innerHTML = '<p style="color:var(--red)">Kunne ikke hente klassedata.</p>' +
+      '<button class="btn btn-primary" style="margin-top:16px;width:100%" onclick="hideClassDashboard()">Luk</button>';
+    return;
+  }
+
+  var students = memRes.data.filter(function(m) { return m.role === 'student'; });
+  var studentNames = students.map(function(m) { return m.player; });
+
+  if (studentNames.length === 0) {
+    renderDashboard(groupId, groupName, [], timeFilter);
+    return;
+  }
+
+  var profilesPromise = supabaseClient.from('profiles').select('player, reward_data, student_grade, updated_at').in('player', studentNames);
+
+  var answersQuery = supabaseClient.from('answers').select('player, correct').in('player', studentNames);
+  if (timeFilter === 'week') {
+    answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 7 * 86400000).toISOString());
+  } else if (timeFilter === 'month') {
+    answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString());
+  }
+  var answersPromise = answersQuery.limit(10000);
+
+  var results = await Promise.all([profilesPromise, answersPromise]);
+  var profiles = results[0].data || [];
+  var answers = results[1].data || [];
+
+  var answerStats = {};
+  for (var a = 0; a < answers.length; a++) {
+    var row = answers[a];
+    if (!answerStats[row.player]) answerStats[row.player] = { total: 0, correct: 0 };
+    answerStats[row.player].total++;
+    if (row.correct) answerStats[row.player].correct++;
+  }
+
+  var profileMap = {};
+  for (var p = 0; p < profiles.length; p++) {
+    profileMap[profiles[p].player] = profiles[p];
+  }
+
+  var studentData = studentNames.map(function(name) {
+    var prof = profileMap[name] || {};
+    var rd = prof.reward_data || {};
+    var stats = answerStats[name] || { total: 0, correct: 0 };
+    var pct = stats.total > 0 ? Math.round(100 * stats.correct / stats.total) : 0;
+    var avatarIdx = rd.displayedLevel || 0;
+    var avatarTitle = (typeof AVATAR_LEVELS !== 'undefined' && AVATAR_LEVELS[avatarIdx]) ? AVATAR_LEVELS[avatarIdx].title : '-';
+    var lastActive = prof.updated_at ? formatRelativeTime(prof.updated_at) : '-';
+
+    return {
+      name: name,
+      grade: prof.student_grade || 0,
+      xp: rd.totalXP || 0,
+      streak: rd.streak || 0,
+      avatar: avatarTitle,
+      correctPct: pct,
+      totalAnswers: stats.total,
+      lastActive: lastActive
+    };
+  });
+
+  studentData.sort(function(a, b) { return b.xp - a.xp; });
+  renderDashboard(groupId, groupName, studentData, timeFilter);
+}
+
+function formatRelativeTime(isoStr) {
+  var diff = Date.now() - new Date(isoStr).getTime();
+  var mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'Lige nu';
+  if (mins < 60) return mins + ' min siden';
+  var hours = Math.floor(mins / 60);
+  if (hours < 24) return hours + ' t siden';
+  var days = Math.floor(hours / 24);
+  if (days === 1) return 'I g\u00e5r';
+  if (days < 30) return days + ' dage siden';
+  return new Date(isoStr).toLocaleDateString('da-DK');
+}
+
+function renderDashboard(groupId, groupName, students, timeFilter) {
+  var content = document.getElementById('classDashboardContent');
+  var html = '';
+
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">' +
+    '<h2 style="font-family:\'Fredoka One\',cursive;color:var(--accent);margin:0;font-size:1.2rem">' + escapeHtml(groupName) + '</h2>' +
+    '<button class="btn" style="font-size:0.8rem;padding:6px 14px;background:#3d4270;color:var(--text)" onclick="hideClassDashboard()">Luk</button>' +
+    '</div>';
+
+  html += '<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">';
+  var filters = [
+    { key: 'week', label: 'Denne uge' },
+    { key: 'month', label: 'Denne m\u00e5ned' },
+    { key: 'all', label: 'Alt' }
+  ];
+  for (var f = 0; f < filters.length; f++) {
+    var active = timeFilter === filters[f].key ? ' active' : '';
+    html += '<button class="time-filter-btn' + active + '" onclick="loadDashboardData(\'' + groupId + '\', \'' + escapeHtml(groupName).replace(/'/g, "\\'") + '\', \'' + filters[f].key + '\')">' + filters[f].label + '</button>';
+  }
+  html += '</div>';
+
+  if (students.length === 0) {
+    html += '<p style="text-align:center;color:var(--muted);padding:20px 0">Ingen elever tilmeldt endnu.<br><span style="font-size:0.82rem">Del klassekoden s\u00e5 elever kan tilmelde sig.</span></p>';
+  } else {
+    html += '<div style="overflow-x:auto;border-radius:10px;border:1px solid #3d4270">';
+    html += '<table class="dashboard-table"><thead><tr>' +
+      '<th>Navn</th><th>Kl.</th><th>XP</th><th>Streak</th><th>Avatar</th><th>Rigtige</th><th>Svar</th><th>Sidst aktiv</th><th></th>' +
+      '</tr></thead><tbody>';
+
+    for (var s = 0; s < students.length; s++) {
+      var st = students[s];
+      var pctColor = st.correctPct >= 80 ? 'var(--green)' : st.correctPct >= 50 ? 'var(--accent)' : 'var(--red)';
+      html += '<tr>' +
+        '<td style="font-weight:700">' + escapeHtml(st.name) + '</td>' +
+        '<td>' + (st.grade > 0 ? st.grade + '.' : '-') + '</td>' +
+        '<td style="color:var(--accent)">' + st.xp + '</td>' +
+        '<td>' + st.streak + ' d</td>' +
+        '<td style="font-size:0.78rem">' + st.avatar + '</td>' +
+        '<td style="color:' + pctColor + ';font-weight:700">' + st.correctPct + '%</td>' +
+        '<td>' + st.totalAnswers + '</td>' +
+        '<td style="font-size:0.78rem;color:var(--muted)">' + st.lastActive + '</td>' +
+        '<td><button class="btn" style="font-size:0.7rem;padding:3px 8px;background:var(--red);color:white" onclick="removeStudentFromClass(\'' + groupId + '\', \'' + escapeHtml(st.name).replace(/'/g, "\\'") + '\', \'' + escapeHtml(groupName).replace(/'/g, "\\'") + '\')">Fjern</button></td>' +
+        '</tr>';
+    }
+
+    html += '</tbody></table></div>';
+  }
+
+  content.innerHTML = html;
 }
 
 // Word bank loaded from words.json
@@ -2122,6 +2514,7 @@ function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i
 function goHome() {
   ['phase-test','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-spellpick','phase-wordmemory','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
+  document.getElementById('classDashboardOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
   cleanupHighway();
@@ -2171,6 +2564,7 @@ function restoreGradeSelection() {
 function toggleSettings() {
   var panel = document.getElementById('settingsPanel');
   panel.classList.toggle('open');
+  if (panel.classList.contains('open')) renderClassSettings();
 }
 
 // Spaced Repetition

@@ -33,7 +33,7 @@ Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 
 - **Projekt**: `https://cfkddsiwwujbbxjuthie.supabase.co`
 - **Anon key**: `sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt`
-- **RLS**: Disabled på begge tabeller
+- **RLS**: Disabled på alle tabeller
 
 ### Tabeller
 
@@ -42,6 +42,12 @@ Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 
 **profiles** — syncer spillerdata på tværs af enheder:
 - player (text, primary key), profile_data (jsonb), reward_data (jsonb), sr_data (jsonb), student_grade (int), updated_at (timestamptz)
+
+**groups** — klasser og vennegrupper:
+- id (uuid, PK), name (text), join_code (text, unique), type (text: 'class'/'friendgroup'), created_by (text), created_at (timestamptz)
+
+**group_members** — kobler spillere til grupper:
+- id (uuid, PK), group_id (uuid, FK → groups.id ON DELETE CASCADE), player (text), role (text: 'teacher'/'student'/'member'), joined_at (timestamptz), UNIQUE(group_id, player)
 
 ### Sync-flow
 - `syncToSupabase()` kaldes efter enhver save (profil, reward, SR, klassetrin)
@@ -98,6 +104,35 @@ Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 - Avatar: 8 niveauer (Baby Ræv → Stavedragen) baseret på total XP
 - Skattekister: 4 sjældenheder (60% almindelig → 5% episk)
 - Milestones: ved 3, 7, 14, 30, 50, 100 dages streak
+
+## Klasser
+
+Lærere kan oprette klasser, elever tilmelder sig via 6-tegns delekode. Ingen auth — "lærer" er selvdeklareret flag i `reward_data.isTeacher`.
+
+### Flow
+- Lærer slår "Jeg er lærer" til i settings → kan oprette klasser
+- System genererer 6-tegns kode (charset: `ABCDEFGHJKMNPQRSTUVWXYZ23456789`)
+- Elev indtaster kode i settings → tilmeldes klassen
+- Lærer åbner dashboard-overlay med elevers fremgang
+
+### Funktioner
+- `generateJoinCode()` — 6-tegns unik kode
+- `isTeacher()` / `toggleTeacherMode()` — lærer-toggle i reward_data
+- `createClass(name)` / `deleteClass(groupId)` — CRUD for klasser
+- `joinClass(joinCode)` / `leaveClass(groupId)` — elev tilmelding
+- `removeStudentFromClass(groupId, player)` — lærer fjerner elev
+- `renderClassSettings()` — bygger klasse-UI i settings
+- `showClassDashboard(groupId, name)` / `hideClassDashboard()` — dashboard overlay
+- `loadDashboardData(groupId, name, timeFilter)` — henter profiler + svar-statistik
+- `renderDashboard(groupId, name, students, timeFilter)` — tabel med tidsfilter
+
+### Dashboard-kolonner
+Navn, Klassetrin, XP, Streak, Avatar, Rigtige %, Antal svar, Sidst aktiv, [Fjern]
+
+### Tidsfilter
+- `'week'` — seneste 7 dage
+- `'month'` — seneste 30 dage
+- `'all'` — alt
 
 ## Audio
 

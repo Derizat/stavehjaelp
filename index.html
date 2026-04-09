@@ -2279,7 +2279,7 @@ function renderStudentDetail(student) {
       var lvl = catData.level;
       var maxLvl = (typeof CATEGORY_MAX_LEVELS !== 'undefined' && CATEGORY_MAX_LEVELS[cat] !== undefined) ? CATEGORY_MAX_LEVELS[cat] : 5;
       var mastered = lvl >= maxLvl;
-      var lvlText = mastered ? 'Mestret' : 'Niv ' + lvl + '/4';
+      var lvlText = mastered ? 'Mestret' : 'Niv ' + lvl + '/' + (maxLvl - 1);
       var lvlColor = mastered ? 'var(--green)' : levelColors[Math.min(lvl, 5)];
 
       // Answer stats for this category
@@ -2864,7 +2864,19 @@ var CATEGORY_START_LEVELS = {
 // Per-category level system
 function loadCategoryLevels() {
   var profile = loadProfile();
-  if (profile && profile.categoryLevels) return profile.categoryLevels;
+  if (profile && profile.categoryLevels) {
+    // Migrate: ensure no category is below its start level
+    var needsSave = false;
+    for (var cat in CATEGORY_START_LEVELS) {
+      var sl = CATEGORY_START_LEVELS[cat];
+      if (profile.categoryLevels[cat] && profile.categoryLevels[cat].level < sl) {
+        profile.categoryLevels[cat].level = sl;
+        needsSave = true;
+      }
+    }
+    if (needsSave) saveCategoryLevels(profile.categoryLevels);
+    return profile.categoryLevels;
+  }
   var levels = {};
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {
     var cat = ALL_CATEGORIES[i];
@@ -9160,7 +9172,7 @@ function renderCategoryLevels() {
     var mastered = lvl >= maxLvl;
     // Svære ord: show locked state if not enough mastered categories
     var locked = (cat === 'Sv\u00E6re ord' && masteredCount < 3);
-    var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/3)' : (mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/4');
+    var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/3)' : (mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/' + (maxLvl - 1));
     var lvlColor = locked ? '#9ca3af' : (mastered ? 'var(--green)' : levelColors[Math.min(lvl, 5)]);
     html += '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem' + (mastered || locked ? ';opacity:0.6' : '') + '">' +
       '<span style="width:20px;text-align:center">' + icon + '</span>' +

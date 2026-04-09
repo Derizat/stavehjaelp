@@ -5163,13 +5163,13 @@
       "misspelling": "medele"
     },
     {
-      "word": "middelalder",
+      "word": "middelalderen",
       "hint": "Historisk periode med riddere og borge",
       "patternHint": "blødt 'd' i dobbelt-d i sammensat ord",
-      "sentence": "I middelalder byggede man store borge af sten.",
+      "sentence": "I middelalderen byggede man store borge af sten.",
       "level": 4,
       "category": "Blødt d",
-      "misspelling": "midelalder"
+      "misspelling": "midelalderen"
     },
     {
       "word": "hæderlig",

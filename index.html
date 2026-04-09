@@ -2936,8 +2936,12 @@ function saveCategoryLevels(levels) {
   syncToSupabase();
 }
 
-function updateCategoryLevel(category, correct, wordLevel) {
+function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelling) {
   if (!category || ALL_CATEGORIES.indexOf(category) === -1) return;
+  // Only count wrong answers as category errors if the mistake matches the category-specific misspelling
+  if (!correct && misspelling && userAnswer) {
+    if (userAnswer.toLowerCase().trim() !== misspelling.toLowerCase()) return;
+  }
   var levels = loadCategoryLevels();
   if (!levels[category]) levels[category] = { level: 1, history: [] };
   var cat = levels[category];
@@ -3693,7 +3697,7 @@ function checkSpelling() {
   var result = { word: w.word, correct: ok, selfCorrected: false, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
   logAnswer(w.word, ans, ok, 1, w.category, w.level || 0);
-  updateCategoryLevel(w.category, ok, w.level || 0);
+  updateCategoryLevel(w.category, ok, w.level || 0, ans, w.misspelling);
   updateSRWord(w.word, ok, w.category);
 
   document.getElementById('listenBox').style.visibility = 'hidden';
@@ -7634,7 +7638,7 @@ function checkFillIn(chosenIndex) {
   // SR update + Supabase
   updateSRWord(w.word, ok, w.category);
   logAnswer(w.word, chosen === '' ? '(intet)' : chosen, ok, 1, w.category, w.level || 0);
-  updateCategoryLevel(w.category, ok, w.level || 0);
+  updateCategoryLevel(w.category, ok, w.level || 0, chosen, w.misspelling);
 
   // Gamification — boss + chest as reward for 5 correct streak
   if (ok) {
@@ -8902,7 +8906,7 @@ function pickSpkOption(btn, picked) {
   spkResults.push(result);
   results.push(result);
   logAnswer(w.word, picked, ok, 1, w.category, w.level || 0);
-  updateCategoryLevel(w.category, ok, w.level || 0);
+  updateCategoryLevel(w.category, ok, w.level || 0, picked, w.misspelling);
   updateSRWord(w.word, ok, w.category);
 
   if (ok) {
@@ -9083,7 +9087,7 @@ function checkSentence() {
   results.push(result);
   logAnswer(swCurrentWord.word, input, ok, 1, swCurrentWord.category, swCurrentWord.level || 0);
   updateSRWord(swCurrentWord.word, ok, swCurrentWord.category);
-  updateCategoryLevel(swCurrentWord.category, ok, swCurrentWord.level || 0);
+  updateCategoryLevel(swCurrentWord.category, ok, swCurrentWord.level || 0, input, swCurrentWord.misspelling);
 
   // Gamification
   if (ok) {

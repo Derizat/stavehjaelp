@@ -8022,6 +8022,51 @@
       "misspelling": "labbe"
     },
     {
+      "word": "lege",
+      "hint": "Have det sjovt med en aktivitet",
+      "patternHint": "g ikke j",
+      "sentence": "Børnene vil lege i haven.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "leje"
+    },
+    {
+      "word": "kage",
+      "hint": "Sød ting man bager og spiser",
+      "patternHint": "g ikke j",
+      "sentence": "Mor bagte en stor chokoladekage.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "kaje"
+    },
+    {
+      "word": "pige",
+      "hint": "Et ungt menneske der ikke er en dreng",
+      "patternHint": "g ikke j",
+      "sentence": "Pigen løb hen over legepladsen.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "pije"
+    },
+    {
+      "word": "bage",
+      "hint": "Lave brød eller kage i ovnen",
+      "patternHint": "g ikke j",
+      "sentence": "Vi skal bage boller i dag.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "baje"
+    },
+    {
+      "word": "uge",
+      "hint": "Syv dage i træk",
+      "patternHint": "g ikke j",
+      "sentence": "Der er syv dage i en uge.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "uje"
+    },
+    {
       "word": "klappe",
       "hint": "Slå hænderne sammen",
       "patternHint": "pp ikke bb",
@@ -8074,6 +8119,51 @@
       "level": 2,
       "category": "Konsonantlyde",
       "misspelling": "tigge"
+    },
+    {
+      "word": "sige",
+      "hint": "Bruge ord til at fortælle noget",
+      "patternHint": "g ikke j",
+      "sentence": "Hvad prøver du at sige?",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "sije"
+    },
+    {
+      "word": "tage",
+      "hint": "Gribe fat i noget",
+      "patternHint": "g ikke j",
+      "sentence": "Husk at tage din jakke med.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "taje"
+    },
+    {
+      "word": "lige",
+      "hint": "Præcis det samme eller helt jævn",
+      "patternHint": "g ikke j",
+      "sentence": "De to stykker er lige store.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "lije"
+    },
+    {
+      "word": "vuge",
+      "hint": "Bevæge blidt frem og tilbage",
+      "patternHint": "g ikke j",
+      "sentence": "Mor vugger babyen i søvn.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "vuje"
+    },
+    {
+      "word": "mage",
+      "hint": "En der ligner en anden præcis",
+      "patternHint": "g ikke j",
+      "sentence": "De to søstre var hinandens mage.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "maje"
     },
     {
       "word": "moppe",

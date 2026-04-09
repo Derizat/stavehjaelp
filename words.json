@@ -101,7 +101,7 @@
     },
     {
       "word": "jul",
-      "hint": "Højtid i december med gaver og juletræ",
+      "hint": "Højtid i december med gaver og pynt",
       "patternHint": "j, ikke hj",
       "sentence": "Vi glæder os til jul.",
       "level": 1,
@@ -830,7 +830,7 @@
     },
     {
       "word": "vist",
-      "hint": "Sandsynligvis",
+      "hint": "Nok, formentlig",
       "patternHint": "ingen stumt 'd' — vis + t, ikke vidst",
       "sentence": "Det er vist rigtigt.",
       "level": 3,
@@ -2835,7 +2835,7 @@
     },
     {
       "word": "svarede",
-      "hint": "Gav svar på et spørgsmål (datid)",
+      "hint": "Reagerede på et spørgsmål (datid)",
       "patternHint": "datid: '-ede'",
       "sentence": "Hun svarede rigtigt på alle spørgsmål.",
       "level": 2,
@@ -3224,7 +3224,7 @@
     },
     {
       "word": "tak",
-      "hint": "Man siger det når man er taknemmelig",
+      "hint": "Ord man siger for at vise man er glad for noget",
       "patternHint": "lydrette ord — staves som det lyder",
       "sentence": "Tak for gaven!",
       "level": 0,
@@ -4099,7 +4099,7 @@
     },
     {
       "word": "laver",
-      "hint": "Er i gang med at lave noget",
+      "hint": "Fremstiller eller tilbereder noget",
       "patternHint": "Nutids-r: 'lave' bliver til 'laver' i nutid",
       "sentence": "Mor laver mad i køkkenet.",
       "level": 1,
@@ -4153,7 +4153,7 @@
     },
     {
       "word": "spiller",
-      "hint": "Deltager i et spil eller en sport",
+      "hint": "Deltager i en sport eller et brætspil",
       "patternHint": "Nutids-r: 'spille' bliver til 'spiller' i nutid",
       "sentence": "Vi spiller fodbold efter skole.",
       "level": 2,
@@ -5066,7 +5066,7 @@
     },
     {
       "word": "rode",
-      "hint": "Lave uorden og rod",
+      "hint": "Lave uorden og kaos",
       "patternHint": "blødt 'd' mellem to vokaler",
       "sentence": "Du må ikke rode på dit værelse.",
       "level": 2,
@@ -5408,7 +5408,7 @@
     },
     {
       "word": "rødlig",
-      "hint": "Lidt rød i farven",
+      "hint": "En farve der minder om solnedgang",
       "patternHint": "Blødt 'd' i 'rød' — bevares når '-lig' tilføjes",
       "sentence": "Himlen var rødlig ved solnedgang.",
       "level": 3,
@@ -5653,7 +5653,7 @@
     },
     {
       "word": "lukke",
-      "hint": "Gøre noget der er åbent til at være lukket",
+      "hint": "Gøre noget der er åbent til at være tæt",
       "patternHint": "kk ikke gg",
       "sentence": "Husk at lukke døren efter dig.",
       "level": 2,
@@ -5761,7 +5761,7 @@
     },
     {
       "word": "slippe",
-      "hint": "Give slip og lade noget falde",
+      "hint": "Lade noget falde fra hænderne",
       "patternHint": "pp ikke bb",
       "sentence": "Pas på ikke at slippe bolden mens du løber.",
       "level": 3,

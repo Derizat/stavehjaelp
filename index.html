@@ -8247,8 +8247,11 @@ function renderRightOrWrongResults() {
 var spItems = [], spIndex = 0, spResults = [];
 
 function buildSpellingPoliceItem(wordObj) {
-  var ms = generateMisspelling(wordObj);
-  if (!ms || !wordObj.sentence) return null;
+  if (!wordObj.sentence) return null;
+  var ms = wordObj.misspelling
+    ? { misspelled: wordObj.misspelling, explanation: '' }
+    : generateMisspelling(wordObj);
+  if (!ms) return null;
 
   var word = wordObj.word;
   var sentence = wordObj.sentence;

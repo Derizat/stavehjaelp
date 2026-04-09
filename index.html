@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.5</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.6</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2342,7 +2342,8 @@ var PATTERN_RULES = {
   "Fremmedord": "<b>L\u00E5neord fra andre sprog!</b><br>Mange ord kommer fra <span style='color:var(--accent)'>fransk</span> (restaurant, garage), <span style='color:var(--accent)'>engelsk</span> (computer, juice) eller <span style='color:var(--accent)'>latin</span> (station, nation).<br>De f\u00F8lger ikke danske staveregler!",
   "Bl\u00F8dt d": "<b>D'et er bl\u00F8dt!</b><br>Mange danske ord har et <span style='color:var(--accent)'>d</span> man n\u00E6sten ikke kan h\u00F8re.<br>r\u00F8<span style='color:var(--green);font-weight:800'>d</span>, ba<span style='color:var(--green);font-weight:800'>d</span>e, ri<span style='color:var(--green);font-weight:800'>dd</span>er<br>Husk: d'et er der \u2014 ogs\u00E5 selv om det lyder bl\u00F8dt!",
   "Konsonantlyde": "<b>Lyt til konsonanten!</b><br>Nogle konsonanter lyder ens men staves forskelligt.<br><span style='color:var(--accent)'>p/b</span>, <span style='color:var(--accent)'>k/g</span>, <span style='color:var(--accent)'>g/j</span> \u2014 hvilken er det?",
-  "Ord fra Fransk": "<b>Parlez-vous fran\u00E7ais?</b><br>Disse ord kommer fra fransk og staves helt anderledes end de lyder.<br>Her g\u00E6lder det om at huske de franske stavem\u00E5der!"
+  "Ord fra Fransk": "<b>Parlez-vous fran\u00E7ais?</b><br>Disse ord kommer fra fransk og staves helt anderledes end de lyder.<br>Her g\u00E6lder det om at huske de franske stavem\u00E5der!",
+  "Ord fra Fransk 2": "<b>Encore du fran\u00E7ais!</b><br>Endnu flere franske ord der kr\u00E6ver ekstra opm\u00E6rksomhed p\u00E5 stavningen."
 };
 
 // Emoji illustrations for fill-in exercise (words with clear visual representation)
@@ -2694,7 +2695,8 @@ var CATEGORY_ICONS = {
   "Fremmedord": "\u{1F30D}",
   "Bl\u00F8dt d": "\u{1F4AC}",
   "Konsonantlyde": "\u{1F442}",
-  "Ord fra Fransk": "\u{1F1EB}\u{1F1F7}"
+  "Ord fra Fransk": "\u{1F1EB}\u{1F1F7}",
+  "Ord fra Fransk 2": "\u{1F1EB}\u{1F1F7}"
 };
 
 var ALL_CATEGORIES = [];
@@ -2811,7 +2813,7 @@ function saveSRData(data) {
 }
 
 function updateSRWord(word, correct, category) {
-  if (category === 'Ord fra Fransk') trackFrenchWord(word, correct);
+  if (category === 'Ord fra Fransk' || category === 'Ord fra Fransk 2') trackFrenchWord(word, correct, category);
   var sr = loadSRData();
   if (!sr.words) sr.words = {};
   if (!sr.words[word]) { sr.words[word] = { level: 0, nextReview: Date.now(), category: category }; }
@@ -2861,7 +2863,8 @@ var CATEGORY_START_LEVELS = {
   'Lydrette ord': 0,
   'Fremmedord': 2,
   'Blødt d': 0,
-  'Ord fra Fransk': 5
+  'Ord fra Fransk': 5,
+  'Ord fra Fransk 2': 5
 };
 
 // Per-category level system
@@ -2896,26 +2899,44 @@ function saveCategoryLevels(levels) {
   syncToSupabase();
 }
 
-function trackFrenchWord(word, correct) {
+function trackFrenchWord(word, correct, category) {
   if (!correct) return;
   var data = loadRewardData();
-  if (!data.frenchCorrectWords) data.frenchCorrectWords = [];
+  var key = (category === 'Ord fra Fransk 2') ? 'french2CorrectWords' : 'frenchCorrectWords';
+  if (!data[key]) data[key] = [];
   var w = word.toLowerCase();
-  if (data.frenchCorrectWords.indexOf(w) === -1) {
-    data.frenchCorrectWords.push(w);
+  if (data[key].indexOf(w) === -1) {
+    data[key].push(w);
     saveRewardData(data);
   }
 }
 
-function getFrenchProgress() {
+function getFrenchProgress(category) {
   var data = loadRewardData();
-  return (data.frenchCorrectWords || []).length;
+  var key = (category === 'Ord fra Fransk 2') ? 'french2CorrectWords' : 'frenchCorrectWords';
+  return (data[key] || []).length;
+}
+
+function isFrench2Unlocked() {
+  var data = loadRewardData();
+  return !!data.french2Unlocked;
+}
+
+function purchaseFrench2() {
+  var data = loadRewardData();
+  if (data.gems < 10) return false;
+  data.gems -= 10;
+  data.french2Unlocked = true;
+  saveRewardData(data);
+  updateRewardBar();
+  renderCategoryLevels();
+  return true;
 }
 
 function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelling) {
   if (!category || ALL_CATEGORIES.indexOf(category) === -1) return;
-  // Ord fra Fransk: track unique correct words instead of normal level system
-  if (category === 'Ord fra Fransk') return;
+  // Ord fra Fransk / Fransk 2: track unique correct words instead of normal level system
+  if (category === 'Ord fra Fransk' || category === 'Ord fra Fransk 2') return;
   // Only count wrong answers as category errors if the mistake matches the category-specific misspelling
   if (!correct && misspelling && userAnswer) {
     if (userAnswer.toLowerCase().trim() !== misspelling.toLowerCase()) return;
@@ -2966,7 +2987,7 @@ function pickBossWord(fallbackWord) {
   var pool = [];
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {
     var cat = ALL_CATEGORIES[i];
-    if (!WORD_BANK[cat] || cat === 'Ord fra Fransk') continue;
+    if (!WORD_BANK[cat] || cat === 'Ord fra Fransk' || cat === 'Ord fra Fransk 2') continue;
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
     var maxLvl = CATEGORY_MAX_LEVELS[cat] || 5;
     if (catLevel >= maxLvl) continue; // skip mastered
@@ -2982,7 +3003,7 @@ function pickBossWord(fallbackWord) {
   if (pool.length === 0) {
     for (var i = 0; i < ALL_CATEGORIES.length; i++) {
       var cat = ALL_CATEGORIES[i];
-      if (!WORD_BANK[cat] || cat === 'Ord fra Fransk') continue;
+      if (!WORD_BANK[cat] || cat === 'Ord fra Fransk' || cat === 'Ord fra Fransk 2') continue;
       var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
       var words = WORD_BANK[cat].filter(function(w) { return w.level === catLevel; });
       for (var j = 0; j < words.length; j++) {
@@ -3012,7 +3033,8 @@ var CATEGORY_MAX_LEVELS = {
   'Fremmedord': 5,
   'Blødt d': 5,
   'Konsonantlyde': 4,
-  'Ord fra Fransk': 6
+  'Ord fra Fransk': 6,
+  'Ord fra Fransk 2': 6
 };
 
 function isFrenchUnlocked() {
@@ -3035,7 +3057,7 @@ function countMasteredCategories(levels) {
   var count = 0;
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {
     var cat = ALL_CATEGORIES[i];
-    if (cat === 'Ord fra Fransk') continue;
+    if (cat === 'Ord fra Fransk' || cat === 'Ord fra Fransk 2') continue;
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
     var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 5;
     if (catLevel >= maxLvl) count++;
@@ -3050,11 +3072,16 @@ function buildPoolWithCategoryLevels(categories) {
   for (var i = 0; i < categories.length; i++) {
     var cat = categories[i];
     if (!WORD_BANK[cat]) continue;
-    // Ord fra Fransk: requires 3 mastered categories + purchased with gems
+    // Ord fra Fransk: requires mastered categories + purchased with gems
     if (cat === 'Ord fra Fransk') {
       if (!isFrenchUnlocked()) continue;
       var frenchTotal = (WORD_BANK['Ord fra Fransk'] || []).length;
       if (getFrenchProgress() >= frenchTotal) continue;
+    }
+    if (cat === 'Ord fra Fransk 2') {
+      if (!isFrench2Unlocked()) continue;
+      var french2Total = (WORD_BANK['Ord fra Fransk 2'] || []).length;
+      if (getFrenchProgress('Ord fra Fransk 2') >= french2Total) continue;
     }
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
     // Skip mastered categories
@@ -9261,22 +9288,28 @@ function renderCategoryLevels() {
     var histStr = hist.length > 0 ? ' (' + correct + '/' + hist.length + ')' : '';
     var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 5;
     var mastered = lvl >= maxLvl;
-    // Ord fra Fransk: hidden until 1 mastered, locked until 2, purchasable, then open
+    // Locked French categories: hidden until N mastered, then locked, then purchasable
     var isFrench = (cat === 'Ord fra Fransk');
-    if (isFrench && masteredCount < 1) continue;
-    var locked = isFrench && masteredCount < 2;
-    var purchasable = isFrench && !locked && !isFrenchUnlocked();
-    var frenchCount = isFrench ? getFrenchProgress() : 0;
-    var frenchTotal = isFrench ? (WORD_BANK['Ord fra Fransk'] || []).length : 0;
-    var frenchMastered = isFrench && isFrenchUnlocked() && frenchCount >= frenchTotal;
-    if (isFrench) mastered = frenchMastered;
+    var isFrench2 = (cat === 'Ord fra Fransk 2');
+    var isAnyFrench = isFrench || isFrench2;
+    var hideThreshold = isFrench ? 1 : isFrench2 ? 3 : 0;
+    var lockThreshold = isFrench ? 2 : isFrench2 ? 4 : 0;
+    if (isAnyFrench && masteredCount < hideThreshold) continue;
+    var locked = isAnyFrench && masteredCount < lockThreshold;
+    var isUnlocked = isFrench ? isFrenchUnlocked() : isFrench2 ? isFrench2Unlocked() : false;
+    var purchasable = isAnyFrench && !locked && !isUnlocked;
+    var fProgress = isAnyFrench ? getFrenchProgress(cat) : 0;
+    var fTotal = isAnyFrench ? (WORD_BANK[cat] || []).length : 0;
+    var fMastered = isAnyFrench && isUnlocked && fProgress >= fTotal;
+    if (isAnyFrench) mastered = fMastered;
     var dimmed = mastered || locked || purchasable;
-    var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/2)' :
+    var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/' + lockThreshold + ')' :
                   purchasable ? '\u{1F512} Locked' :
-                  isFrench ? (frenchMastered ? 'Mestret \u2B50' : frenchCount + '/' + frenchTotal) :
+                  isAnyFrench ? (fMastered ? 'Mestret \u2B50' : fProgress + '/' + fTotal) :
                   (mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/' + (maxLvl - 1));
-    var lvlColor = locked ? '#9ca3af' : purchasable ? 'var(--blue)' : (frenchMastered || mastered) ? 'var(--green)' : isFrench ? 'var(--accent)' : levelColors[Math.min(lvl, 5)];
-    var clickAttr = purchasable ? ' onclick="purchaseFrench()" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem;opacity:0.8;cursor:pointer"' :
+    var lvlColor = locked ? '#9ca3af' : purchasable ? 'var(--blue)' : (fMastered || mastered) ? 'var(--green)' : isAnyFrench ? 'var(--accent)' : levelColors[Math.min(lvl, 5)];
+    var purchaseFn = isFrench ? 'purchaseFrench()' : 'purchaseFrench2()';
+    var clickAttr = purchasable ? ' onclick="' + purchaseFn + '" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem;opacity:0.8;cursor:pointer"' :
       ' style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem' + (dimmed ? ';opacity:0.6' : '') + '"';
     html += '<div' + clickAttr + '>' +
       '<span style="width:20px;text-align:center">' + icon + '</span>' +
@@ -9285,7 +9318,7 @@ function renderCategoryLevels() {
       '<span style="color:var(--muted);font-size:0.7rem;min-width:40px;text-align:right">' + (dimmed ? '' : histStr) + '</span>' +
       '</div>';
     if (locked) {
-      html += '<div style="font-size:0.72rem;color:var(--muted);padding:0 0 4px 28px;opacity:0.7">Opn\u00E5 Mestret i to kategorier for at \u00E5bne</div>';
+      html += '<div style="font-size:0.72rem;color:var(--muted);padding:0 0 4px 28px;opacity:0.7">Opn\u00E5 Mestret i ' + lockThreshold + ' kategorier for at \u00E5bne</div>';
     }
     if (purchasable) {
       html += '<div style="font-size:0.72rem;color:var(--blue);padding:0 0 4px 28px;opacity:0.8">Klik for at l\u00E5se op med 10 \u{1F48E}</div>';

@@ -4891,15 +4891,6 @@
       "misspelling": "psikologi"
     },
     {
-      "word": "renaissance",
-      "hint": "Tidsperiode med kunst og genopdagelse",
-      "patternHint": "Fremmedord fra fransk — 're' plus 'naissance', 'ai' og stumt 'e'",
-      "sentence": "Perioden renaissance var en tid med stor kunst og videnskab.",
-      "level": 4,
-      "category": "Fremmedord",
-      "misspelling": "renæssance"
-    },
-    {
       "word": "balkon",
       "hint": "Lille udendørs platform på en bygning",
       "patternHint": "Fremmedord fra italiensk — staves med 'k' ikke 'c'",
@@ -5858,6 +5849,17 @@
       "level": 5,
       "category": "Ord fra Fransk",
       "misspelling": "buro"
+    }
+  ],
+  "Ord fra Fransk 2": [
+    {
+      "word": "renæssancen",
+      "hint": "Tidsperiode med kunst og genopdagelse",
+      "patternHint": "re + næs + san + cen",
+      "sentence": "Renæssancen var en tid med stor kunst og videnskab.",
+      "level": 5,
+      "category": "Ord fra Fransk 2",
+      "misspelling": "renæsancen"
     }
   ]
 }

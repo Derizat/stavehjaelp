@@ -7905,45 +7905,47 @@ function startRightOrWrong() {
   }
   pool = shuffle(pool);
 
-  // Build items: ~50% correct, ~50% misspelled
-  rfItems = [];
-  for (var i = 0; i < pool.length && rfItems.length < 20; i++) {
-    var ms = generateMisspelling(pool[i]);
-    if (ms) {
-      // Randomly show correct or misspelled version
+  // Fetch DB misspellings, then build items using only words with real user errors
+  var wordList = pool.map(function(w) { return w.word.toLowerCase(); });
+  fetchMisspellings(wordList, function(misByWord) {
+    rfItems = [];
+    for (var i = 0; i < pool.length && rfItems.length < 20; i++) {
+      var dbMis = misByWord[pool[i].word.toLowerCase()];
+      if (!dbMis || dbMis.length === 0) continue;
+      // ~50% correct, ~50% misspelled (using most common DB misspelling)
       if (Math.random() < 0.5) {
         rfItems.push({ word: pool[i].word, displayed: pool[i].word, isCorrect: true, explanation: '', category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
       } else {
-        rfItems.push({ word: pool[i].word, displayed: ms.misspelled, isCorrect: false, explanation: ms.explanation, category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
+        rfItems.push({ word: pool[i].word, displayed: dbMis[0], isCorrect: false, explanation: '', category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
       }
     }
-  }
 
-  if (rfItems.length < 5) {
-    alert('Ikke nok ord til denne \u00F8velse. Pr\u00F8v tr\u00E6ningsmodus i stedet.');
-    return;
-  }
+    if (rfItems.length < 5) {
+      alert('Ikke nok ord med bruger-stavefejl endnu. Pr\u00F8v igen senere eller brug en anden \u00F8velse.');
+      return;
+    }
 
-  rfItems = shuffle(rfItems);
-  rfIndex = 0;
-  rfResults = [];
-  results = [];
-  rfCombo = 0;
-  rfMaxCombo = 0;
+    rfItems = shuffle(rfItems);
+    rfIndex = 0;
+    rfResults = [];
+    results = [];
+    rfCombo = 0;
+    rfMaxCombo = 0;
 
-  document.getElementById('rfScoreCorrect').textContent = '0';
-  document.getElementById('rfScoreWrong').textContent = '0';
+    document.getElementById('rfScoreCorrect').textContent = '0';
+    document.getElementById('rfScoreWrong').textContent = '0';
 
-  hide('phase-welcome');
-  show('phase-rightorwrong');
-  updateRewardBar();
+    hide('phase-welcome');
+    show('phase-rightorwrong');
+    updateRewardBar();
 
-  var b = document.createElement('div');
-  b.className = 'session-badge';
-  b.innerHTML = '\u{1F441}\uFE0F Rigtigt eller forkert \u2014 er ordet stavet rigtigt?';
-  document.getElementById('phase-rightorwrong').appendChild(b);
+    var b = document.createElement('div');
+    b.className = 'session-badge';
+    b.innerHTML = '\u{1F441}\uFE0F Rigtigt eller forkert \u2014 er ordet stavet rigtigt?';
+    document.getElementById('phase-rightorwrong').appendChild(b);
 
-  renderRightOrWrongWord();
+    renderRightOrWrongWord();
+  });
 }
 
 function renderRightOrWrongWord() {

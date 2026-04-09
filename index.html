@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.4.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.4.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1440,6 +1440,7 @@
     <div class="score-box"><div class="num num-green" id="spkScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
     <div class="score-box"><div class="num num-red" id="spkScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
   </div>
+  <div id="spkPatternBadge" class="pattern-badge" style="display:none"></div>
   <div class="listen-box">
     <p class="hint-text" id="spkHint"></p>
     <button class="btn-listen" id="spkListenBtn" onclick="speakSpkWord()">&#x1F508; H&#xf8;r ordet</button>
@@ -4359,7 +4360,15 @@ function showBossMinigame(bossData) {
 
 // --- Shared boss UI helpers ---
 function renderBossHeader(boss, idleAnim, hp, maxHP) {
+  var catBadge = '';
+  if (bossState && bossState.wordObj) {
+    var wo = bossState.wordObj;
+    var icon = CATEGORY_ICONS[wo.category] || '\uD83D\uDD20';
+    var lvlStr = (wo.level !== undefined) ? ' \u2014 niveau ' + wo.level : '';
+    catBadge = '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:4px">' + icon + ' ' + (wo.category || '') + lvlStr + '</div>';
+  }
   return '<div style="text-align:center">' +
+    catBadge +
     '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>' +
     '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:4px" id="bossHPText">HP: ' + hp + '/' + maxHP + '</div>' +
     '<div id="bossMonster" class="boss-monster ' + idleAnim + '">' + boss.emoji + '</div>' +
@@ -8692,6 +8701,7 @@ function renderSpkWord() {
 
   document.getElementById('spkWordNum').textContent = (spkIndex + 1);
   document.getElementById('spkProgressBar').style.width = ((spkIndex / spkWords.length) * 100) + '%';
+  updatePatternBadge('spkPatternBadge', w.category, w.level);
   document.getElementById('spkHint').textContent = '\u{1F4A1} ' + w.hint;
   document.getElementById('spkFeedbackBox').style.display = 'none';
   document.getElementById('spkNextBtn').classList.add('hidden');

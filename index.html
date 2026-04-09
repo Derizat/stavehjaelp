@@ -1126,7 +1126,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -7915,18 +7915,16 @@ function renderWBWord() {
   }
   document.getElementById('wbBuiltWord').innerHTML = slotsHtml;
 
-  // Build shuffled morpheme buttons with optional distractors
+  // Build shuffled morpheme buttons with distractors (always)
   var allMorphemes = wbCurrentMorphemes.slice();
-  // Add 1-2 distractors for short words
-  if (allMorphemes.length <= 3) {
-    var available = DISTRACTOR_MORPHEMES.filter(function(d) {
-      return allMorphemes.indexOf(d) < 0;
-    });
-    available = shuffle(available);
-    var numDistractors = allMorphemes.length <= 2 ? 2 : 1;
-    for (var di = 0; di < numDistractors && di < available.length; di++) {
-      allMorphemes.push(available[di]);
-    }
+  var available = DISTRACTOR_MORPHEMES.filter(function(d) {
+    return allMorphemes.indexOf(d) < 0;
+  });
+  available = shuffle(available);
+  // Always add at least 2 distractors, more for shorter words
+  var numDistractors = allMorphemes.length <= 2 ? 3 : (allMorphemes.length <= 3 ? 2 : 2);
+  for (var di = 0; di < numDistractors && di < available.length; di++) {
+    allMorphemes.push(available[di]);
   }
   wbShuffled = shuffle(allMorphemes);
 

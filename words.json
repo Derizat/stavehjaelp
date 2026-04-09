@@ -1,60 +1,6 @@
 {
   "Stumme bogstaver": [
     {
-      "word": "hvil",
-      "hint": "Hold en pause",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Tag et hvil inden vi går videre.",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "vil"
-    },
-    {
-      "word": "hvæs",
-      "hint": "Lyden en slange laver",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Slangen sagde hvæs!",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "væs"
-    },
-    {
-      "word": "hvid",
-      "hint": "En farve som sne",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Sneen er helt hvid i dag.",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "vid"
-    },
-    {
-      "word": "hjul",
-      "hint": "Rund ting på en cykel",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Cyklen har to hjul.",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "jul"
-    },
-    {
-      "word": "hvad",
-      "hint": "Spørger om en ting",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvad skal vi lege i dag?",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "vad"
-    },
-    {
-      "word": "hvor",
-      "hint": "Spørger om et sted",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvor bor du henne?",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "vor"
-    },
-    {
       "word": "hjem",
       "hint": "Der hvor man bor",
       "patternHint": "stumt 'h' i 'hj'",
@@ -62,312 +8,6 @@
       "level": 1,
       "category": "Stumme bogstaver",
       "misspelling": "jem"
-    },
-    {
-      "word": "hvornår",
-      "hint": "Spørger om tid",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvornår skal vi spise?",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "vornår"
-    },
-    {
-      "word": "hjørne",
-      "hint": "Krog i et rum",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Stolen står henne i hjørne af stuen.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "jørne"
-    },
-    {
-      "word": "hvile",
-      "hint": "Slappe af",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Du skal hvile dig efter løbeturen.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "vile"
-    },
-    {
-      "word": "hjælpe",
-      "hint": "Give en hånd",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Kan du hjælpe mig med opgaven?",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "jælpe"
-    },
-    {
-      "word": "hvem",
-      "hint": "Spørger om en person",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvem har du inviteret til festen?",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "vem"
-    },
-    {
-      "word": "hjerte",
-      "hint": "Pumper blodet rundt",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Dit hjerte pumper blod rundt i kroppen.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "jerte"
-    },
-    {
-      "word": "hvilken",
-      "hint": "Spørger om valg",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvilken farve kan du bedst lide?",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "vilken"
-    },
-    {
-      "word": "hvorfor",
-      "hint": "Spørger om årsag",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvorfor er himlen blå?",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "vorfor"
-    },
-    {
-      "word": "hjerne",
-      "hint": "Sidder inde i hovedet",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Din hjerne arbejder hårdt når du læser.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "jerne"
-    },
-    {
-      "word": "hveps",
-      "hint": "Insekt der kan stikke",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Pas på, der sidder en hveps på dit glas.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "veps"
-    },
-    {
-      "word": "hjort",
-      "hint": "Stort dyr i skoven",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Vi så en hjort i skoven.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "jort"
-    },
-    {
-      "word": "hvisker",
-      "hint": "Taler meget stille",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hun hvisker en hemmelighed til sin veninde.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "visker"
-    },
-    {
-      "word": "halvanden",
-      "hint": "Tallet 1,5",
-      "patternHint": "stumt 'v' i 'halv'",
-      "sentence": "Vi ventede i halvanden time på bussen.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "halanden"
-    },
-    {
-      "word": "tvivler",
-      "hint": "Er usikker på noget",
-      "patternHint": "stumt 'v' foran 'l'",
-      "sentence": "Han tvivler på om det kan passe.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "tivler"
-    },
-    {
-      "word": "hvordan",
-      "hint": "Spørger om måde",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvordan laver man en pandekage?",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vordan"
-    },
-    {
-      "word": "hvæsse",
-      "hint": "Gøre skarp",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Du skal hvæsse din blyant inden timen.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "væsse"
-    },
-    {
-      "word": "dværg",
-      "hint": "Lille eventyrfigur",
-      "patternHint": "stumt 'v' i 'dv'",
-      "sentence": "I eventyret bor der en dværg i skoven.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "dærg"
-    },
-    {
-      "word": "hverdagen",
-      "hint": "Det daglige liv",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "I hverdagen står vi op klokken syv.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "verdagen"
-    },
-    {
-      "word": "hjemmelavet",
-      "hint": "Lavet i eget køkken, ikke købt",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Kagen var hjemmelavet af bedstemor.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "jemmelavet"
-    },
-    {
-      "word": "egentlig",
-      "hint": "Faktisk, i virkeligheden",
-      "patternHint": "stumt 'g'",
-      "sentence": "Hvad vil du egentlig lave når du bliver stor?",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "eentlig"
-    },
-    {
-      "word": "selvfølgelig",
-      "hint": "Naturligvis",
-      "patternHint": "'selv'+'følge'+'lig'",
-      "sentence": "Du må selvfølgelig gerne komme med os.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "sevfølgelig"
-    },
-    {
-      "word": "chokolade",
-      "hint": "Sød brun godbid",
-      "patternHint": "stumt 'h' i 'ch'",
-      "sentence": "Vi fik varm chokolade efter skituren.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "cokolade"
-    },
-    {
-      "word": "fuldstændig",
-      "hint": "Helt og aldeles",
-      "patternHint": "stumt 'd' i 'fuld'",
-      "sentence": "Værelset var fuldstændig rodet.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "fulstændig"
-    },
-    {
-      "word": "ordentlig",
-      "hint": "Pæn og rigtig",
-      "patternHint": "stumt 'd' i udtalen",
-      "sentence": "Ryd venligst ordentlig op efter dig.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "orentlig"
-    },
-    {
-      "word": "afdeling",
-      "hint": "Del af en bygning",
-      "patternHint": "stumt 'd' i 'af-d'",
-      "sentence": "Vi besøgte en afdeling på hospitalet.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "afeling"
-    },
-    {
-      "word": "menneske",
-      "hint": "En person",
-      "patternHint": "stumt 'n' i udtalen",
-      "sentence": "Hvert menneske er unikt og specielt.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "meneske"
-    },
-    {
-      "word": "højre",
-      "hint": "Modsatte side af venstre",
-      "patternHint": "stumt 'j' i udtalen",
-      "sentence": "Drej til højre ved lyskrydset.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "høre"
-    },
-    {
-      "word": "hvælving",
-      "hint": "Buet loft eller tag",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Kirkens hvælving var flot dekoreret.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "vælving"
-    },
-    {
-      "word": "hjemmehørende",
-      "hint": "Hørende til et sted",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Dyret er hjemmehørende i Afrika.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "jemmehørende"
-    },
-    {
-      "word": "hviske",
-      "hint": "Tale meget lavt",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Man skal hviske i biblioteket.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "viske"
-    },
-    {
-      "word": "hval",
-      "hint": "Stort dyr i havet",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Vi så en stor hval fra båden.",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "val"
-    },
-    {
-      "word": "hvass",
-      "hint": "Meget skarp",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Kniven er meget hvass, så pas på.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vass"
-    },
-    {
-      "word": "hvis",
-      "hint": "Betingelse for noget",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvis det regner, bliver vi inde.",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "vis"
-    },
-    {
-      "word": "hver",
-      "hint": "Alle sammen, én ad gangen",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hver dag går vi i skole.",
-      "level": 1,
-      "category": "Stumme bogstaver",
-      "misspelling": "ver"
     },
     {
       "word": "hjemme",
@@ -379,6 +19,42 @@
       "misspelling": "jemme"
     },
     {
+      "word": "hjul",
+      "hint": "Rund ting på en cykel",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Cyklen har to hjul.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "jul"
+    },
+    {
+      "word": "hjælp",
+      "hint": "Når man har brug for en hånd",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Hjælp, jeg kan ikke nå op!",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "jælp"
+    },
+    {
+      "word": "hvad",
+      "hint": "Spørger om en ting",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvad skal vi lege i dag?",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "vad"
+    },
+    {
+      "word": "hval",
+      "hint": "Stort dyr i havet",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Vi så en stor hval fra båden.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "val"
+    },
+    {
       "word": "hvalp",
       "hint": "En lille hund",
       "patternHint": "stumt 'h' i 'hv'",
@@ -386,6 +62,24 @@
       "level": 1,
       "category": "Stumme bogstaver",
       "misspelling": "valp"
+    },
+    {
+      "word": "hver",
+      "hint": "Alle sammen, én ad gangen",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hver dag går vi i skole.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "ver"
+    },
+    {
+      "word": "hvid",
+      "hint": "En farve som sne",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Sneen er helt hvid i dag.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "vid"
     },
     {
       "word": "hvidt",
@@ -397,13 +91,184 @@
       "misspelling": "vidt"
     },
     {
-      "word": "hjælp",
-      "hint": "Når man har brug for en hånd",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Hjælp, jeg kan ikke nå op!",
+      "word": "hvil",
+      "hint": "Hold en pause",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Tag et hvil inden vi går videre.",
       "level": 1,
       "category": "Stumme bogstaver",
-      "misspelling": "jælp"
+      "misspelling": "vil"
+    },
+    {
+      "word": "hvis",
+      "hint": "Betingelse for noget",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvis det regner, bliver vi inde.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "vis"
+    },
+    {
+      "word": "hvor",
+      "hint": "Spørger om et sted",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvor bor du henne?",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "vor"
+    },
+    {
+      "word": "jul",
+      "hint": "Højtid i december med gaver og juletræ",
+      "patternHint": "j, ikke hj",
+      "sentence": "Vi glæder os til jul.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "hjul"
+    },
+    {
+      "word": "vand",
+      "hint": "Det man drikker fra hanen",
+      "patternHint": "v, ikke hv",
+      "sentence": "Må jeg få et glas vand?",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "hvand"
+    },
+    {
+      "word": "vel",
+      "hint": "Nok, formentlig",
+      "patternHint": "v, ikke hv",
+      "sentence": "Du kommer vel til festen?",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "hvel"
+    },
+    {
+      "word": "våd",
+      "hint": "Det modsatte af tør",
+      "patternHint": "v, ikke hv",
+      "sentence": "Hunden blev helt våd i regnen.",
+      "level": 1,
+      "category": "Stumme bogstaver",
+      "misspelling": "hvåd"
+    },
+    {
+      "word": "guld",
+      "hint": "Dyrebart skinnende metal",
+      "patternHint": "stumt 'd' efter 'l'",
+      "sentence": "Ringen er lavet af guld.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "gul"
+    },
+    {
+      "word": "gulv",
+      "hint": "Det man går på indendørs",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Der ligger et tæppe på gulv i stuen.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "gul"
+    },
+    {
+      "word": "halvt",
+      "hint": "50 procent",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Klokken er halvt tre.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "halt"
+    },
+    {
+      "word": "hjelm",
+      "hint": "Beskytter hovedet",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Husk at tage din hjelm på cyklen.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jelm"
+    },
+    {
+      "word": "hjemad",
+      "hint": "I retning af der, hvor man bor",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Vi gik hjemad efter skole.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jemad"
+    },
+    {
+      "word": "hjemve",
+      "hint": "Følelsen af at savne sit hus",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Hun fik hjemve på sommerlejren.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jemve"
+    },
+    {
+      "word": "hjerne",
+      "hint": "Sidder inde i hovedet",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Din hjerne arbejder hårdt når du læser.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jerne"
+    },
+    {
+      "word": "hjerte",
+      "hint": "Pumper blodet rundt",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Dit hjerte pumper blod rundt i kroppen.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jerte"
+    },
+    {
+      "word": "hjord",
+      "hint": "En flok køer eller får",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "En hjord af køer stod på marken.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jord"
+    },
+    {
+      "word": "hjort",
+      "hint": "Stort dyr i skoven",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Vi så en hjort i skoven.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jort"
+    },
+    {
+      "word": "hjælpe",
+      "hint": "Give en hånd",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Kan du hjælpe mig med opgaven?",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jælpe"
+    },
+    {
+      "word": "hjørne",
+      "hint": "Krog i et rum",
+      "patternHint": "stumt 'h' i 'hj'",
+      "sentence": "Stolen står henne i hjørne af stuen.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "jørne"
+    },
+    {
+      "word": "hvalpene",
+      "hint": "De små unger fra en tæve",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvalpene legede i haven.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "valpene"
     },
     {
       "word": "hvalros",
@@ -424,247 +289,40 @@
       "misspelling": "vede"
     },
     {
-      "word": "hvorhen",
-      "hint": "Spørger om retning",
+      "word": "hvem",
+      "hint": "Spørger om en person",
       "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvorhen skal vi køre i dag?",
+      "sentence": "Hvem har du inviteret til festen?",
       "level": 2,
       "category": "Stumme bogstaver",
-      "misspelling": "vorhen"
+      "misspelling": "vem"
     },
     {
-      "word": "hvæse",
-      "hint": "Lave en slangelyd",
+      "word": "hveps",
+      "hint": "Insekt der kan stikke",
       "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Slangen begyndte at hvæse ad os.",
+      "sentence": "Pas på, der sidder en hveps på dit glas.",
       "level": 2,
       "category": "Stumme bogstaver",
-      "misspelling": "væse"
+      "misspelling": "veps"
     },
     {
-      "word": "hjemad",
-      "hint": "I retning af der, hvor man bor",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Vi gik hjemad efter skole.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "jemad"
-    },
-    {
-      "word": "hjelm",
-      "hint": "Beskytter hovedet",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Husk at tage din hjelm på cyklen.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "jelm"
-    },
-    {
-      "word": "halvt",
-      "hint": "50 procent",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Klokken er halvt tre.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "havt"
-    },
-    {
-      "word": "gulv",
-      "hint": "Det man går på indendørs",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Der ligger et tæppe på gulv i stuen.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "guv"
-    },
-    {
-      "word": "tolv",
-      "hint": "Tallet 12",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Der er tolv måneder på et år.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "tov"
-    },
-    {
-      "word": "sølv",
-      "hint": "Et skinnende metal",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Ringen er lavet af sølv.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "søv"
-    },
-    {
-      "word": "hvirvle",
-      "hint": "Dreje rundt og rundt",
+      "word": "hvile",
+      "hint": "Slappe af",
       "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Bladene begyndte at hvirvle i vinden.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "virvle"
-    },
-    {
-      "word": "hvorfra",
-      "hint": "Spørger om oprindelse",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvorfra kommer du egentlig?",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vorfra"
-    },
-    {
-      "word": "hjemkomst",
-      "hint": "Når man vender tilbage",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Familiens hjemkomst blev fejret med kage.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "jemkomst"
-    },
-    {
-      "word": "halvdel",
-      "hint": "Den ene af to dele",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Giv mig en halvdel af æblet.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "havdel"
-    },
-    {
-      "word": "kalv",
-      "hint": "En ung ko",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Bonden har en ny kalv i stalden.",
+      "sentence": "Du skal hvile dig efter løbeturen.",
       "level": 2,
       "category": "Stumme bogstaver",
-      "misspelling": "kav"
+      "misspelling": "vile"
     },
     {
-      "word": "mild",
-      "hint": "Blid og rolig",
-      "patternHint": "stumt 'd' efter 'l'",
-      "sentence": "Vinden er mild i aften.",
+      "word": "hvilken",
+      "hint": "Spørger om valg",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvilken farve kan du bedst lide?",
       "level": 2,
       "category": "Stumme bogstaver",
-      "misspelling": "mil"
-    },
-    {
-      "word": "hvortil",
-      "hint": "Spørger om destination",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvortil skal rejsen gå i år?",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vortil"
-    },
-    {
-      "word": "guld",
-      "hint": "Dyrebart skinnende metal",
-      "patternHint": "stumt 'd' efter 'l'",
-      "sentence": "Ringen er lavet af guld.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "gul"
-    },
-    {
-      "word": "hvælvet",
-      "hint": "En buet form",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Loftet i kirken er hvælvet.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "vælvet"
-    },
-    {
-      "word": "hverdag",
-      "hint": "En almindelig dag",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Det sker ikke hver hverdag men ofte nok.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "verdag"
-    },
-    {
-      "word": "told",
-      "hint": "Afgift på varer",
-      "patternHint": "stumt 'd' efter 'l'",
-      "sentence": "Der skal betales told på varen.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "tol"
-    },
-    {
-      "word": "vild",
-      "hint": "Ikke tam, ukontrolleret",
-      "patternHint": "stumt 'd' efter 'l'",
-      "sentence": "Katten er helt vild med at lege.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "vil"
-    },
-    {
-      "word": "hjemstavns",
-      "hint": "Relateret til den egn man er fra",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "De studerede hjemstavns historie i skolen.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "jemstavns"
-    },
-    {
-      "word": "stiltiende",
-      "hint": "Uden at sige noget",
-      "patternHint": "stumt 'd' i 'tiende'",
-      "sentence": "De indgik en stiltiende aftale.",
-      "level": 4,
-      "category": "Stumme bogstaver",
-      "misspelling": "stiltiene"
-    },
-    {
-      "word": "hvin",
-      "hint": "Skinger lyd fra bremser",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Der kom et højt hvin fra bremserne.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vin"
-    },
-    {
-      "word": "hvas",
-      "hint": "Skarp og kold som vinden",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Vinden var hvas ude ved stranden.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vas"
-    },
-    {
-      "word": "hvisk",
-      "hint": "En meget stille lyd",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hun sagde det med et hvisk.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "visk"
-    },
-    {
-      "word": "hjord",
-      "hint": "En flok køer eller får",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "En hjord af køer stod på marken.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "jord"
-    },
-    {
-      "word": "hvælv",
-      "hint": "Buet tag i en kælder",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Kælderen har et gammelt hvælv.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vælv"
+      "misspelling": "vilken"
     },
     {
       "word": "hvirvel",
@@ -676,13 +334,175 @@
       "misspelling": "virvel"
     },
     {
-      "word": "hjemve",
-      "hint": "Følelsen af at savne sit hus",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Hun fik hjemve på sommerlejren.",
+      "word": "hvisk",
+      "hint": "En meget stille lyd",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hun sagde det med et hvisk.",
       "level": 2,
       "category": "Stumme bogstaver",
-      "misspelling": "jemve"
+      "misspelling": "visk"
+    },
+    {
+      "word": "hvorfor",
+      "hint": "Spørger om årsag",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvorfor er himlen blå?",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "vorfor"
+    },
+    {
+      "word": "hvorhen",
+      "hint": "Spørger om retning",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvorhen skal vi køre i dag?",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "vorhen"
+    },
+    {
+      "word": "hvornår",
+      "hint": "Spørger om tid",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvornår skal vi spise?",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "vornår"
+    },
+    {
+      "word": "hvæs",
+      "hint": "Lyden en slange laver",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Slangen sagde hvæs!",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "væs"
+    },
+    {
+      "word": "hvæse",
+      "hint": "Lave en slangelyd",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Slangen begyndte at hvæse ad os.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "væse"
+    },
+    {
+      "word": "kalv",
+      "hint": "En ung ko",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Bonden har en ny kalv i stalden.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "kal"
+    },
+    {
+      "word": "mild",
+      "hint": "Blid og rolig",
+      "patternHint": "stumt 'd' efter 'l'",
+      "sentence": "Vinden er mild i aften.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "mil"
+    },
+    {
+      "word": "sølv",
+      "hint": "Et skinnende metal",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Ringen er lavet af sølv.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "søl"
+    },
+    {
+      "word": "tolv",
+      "hint": "Tallet 12",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Der er tolv måneder på et år.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "tol"
+    },
+    {
+      "word": "vaske",
+      "hint": "Gøre rent med vand og sæbe",
+      "patternHint": "v, ikke hv",
+      "sentence": "Husk at vaske hænder før maden.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "hvaske"
+    },
+    {
+      "word": "vejr",
+      "hint": "Sol, regn, vind og sne",
+      "patternHint": "v, ikke hv",
+      "sentence": "Vejret er flot i dag.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "hvejr"
+    },
+    {
+      "word": "vild",
+      "hint": "Ikke tam, ukontrolleret",
+      "patternHint": "stumt 'd' efter 'l'",
+      "sentence": "Katten er helt vild med at lege.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "vil"
+    },
+    {
+      "word": "vise",
+      "hint": "Lade nogen se noget",
+      "patternHint": "v, ikke hv",
+      "sentence": "Kan du vise mig din tegning?",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "hvise"
+    },
+    {
+      "word": "vælge",
+      "hint": "Bestemme sig for én ting",
+      "patternHint": "v, ikke hv",
+      "sentence": "Du må vælge mellem is og kage.",
+      "level": 2,
+      "category": "Stumme bogstaver",
+      "misspelling": "hvælge"
+    },
+    {
+      "word": "dværg",
+      "hint": "Lille eventyrfigur",
+      "patternHint": "stumt 'v' i 'dv'",
+      "sentence": "I eventyret bor der en dværg i skoven.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "dvær"
+    },
+    {
+      "word": "halvanden",
+      "hint": "Tallet 1,5",
+      "patternHint": "stumt 'v' i 'halv'",
+      "sentence": "Vi ventede i halvanden time på bussen.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "halanden"
+    },
+    {
+      "word": "halvdel",
+      "hint": "Den ene af to dele",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Giv mig en halvdel af æblet.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "haldel"
+    },
+    {
+      "word": "halvfems",
+      "hint": "Tallet 90",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Min oldemor blev halvfems år gammel.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "halfems"
     },
     {
       "word": "halvmåne",
@@ -691,52 +511,25 @@
       "sentence": "Der var en smuk halvmåne på himlen i nat.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "havmåne"
+      "misspelling": "halmåne"
     },
     {
-      "word": "hvileplads",
-      "hint": "Sted langs vejen hvor man holder pause",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Vi holdt ind på en hvileplads.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "vileplads"
-    },
-    {
-      "word": "hvalpene",
-      "hint": "De små unger fra en tæve",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hvalpene legede i haven.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "valpene"
-    },
-    {
-      "word": "halvø",
-      "hint": "Land med vand på tre sider",
+      "word": "halvtreds",
+      "hint": "Tallet 50",
       "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Danmark ligger på en halvø.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "havø"
-    },
-    {
-      "word": "hjælpsom",
-      "hint": "En der gerne giver en hånd",
-      "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Min nabo er meget hjælpsom.",
+      "sentence": "Der var halvtreds elever til eksamen.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "jælpsom"
+      "misspelling": "haltres"
     },
     {
-      "word": "hverdags",
-      "hint": "Noget der hører til det daglige",
-      "patternHint": "stumt 'h' i 'hv'",
-      "sentence": "Hun havde sit hverdags tøj på.",
+      "word": "halvvejs",
+      "hint": "Midtvejs, halvt fremme",
+      "patternHint": "stumt 'l' foran 'v'",
+      "sentence": "Vi er halvvejs til sommerhuset.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "verdags"
+      "misspelling": "halvejs"
     },
     {
       "word": "hjemlig",
@@ -748,31 +541,49 @@
       "misspelling": "jemlig"
     },
     {
-      "word": "halvkreds",
-      "hint": "En halv cirkel",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Børnene sad i en halvkreds.",
-      "level": 3,
-      "category": "Stumme bogstaver",
-      "misspelling": "havkreds"
-    },
-    {
-      "word": "hjælpeløs",
-      "hint": "Kan ikke klare sig uden andre",
+      "word": "hjælpsom",
+      "hint": "En der gerne giver en hånd",
       "patternHint": "stumt 'h' i 'hj'",
-      "sentence": "Killingen var helt hjælpeløs.",
+      "sentence": "Min nabo er meget hjælpsom.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "jælpeløs"
+      "misspelling": "jælpsom"
     },
     {
-      "word": "halvvejs",
-      "hint": "Midtvejs, halvt fremme",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Vi er halvvejs til sommerhuset.",
+      "word": "hvas",
+      "hint": "Skarp og kold som vinden",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Vinden var hvas ude ved stranden.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "havvejs"
+      "misspelling": "vas"
+    },
+    {
+      "word": "hverdagen",
+      "hint": "Det daglige liv",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "I hverdagen står vi op klokken syv.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "verdagen"
+    },
+    {
+      "word": "hverdags",
+      "hint": "Noget der hører til det daglige",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hun havde sit hverdags tøj på.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "verdags"
+    },
+    {
+      "word": "hvileplads",
+      "hint": "Sted langs vejen hvor man holder pause",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Vi holdt ind på en hvileplads.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "vileplads"
     },
     {
       "word": "hvilestol",
@@ -784,40 +595,76 @@
       "misspelling": "vilestol"
     },
     {
-      "word": "dværgagtig",
-      "hint": "Meget lille af størrelse",
-      "patternHint": "stumt 'v' i 'dv'",
-      "sentence": "Hunden var helt dværgagtig sammenlignet med de andre.",
+      "word": "hvin",
+      "hint": "Skinger lyd fra bremser",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Der kom et højt hvin fra bremserne.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "dærgagtig"
+      "misspelling": "vin"
     },
     {
-      "word": "halvfems",
-      "hint": "Tallet 90",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Min oldemor blev halvfems år gammel.",
+      "word": "hvirvle",
+      "hint": "Dreje rundt og rundt",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Bladene begyndte at hvirvle i vinden.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "havfems"
+      "misspelling": "virvle"
     },
     {
-      "word": "halvtreds",
-      "hint": "Tallet 50",
-      "patternHint": "stumt 'l' foran 'v'",
-      "sentence": "Der var halvtreds elever til eksamen.",
+      "word": "hvisker",
+      "hint": "Taler meget stille",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hun hvisker en hemmelighed til sin veninde.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "havtreds"
+      "misspelling": "visker"
     },
     {
-      "word": "tallerken",
-      "hint": "Flad ting man spiser af",
-      "patternHint": "stumt 'l' i udtalen",
-      "sentence": "Sæt venligst en tallerken på bordet.",
+      "word": "hvordan",
+      "hint": "Spørger om måde",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvordan laver man en pandekage?",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "talerken"
+      "misspelling": "vordan"
+    },
+    {
+      "word": "hvorfra",
+      "hint": "Spørger om oprindelse",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvorfra kommer du egentlig?",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "vorfra"
+    },
+    {
+      "word": "hvortil",
+      "hint": "Spørger om destination",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Hvortil skal rejsen gå i år?",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "vortil"
+    },
+    {
+      "word": "hvælv",
+      "hint": "Buet tag i en kælder",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Kælderen har et gammelt hvælv.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "vælv"
+    },
+    {
+      "word": "hvæsse",
+      "hint": "Gøre skarp",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Du skal hvæsse din blyant inden timen.",
+      "level": 3,
+      "category": "Stumme bogstaver",
+      "misspelling": "væsse"
     },
     {
       "word": "skulder",
@@ -826,25 +673,61 @@
       "sentence": "Han lagde armen om hendes skulder.",
       "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "skuder"
+      "misspelling": "skuller"
     },
     {
-      "word": "folkelig",
-      "hint": "Tæt på almindelige borgere",
-      "patternHint": "stumt 'l' i udtalen",
-      "sentence": "Festivalen havde en folkelig stemning.",
-      "level": 4,
+      "word": "told",
+      "hint": "Afgift på varer",
+      "patternHint": "stumt 'd' efter 'l'",
+      "sentence": "Der skal betales told på varen.",
+      "level": 3,
       "category": "Stumme bogstaver",
-      "misspelling": "fokelig"
+      "misspelling": "tol"
     },
     {
-      "word": "stilfærdig",
-      "hint": "Rolig og beskeden",
-      "patternHint": "stumt 'l' i udtalen",
-      "sentence": "Min ven er stilfærdig og meget venlig.",
+      "word": "egentlig",
+      "hint": "Faktisk, i virkeligheden",
+      "patternHint": "stumt 'g'",
+      "sentence": "Hvad vil du egentlig lave når du bliver stor?",
       "level": 4,
       "category": "Stumme bogstaver",
-      "misspelling": "stifærdig"
+      "misspelling": "entlig"
+    },
+    {
+      "word": "fuldstændig",
+      "hint": "Helt og aldeles",
+      "patternHint": "stumt 'd' i 'fuld'",
+      "sentence": "Værelset var fuldstændig rodet.",
+      "level": 4,
+      "category": "Stumme bogstaver",
+      "misspelling": "fulstændig"
+    },
+    {
+      "word": "hvælvet",
+      "hint": "En buet form",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Loftet i kirken er hvælvet.",
+      "level": 4,
+      "category": "Stumme bogstaver",
+      "misspelling": "vælvet"
+    },
+    {
+      "word": "hvælving",
+      "hint": "Buet loft eller tag",
+      "patternHint": "stumt 'h' i 'hv'",
+      "sentence": "Kirkens hvælving var flot dekoreret.",
+      "level": 4,
+      "category": "Stumme bogstaver",
+      "misspelling": "vælving"
+    },
+    {
+      "word": "selvfølgelig",
+      "hint": "Naturligvis",
+      "patternHint": "'selv'+'følge'+'lig'",
+      "sentence": "Du må selvfølgelig gerne komme med os.",
+      "level": 4,
+      "category": "Stumme bogstaver",
+      "misspelling": "sevfølgelig"
     }
   ],
   "Dobbeltkonsonant": [
@@ -1675,6 +1558,24 @@
       "level": 4,
       "category": "Dobbeltkonsonant",
       "misspelling": "terarium"
+    },
+    {
+      "word": "tallerken",
+      "hint": "Flad ting man spiser af",
+      "patternHint": "stumt 'l' i udtalen",
+      "sentence": "Sæt venligst en tallerken på bordet.",
+      "level": 3,
+      "category": "Dobbeltkonsonant",
+      "misspelling": "talerken"
+    },
+    {
+      "word": "menneske",
+      "hint": "En person",
+      "patternHint": "stumt 'n' i udtalen",
+      "sentence": "Hvert menneske er unikt og specielt.",
+      "level": 4,
+      "category": "Dobbeltkonsonant",
+      "misspelling": "meneske"
     }
   ],
   "For- og efterstavelser": [

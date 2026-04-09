@@ -9219,7 +9219,7 @@ function renderCategoryLevels() {
     if (isFrench) mastered = frenchMastered;
     var dimmed = mastered || locked || purchasable;
     var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/2)' :
-                  purchasable ? '\u{1F48E} 10 gems' :
+                  purchasable ? '\u{1F512} Locked' :
                   isFrench ? (frenchMastered ? 'Mestret \u2B50' : frenchCount + '/' + frenchTotal) :
                   (mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/' + (maxLvl - 1));
     var lvlColor = locked ? '#9ca3af' : purchasable ? 'var(--blue)' : (frenchMastered || mastered) ? 'var(--green)' : isFrench ? 'var(--accent)' : levelColors[Math.min(lvl, 5)];

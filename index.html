@@ -4655,6 +4655,22 @@ function renderBossCardcast(word, boss, idleAnim) {
   bossState.ccLetterIndex = 0;
   bossState.ccLives = 2;
 
+  // Keyboard support: press a letter key to cast the first matching unplayed card
+  if (bossState._ccKeyHandler) document.removeEventListener('keydown', bossState._ccKeyHandler);
+  bossState._ccKeyHandler = function(e) {
+    if (!bossState || bossState.battleType !== 'cardcast') return;
+    var key = e.key.toLowerCase();
+    if (key.length !== 1) return;
+    var cards = document.querySelectorAll('.cardcast-card:not(.played)');
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].dataset.letter === key) {
+        castCard(parseInt(cards[i].dataset.index));
+        return;
+      }
+    }
+  };
+  document.addEventListener('keydown', bossState._ccKeyHandler);
+
   // Play the word
   speakWord(word, null);
 }
@@ -5386,6 +5402,7 @@ function bossDefeated() {
   cleanupPacman();
   cleanupHighway();
   cleanupSnake();
+  if (bossState && bossState._ccKeyHandler) document.removeEventListener('keydown', bossState._ccKeyHandler);
   bossState = null;
 
   var monster = document.getElementById('bossMonster');

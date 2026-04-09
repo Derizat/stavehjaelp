@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.3.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -3589,7 +3589,7 @@ function renderWord() {
   // Show sentence with blank for the word
   if (sentEl) {
     if (w.sentence) {
-      var sentRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+      var sentRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøå]*\\b', 'i');
       var blankSpan = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);padding:2px 4px">&nbsp;</span>';
       var cloze = w.sentence.replace(sentRegex, blankSpan);
       if (cloze === w.sentence) cloze = w.sentence + ' ' + blankSpan;
@@ -8845,7 +8845,7 @@ function renderSentenceWord(wordObj) {
 
   // Build cloze sentence: replace the word with ___
   var sentence = w.sentence || '';
-  var wordRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+  var wordRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøå]*\\b', 'i');
   var blank = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);padding:2px 4px">&nbsp;</span>';
   var clozeText = sentence.replace(wordRegex, blank);
 

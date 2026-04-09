@@ -409,7 +409,7 @@
       "word": "vejr",
       "hint": "Sol, regn, vind og sne",
       "patternHint": "v, ikke hv",
-      "sentence": "Vejret er flot i dag.",
+      "sentence": "I dag er det godt vejr.",
       "level": 2,
       "category": "Stumme bogstaver",
       "misspelling": "hvejr"
@@ -3657,7 +3657,7 @@
       "word": "termometer",
       "hint": "Måler hvor varmt eller koldt det er",
       "patternHint": "Alle bogstaver lyder som de skrives — fire stavelser",
-      "sentence": "Termometeret viste 30 grader i dag.",
+      "sentence": "Mor har et termometer i køkkenet.",
       "level": 4,
       "category": "Lydrette ord",
       "misspelling": "terrmometer"
@@ -3666,7 +3666,7 @@
       "word": "trampolin",
       "hint": "Noget man hopper på i haven",
       "patternHint": "Alle bogstaver lyder som de skrives — tre stavelser",
-      "sentence": "Vi hoppede på trampolinen hele dagen.",
+      "sentence": "Vi har en trampolin i haven.",
       "level": 4,
       "category": "Lydrette ord",
       "misspelling": "trrampolin"
@@ -4714,7 +4714,7 @@
       "word": "jungle",
       "hint": "Tæt tropisk skov",
       "patternHint": "Fremmedord fra hindi/engelsk — 'j' udtales som 'dj'",
-      "sentence": "Der bor mange dyr i junglen.",
+      "sentence": "Tigeren lever i jungle og skov.",
       "level": 3,
       "category": "Fremmedord",
       "misspelling": "jungl"
@@ -4723,7 +4723,7 @@
       "word": "bibliotek",
       "hint": "Sted hvor man låner bøger",
       "patternHint": "Fremmedord fra græsk — 'th' udtales som 't', og 'ek' til sidst",
-      "sentence": "Vi låner bøger på biblioteket hver uge.",
+      "sentence": "Vi skal hen på bibliotek og låne bøger.",
       "level": 3,
       "category": "Fremmedord",
       "misspelling": "bibloitek"
@@ -4759,7 +4759,7 @@
       "word": "terapeut",
       "hint": "Person der hjælper folk med problemer",
       "patternHint": "Fremmedord fra græsk — staves med 'th' der udtales som 't'",
-      "sentence": "Terapeuten hjalp drengen med at tale om sine følelser.",
+      "sentence": "Han går til en terapeut en gang om ugen.",
       "level": 3,
       "category": "Fremmedord",
       "misspelling": "teraeput"
@@ -4858,7 +4858,7 @@
       "word": "koreografi",
       "hint": "Planlagte dansetrin til musik",
       "patternHint": "Fremmedord fra græsk — 'koreo' plus 'grafi', staves med 'e' og 'o'",
-      "sentence": "Danserne øvede koreografien til showet.",
+      "sentence": "Hun skal lave koreografi til skolens musical.",
       "level": 2,
       "category": "Fremmedord",
       "misspelling": "koreorgafi"
@@ -4903,7 +4903,7 @@
       "word": "balkon",
       "hint": "Lille udendørs platform på en bygning",
       "patternHint": "Fremmedord fra italiensk — staves med 'k' ikke 'c'",
-      "sentence": "Vi sad på balkonen og nød solen.",
+      "sentence": "Lejligheden har en stor balkon.",
       "level": 3,
       "category": "Fremmedord",
       "misspelling": "balokn"
@@ -4939,7 +4939,7 @@
       "word": "hieroglyf",
       "hint": "Gammelt egyptisk billedtegn",
       "patternHint": "Fremmedord fra græsk — staves med 'ie', 'gl' og 'y'",
-      "sentence": "Egypterne skrev med hieroglyffer på væggene.",
+      "sentence": "En hieroglyf er et gammelt egyptisk tegn.",
       "level": 4,
       "category": "Fremmedord",
       "misspelling": "hieroglif"
@@ -4957,7 +4957,7 @@
       "word": "zoologisk",
       "hint": "Noget der handler om dyr og dyreliv",
       "patternHint": "zoo (z som s)",
-      "sentence": "Vi tog i den zoologiske have i går.",
+      "sentence": "Det er et zoologisk museum med mange dyr.",
       "level": 3,
       "category": "Fremmedord",
       "misspelling": "sooologisk"
@@ -5546,7 +5546,7 @@
       "word": "vippe",
       "hint": "Legeredskab man kan gynge op og ned på",
       "patternHint": "pp ikke bb",
-      "sentence": "Børnene legede på vippen i parken.",
+      "sentence": "Der er en vippe på legepladsen.",
       "level": 1,
       "category": "Konsonantlyde",
       "misspelling": "vibbe"
@@ -5573,7 +5573,7 @@
       "word": "lappe",
       "hint": "Reparere et hul med et stykke stof",
       "patternHint": "pp ikke bb",
-      "sentence": "Far lappede hullet i cykeldækket.",
+      "sentence": "Far skal lappe hullet i cykeldækket.",
       "level": 1,
       "category": "Konsonantlyde",
       "misspelling": "labbe"
@@ -5600,7 +5600,7 @@
       "word": "pige",
       "hint": "Et ungt menneske der ikke er en dreng",
       "patternHint": "g ikke j",
-      "sentence": "Pigen løb hen over legepladsen.",
+      "sentence": "Der var en pige på legepladsen.",
       "level": 1,
       "category": "Konsonantlyde",
       "misspelling": "pije"
@@ -5627,7 +5627,7 @@
       "word": "klappe",
       "hint": "Slå hænderne sammen",
       "patternHint": "pp ikke bb",
-      "sentence": "Alle klappede efter forestillingen.",
+      "sentence": "Alle begyndte at klappe efter sangen.",
       "level": 2,
       "category": "Konsonantlyde",
       "misspelling": "klabbe"
@@ -5654,7 +5654,7 @@
       "word": "stoppe",
       "hint": "Holde op med at bevæge sig",
       "patternHint": "pp ikke bb",
-      "sentence": "Bussen stoppede ved næste stoppested.",
+      "sentence": "Bussen plejer at stoppe her.",
       "level": 2,
       "category": "Konsonantlyde",
       "misspelling": "stobbe"
@@ -5663,7 +5663,7 @@
       "word": "hakke",
       "hint": "Hugge i noget med et redskab",
       "patternHint": "kk ikke gg",
-      "sentence": "Spætten hakkede i træet.",
+      "sentence": "Spætten kan hakke hul i træet.",
       "level": 2,
       "category": "Konsonantlyde",
       "misspelling": "hagge"
@@ -5672,7 +5672,7 @@
       "word": "tikke",
       "hint": "Den lyd et ur laver",
       "patternHint": "kk ikke gg",
-      "sentence": "Uret tikkede stille i mørket.",
+      "sentence": "Man kan høre uret tikke om natten.",
       "level": 2,
       "category": "Konsonantlyde",
       "misspelling": "tigge"
@@ -5735,7 +5735,7 @@
       "word": "rykke",
       "hint": "Trække hurtigt og hårdt",
       "patternHint": "kk ikke gg",
-      "sentence": "Han rykkede i dørhåndtaget.",
+      "sentence": "Du skal rykke stolen hen til bordet.",
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "rygge"
@@ -5753,7 +5753,7 @@
       "word": "vække",
       "hint": "Få nogen til at vågne",
       "patternHint": "kk ikke gg",
-      "sentence": "Vækkeuret vækkede ham klokken syv.",
+      "sentence": "Kan du vække mig klokken syv?",
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "vægge"
@@ -5762,7 +5762,7 @@
       "word": "sukke",
       "hint": "Trække vejret dybt når man er træt eller ked af det",
       "patternHint": "kk ikke gg",
-      "sentence": "Hun sukkede dybt over lektierne.",
+      "sentence": "Det fik hende til at sukke dybt.",
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "sugge"
@@ -5771,7 +5771,7 @@
       "word": "slikke",
       "hint": "Røre ved noget med tungen",
       "patternHint": "kk ikke gg",
-      "sentence": "Katten slikkede sig om munden.",
+      "sentence": "Katten kan godt lide at slikke sig om munden.",
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "sligge"
@@ -5827,7 +5827,7 @@
       "word": "chauffør",
       "hint": "Person der kører bil som arbejde",
       "patternHint": "ch som sj, au, ff + ør",
-      "sentence": "Chaufføren kørte bussen til skolen.",
+      "sentence": "Min far arbejder som chauffør.",
       "level": 5,
       "category": "Ord fra Fransk",
       "misspelling": "sjåfør"

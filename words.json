@@ -3372,7 +3372,7 @@
       "sentence": "Vi legede i parken i går.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "legte"
+      "misspelling": "leged"
     },
     {
       "word": "hoppede",
@@ -3381,7 +3381,7 @@
       "sentence": "Katten hoppede op på bordet.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "hoppte"
+      "misspelling": "hopped"
     },
     {
       "word": "sov",
@@ -3390,7 +3390,7 @@
       "sentence": "Barnet sov hele natten.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "svo"
+      "misspelling": "sovede"
     },
     {
       "word": "drak",
@@ -3399,7 +3399,7 @@
       "sentence": "Hun drak et glas mælk.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "drka"
+      "misspelling": "drikede"
     },
     {
       "word": "sang",
@@ -3408,7 +3408,7 @@
       "sentence": "Vi sang fødselsdagssang for ham.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "sagn"
+      "misspelling": "syngede"
     },
     {
       "word": "løb",
@@ -3417,7 +3417,7 @@
       "sentence": "Hunden løb hen over græsset.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "lbø"
+      "misspelling": "løbede"
     },
     {
       "word": "malede",
@@ -3426,7 +3426,7 @@
       "sentence": "Vi malede et billede i kunst.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "malte"
+      "misspelling": "maled"
     },
     {
       "word": "sagde",
@@ -3435,7 +3435,7 @@
       "sentence": "Hun sagde godnat til os alle.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "sadge"
+      "misspelling": "sigede"
     },
     {
       "word": "cyklede",
@@ -3444,7 +3444,7 @@
       "sentence": "Jeg cyklede til skole i dag.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "cyklte"
+      "misspelling": "cykled"
     },
     {
       "word": "købte",
@@ -3489,7 +3489,7 @@
       "sentence": "Han kastede bolden over hegnet.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "kastte"
+      "misspelling": "kasted"
     },
     {
       "word": "fandt",
@@ -3498,7 +3498,7 @@
       "sentence": "Vi fandt en fin sten på stranden.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "fandte"
+      "misspelling": "findede"
     },
     {
       "word": "skrev",
@@ -3507,7 +3507,7 @@
       "sentence": "Hun skrev et langt brev til sin veninde.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "skerv"
+      "misspelling": "skrivede"
     },
     {
       "word": "havde",
@@ -3516,7 +3516,7 @@
       "sentence": "Vi havde det sjovt til festen.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "hadve"
+      "misspelling": "havede"
     },
     {
       "word": "bestemte",
@@ -3543,7 +3543,7 @@
       "sentence": "Forskeren opdagede en helt ny dyreart.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "opdagte"
+      "misspelling": "opdaged"
     },
     {
       "word": "undskyldte",
@@ -3561,7 +3561,7 @@
       "sentence": "Lægen behandlede patienten med det samme.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "behandlte"
+      "misspelling": "behandled"
     },
     {
       "word": "besluttede",
@@ -3570,7 +3570,7 @@
       "sentence": "Familien besluttede at flytte til landet.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "besluttte"
+      "misspelling": "beslutted"
     },
     {
       "word": "fortsatte",
@@ -3588,7 +3588,7 @@
       "sentence": "Skolen modtog mange nye elever.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "modotg"
+      "misspelling": "modtagede"
     },
     {
       "word": "forsvandt",
@@ -3597,7 +3597,7 @@
       "sentence": "Katten forsvandt ud i mørket.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "forsvandte"
+      "misspelling": "forsvindede"
     },
     {
       "word": "udviklet",
@@ -3606,7 +3606,7 @@
       "sentence": "Holdet har udviklet en ny strategi.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "udviklt"
+      "misspelling": "udviklede"
     },
     {
       "word": "overrasket",
@@ -3615,7 +3615,7 @@
       "sentence": "Vi blev fuldstændig overrasket over resultatet.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "overraskt"
+      "misspelling": "overraskede"
     },
     {
       "word": "produceret",
@@ -3624,7 +3624,7 @@
       "sentence": "Filmen er produceret i Danmark.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "producert"
+      "misspelling": "producerede"
     },
     {
       "word": "organiseret",
@@ -3633,7 +3633,7 @@
       "sentence": "Festen var godt organiseret af elevrådet.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "organisert"
+      "misspelling": "organiserede"
     },
     {
       "word": "koncentreret",
@@ -3642,7 +3642,7 @@
       "sentence": "Hun arbejdede koncentreret hele aftenen.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "koncentrert"
+      "misspelling": "koncentrerede"
     },
     {
       "word": "identificeret",
@@ -3651,7 +3651,7 @@
       "sentence": "Problemet er blevet identificeret af teknikerne.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "identificert"
+      "misspelling": "identificerede"
     },
     {
       "word": "analyseret",
@@ -3660,7 +3660,7 @@
       "sentence": "Resultaterne er grundigt analyseret.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "analysert"
+      "misspelling": "analyserede"
     },
     {
       "word": "diskuteret",
@@ -3669,7 +3669,7 @@
       "sentence": "Emnet blev diskuteret i klassen.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "diskutert"
+      "misspelling": "diskuterede"
     },
     {
       "word": "kommunikeret",
@@ -3678,7 +3678,7 @@
       "sentence": "Beskeden blev klart kommunikeret til alle.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "kommunikert"
+      "misspelling": "kommunikerede"
     },
     {
       "word": "dokumenteret",
@@ -3687,7 +3687,7 @@
       "sentence": "Alt er omhyggeligt dokumenteret i rapporten.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "dokumentert"
+      "misspelling": "dokumenterede"
     },
     {
       "word": "løber",
@@ -3696,7 +3696,7 @@
       "sentence": "Hunden løber rundt i haven.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "løebr"
+      "misspelling": "løbe"
     },
     {
       "word": "synger",
@@ -3705,7 +3705,7 @@
       "sentence": "Fuglen synger i træet.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "synegr"
+      "misspelling": "synge"
     },
     {
       "word": "svømmede",
@@ -3714,7 +3714,7 @@
       "sentence": "Vi svømmede i søen hele dagen.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "svømmte"
+      "misspelling": "svømmed"
     },
     {
       "word": "faldt",
@@ -3723,7 +3723,7 @@
       "sentence": "Han faldt ned fra gyngen.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "faldte"
+      "misspelling": "faldede"
     },
     {
       "word": "gav",
@@ -3732,7 +3732,7 @@
       "sentence": "Mor gav mig en is.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "gva"
+      "misspelling": "givede"
     },
     {
       "word": "sad",
@@ -3741,7 +3741,7 @@
       "sentence": "Vi sad stille i klassen.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "sda"
+      "misspelling": "siddede"
     },
     {
       "word": "stod",
@@ -3750,7 +3750,7 @@
       "sentence": "Han stod ved døren og ventede.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "stdo"
+      "misspelling": "ståede"
     },
     {
       "word": "tog",
@@ -3759,7 +3759,7 @@
       "sentence": "Hun tog sin taske og gik.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "tgo"
+      "misspelling": "tagede"
     },
     {
       "word": "spurgte",
@@ -3795,7 +3795,7 @@
       "sentence": "Filmen sluttede klokken ni.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "sluttte"
+      "misspelling": "slutted"
     },
     {
       "word": "øvede",
@@ -3804,7 +3804,7 @@
       "sentence": "Vi øvede os på diktat hver dag.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "øvte"
+      "misspelling": "øved"
     },
     {
       "word": "gemte",
@@ -3822,7 +3822,7 @@
       "sentence": "Brandmanden reddede katten fra træet.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "reddte"
+      "misspelling": "redded"
     },
     {
       "word": "råbte",
@@ -3840,7 +3840,7 @@
       "sentence": "Den nye chef overtog ansvaret.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "ovetrog"
+      "misspelling": "overtagede"
     },
     {
       "word": "afslørede",
@@ -3849,7 +3849,7 @@
       "sentence": "Detektiven afslørede tyven.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "afslørte"
+      "misspelling": "afsløred"
     },
     {
       "word": "forklarede",
@@ -3858,7 +3858,7 @@
       "sentence": "Læreren forklarede reglen tydeligt.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "forklarte"
+      "misspelling": "forklared"
     },
     {
       "word": "udviklede",
@@ -3867,7 +3867,7 @@
       "sentence": "Firmaet udviklede en ny app.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "udviklte"
+      "misspelling": "udvikled"
     },
     {
       "word": "oplevede",
@@ -3876,7 +3876,7 @@
       "sentence": "Vi oplevede en fantastisk solnedgang.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "oplevte"
+      "misspelling": "opleved"
     },
     {
       "word": "mistede",
@@ -3885,7 +3885,7 @@
       "sentence": "Han mistede sin pung på toget.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "mistte"
+      "misspelling": "misted"
     },
     {
       "word": "lykkedes",
@@ -3894,7 +3894,7 @@
       "sentence": "Det lykkedes os at nå toget.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "lykkdees"
+      "misspelling": "lykkede"
     },
     {
       "word": "konfronteret",
@@ -3903,7 +3903,7 @@
       "sentence": "Han blev konfronteret med sandheden.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "konfrontert"
+      "misspelling": "konfronterede"
     },
     {
       "word": "reflekteret",
@@ -3912,7 +3912,7 @@
       "sentence": "Hun havde reflekteret over situationen.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "reflektert"
+      "misspelling": "reflekterede"
     },
     {
       "word": "præsenteret",
@@ -3921,7 +3921,7 @@
       "sentence": "Projektet blev præsenteret for klassen.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "præsentert"
+      "misspelling": "præsenterede"
     },
     {
       "word": "konstrueret",
@@ -3930,7 +3930,7 @@
       "sentence": "Broen er konstrueret af stål og beton.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "konstruert"
+      "misspelling": "konstruerede"
     },
     {
       "word": "accepteret",
@@ -3939,7 +3939,7 @@
       "sentence": "Forslaget blev accepteret af alle.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "acceptert"
+      "misspelling": "accepterede"
     },
     {
       "word": "reduceret",
@@ -3948,7 +3948,7 @@
       "sentence": "Prisen er reduceret med tyve procent.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "reducert"
+      "misspelling": "reducerede"
     },
     {
       "word": "hoppet",
@@ -3957,7 +3957,7 @@
       "sentence": "Kaninen har hoppet over hegnet.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "hoppt"
+      "misspelling": "hoppede"
     },
     {
       "word": "spist",
@@ -3966,7 +3966,7 @@
       "sentence": "Vi har spist al maden.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "spiste"
+      "misspelling": "spiset"
     },
     {
       "word": "leget",
@@ -3975,7 +3975,7 @@
       "sentence": "Børnene har leget hele dagen.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "legt"
+      "misspelling": "legede"
     },
     {
       "word": "sovet",
@@ -3984,7 +3984,7 @@
       "sentence": "Katten har sovet på sofaen.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "sovt"
+      "misspelling": "sovede"
     },
     {
       "word": "malet",
@@ -3993,7 +3993,7 @@
       "sentence": "Hun har malet et smukt billede.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "malt"
+      "misspelling": "malede"
     },
     {
       "word": "grinede",
@@ -4002,7 +4002,7 @@
       "sentence": "Vi grinede af den sjove film.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "grinte"
+      "misspelling": "grined"
     },
     {
       "word": "vinkede",
@@ -4011,7 +4011,7 @@
       "sentence": "Hun vinkede farvel fra vinduet.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "vinkte"
+      "misspelling": "vinked"
     },
     {
       "word": "klappede",
@@ -4020,7 +4020,7 @@
       "sentence": "Publikum klappede efter sangen.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "klappte"
+      "misspelling": "klapped"
     },
     {
       "word": "pakkede",
@@ -4029,7 +4029,7 @@
       "sentence": "Vi pakkede kufferten inden ferien.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "pakkte"
+      "misspelling": "pakked"
     },
     {
       "word": "trillede",
@@ -4038,7 +4038,7 @@
       "sentence": "Bolden trillede ned ad bakken.",
       "level": 1,
       "category": "Verbernes bøjning",
-      "misspelling": "trillte"
+      "misspelling": "trilled"
     },
     {
       "word": "fortalte",
@@ -4065,7 +4065,7 @@
       "sentence": "Hun svarede rigtigt på alle spørgsmål.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "svarte"
+      "misspelling": "svared"
     },
     {
       "word": "troede",
@@ -4074,7 +4074,7 @@
       "sentence": "Han troede på julemanden.",
       "level": 2,
       "category": "Verbernes bøjning",
-      "misspelling": "trote"
+      "misspelling": "troed"
     },
     {
       "word": "forberedte",
@@ -4101,7 +4101,7 @@
       "sentence": "Han begrundede sit valg grundigt.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "begrundte"
+      "misspelling": "begrunded"
     },
     {
       "word": "forestillede",
@@ -4110,7 +4110,7 @@
       "sentence": "Hun forestillede sig en rejse til Mars.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "forestillte"
+      "misspelling": "forestilled"
     },
     {
       "word": "overhalede",
@@ -4119,7 +4119,7 @@
       "sentence": "Cyklisten overhalede bilen på cykelstien.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "overhalte"
+      "misspelling": "overhaled"
     },
     {
       "word": "indvilligede",
@@ -4128,7 +4128,7 @@
       "sentence": "Til sidst indvilligede hun i at deltage.",
       "level": 3,
       "category": "Verbernes bøjning",
-      "misspelling": "indvilligte"
+      "misspelling": "indvilliged"
     },
     {
       "word": "konkluderet",
@@ -4137,7 +4137,7 @@
       "sentence": "Forskerne har konkluderet at forsøget virkede.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "konkludert"
+      "misspelling": "konkluderede"
     },
     {
       "word": "manipuleret",
@@ -4146,7 +4146,7 @@
       "sentence": "Billedet var manipuleret med et program.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "manipulert"
+      "misspelling": "manipulerede"
     },
     {
       "word": "struktureret",
@@ -4155,7 +4155,7 @@
       "sentence": "Opgaven var godt struktureret.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "strukturert"
+      "misspelling": "strukturerede"
     },
     {
       "word": "karakteriseret",
@@ -4164,7 +4164,7 @@
       "sentence": "Perioden var karakteriseret af store forandringer.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "karakterisert"
+      "misspelling": "karakteriserede"
     },
     {
       "word": "argumenteret",
@@ -4173,7 +4173,7 @@
       "sentence": "Eleven har argumenteret overbevisende i sin stil.",
       "level": 4,
       "category": "Verbernes bøjning",
-      "misspelling": "argumentert"
+      "misspelling": "argumenterede"
     }
   ],
   "Navneordsendelser": [

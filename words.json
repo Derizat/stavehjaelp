@@ -7968,6 +7968,114 @@
   ],
   "Konsonantlyde": [
     {
+      "word": "kappe",
+      "hint": "En lang frakke uden ærmer",
+      "patternHint": "pp ikke bb",
+      "sentence": "Prinsessen bar en rød kappe.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "kabbe"
+    },
+    {
+      "word": "bakke",
+      "hint": "Flad plade man bærer kopper på",
+      "patternHint": "kk ikke gg",
+      "sentence": "Hun bar en bakke med te og kager.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "bagge"
+    },
+    {
+      "word": "vippe",
+      "hint": "Legeredskab man kan gynge op og ned på",
+      "patternHint": "pp ikke bb",
+      "sentence": "Børnene legede på vippen i parken.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "vibbe"
+    },
+    {
+      "word": "nikke",
+      "hint": "Bevæge hovedet op og ned for at sige ja",
+      "patternHint": "kk ikke gg",
+      "sentence": "Han nikkede ja til spørgsmålet.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "nigge"
+    },
+    {
+      "word": "bukke",
+      "hint": "Bøje sig forover som hilsen",
+      "patternHint": "kk ikke gg",
+      "sentence": "Skuespilleren bukkede for publikum.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "bugge"
+    },
+    {
+      "word": "lappe",
+      "hint": "Reparere et hul med et stykke stof",
+      "patternHint": "pp ikke bb",
+      "sentence": "Far lappede hullet i cykeldækket.",
+      "level": 1,
+      "category": "Konsonantlyde",
+      "misspelling": "labbe"
+    },
+    {
+      "word": "klappe",
+      "hint": "Slå hænderne sammen",
+      "patternHint": "pp ikke bb",
+      "sentence": "Alle klappede efter forestillingen.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "klabbe"
+    },
+    {
+      "word": "lukke",
+      "hint": "Gøre noget der er åbent til at være lukket",
+      "patternHint": "kk ikke gg",
+      "sentence": "Husk at lukke døren efter dig.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "lugge"
+    },
+    {
+      "word": "stikke",
+      "hint": "Prikke med noget spidst",
+      "patternHint": "kk ikke gg",
+      "sentence": "Pas på ikke at stikke dig på tornene.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "stigge"
+    },
+    {
+      "word": "stoppe",
+      "hint": "Holde op med at bevæge sig",
+      "patternHint": "pp ikke bb",
+      "sentence": "Bussen stoppede ved næste stoppested.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "stobbe"
+    },
+    {
+      "word": "hakke",
+      "hint": "Hugge i noget med et redskab",
+      "patternHint": "kk ikke gg",
+      "sentence": "Spætten hakkede i træet.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "hagge"
+    },
+    {
+      "word": "tikke",
+      "hint": "Den lyd et ur laver",
+      "patternHint": "kk ikke gg",
+      "sentence": "Uret tikkede stille i mørket.",
+      "level": 2,
+      "category": "Konsonantlyde",
+      "misspelling": "tigge"
+    },
+    {
       "word": "moppe",
       "hint": "Redskab til gulvvask",
       "patternHint": "dobbelt 'p' efter kort vokal",
@@ -7975,6 +8083,78 @@
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "mobbe"
+    },
+    {
+      "word": "trykke",
+      "hint": "Presse med fingeren på en knap",
+      "patternHint": "kk ikke gg",
+      "sentence": "Tryk på knappen for at starte maskinen.",
+      "level": 3,
+      "category": "Konsonantlyde",
+      "misspelling": "trygge"
+    },
+    {
+      "word": "rykke",
+      "hint": "Trække hurtigt og hårdt",
+      "patternHint": "kk ikke gg",
+      "sentence": "Han rykkede i dørhåndtaget.",
+      "level": 3,
+      "category": "Konsonantlyde",
+      "misspelling": "rygge"
+    },
+    {
+      "word": "slippe",
+      "hint": "Give slip og lade noget falde",
+      "patternHint": "pp ikke bb",
+      "sentence": "Slip ikke bolden mens du løber.",
+      "level": 3,
+      "category": "Konsonantlyde",
+      "misspelling": "slibbe"
+    },
+    {
+      "word": "vække",
+      "hint": "Få nogen til at vågne",
+      "patternHint": "kk ikke gg",
+      "sentence": "Vækkeuret vækkede ham klokken syv.",
+      "level": 3,
+      "category": "Konsonantlyde",
+      "misspelling": "vægge"
+    },
+    {
+      "word": "sukke",
+      "hint": "Trække vejret dybt når man er træt eller ked af det",
+      "patternHint": "kk ikke gg",
+      "sentence": "Hun sukkede dybt over lektierne.",
+      "level": 3,
+      "category": "Konsonantlyde",
+      "misspelling": "sugge"
+    },
+    {
+      "word": "slikke",
+      "hint": "Røre ved noget med tungen",
+      "patternHint": "kk ikke gg",
+      "sentence": "Katten slikkede sig om munden.",
+      "level": 3,
+      "category": "Konsonantlyde",
+      "misspelling": "sligge"
+    },
+    {
+      "word": "pakke",
+      "hint": "Lægge ting ned i en kasse eller taske",
+      "patternHint": "kk ikke gg",
+      "sentence": "Vi skal pakke kufferten inden rejsen.",
+      "level": 4,
+      "category": "Konsonantlyde",
+      "misspelling": "pagge"
+    },
+    {
+      "word": "udtrykke",
+      "hint": "Sige eller vise hvad man føler",
+      "patternHint": "kk ikke gg",
+      "sentence": "Det kan være svært at udtrykke sine følelser.",
+      "level": 4,
+      "category": "Konsonantlyde",
+      "misspelling": "udtrygge"
     }
   ]
 }

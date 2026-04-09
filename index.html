@@ -9211,14 +9211,14 @@ function renderCategoryLevels() {
     var mastered = lvl >= maxLvl;
     // Ord fra Fransk: locked → purchasable → open (track unique correct words)
     var isFrench = (cat === 'Ord fra Fransk');
-    var locked = isFrench && masteredCount < 3;
+    var locked = isFrench && masteredCount < 2;
     var purchasable = isFrench && !locked && !isFrenchUnlocked();
     var frenchCount = isFrench ? getFrenchProgress() : 0;
     var frenchTotal = isFrench ? (WORD_BANK['Ord fra Fransk'] || []).length : 0;
     var frenchMastered = isFrench && isFrenchUnlocked() && frenchCount >= frenchTotal;
     if (isFrench) mastered = frenchMastered;
     var dimmed = mastered || locked || purchasable;
-    var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/3)' :
+    var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/2)' :
                   purchasable ? '\u{1F48E} 10 gems' :
                   isFrench ? (frenchMastered ? 'Mestret \u2B50' : frenchCount + '/' + frenchTotal) :
                   (mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/' + (maxLvl - 1));
@@ -9232,7 +9232,7 @@ function renderCategoryLevels() {
       '<span style="color:var(--muted);font-size:0.7rem;min-width:40px;text-align:right">' + (dimmed ? '' : histStr) + '</span>' +
       '</div>';
     if (locked) {
-      html += '<div style="font-size:0.72rem;color:var(--muted);padding:0 0 4px 28px;opacity:0.7">Opn\u00E5 Mestret i tre kategorier for at \u00E5bne</div>';
+      html += '<div style="font-size:0.72rem;color:var(--muted);padding:0 0 4px 28px;opacity:0.7">Opn\u00E5 Mestret i to kategorier for at \u00E5bne</div>';
     }
     if (purchasable) {
       html += '<div style="font-size:0.72rem;color:var(--blue);padding:0 0 4px 28px;opacity:0.8">Klik for at l\u00E5se op med 10 \u{1F48E}</div>';

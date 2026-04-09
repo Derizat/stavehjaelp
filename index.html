@@ -1205,7 +1205,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.7.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.7.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -5801,13 +5801,20 @@ function fetchMisspellings(words, callback) {
           var w = r.word.toLowerCase();
           var a = r.answer.toLowerCase().trim();
           if (a && a !== w) {
-            if (!misByWord[w]) misByWord[w] = [];
-            if (misByWord[w].indexOf(a) < 0) misByWord[w].push(a);
+            if (!misByWord[w]) misByWord[w] = {};
+            misByWord[w][a] = (misByWord[w][a] || 0) + 1;
           }
         }
       }
+      // Convert frequency maps to sorted arrays (most common first)
+      var sortedByWord = {};
+      Object.keys(misByWord).forEach(function(w) {
+        var entries = Object.keys(misByWord[w]).map(function(a) { return { answer: a, count: misByWord[w][a] }; });
+        entries.sort(function(a, b) { return b.count - a.count; });
+        sortedByWord[w] = entries.map(function(e) { return e.answer; });
+      });
       // Update cache
-      uncached.forEach(function(w) { misspellingCache[w] = misByWord[w] || []; });
+      uncached.forEach(function(w) { misspellingCache[w] = sortedByWord[w] || []; });
       misspellingCacheTime = now;
       // Return all requested words from cache
       var result = {};
@@ -8938,31 +8945,36 @@ function renderSpkWord() {
   document.getElementById('spkFeedbackBox').style.display = 'none';
   document.getElementById('spkNextBtn').classList.add('hidden');
 
-  // Build 4 options: 1 correct + up to 3 wrong
+  // Build options: correct + misspellings based on DB data
   var options = [word];
+  var dbMis = (w._dbMis || []).filter(function(m) { return m !== word; });
+  var hardcoded = w.misspelling ? w.misspelling.toLowerCase() : null;
+  if (hardcoded === word) hardcoded = null;
 
-  // Real misspellings from DB
-  var dbMis = (w._dbMis || []).slice();
-  for (var di = dbMis.length - 1; di > 0; di--) {
-    var dj = Math.floor(Math.random() * (di + 1));
-    var dt = dbMis[di]; dbMis[di] = dbMis[dj]; dbMis[dj] = dt;
-  }
-  for (var dbi = 0; dbi < dbMis.length && options.length < 4; dbi++) {
-    if (options.indexOf(dbMis[dbi]) < 0) options.push(dbMis[dbi]);
+  if (dbMis.length === 0) {
+    // No DB misspellings: show correct + hardcoded (2 options)
+    if (hardcoded && options.indexOf(hardcoded) < 0) options.push(hardcoded);
+  } else if (dbMis.length === 1) {
+    // 1 DB misspelling: show correct + hardcoded + DB (3 options)
+    if (hardcoded && options.indexOf(hardcoded) < 0) options.push(hardcoded);
+    if (options.indexOf(dbMis[0]) < 0) options.push(dbMis[0]);
+  } else {
+    // 2+ DB misspellings: show correct + top 2 most common (3 options)
+    for (var dbi = 0; dbi < 2 && dbi < dbMis.length; dbi++) {
+      if (options.indexOf(dbMis[dbi]) < 0) options.push(dbMis[dbi]);
+    }
   }
 
-  // Category-aware misspelling
-  if (options.length < 4) {
+  // Fallback: ensure at least 2 options
+  if (options.length < 2) {
     var mis = generateMisspelling(w);
     if (mis && mis.misspelled && options.indexOf(mis.misspelled.toLowerCase()) < 0) {
       options.push(mis.misspelled.toLowerCase());
     }
   }
-
-  // Fallback misspellings
-  if (options.length < 4) {
+  if (options.length < 2) {
     var fallbacks = generateFallbackMisspellings(word);
-    for (var fi = 0; fi < fallbacks.length && options.length < 4; fi++) {
+    for (var fi = 0; fi < fallbacks.length && options.length < 2; fi++) {
       if (options.indexOf(fallbacks[fi]) < 0) options.push(fallbacks[fi]);
     }
   }

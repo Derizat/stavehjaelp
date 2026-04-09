@@ -969,16 +969,21 @@
     display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px;
   }
   .wb-slot {
-    display: inline-block; min-width: 2em; min-height: 1.2em;
-    border-bottom: 4px dashed #3d4270; padding: 4px 8px;
-    color: var(--muted); opacity: 0.4; font-size: 1.6rem;
+    display: inline-block; min-height: 1.2em;
+    padding: 4px 4px;
+    color: var(--green); font-size: 1.6rem;
     transition: all 0.3s;
   }
-  .wb-slot.active { border-bottom-color: var(--accent); opacity: 0.7; }
+  .wb-slot.active::before { content: '|'; color: var(--accent); animation: blink 1s infinite; }
+  @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.2; } }
   .wb-slot.filled {
-    border-bottom-style: solid; border-bottom-color: var(--green);
-    color: var(--green); opacity: 1;
+    color: var(--green);
     animation: fillin-pop 0.3s ease;
+  }
+  .wb-slot.filled.active::before { content: ''; }
+  .wb-dash {
+    display: inline-block; padding: 0 2px; color: var(--muted);
+    font-size: 1.6rem; opacity: 0.6;
   }
   .wb-morphemes {
     display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 16px 0;
@@ -8393,11 +8398,12 @@ function renderWBWord() {
     document.getElementById('wbHint').textContent = w.hint || '';
   }
 
-  // Render empty slots
+  // Render empty slots — no hints about word length, just dashes between parts
   var slotsHtml = '';
   for (var i = 0; i < wbCurrentMorphemes.length; i++) {
     var cls = i === 0 ? 'wb-slot active' : 'wb-slot';
-    slotsHtml += '<span class="' + cls + '" id="wbSlot' + i + '">___</span>';
+    if (i > 0) slotsHtml += '<span class="wb-dash">-</span>';
+    slotsHtml += '<span class="' + cls + '" id="wbSlot' + i + '"></span>';
   }
   document.getElementById('wbBuiltWord').innerHTML = slotsHtml;
 

@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.4</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.7.4.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -9251,8 +9251,9 @@ function renderCategoryLevels() {
     var histStr = hist.length > 0 ? ' (' + correct + '/' + hist.length + ')' : '';
     var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 5;
     var mastered = lvl >= maxLvl;
-    // Ord fra Fransk: locked → purchasable → open (track unique correct words)
+    // Ord fra Fransk: hidden until 1 mastered, locked until 2, purchasable, then open
     var isFrench = (cat === 'Ord fra Fransk');
+    if (isFrench && masteredCount < 1) continue;
     var locked = isFrench && masteredCount < 2;
     var purchasable = isFrench && !locked && !isFrenchUnlocked();
     var frenchCount = isFrench ? getFrenchProgress() : 0;

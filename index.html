@@ -8446,7 +8446,8 @@ function tapMorpheme(btnIndex) {
     // Correct!
     btn.classList.add('used');
     var slot = document.getElementById('wbSlot' + wbPlacedCount);
-    slot.textContent = tapped;
+    // Strip leading/trailing dashes from morpheme (be- → be, -lig → lig)
+    slot.textContent = tapped.replace(/^-+/, '').replace(/-+$/, '');
     slot.classList.remove('active');
     slot.classList.add('filled');
     wbPlacedCount++;

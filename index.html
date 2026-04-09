@@ -1126,7 +1126,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v3.6.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1971,14 +1971,17 @@ function checkLessonTrigger(category) {
 
   var levels = loadCategoryLevels();
   var cat = levels[category];
-  if (!cat || !cat.history || cat.history.length < 3) return;
+  if (!cat || !cat.history || cat.history.length < 2) return;
 
   var total = cat.history.length;
   var correct = cat.history.filter(function(h) { return h; }).length;
   var pct = correct / total;
 
-  // Trigger lesson if <60% correct over accumulated history (min 3 answers)
-  if (pct < 0.6) {
+  // Trigger lesson if struggling:
+  // - 2 answers with 0 correct (immediate help)
+  // - 3+ answers with <60% correct (accumulated struggle)
+  var shouldTrigger = (total === 2 && correct === 0) || (total >= 3 && pct < 0.6);
+  if (shouldTrigger) {
     // Reset history so the count starts fresh after the lesson
     cat.history = [];
     levels[category] = cat;

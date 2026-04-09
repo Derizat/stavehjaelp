@@ -5842,13 +5842,13 @@
   ],
   "Svære ord": [
     {
-      "word": "yacht",
-      "hint": "En stor, flot sejlbåd",
-      "patternHint": "y som j, ch stumt",
-      "sentence": "Der lå en stor yacht i havnen.",
+      "word": "cognac",
+      "hint": "En type fransk brændevin",
+      "patternHint": "co + gnac (gn som nj)",
+      "sentence": "Bedstefar drikker cognac efter middagen.",
       "level": 5,
       "category": "Svære ord",
-      "misspelling": "jagt"
+      "misspelling": "konjak"
     },
     {
       "word": "bouillon",

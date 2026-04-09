@@ -721,24 +721,6 @@
       "misspelling": "kol"
     },
     {
-      "word": "vild",
-      "hint": "Ikke tam",
-      "patternHint": "stumt 'd' i '-ld'",
-      "sentence": "Han blev helt vild af glæde.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "vil"
-    },
-    {
-      "word": "mild",
-      "hint": "Blid og skånsom",
-      "patternHint": "stumt 'd' i '-ld'",
-      "sentence": "Sæben er mild mod huden.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "mil"
-    },
-    {
       "word": "grund",
       "hint": "Et stykke jord",
       "patternHint": "stumt 'd' i '-nd'",
@@ -894,14 +876,6 @@
       "misspelling": "koken"
     },
     {
-      "word": "tappe",
-      "hint": "Hælde væske fra en beholder",
-      "patternHint": "ta_pe → pp",
-      "sentence": "Far skal tappe øl fra tønden.",
-      "level": 2,
-      "category": "Dobbeltkonsonant",
-      "misspelling": "tape"
-    },
     {
       "word": "hoppe",
       "hint": "Springe op og ned",
@@ -5364,7 +5338,7 @@
       "word": "skud",
       "hint": "Lyden fra noget der affyres",
       "patternHint": "Blødt 'd' til sidst — udtales næsten som 'skuð'",
-      "sentence": "Startskuddet lød og løberne satte af sted.",
+      "sentence": "Han hørte et skud ude fra skoven.",
       "level": 1,
       "category": "Blødt d",
       "misspelling": "sku"
@@ -5636,7 +5610,7 @@
       "word": "kage",
       "hint": "Sød ting man bager og spiser",
       "patternHint": "g ikke j",
-      "sentence": "Mor bagte en stor chokoladekage.",
+      "sentence": "Mor bagte en kage til festen.",
       "level": 1,
       "category": "Konsonantlyde",
       "misspelling": "kaje"
@@ -5771,7 +5745,7 @@
       "word": "trykke",
       "hint": "Presse med fingeren på en knap",
       "patternHint": "kk ikke gg",
-      "sentence": "Tryk på knappen for at starte maskinen.",
+      "sentence": "Du skal trykke på knappen for at starte.",
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "trygge"
@@ -5789,7 +5763,7 @@
       "word": "slippe",
       "hint": "Give slip og lade noget falde",
       "patternHint": "pp ikke bb",
-      "sentence": "Slip ikke bolden mens du løber.",
+      "sentence": "Pas på ikke at slippe bolden mens du løber.",
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "slibbe"
@@ -5899,7 +5873,7 @@
       "word": "bureau",
       "hint": "Et kontor eller skrivebord",
       "patternHint": "bu + reau (eau som o)",
-      "sentence": "Hun arbejder på et rejsebureau.",
+      "sentence": "Han sad ved sit bureau og skrev.",
       "level": 5,
       "category": "Ord fra Fransk",
       "misspelling": "buro"

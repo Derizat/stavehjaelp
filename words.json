@@ -5166,10 +5166,10 @@
       "word": "hæderlig",
       "hint": "En person der er ærlig og ordentlig",
       "patternHint": "blødt 'd' mellem vokaler i afledt ord",
-      "sentence": "Han lavede et hæderlig stykke arbejde.",
-      "level": 4,
+      "sentence": "Han var en ærlig og hæderlig mand.",
+      "level": 3,
       "category": "Blødt d",
-      "misspelling": "hæerlig"
+      "misspelling": "hæjerlig"
     },
     {
       "word": "meddelelse",

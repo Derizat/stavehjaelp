@@ -1,4 +1,10 @@
 
+// ===== KONSTANTER =====
+var ONE_DAY_MS = 86400000;
+var BOSS_TRIGGER_STREAK = 5;
+var MAX_BOSSES_PER_SESSION = 2;
+var MISSPELLING_CACHE_MS = 5 * 60 * 1000; // 5 minutter
+
 // ===== MULTI-PROFIL SYSTEM =====
 var activePlayer = '';
 
@@ -549,9 +555,9 @@ async function loadClassOverview(groupId, timeFilter) {
   var profilesPromise = supabaseClient.from('profiles').select('player, reward_data, profile_data, student_grade, updated_at').in('player', studentNames);
   var answersQuery = supabaseClient.from('answers').select('player, correct, category').in('player', studentNames);
   if (timeFilter === 'week') {
-    answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 7 * 86400000).toISOString());
+    answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 7 * ONE_DAY_MS).toISOString());
   } else if (timeFilter === 'month') {
-    answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 30 * 86400000).toISOString());
+    answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 30 * ONE_DAY_MS).toISOString());
   }
 
   var results = await Promise.all([profilesPromise, answersQuery.limit(10000)]);
@@ -1226,7 +1232,7 @@ function toggleSettings() {
 }
 
 // Spaced Repetition
-var SR_INTERVALS = [0, 86400000, 3*86400000, 7*86400000, 14*86400000];
+var SR_INTERVALS = [0, ONE_DAY_MS, 3*ONE_DAY_MS, 7*ONE_DAY_MS, 14*ONE_DAY_MS];
 
 function loadSRData() {
   try { var raw = localStorage.getItem(playerKey('sr_data')); return raw ? JSON.parse(raw) : { words: {} }; } catch(e) { return { words: {} }; }
@@ -1935,7 +1941,7 @@ function renderMixedItem() {
 
   // Map of prefix → phase score/progress element IDs
   var prefixMap = {
-    diktat: '', fillin: 'fillin', rightorwrong: 'rf',
+    diktat: '', fillin: 'fillin',
     spellingpolice: 'sp', wordbuilder: 'wb', spellpick: 'spk', sentence: 'sw'
   };
   var prefix = prefixMap[item.type] || '';
@@ -1967,26 +1973,6 @@ function renderMixedItem() {
       fillinResults = results.filter(function(r) { return true; }); // share results
       show('phase-fillin');
       renderFillInWord();
-      break;
-
-    case 'rightorwrong':
-      gameMode = 'rightorwrong';
-      var showCorrect = Math.random() < 0.5;
-      rfItems = [{
-        word: item.wordObj.word,
-        displayed: showCorrect ? item.wordObj.word : item.dbMisspelling,
-        isCorrect: showCorrect,
-        explanation: '',
-        category: item.wordObj.category,
-        patternHint: item.wordObj.patternHint || '',
-        level: item.wordObj.level || 0
-      }];
-      rfIndex = 0;
-      rfResults = [];
-      rfCombo = 0;
-      rfAnswered = false;
-      show('phase-rightorwrong');
-      renderRightOrWrongWord();
       break;
 
     case 'spellingpolice':
@@ -2298,7 +2284,7 @@ function checkSpelling() {
     sessionCorrectCount++;
     sessionCorrectStreak++;
     // Boss + chest triggered as reward after 5 correct in a row
-    if (sessionCorrectStreak >= 5) {
+    if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true; // chest awarded after boss is defeated
@@ -2386,36 +2372,52 @@ function finishTest() {
   }
 }
 
-// Training results
-function renderTrainingResults() {
+// Shared results renderer
+// opts: { resultsList, messages, summary, labels, showAllWords, showLessons, wordRenderer }
+function renderResults(opts) {
   show('phase-results');
-  var correct = results.filter(function(r) { return r.correct; }).length;
-  var wrong = results.filter(function(r) { return !r.correct; });
+  var res = opts.resultsList;
+  var correct = res.filter(function(r) { return r.correct; }).length;
+  var wrong = res.filter(function(r) { return !r.correct; });
+  var labels = opts.labels || { correct: 'Rigtige \u2713', wrong: 'Fejl \u2717' };
 
   var html = '';
-  var encouragements = ['Godt gået med træningen! \u{1F4AA}', 'Flot indsats! Du bliver bedre og bedre \u{1F31F}', 'Stærkt! Øvelse gør mester \u2B50'];
-  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
-  html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige i træningen.</p></div>';
 
+  // Encouragement bubble
+  var msgs = opts.messages || ['Godt gået! \u{1F4AA}', 'Flot indsats! \u{1F31F}', 'Stærkt! \u2B50'];
+  var summary = opts.summary || ('Du fik ' + correct + ' ud af ' + res.length + ' rigtige.');
+  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
+  html += '<p style="margin-top:8px">' + summary + '</p></div>';
+
+  // Score boxes
   html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
+  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">' + labels.correct + '</div></div>';
+  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">' + labels.wrong + '</div></div>';
+  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / res.length * 100) + '%</div><div class="lbl">Score</div></div>';
   html += '</div>';
 
-  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
-  html += '<div style="margin-bottom:18px">';
-  results.forEach(function(r) {
-    html += '<div class="word-attempt">';
-    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-    html += '<span>';
-    html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
-    html += '</span></div>';
-  });
-  html += '</div>';
+  // Word list
+  var wordsToShow = opts.showAllWords !== false ? res : wrong;
+  if (wordsToShow.length > 0) {
+    var heading = opts.showAllWords !== false ? 'Ord-resultater' : '\u{1F4D6} Ord at øve';
+    html += '<h2 style="margin-bottom:12px;font-size:1.2rem">' + heading + '</h2>';
+    html += '<div style="margin-bottom:18px">';
+    wordsToShow.forEach(function(r) {
+      html += '<div class="word-attempt">';
+      html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
+      html += '<span>';
+      if (opts.wordRenderer) {
+        html += opts.wordRenderer(r);
+      } else {
+        html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
+      }
+      html += '</span></div>';
+    });
+    html += '</div>';
+  }
 
-  // Show lesson buttons for categories with 3+ errors
-  if (sessionLessonCategories.length > 0) {
+  // Lesson buttons (training only)
+  if (opts.showLessons && sessionLessonCategories.length > 0) {
     html += '<div style="margin-top:16px;margin-bottom:8px">';
     for (var li = 0; li < sessionLessonCategories.length; li++) {
       var lCat = sessionLessonCategories[li];
@@ -2434,43 +2436,30 @@ function renderTrainingResults() {
   document.getElementById('resultsContent').innerHTML = html;
 }
 
-// Review results
-function renderReviewResults() {
-  show('phase-results');
-  var correct = results.filter(function(r) { return r.correct; }).length;
-  var wrong = results.filter(function(r) { return !r.correct; });
-  var sr = loadSRData();
-
-  var html = '';
-  html += '<div class="ai-bubble"><p><strong>Gennemgang færdig!</strong></p>';
-  html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + results.length + ' rigtige i gennemgangen.</p></div>';
-
-  html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / results.length * 100) + '%</div><div class="lbl">Score</div></div>';
-  html += '</div>';
-
-  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">SR-opdateringer</h2>';
-  html += '<div style="margin-bottom:18px">';
-  results.forEach(function(r) {
-    var srWord = sr.words[r.word];
-    var level = srWord ? srWord.level : 0;
-    var levelNames = ['Nulstillet', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
-    var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
-    html += '<div class="word-attempt">';
-    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-    html += '<span>';
-    html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
-    html += ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
-    html += '</span></div>';
+function renderTrainingResults() {
+  renderResults({
+    resultsList: results,
+    messages: ['Godt gået med træningen! \u{1F4AA}', 'Flot indsats! Du bliver bedre og bedre \u{1F31F}', 'Stærkt! Øvelse gør mester \u2B50'],
+    summary: 'Du fik ' + results.filter(function(r) { return r.correct; }).length + ' ud af ' + results.length + ' rigtige i træningen.',
+    showLessons: true
   });
-  html += '</div>';
+}
 
-  html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
-
-  document.getElementById('resultsContent').innerHTML = html;
+function renderReviewResults() {
+  var sr = loadSRData();
+  var levelNames = ['Nulstillet', 'Niveau 1', 'Niveau 2', 'Niveau 3', 'Mestret!'];
+  var levelColors = ['var(--red)', 'var(--accent)', 'var(--accent)', 'var(--blue)', 'var(--green)'];
+  renderResults({
+    resultsList: results,
+    messages: ['Gennemgang færdig!'],
+    summary: 'Du fik ' + results.filter(function(r) { return r.correct; }).length + ' ud af ' + results.length + ' rigtige i gennemgangen.',
+    wordRenderer: function(r) {
+      var srWord = sr.words[r.word];
+      var level = srWord ? srWord.level : 0;
+      var mark = r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>';
+      return mark + ' <span style="font-size:0.72rem;color:' + levelColors[level] + ';margin-left:6px">' + levelNames[level] + '</span>';
+    }
+  });
 }
 
 // ===== REWARD SYSTEM =====
@@ -2508,7 +2497,7 @@ function dateDiffDays(dateStr1, dateStr2) {
   if (!dateStr1 || !dateStr2) return 999;
   var d1 = new Date(dateStr1 + 'T00:00:00');
   var d2 = new Date(dateStr2 + 'T00:00:00');
-  return Math.round((d2 - d1) / 86400000);
+  return Math.round((d2 - d1) / ONE_DAY_MS);
 }
 
 function awardSessionXP(correctCount, totalCount) {
@@ -2798,7 +2787,7 @@ function testBoss(type) {
 
 function showBossMinigame(bossData) {
   // Hard limit: max 2 bosses per session to prevent loops
-  if (sessionBossCount >= 2) {
+  if (sessionBossCount >= MAX_BOSSES_PER_SESSION) {
     pendingBoss = null;
     pendingChest = false;
     proceedAfterInterrupt();
@@ -4228,7 +4217,7 @@ function fetchMisspellings(words, callback) {
 
   // Use cache if fresh (5 minutes)
   var now = Date.now();
-  var uncached = words.filter(function(w) { return !misspellingCache[w] || now - misspellingCacheTime > 300000; });
+  var uncached = words.filter(function(w) { return !misspellingCache[w] || now - misspellingCacheTime > MISSPELLING_CACHE_MS; });
   if (uncached.length === 0) {
     var result = {};
     words.forEach(function(w) { if (misspellingCache[w]) result[w] = misspellingCache[w]; });
@@ -6013,7 +6002,7 @@ function checkFillIn(chosenIndex) {
   if (ok) {
     sessionCorrectCount++;
     sessionCorrectStreak++;
-    if (sessionCorrectStreak >= 5) {
+    if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true;
@@ -6089,36 +6078,11 @@ function finishFillIn() {
 }
 
 function renderFillInResults() {
-  show('phase-results');
-  var correct = fillinResults.filter(function(r) { return r.correct; }).length;
-  var wrong = fillinResults.filter(function(r) { return !r.correct; });
-
-  var html = '';
-  var encouragements = ['Godt g\u00E5et! \u{1F4AA}', 'Flot indsats med bogstaverne! \u{1F31F}', 'Du bliver skarpere! \u2B50'];
-  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + encouragements[Math.floor(Math.random() * encouragements.length)] + '</strong></p>';
-  html += '<p style="margin-top:8px">Du fik ' + correct + ' ud af ' + fillinResults.length + ' rigtige i udfyld-\u00F8velsen.</p></div>';
-
-  html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / fillinResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
-  html += '</div>';
-
-  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
-  html += '<div style="margin-bottom:18px">';
-  fillinResults.forEach(function(r) {
-    html += '<div class="word-attempt">';
-    html += '<span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-    html += '<span>';
-    html += (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">\u2717 ' + r.userAnswer + '</span>');
-    html += '</span></div>';
+  renderResults({
+    resultsList: fillinResults,
+    messages: ['Godt gået! \u{1F4AA}', 'Flot indsats med bogstaverne! \u{1F31F}', 'Du bliver skarpere! \u2B50'],
+    summary: 'Du fik ' + fillinResults.filter(function(r) { return r.correct; }).length + ' ud af ' + fillinResults.length + ' rigtige i udfyld-øvelsen.'
   });
-  html += '</div>';
-
-  html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
-
-  document.getElementById('resultsContent').innerHTML = html;
 }
 
 // ===== RIGHT OR WRONG EXERCISE =====
@@ -6343,7 +6307,7 @@ function resolveRightOrWrong(ok, answeredCorrect, correctionAnswer) {
     sessionCorrectStreak++;
     rfCombo++;
     if (rfCombo > rfMaxCombo) rfMaxCombo = rfCombo;
-    if (sessionCorrectStreak >= 5) {
+    if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: item.word, category: item.category });
       pendingChest = true;
@@ -6417,40 +6381,17 @@ function finishRightOrWrong() {
 }
 
 function renderRightOrWrongResults() {
-  show('phase-results');
   var correct = rfResults.filter(function(r) { return r.correct; }).length;
-  var wrong = rfResults.filter(function(r) { return !r.correct; });
-
-  var html = '';
-  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>';
-  if (correct / rfResults.length >= 0.8) html += 'Skarpt \u00F8je! Du er god til at se fejl! \u{1F31F}';
-  else if (correct / rfResults.length >= 0.5) html += 'Godt g\u00E5et! \u00D8velse g\u00F8r mester \u{1F4AA}';
-  else html += 'Bliv ved! Det bliver lettere med \u00F8velse \u{1F680}';
-  html += '</strong></p>';
-  html += '<p style="margin-top:8px">' + correct + ' ud af ' + rfResults.length + ' rigtige.';
-  if (rfMaxCombo >= 3) html += ' Bedste combo: <strong>' + rfMaxCombo + 'x</strong> \u{1F525}';
-  html += '</p></div>';
-
-  html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Fejl \u2717</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / rfResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
-  html += '</div>';
-
-  if (wrong.length > 0) {
-    html += '<h2 style="margin-bottom:12px;font-size:1.2rem">\u{1F4D6} Ord at \u00F8ve</h2>';
-    html += '<div style="margin-bottom:18px">';
-    wrong.forEach(function(r) {
-      html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-      html += '<span class="wrong-mark">\u2717</span></div>';
-    });
-    html += '</div>';
-  }
-
-  html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
-
-  document.getElementById('resultsContent').innerHTML = html;
+  var pct = correct / rfResults.length;
+  var msg = pct >= 0.8 ? 'Skarpt øje! Du er god til at se fejl! \u{1F31F}' : pct >= 0.5 ? 'Godt gået! Øvelse gør mester \u{1F4AA}' : 'Bliv ved! Det bliver lettere med øvelse \u{1F680}';
+  var summary = correct + ' ud af ' + rfResults.length + ' rigtige.';
+  if (rfMaxCombo >= 3) summary += ' Bedste combo: <strong>' + rfMaxCombo + 'x</strong> \u{1F525}';
+  renderResults({
+    resultsList: rfResults,
+    messages: [msg],
+    summary: summary,
+    showAllWords: false
+  });
 }
 
 // ===== SPELLING POLICE EXERCISE =====
@@ -6651,7 +6592,7 @@ function checkSpellingPolice(wordIndex) {
   if (ok) {
     sessionCorrectCount++;
     sessionCorrectStreak++;
-    if (sessionCorrectStreak >= 5) {
+    if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: item.word, category: item.category });
       pendingChest = true;
@@ -6722,35 +6663,13 @@ function finishSpellingPolice() {
 }
 
 function renderSpellingPoliceResults() {
-  show('phase-results');
-  var correct = spResults.filter(function(r) { return r.correct; }).length;
-  var wrong = spResults.filter(function(r) { return !r.correct; });
-
-  var html = '';
-  var msgs = ['Skarpt politiarbejde, betjent! \u{1F50D}', 'Mesterdetektiv! \u{1F575}\uFE0F', 'Ingen slipper forbi dig! \u{1F6A8}'];
-  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
-  html += '<p style="margin-top:8px">' + correct + ' ud af ' + spResults.length + ' forbrydere fanget!</p></div>';
-
-  html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Fundet \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Misset \u2717</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / spResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
-  html += '</div>';
-
-  if (wrong.length > 0) {
-    html += '<h2 style="margin-bottom:12px;font-size:1.2rem">\u{1F4D6} Ord at \u00F8ve</h2>';
-    html += '<div style="margin-bottom:18px">';
-    wrong.forEach(function(r) {
-      html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-      html += '<span class="wrong-mark">\u2717</span></div>';
-    });
-    html += '</div>';
-  }
-
-  html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
-
-  document.getElementById('resultsContent').innerHTML = html;
+  renderResults({
+    resultsList: spResults,
+    messages: ['Skarpt politiarbejde, betjent! \u{1F50D}', 'Mesterdetektiv! \u{1F575}\uFE0F', 'Ingen slipper forbi dig! \u{1F6A8}'],
+    summary: spResults.filter(function(r) { return r.correct; }).length + ' ud af ' + spResults.length + ' forbrydere fanget!',
+    labels: { correct: 'Fundet \u2713', wrong: 'Misset \u2717' },
+    showAllWords: false
+  });
 }
 
 // ===== WORD BUILDER EXERCISE =====
@@ -7011,7 +6930,7 @@ function wordBuilderComplete() {
   if (ok) {
     sessionCorrectCount++;
     sessionCorrectStreak++;
-    if (sessionCorrectStreak >= 5) {
+    if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true;
@@ -7080,33 +6999,12 @@ function finishWordBuilder() {
 }
 
 function renderWBResults() {
-  show('phase-results');
-  var correct = wbResults.filter(function(r) { return r.correct; }).length;
-  var wrong = wbResults.filter(function(r) { return !r.correct; });
-
-  var html = '';
-  var msgs = ['Flot bygget! \u{1F9E9}', 'Du er en ordarkitekt! \u{1F3D7}\uFE0F', 'Godt samlet! \u{1F4AA}'];
-  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
-  html += '<p style="margin-top:8px">' + correct + ' ud af ' + wbResults.length + ' ord bygget uden fejl.</p></div>';
-
-  html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Perfekte \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Med fejl</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / wbResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
-  html += '</div>';
-
-  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
-  html += '<div style="margin-bottom:18px">';
-  wbResults.forEach(function(r) {
-    html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-    html += '<span>' + (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">' + r.userAnswer + '</span>') + '</span></div>';
+  renderResults({
+    resultsList: wbResults,
+    messages: ['Flot bygget! \u{1F9E9}', 'Du er en ordarkitekt! \u{1F3D7}\uFE0F', 'Godt samlet! \u{1F4AA}'],
+    summary: wbResults.filter(function(r) { return r.correct; }).length + ' ud af ' + wbResults.length + ' ord bygget uden fejl.',
+    labels: { correct: 'Perfekte \u2713', wrong: 'Med fejl' }
   });
-  html += '</div>';
-
-  html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
-
-  document.getElementById('resultsContent').innerHTML = html;
 }
 
 // ===== SPELL PICK EXERCISE =====
@@ -7253,7 +7151,7 @@ function pickSpkOption(btn, picked) {
   if (ok) {
     sessionCorrectCount++;
     sessionCorrectStreak++;
-    if (sessionCorrectStreak >= 5) {
+    if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true;
@@ -7320,33 +7218,12 @@ function finishSpellPick() {
 }
 
 function renderSpkResults() {
-  show('phase-results');
-  var correct = spkResults.filter(function(r) { return r.correct; }).length;
-  var wrong = spkResults.filter(function(r) { return !r.correct; });
-
-  var html = '';
-  var msgs = ['Godt valgt! \u{1F3AF}', 'Skarpt \u00F8je! \u{1F441}\uFE0F', 'Flot stavning! \u{1F4AA}'];
-  html += '<div class="ai-bubble">' + getCurrentAvatarImg('ai-bubble-avatar') + '<p><strong>' + msgs[Math.floor(Math.random() * msgs.length)] + '</strong></p>';
-  html += '<p style="margin-top:8px">' + correct + ' ud af ' + spkResults.length + ' ord valgt rigtigt.</p></div>';
-
-  html += '<div class="score-row">';
-  html += '<div class="score-box"><div class="num num-green">' + correct + '</div><div class="lbl">Rigtige \u2713</div></div>';
-  html += '<div class="score-box"><div class="num num-red">' + wrong.length + '</div><div class="lbl">Forkerte</div></div>';
-  html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / spkResults.length * 100) + '%</div><div class="lbl">Score</div></div>';
-  html += '</div>';
-
-  html += '<h2 style="margin-bottom:12px;font-size:1.2rem">Ord-resultater</h2>';
-  html += '<div style="margin-bottom:18px">';
-  spkResults.forEach(function(r) {
-    html += '<div class="word-attempt"><span><strong>' + r.word + '</strong> <span style="font-size:0.72rem;color:var(--muted)">' + r.category + '</span></span>';
-    html += '<span>' + (r.correct ? '<span class="correct-mark">\u2713</span>' : '<span class="wrong-mark">' + r.userAnswer + '</span>') + '</span></div>';
+  renderResults({
+    resultsList: spkResults,
+    messages: ['Godt valgt! \u{1F3AF}', 'Skarpt øje! \u{1F441}\uFE0F', 'Flot stavning! \u{1F4AA}'],
+    summary: spkResults.filter(function(r) { return r.correct; }).length + ' ud af ' + spkResults.length + ' ord valgt rigtigt.',
+    labels: { correct: 'Rigtige \u2713', wrong: 'Forkerte' }
   });
-  html += '</div>';
-
-  html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
-
-  document.getElementById('resultsContent').innerHTML = html;
 }
 
 // ===== WHAT IS THE WORD EXERCISE =====
@@ -7424,7 +7301,7 @@ function checkSentence() {
   if (ok) {
     sessionCorrectCount++;
     sessionCorrectStreak++;
-    if (sessionCorrectStreak >= 5) {
+    if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: swCurrentWord.word, category: swCurrentWord.category });
       pendingChest = true;

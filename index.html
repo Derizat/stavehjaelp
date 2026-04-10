@@ -6229,14 +6229,13 @@ function bossDefeated() {
     content.innerHTML = '<div style="text-align:center;padding:30px">' +
       '<div style="font-size:4rem;margin-bottom:12px">\uD83C\uDF89</div>' +
       '<h2 style="color:var(--green);margin-bottom:8px">' + victoryMsg + '</h2>' +
-      '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">+15 XP bonus!</p>' +
+      '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">\uD83D\uDC8E +3 Diamanter</p>' +
       '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
       '</div>';
   }, 1700);
 
   var data = loadRewardData();
-  data.totalXP = (data.totalXP || 0) + 15;
-  data.todayXP = (data.todayXP || 0) + 15;
+  data.gems = (data.gems || 0) + 3;
   saveRewardData(data);
   updateRewardBar();
 }
@@ -6252,12 +6251,7 @@ function continueAfterBoss() {
     return;
   }
 
-  // After boss defeat, show chest reward if pending
-  if (pendingChest) {
-    pendingChest = false;
-    showTreasureChest();
-    return;
-  }
+  pendingChest = false;
 
   if (!isMixedSession) {
     if (gameMode === 'fillin') show('phase-fillin');

@@ -3130,12 +3130,15 @@ function countCategoriesAtLevel(levels, minLevel) {
 function buildPoolWithCategoryLevels(categories) {
   var levels = loadCategoryLevels();
   var atLevel2 = countCategoriesAtLevel(levels, 2);
+  var lydretLevel = (levels['Lydrette ord'] && levels['Lydrette ord'].level !== undefined) ? levels['Lydrette ord'].level : 0;
   var pool = [];
   for (var i = 0; i < categories.length; i++) {
     var cat = categories[i];
     if (!WORD_BANK[cat]) continue;
     // Skip pro categories — handled separately by buildProPool
     if (PRO_CATEGORIES.indexOf(cat) !== -1) continue;
+    // Only Lydrette ord until it reaches level 1
+    if (cat !== 'Lydrette ord' && lydretLevel < 1) continue;
     // Fremmedord requires 2 other categories at level 2+
     if (cat === 'Fremmedord' && atLevel2 < 2) continue;
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
@@ -9401,6 +9404,9 @@ function renderCategoryLevels() {
     var hideThreshold = isFrench ? 1 : isFrench2 ? 2 : 0;
     var lockThreshold = isFrench ? 2 : isFrench2 ? 4 : 0;
     if (isAnyFrench && masteredCount < hideThreshold) continue;
+    // Only show Lydrette ord until it reaches level 1
+    var lydretLevel = (levels['Lydrette ord'] && levels['Lydrette ord'].level !== undefined) ? levels['Lydrette ord'].level : 0;
+    if (cat !== 'Lydrette ord' && lydretLevel < 1) continue;
     // Fremmedord: hidden until 2 other categories reach level 2
     if (cat === 'Fremmedord' && countCategoriesAtLevel(levels, 2) < 2) continue;
     var locked = isAnyFrench && masteredCount < lockThreshold;

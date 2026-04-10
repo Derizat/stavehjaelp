@@ -4538,8 +4538,14 @@ function renderBossHeader(boss, idleAnim, hp, maxHP) {
   // Update phase label with boss name
   var label = document.getElementById('bossPhaseLabel');
   if (label && bossState) {
-    var typeName = BOSS_INSTRUCTIONS[bossState.battleType] ? BOSS_INSTRUCTIONS[bossState.battleType].name : '';
-    label.innerHTML = '\u2694\uFE0F Ord-Boss: ' + boss.name + (typeName ? ' \u2014 ' + typeName : '');
+    var bossNames = {
+      scramble: 'Bogstavmixer', rain: 'Bogstavregner', memory: 'Huskemonster',
+      reverse: 'Baglænsuhyre', pacman: 'Pac-Man', highway: 'Motorvejsmonster',
+      cardcast: 'Kortmagiker', spellpick: 'Stavevælger', silentservant: 'Stumtjeneren',
+      snake: 'Bogstavslangen'
+    };
+    var displayName = bossNames[bossState.battleType] || boss.name;
+    label.innerHTML = '\u2694\uFE0F Ord-Boss: ' + displayName;
   }
   return '<div style="text-align:center">' +
     catBadge +

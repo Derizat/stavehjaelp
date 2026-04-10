@@ -721,24 +721,6 @@
       "misspelling": "kol"
     },
     {
-      "word": "vild",
-      "hint": "Ikke tam",
-      "patternHint": "stumt 'd' i '-ld'",
-      "sentence": "Han blev helt vild af glæde.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "vil"
-    },
-    {
-      "word": "mild",
-      "hint": "Blid og skånsom",
-      "patternHint": "stumt 'd' i '-ld'",
-      "sentence": "Sæben er mild mod huden.",
-      "level": 2,
-      "category": "Stumme bogstaver",
-      "misspelling": "mil"
-    },
-    {
       "word": "grund",
       "hint": "Et stykke jord",
       "patternHint": "stumt 'd' i '-nd'",
@@ -973,15 +955,6 @@
       "level": 1,
       "category": "Dobbeltkonsonant",
       "misspelling": "kate"
-    },
-    {
-      "word": "tappe",
-      "hint": "Hælde væske ud",
-      "patternHint": "dobbelt-p efter kort 'a'",
-      "sentence": "Far skal tappe øl fra tønden.",
-      "level": 2,
-      "category": "Dobbeltkonsonant",
-      "misspelling": "tape"
     },
     {
       "word": "klasse",

@@ -3033,10 +3033,14 @@ function buildPoolForCategory(cat, catLevel) {
 // Pick a boss word from one level higher than player's current level, excluding used words
 function pickBossWord(fallbackWord) {
   var levels = loadCategoryLevels();
+  var lydretLevel = (levels['Lydrette ord'] && levels['Lydrette ord'].level !== undefined) ? levels['Lydrette ord'].level : 0;
+  var atLevel2 = countCategoriesAtLevel(levels, 2);
   var pool = [];
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {
     var cat = ALL_CATEGORIES[i];
-    if (!WORD_BANK[cat] || cat === 'Ord fra Fransk' || cat === 'Ord fra Fransk 2') continue;
+    if (!WORD_BANK[cat] || PRO_CATEGORIES.indexOf(cat) !== -1) continue;
+    if (cat !== 'Lydrette ord' && lydretLevel < 1) continue;
+    if (cat === 'Fremmedord' && atLevel2 < 2) continue;
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
     var maxLvl = CATEGORY_MAX_LEVELS[cat] || 5;
     if (catLevel >= maxLvl) continue; // skip mastered
@@ -3052,7 +3056,9 @@ function pickBossWord(fallbackWord) {
   if (pool.length === 0) {
     for (var i = 0; i < ALL_CATEGORIES.length; i++) {
       var cat = ALL_CATEGORIES[i];
-      if (!WORD_BANK[cat] || cat === 'Ord fra Fransk' || cat === 'Ord fra Fransk 2') continue;
+      if (!WORD_BANK[cat] || PRO_CATEGORIES.indexOf(cat) !== -1) continue;
+      if (cat !== 'Lydrette ord' && lydretLevel < 1) continue;
+      if (cat === 'Fremmedord' && atLevel2 < 2) continue;
       var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
       var words = WORD_BANK[cat].filter(function(w) { return w.level === catLevel; });
       for (var j = 0; j < words.length; j++) {

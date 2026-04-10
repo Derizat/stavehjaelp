@@ -9420,7 +9420,7 @@ function renderCategoryLevels() {
     var lvlText = locked ? '\u{1F512} L\u00E5st (' + masteredCount + '/' + lockThreshold + ')' :
                   purchasable ? '\u{1F512} Locked' :
                   isAnyFrench ? (fMastered ? 'Mestret \u2B50' : fProgress + '/' + fTotal) :
-                  (mastered ? 'Mestret \u2B50' : hist.length === 0 ? '' : 'Niv ' + lvl + '/' + (maxLvl - 1));
+                  (mastered ? 'Mestret \u2B50' : 'Niv ' + lvl + '/' + (maxLvl - 1));
     var lvlColor = locked ? '#9ca3af' : purchasable ? 'var(--blue)' : (fMastered || mastered) ? 'var(--green)' : isAnyFrench ? 'var(--accent)' : levelColors[Math.min(lvl, 5)];
     var purchaseFn = isFrench ? 'purchaseFrench()' : 'purchaseFrench2()';
     var clickAttr = purchasable ? ' onclick="' + purchaseFn + '" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.8rem;opacity:0.8;cursor:pointer"' :

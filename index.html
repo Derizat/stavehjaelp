@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.3</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.4</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1484,7 +1484,6 @@
   <div class="rf-combo" id="rfCombo"></div>
   <div class="listen-box">
     <div class="rf-word" id="rfWordDisplay"></div>
-    <!-- timer removed -->
     <p class="hint-text" id="rfHint">Er dette ord stavet rigtigt?</p>
   </div>
   <div class="rf-buttons" id="rfButtons">
@@ -1650,7 +1649,6 @@ function selectPlayer(name) {
     show('phase-welcome');
     var nameEl = document.getElementById('playerNameDisplay');
     if (nameEl) nameEl.textContent = activePlayer;
-    refreshWelcomeButtons();
     updateWelcomeAvatar();
     renderCategoryLevels();
     restoreGradeSelection();
@@ -2781,8 +2779,8 @@ var pendingInterruptAction = null; // stores what to do after boss/chest
 var sessionUsedWords = {}; // tracks words used in session to prevent repeats
 
 // Utility
-function show(id) { document.getElementById(id).classList.remove('hidden'); }
-function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function show(id) { var el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+function hide(id) { var el = document.getElementById(id); if (el) el.classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
@@ -2795,7 +2793,6 @@ function goHome() {
   if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
   if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
   show('phase-welcome');
-  refreshWelcomeButtons();
   updateWelcomeAvatar();
   renderCategoryLevels();
   updateDashboardButton();
@@ -3542,17 +3539,33 @@ function renderMixedItem() {
   hide('phase-boss');
   document.getElementById('chestOverlay').classList.add('hidden');
 
+  var correctCount = results.filter(function(r) { return r.correct; }).length;
+  var wrongCount = results.filter(function(r) { return !r.correct; }).length;
+  var progressPct = ((mixedIndex / mixedQueue.length) * 100) + '%';
+  var wordNumStr = String(mixedIndex + 1);
+
+  // Map of prefix → phase score/progress element IDs
+  var prefixMap = {
+    diktat: '', fillin: 'fillin', rightorwrong: 'rf',
+    spellingpolice: 'sp', wordbuilder: 'wb', spellpick: 'spk', sentence: 'sw'
+  };
+  var prefix = prefixMap[item.type] || '';
+  var scoreC = document.getElementById(prefix ? prefix + 'ScoreCorrect' : 'scoreCorrect');
+  var scoreW = document.getElementById(prefix ? prefix + 'ScoreWrong' : 'scoreWrong');
+  var wordNum = document.getElementById(prefix ? prefix + 'WordNum' : 'wordNum');
+  var progBar = document.getElementById(prefix ? prefix + 'ProgressBar' : 'progressBar');
+  if (scoreC) scoreC.textContent = correctCount;
+  if (scoreW) scoreW.textContent = wrongCount;
+  if (wordNum) wordNum.textContent = wordNumStr;
+  if (progBar) progBar.style.width = progressPct;
+
   switch (item.type) {
     case 'diktat':
       gameMode = 'training';
       currentWords = [item.wordObj];
       currentIndex = 0;
-      document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
-      document.getElementById('scoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
       document.getElementById('testPhaseLabel').style.display = 'none';
       document.getElementById('difficultyLabel').innerHTML = '';
-      document.getElementById('wordNum').textContent = (mixedIndex + 1);
-      document.getElementById('progressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
       show('phase-test');
       renderWord();
       break;
@@ -3563,10 +3576,6 @@ function renderMixedItem() {
       fillinBlanks = [item.blanks];
       fillinIndex = 0;
       fillinResults = results.filter(function(r) { return true; }); // share results
-      document.getElementById('fillinScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
-      document.getElementById('fillinScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
-      document.getElementById('fillinWordNum').textContent = (mixedIndex + 1);
-      document.getElementById('fillinProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
       show('phase-fillin');
       renderFillInWord();
       break;
@@ -3587,10 +3596,6 @@ function renderMixedItem() {
       rfResults = [];
       rfCombo = 0;
       rfAnswered = false;
-      document.getElementById('rfScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
-      document.getElementById('rfScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
-      document.getElementById('rfWordNum').textContent = (mixedIndex + 1);
-      document.getElementById('rfProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
       show('phase-rightorwrong');
       renderRightOrWrongWord();
       break;
@@ -3600,10 +3605,6 @@ function renderMixedItem() {
       spItems = [item.spItem];
       spIndex = 0;
       spResults = [];
-      document.getElementById('spScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
-      document.getElementById('spScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
-      document.getElementById('spWordNum').textContent = (mixedIndex + 1);
-      document.getElementById('spProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
       show('phase-spellingpolice');
       renderSpellingPoliceWord();
       break;
@@ -3613,10 +3614,6 @@ function renderMixedItem() {
       wbWords = [{ wordObj: item.wordObj, morphemes: item.morphemes }];
       wbIndex = 0;
       wbResults = [];
-      document.getElementById('wbScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
-      document.getElementById('wbScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
-      document.getElementById('wbWordNum').textContent = (mixedIndex + 1);
-      document.getElementById('wbProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
       show('phase-wordbuilder');
       renderWBWord();
       break;
@@ -3626,11 +3623,6 @@ function renderMixedItem() {
       spkWords = [item.wordObj];
       spkIndex = 0;
       spkResults = [];
-      document.getElementById('spkScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
-      document.getElementById('spkScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
-      document.getElementById('spkWordNum').textContent = (mixedIndex + 1);
-      document.getElementById('spkProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
-      // Fetch misspellings then render
       var spkWord = item.wordObj;
       spkWord._dbMis = [];
       fetchMisspellings([spkWord.word.toLowerCase()], function(misByWord) {
@@ -3642,10 +3634,6 @@ function renderMixedItem() {
 
     case 'sentence':
       gameMode = 'sentence';
-      document.getElementById('swScoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
-      document.getElementById('swScoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
-      document.getElementById('swWordNum').textContent = (mixedIndex + 1);
-      document.getElementById('swProgressBar').style.width = ((mixedIndex / mixedQueue.length) * 100) + '%';
       show('phase-sentence');
       renderSentenceWord(item.wordObj);
       break;
@@ -4283,8 +4271,8 @@ var BOSS_INSTRUCTIONS = {
 var bossPracticeMode = false;
 var bossPracticeType = null;
 
-var BOSS_DISABLED_TYPES = ['rain', 'reverse', 'pacman', 'highway', 'snake'];
-var BOSS_ALL_TYPES = ['scramble', 'memory', 'cardcast', 'rain', 'reverse', 'pacman', 'highway', 'snake'];
+var BOSS_DISABLED_TYPES = ['scramble', 'spellpick', 'rain', 'reverse', 'pacman', 'highway', 'snake'];
+var BOSS_ALL_TYPES = BOSS_BATTLE_TYPES.concat(BOSS_DISABLED_TYPES);
 
 var EXERCISE_TYPES = [
   { id: 'fillin', emoji: '\u{270F}\uFE0F', name: 'Udfyld bogstav', fn: 'startFillIn' },
@@ -4369,16 +4357,18 @@ function startBossPractice(battleType) {
     wordObj: chosen
   };
 
-  if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
-  else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
-  else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
-  else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
-  else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
-  else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
-  else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
-  else if (battleType === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
-  else if (battleType === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
-  else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
+  renderBossByType(battleType, word, boss, idleAnim);
+}
+
+function renderBossByType(type, word, boss, idleAnim) {
+  var renderers = {
+    scramble: renderBossScramble, rain: renderBossRain, memory: renderBossMemory,
+    reverse: renderBossReverse, pacman: renderBossPacman, highway: renderBossHighway,
+    cardcast: renderBossCardcast, spellpick: renderBossSpellpick,
+    silentservant: renderBossSilentServant, snake: renderBossSnake
+  };
+  var fn = renderers[type] || renderers.scramble;
+  fn(word, boss, idleAnim);
 }
 
 function loadBossSeen() {
@@ -4410,19 +4400,11 @@ function testBoss(type) {
   bossState = {
     word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
     battleType: type, boss: boss, idleAnim: idleAnim,
-    deathAnim: pickRandom(BOSS_DEATH_ANIMS)
+    deathAnim: pickRandom(BOSS_DEATH_ANIMS),
+    wordObj: w
   };
 
-  if (type === 'scramble') renderBossScramble(word, boss, idleAnim);
-  else if (type === 'rain') renderBossRain(word, boss, idleAnim);
-  else if (type === 'memory') renderBossMemory(word, boss, idleAnim);
-  else if (type === 'reverse') renderBossReverse(word, boss, idleAnim);
-  else if (type === 'pacman') renderBossPacman(word, boss, idleAnim);
-  else if (type === 'highway') renderBossHighway(word, boss, idleAnim);
-  else if (type === 'cardcast') renderBossCardcast(word, boss, idleAnim);
-  else if (type === 'spellpick') renderBossSpellpick(word, boss, idleAnim);
-  else if (type === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
-  else if (type === 'snake') renderBossSnake(word, boss, idleAnim);
+  renderBossByType(type, word, boss, idleAnim);
 }
 
 function showBossMinigame(bossData) {
@@ -4500,26 +4482,10 @@ function showBossMinigame(bossData) {
       '<p style="font-size:1.15rem;font-weight:700;color:var(--text);line-height:1.6">' + instr.text + '</p>' +
       '</div>';
     setTimeout(function() {
-      if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
-      else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
-      else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
-      else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
-      else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
-      else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
-      else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
-      else if (battleType === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
-      else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
+      renderBossByType(battleType, word, boss, idleAnim);
     }, 3000);
   } else {
-    if (battleType === 'scramble') renderBossScramble(word, boss, idleAnim);
-    else if (battleType === 'rain') renderBossRain(word, boss, idleAnim);
-    else if (battleType === 'memory') renderBossMemory(word, boss, idleAnim);
-    else if (battleType === 'reverse') renderBossReverse(word, boss, idleAnim);
-    else if (battleType === 'pacman') renderBossPacman(word, boss, idleAnim);
-    else if (battleType === 'highway') renderBossHighway(word, boss, idleAnim);
-    else if (battleType === 'cardcast') renderBossCardcast(word, boss, idleAnim);
-    else if (battleType === 'silentservant') renderBossSilentServant(word, boss, idleAnim);
-    else if (battleType === 'snake') renderBossSnake(word, boss, idleAnim);
+    renderBossByType(battleType, word, boss, idleAnim);
   }
 }
 
@@ -9419,9 +9385,6 @@ function renderCategoryLevels() {
   el.innerHTML = html;
 }
 
-function refreshWelcomeButtons() {
-  // No-op — kept for compatibility with callers
-}
 
 // Init
 window.addEventListener('load', function() {

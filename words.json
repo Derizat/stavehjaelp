@@ -5185,7 +5185,7 @@
                   "hint": "Den sidder for enden af benet",
                   "patternHint": "blødt d til sidst — det høres næsten ikke",
                   "sentence": "Jeg slog min fod på stolen.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "fo"
             },
@@ -5194,7 +5194,7 @@
                   "hint": "Det grønne der sidder på et træ",
                   "patternHint": "blødt d til sidst — det høres næsten ikke",
                   "sentence": "Et blad faldt ned fra træet.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "bla"
             },
@@ -5203,7 +5203,7 @@
                   "hint": "Det modsatte af kærlighed",
                   "patternHint": "blødt d til sidst — det høres næsten ikke",
                   "sentence": "Had er en stærk følelse.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "ha"
             },
@@ -5212,7 +5212,7 @@
                   "hint": "Ikke pæn, grim",
                   "patternHint": "blødt d til sidst — det høres næsten ikke",
                   "sentence": "Det var en led heks i eventyret.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "le"
             },
@@ -5221,7 +5221,7 @@
                   "hint": "Blødt og vådt jord",
                   "patternHint": "blødt d til sidst — det høres næsten ikke",
                   "sentence": "Grisen rullede sig i mud.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "mu"
             },
@@ -5230,7 +5230,7 @@
                   "hint": "Lille hus eller stand på et marked",
                   "patternHint": "Blødt 'd' til sidst — udtales næsten som 'boð'",
                   "sentence": "Vi købte slik fra en bod på markedet.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "bo"
             },
@@ -5239,7 +5239,7 @@
                   "hint": "En lang række af ting",
                   "patternHint": "Blødt 'd' til sidst — udtales næsten som 'rað'",
                   "sentence": "Bilerne stod på rad og række.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "ra"
             },
@@ -5248,7 +5248,7 @@
                   "hint": "Sort støv fra en skorsten",
                   "patternHint": "Blødt 'd' til sidst — udtales næsten som 'soð'",
                   "sentence": "Skorstenen var fuld af sod.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "so"
             },
@@ -5464,7 +5464,7 @@
                   "hint": "Et stykke man tager med tænderne",
                   "patternHint": "Blødt 'd' til sidst — udtales næsten som 'bið'",
                   "sentence": "Kan jeg få en bid af dit æble?",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "bi"
             },
@@ -5473,7 +5473,7 @@
                   "hint": "Den del af planten under jorden",
                   "patternHint": "Blødt 'd' til sidst — udtales næsten som 'roð'",
                   "sentence": "Træet har en stor rod.",
-                  "level": 0,
+                  "level": 1,
                   "category": "Blødt d",
                   "misspelling": "ro"
             },

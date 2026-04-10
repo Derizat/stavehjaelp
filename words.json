@@ -685,15 +685,6 @@
                   "misspelling": "lan"
             },
             {
-                  "word": "bold",
-                  "hint": "Man sparker til den",
-                  "patternHint": "stumt 'd' i '-ld'",
-                  "sentence": "Børnene spiller bold i haven.",
-                  "level": 2,
-                  "category": "Stumme bogstaver",
-                  "misspelling": "bol"
-            },
-            {
                   "word": "sand",
                   "hint": "Findes på stranden",
                   "patternHint": "stumt 'd' i '-nd'",
@@ -1461,15 +1452,6 @@
                   "misspelling": "zepelin"
             },
             {
-                  "word": "hakke",
-                  "hint": "Skære i små stykker",
-                  "patternHint": "ha_ke → kk",
-                  "sentence": "Kan du hakke løget i små tern?",
-                  "level": 1,
-                  "category": "Dobbeltkonsonant",
-                  "misspelling": "hake"
-            },
-            {
                   "word": "puffe",
                   "hint": "Give et lille skub",
                   "patternHint": "pu_fe → ff",
@@ -1486,24 +1468,6 @@
                   "level": 1,
                   "category": "Dobbeltkonsonant",
                   "misspelling": "dipe"
-            },
-            {
-                  "word": "bukke",
-                  "hint": "Bøje sig ned som hilsen",
-                  "patternHint": "bu_ke → kk",
-                  "sentence": "Skuespillerne skal bukke efter forestillingen.",
-                  "level": 1,
-                  "category": "Dobbeltkonsonant",
-                  "misspelling": "buke"
-            },
-            {
-                  "word": "nikke",
-                  "hint": "Bevæge hovedet op og ned",
-                  "patternHint": "ni_ke → kk",
-                  "sentence": "Hun begyndte at nikke til musikken.",
-                  "level": 1,
-                  "category": "Dobbeltkonsonant",
-                  "misspelling": "nike"
             },
             {
                   "word": "brumme",
@@ -2977,15 +2941,6 @@
                   "level": 0,
                   "category": "Lydrette ord",
                   "misspelling": "katt"
-            },
-            {
-                  "word": "hund",
-                  "hint": "Dyr der siger vov",
-                  "patternHint": "lydrette ord — staves som det lyder",
-                  "sentence": "Min nabo har en hund der er meget stor.",
-                  "level": 1,
-                  "category": "Lydrette ord",
-                  "misspelling": "hunnd"
             },
             {
                   "word": "bold",
@@ -4486,15 +4441,6 @@
                   "misspelling": "garag"
             },
             {
-                  "word": "chauffør",
-                  "hint": "Person der kører en bil for andre",
-                  "patternHint": "fremmedord fra fransk: 'ch' udtales som 'sj' og '-ør' ending",
-                  "sentence": "Bussens chauffør var meget venlig.",
-                  "level": 3,
-                  "category": "Fremmedord",
-                  "misspelling": "kauffør"
-            },
-            {
                   "word": "nervøs",
                   "hint": "En følelse af uro og bekymring",
                   "patternHint": "fremmedord fra latin: '-øs' ending fra fransk",
@@ -4547,15 +4493,6 @@
                   "level": 4,
                   "category": "Fremmedord",
                   "misspelling": "milgø"
-            },
-            {
-                  "word": "psykolog",
-                  "hint": "Person der hjælper med tanker og følelser",
-                  "patternHint": "fremmedord fra græsk: stumt 'p' i 'psyk-'",
-                  "sentence": "Skolens psykolog taler med eleverne om trivsel.",
-                  "level": 4,
-                  "category": "Fremmedord",
-                  "misspelling": "psikolog"
             },
             {
                   "word": "symfoni",
@@ -4853,15 +4790,6 @@
                   "level": 4,
                   "category": "Fremmedord",
                   "misspelling": "enkyclopædi"
-            },
-            {
-                  "word": "psykologi",
-                  "hint": "Videnskaben om tanker og følelser",
-                  "patternHint": "Fremmedord fra græsk — stumt 'p' i starten, staves med 'y' og 'gi'",
-                  "sentence": "Psykologi handler om hvordan mennesker tænker.",
-                  "level": 4,
-                  "category": "Fremmedord",
-                  "misspelling": "psikologi"
             },
             {
                   "word": "balkon",

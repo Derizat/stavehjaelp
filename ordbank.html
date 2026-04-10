@@ -5,165 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stavehjælpen — Ordbank</title>
 <style>
-  :root {
-    --bg: #f8f9fa;
-    --card: #fff;
-    --border: #e2e8f0;
-    --text: #1a202c;
-    --muted: #718096;
-    --accent: #4299e1;
-    --accent-dark: #2b6cb0;
-  }
+  :root { --bg: #f8f9fa; --card: #fff; --border: #e2e8f0; --text: #1a202c; --muted: #718096; --accent: #4299e1; --accent-dark: #2b6cb0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    padding: 20px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; max-width: 1100px; margin: 0 auto; }
   h1 { font-size: 2rem; margin-bottom: 8px; text-align: center; }
   .subtitle { text-align: center; color: var(--muted); margin-bottom: 32px; font-size: 1.05rem; }
-  .toc {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px 32px;
-    margin-bottom: 40px;
-  }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px 32px; margin-bottom: 40px; }
   .toc h2 { font-size: 1.3rem; margin-bottom: 12px; }
-  .toc-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 8px 24px;
-  }
-  .toc a {
-    color: var(--accent-dark);
-    text-decoration: none;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 0;
-  }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px 24px; }
+  .toc a { color: var(--accent-dark); text-decoration: none; font-size: 1rem; display: flex; align-items: center; gap: 6px; padding: 4px 0; }
   .toc a:hover { text-decoration: underline; }
   .toc .count { color: var(--muted); font-size: 0.85rem; }
   .category { margin-bottom: 48px; }
-  .cat-header {
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    padding: 12px 0 8px;
-    z-index: 10;
-    border-bottom: 2px solid var(--accent);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
+  .cat-header { position: sticky; top: 0; background: var(--bg); padding: 12px 0 8px; z-index: 10; border-bottom: 2px solid var(--accent); margin-bottom: 16px; display: flex; align-items: baseline; gap: 10px; }
   .cat-header h2 { font-size: 1.5rem; }
   .cat-header .cat-count { color: var(--muted); font-size: 0.95rem; }
   .level-section { margin-bottom: 28px; }
-  .level-header {
-    font-size: 1.1rem;
-    color: var(--accent-dark);
-    margin-bottom: 10px;
-    padding-left: 4px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--card);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    margin-bottom: 8px;
-  }
-  th {
-    background: #edf2f7;
-    text-align: left;
-    padding: 10px 14px;
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-    font-weight: 600;
-  }
-  td {
-    padding: 9px 14px;
-    border-top: 1px solid var(--border);
-    font-size: 0.95rem;
-    vertical-align: top;
-  }
+  .level-header { font-size: 1.1rem; color: var(--accent-dark); margin-bottom: 10px; padding-left: 4px; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 8px; }
+  th { background: #edf2f7; text-align: left; padding: 10px 14px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 600; }
+  td { padding: 9px 14px; border-top: 1px solid var(--border); font-size: 0.95rem; vertical-align: top; }
   tr:hover td { background: #f7fafc; }
   .word-cell { font-weight: 600; white-space: nowrap; }
   .ms-cell { color: #c53030; font-style: italic; }
   .hint-cell { color: var(--muted); font-size: 0.9rem; }
   .sentence-cell { font-size: 0.88rem; color: #4a5568; }
   .pattern-cell { font-family: monospace; font-size: 0.85rem; color: #805ad5; }
-  .back-to-top {
-    display: inline-block;
-    margin-top: 4px;
-    font-size: 0.85rem;
-    color: var(--accent);
-    text-decoration: none;
-  }
+  .back-to-top { display: inline-block; margin-top: 4px; font-size: 0.85rem; color: var(--accent); text-decoration: none; }
   .back-to-top:hover { text-decoration: underline; }
-  .stats {
-    text-align: center;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 32px;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-  }
+  .stats { text-align: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 32px; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
   .stat-item .num { font-size: 1.8rem; font-weight: 700; color: var(--accent-dark); }
   .stat-item .lbl { font-size: 0.85rem; color: var(--muted); }
-  @media (max-width: 600px) {
-    body { padding: 12px; }
-    .toc-grid { grid-template-columns: 1fr; }
-    th, td { padding: 7px 8px; font-size: 0.85rem; }
-    .sentence-cell { display: none; }
-  }
+  @media (max-width: 600px) { body { padding: 12px; } .toc-grid { grid-template-columns: 1fr; } th, td { padding: 7px 8px; font-size: 0.85rem; } .sentence-cell { display: none; } }
 </style>
 </head>
 <body>
 <div id="top"></div>
 <h1>📚 Stavehjælpen — Ordbank</h1>
-<p class="subtitle">656 ord fordelt på 10 kategorier og 6 niveauer</p>
+<p class="subtitle">638 ord fordelt på 11 kategorier og 6 niveauer</p>
 <div class="stats">
-  <div class="stat-item"><div class="num">656</div><div class="lbl">Ord i alt</div></div>
-  <div class="stat-item"><div class="num">10</div><div class="lbl">Kategorier</div></div>
+  <div class="stat-item"><div class="num">638</div><div class="lbl">Ord i alt</div></div>
+  <div class="stat-item"><div class="num">11</div><div class="lbl">Kategorier</div></div>
   <div class="stat-item"><div class="num">6</div><div class="lbl">Niveauer</div></div>
 </div>
 <nav class="toc" id="toc">
 <h2>Indholdsfortegnelse</h2>
 <div class="toc-grid">
-  <a href="#stumme-bogstaver">🔇 Stumme bogstaver <span class="count">(98)</span></a>
-  <a href="#dobbeltkonsonant">🔠 Dobbeltkonsonant <span class="count">(93)</span></a>
-  <a href="#sammensatte-ord">🔗 Sammensatte ord <span class="count">(48)</span></a>
+  <a href="#stumme-bogstaver">🔇 Stumme bogstaver <span class="count">(96)</span></a>
+  <a href="#dobbeltkonsonant">🔠 Dobbeltkonsonant <span class="count">(89)</span></a>
+  <a href="#sammensatte-ord">🔗 Sammensatte ord <span class="count">(46)</span></a>
   <a href="#verbernes-boejning">🔄 Verbernes bøjning <span class="count">(91)</span></a>
-  <a href="#lydrette-ord">🔊 Lydrette ord <span class="count">(83)</span></a>
+  <a href="#lydrette-ord">🔊 Lydrette ord <span class="count">(80)</span></a>
   <a href="#nutids-r">🏃 Nutids-r <span class="count">(83)</span></a>
-  <a href="#fremmedord">🌍 Fremmedord <span class="count">(60)</span></a>
+  <a href="#fremmedord">🌍 Fremmedord <span class="count">(54)</span></a>
   <a href="#bloedt-d">🫠 Blødt d <span class="count">(61)</span></a>
   <a href="#konsonantlyde">👂 Konsonantlyde <span class="count">(30)</span></a>
-  <a href="#svaere-ord">💀 Svære ord <span class="count">(9)</span></a>
+  <a href="#ord-fra-fransk">🇫🇷 Ord fra Fransk <span class="count">(7)</span></a>
+  <a href="#ord-fra-fransk-2">🇫🇷 Ord fra Fransk 2 <span class="count">(1)</span></a>
 </div>
 </nav>
 <section class="category" id="stumme-bogstaver">
-  <div class="cat-header"><h2>🔇 Stumme bogstaver</h2><span class="cat-count">98 ord</span></div>
+  <div class="cat-header"><h2>🔇 Stumme bogstaver</h2><span class="cat-count">96 ord</span></div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 16 ord</h3>
+    <h3 class="level-header">Niveau 2 (3.-4. klasse) — 15 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
-      <tr><td class="word-cell">bold</td><td class="ms-cell">bol</td><td class="hint-cell">Man sparker til den</td><td class="pattern-cell">stumt 'd' i '-ld'</td><td class="sentence-cell">Børnene spiller bold i haven.</td></tr>
       <tr><td class="word-cell">fint</td><td class="ms-cell">findt</td><td class="hint-cell">Godt og i orden</td><td class="pattern-cell">ingen stumt 'd' — fin + t</td><td class="sentence-cell">Det er fint vejr i dag.</td></tr>
       <tr><td class="word-cell">hjemme</td><td class="ms-cell">jemme</td><td class="hint-cell">I sit eget hus</td><td class="pattern-cell">stumt 'h' i 'hj'</td><td class="sentence-cell">Mor er hjemme hele dagen.</td></tr>
       <tr><td class="word-cell">hjælp</td><td class="ms-cell">jælp</td><td class="hint-cell">Når man har brug for en hånd</td><td class="pattern-cell">stumt 'h' i 'hj'</td><td class="sentence-cell">Hjælp, jeg kan ikke nå op!</td></tr>
@@ -174,7 +80,7 @@
       <tr><td class="word-cell">hvil</td><td class="ms-cell">vil</td><td class="hint-cell">Hold en pause</td><td class="pattern-cell">stumt 'h' i 'hv'</td><td class="sentence-cell">Tag et hvil inden vi går videre.</td></tr>
       <tr><td class="word-cell">hvis</td><td class="ms-cell">vis</td><td class="hint-cell">Betingelse for noget</td><td class="pattern-cell">stumt 'h' i 'hv'</td><td class="sentence-cell">Hvis det regner, bliver vi inde.</td></tr>
       <tr><td class="word-cell">hvor</td><td class="ms-cell">vor</td><td class="hint-cell">Spørger om et sted</td><td class="pattern-cell">stumt 'h' i 'hv'</td><td class="sentence-cell">Hvor bor du henne?</td></tr>
-      <tr><td class="word-cell">jul</td><td class="ms-cell">hjul</td><td class="hint-cell">Højtid i december med gaver og juletræ</td><td class="pattern-cell">j, ikke hj</td><td class="sentence-cell">Vi glæder os til jul.</td></tr>
+      <tr><td class="word-cell">jul</td><td class="ms-cell">hjul</td><td class="hint-cell">Højtid i december med gaver og pynt</td><td class="pattern-cell">j, ikke hj</td><td class="sentence-cell">Vi glæder os til jul.</td></tr>
       <tr><td class="word-cell">pænt</td><td class="ms-cell">pændt</td><td class="hint-cell">Flot og ordentligt</td><td class="pattern-cell">ingen stumt 'd' — pæn + t</td><td class="sentence-cell">Du har tegnet meget pænt.</td></tr>
       <tr><td class="word-cell">vand</td><td class="ms-cell">hvand</td><td class="hint-cell">Det man drikker fra hanen</td><td class="pattern-cell">v, ikke hv</td><td class="sentence-cell">Må jeg få et glas vand?</td></tr>
       <tr><td class="word-cell">vel</td><td class="ms-cell">hvel</td><td class="hint-cell">Nok, formentlig</td><td class="pattern-cell">v, ikke hv</td><td class="sentence-cell">Du kommer vel til festen?</td></tr>
@@ -182,10 +88,11 @@
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 2 (3.-4. klasse) — 48 ord</h3>
+    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 47 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">brunt</td><td class="ms-cell">brundt</td><td class="hint-cell">Farven på chokolade</td><td class="pattern-cell">ingen stumt 'd' — brun + t</td><td class="sentence-cell">Bordet er brunt.</td></tr>
+      <tr><td class="word-cell">grædt</td><td class="ms-cell">græt</td><td class="hint-cell">Fældet tårer</td><td class="pattern-cell">stumt 'd' i '-dt'</td><td class="sentence-cell">Barnet havde grædt hele natten.</td></tr>
       <tr><td class="word-cell">grønt</td><td class="ms-cell">grøndt</td><td class="hint-cell">Farven på græs</td><td class="pattern-cell">ingen stumt 'd' — grøn + t</td><td class="sentence-cell">Lyset er grønt, nu kan vi gå.</td></tr>
       <tr><td class="word-cell">guld</td><td class="ms-cell">gul</td><td class="hint-cell">Dyrebart skinnende metal</td><td class="pattern-cell">stumt 'd' efter 'l'</td><td class="sentence-cell">Ringen er lavet af guld.</td></tr>
       <tr><td class="word-cell">gulv</td><td class="ms-cell">gul</td><td class="hint-cell">Det man går på indendørs</td><td class="pattern-cell">stumt 'l' foran 'v'</td><td class="sentence-cell">Der ligger et tæppe på gulv i stuen.</td></tr>
@@ -220,7 +127,6 @@
       <tr><td class="word-cell">land</td><td class="ms-cell">lan</td><td class="hint-cell">Et område med grænser</td><td class="pattern-cell">stumt 'd' i '-nd'</td><td class="sentence-cell">Danmark er et dejligt land.</td></tr>
       <tr><td class="word-cell">lunt</td><td class="ms-cell">lundt</td><td class="hint-cell">Behageligt varmt</td><td class="pattern-cell">ingen stumt 'd' — lun + t</td><td class="sentence-cell">Vejret er lunt i aften.</td></tr>
       <tr><td class="word-cell">mild</td><td class="ms-cell">mil</td><td class="hint-cell">Blid og rolig</td><td class="pattern-cell">stumt 'd' efter 'l'</td><td class="sentence-cell">Vinden er mild i aften.</td></tr>
-      <tr><td class="word-cell">mild</td><td class="ms-cell">mil</td><td class="hint-cell">Blid og skånsom</td><td class="pattern-cell">stumt 'd' i '-ld'</td><td class="sentence-cell">Sæben er mild mod huden.</td></tr>
       <tr><td class="word-cell">rent</td><td class="ms-cell">rendt</td><td class="hint-cell">Uden snavs</td><td class="pattern-cell">ingen stumt 'd' — ren + t</td><td class="sentence-cell">Værelset er rent og pænt.</td></tr>
       <tr><td class="word-cell">rund</td><td class="ms-cell">run</td><td class="hint-cell">Formen på en bold</td><td class="pattern-cell">stumt 'd' i '-nd'</td><td class="sentence-cell">Bolden er helt rund.</td></tr>
       <tr><td class="word-cell">salt</td><td class="ms-cell">saldt</td><td class="hint-cell">Hvidt krydderi til maden</td><td class="pattern-cell">ingen stumt 'd' — salt, ikke saldt</td><td class="sentence-cell">Suppen er for salt.</td></tr>
@@ -228,15 +134,14 @@
       <tr><td class="word-cell">sølv</td><td class="ms-cell">søl</td><td class="hint-cell">Et skinnende metal</td><td class="pattern-cell">stumt 'l' foran 'v'</td><td class="sentence-cell">Ringen er lavet af sølv.</td></tr>
       <tr><td class="word-cell">tolv</td><td class="ms-cell">tol</td><td class="hint-cell">Tallet 12</td><td class="pattern-cell">stumt 'l' foran 'v'</td><td class="sentence-cell">Der er tolv måneder på et år.</td></tr>
       <tr><td class="word-cell">vaske</td><td class="ms-cell">hvaske</td><td class="hint-cell">Gøre rent med vand og sæbe</td><td class="pattern-cell">v, ikke hv</td><td class="sentence-cell">Husk at vaske hænder før maden.</td></tr>
-      <tr><td class="word-cell">vejr</td><td class="ms-cell">hvejr</td><td class="hint-cell">Sol, regn, vind og sne</td><td class="pattern-cell">v, ikke hv</td><td class="sentence-cell">Vejret er flot i dag.</td></tr>
+      <tr><td class="word-cell">vejr</td><td class="ms-cell">hvejr</td><td class="hint-cell">Sol, regn, vind og sne</td><td class="pattern-cell">v, ikke hv</td><td class="sentence-cell">I dag er det godt vejr.</td></tr>
       <tr><td class="word-cell">vild</td><td class="ms-cell">vil</td><td class="hint-cell">Ikke tam, ukontrolleret</td><td class="pattern-cell">stumt 'd' efter 'l'</td><td class="sentence-cell">Katten er helt vild med at lege.</td></tr>
-      <tr><td class="word-cell">vild</td><td class="ms-cell">vil</td><td class="hint-cell">Ikke tam</td><td class="pattern-cell">stumt 'd' i '-ld'</td><td class="sentence-cell">Han blev helt vild af glæde.</td></tr>
       <tr><td class="word-cell">vise</td><td class="ms-cell">hvise</td><td class="hint-cell">Lade nogen se noget</td><td class="pattern-cell">v, ikke hv</td><td class="sentence-cell">Kan du vise mig din tegning?</td></tr>
       <tr><td class="word-cell">vælge</td><td class="ms-cell">hvælge</td><td class="hint-cell">Bestemme sig for én ting</td><td class="pattern-cell">v, ikke hv</td><td class="sentence-cell">Du må vælge mellem is og kage.</td></tr>
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 31 ord</h3>
+    <h3 class="level-header">Niveau 4 (7.-8. klasse) — 34 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">blind</td><td class="ms-cell">blin</td><td class="hint-cell">Kan ikke se</td><td class="pattern-cell">stumt 'd' i '-nd'</td><td class="sentence-cell">Manden var blind og brugte en stok.</td></tr>
@@ -244,6 +149,7 @@
       <tr><td class="word-cell">faldgrube</td><td class="ms-cell">falgrube</td><td class="hint-cell">En skjult fælde</td><td class="pattern-cell">stumt 'd' i '-ld'</td><td class="sentence-cell">Pas på, det kan være en faldgrube.</td></tr>
       <tr><td class="word-cell">fuldstændig</td><td class="ms-cell">fulstændig</td><td class="hint-cell">Helt og aldeles</td><td class="pattern-cell">stumt 'd' i 'fuld'</td><td class="sentence-cell">Værelset var fuldstændig rodet.</td></tr>
       <tr><td class="word-cell">grund</td><td class="ms-cell">grun</td><td class="hint-cell">Et stykke jord</td><td class="pattern-cell">stumt 'd' i '-nd'</td><td class="sentence-cell">Vi har en stor grund med græs.</td></tr>
+      <tr><td class="word-cell">grøntsager</td><td class="ms-cell">grønsager</td><td class="hint-cell">Gulerødder, broccoli og andet sundt</td><td class="pattern-cell">stumt t i -nts-</td><td class="sentence-cell">Husk at spise dine grøntsager.</td></tr>
       <tr><td class="word-cell">halvanden</td><td class="ms-cell">halanden</td><td class="hint-cell">Tallet 1,5</td><td class="pattern-cell">stumt 'v' i 'halv'</td><td class="sentence-cell">Vi ventede i halvanden time på bussen.</td></tr>
       <tr><td class="word-cell">halvdel</td><td class="ms-cell">haldel</td><td class="hint-cell">Den ene af to dele</td><td class="pattern-cell">stumt 'l' foran 'v'</td><td class="sentence-cell">Giv mig en halvdel af æblet.</td></tr>
       <tr><td class="word-cell">halvfems</td><td class="ms-cell">halfems</td><td class="hint-cell">Tallet 90</td><td class="pattern-cell">stumt 'l' foran 'v'</td><td class="sentence-cell">Min oldemor blev halvfems år gammel.</td></tr>
@@ -266,41 +172,31 @@
       <tr><td class="word-cell">hvælv</td><td class="ms-cell">vælv</td><td class="hint-cell">Buet tag i en kælder</td><td class="pattern-cell">stumt 'h' i 'hv'</td><td class="sentence-cell">Kælderen har et gammelt hvælv.</td></tr>
       <tr><td class="word-cell">hvælving</td><td class="ms-cell">vælving</td><td class="hint-cell">Buet loft eller tag</td><td class="pattern-cell">stumt 'h' i 'hv'</td><td class="sentence-cell">Kirkens hvælving var flot dekoreret.</td></tr>
       <tr><td class="word-cell">hvæse</td><td class="ms-cell">væse</td><td class="hint-cell">Lave en slangelyd</td><td class="pattern-cell">stumt 'h' i 'hv'</td><td class="sentence-cell">Slangen begyndte at hvæse ad os.</td></tr>
+      <tr><td class="word-cell">psykolog</td><td class="ms-cell">sykolog</td><td class="hint-cell">En person man snakker med om følelser</td><td class="pattern-cell">stumt p i ps-</td><td class="sentence-cell">Hun gik til psykolog for at få det bedre.</td></tr>
       <tr><td class="word-cell">selvfølgelig</td><td class="ms-cell">selfølgelig</td><td class="hint-cell">Naturligvis</td><td class="pattern-cell">'selv'+'følge'+'lig'</td><td class="sentence-cell">Du må selvfølgelig gerne komme med os.</td></tr>
       <tr><td class="word-cell">skulder</td><td class="ms-cell">skuller</td><td class="hint-cell">Kropsdel mellem hals og arm</td><td class="pattern-cell">stumt 'l' i udtalen</td><td class="sentence-cell">Han lagde armen om hendes skulder.</td></tr>
-      <tr><td class="word-cell">told</td><td class="ms-cell">tol</td><td class="hint-cell">Afgift på varer</td><td class="pattern-cell">stumt 'd' efter 'l'</td><td class="sentence-cell">Der skal betales told på varen.</td></tr>
-      <tr><td class="word-cell">vist</td><td class="ms-cell">vidst</td><td class="hint-cell">Sandsynligvis</td><td class="pattern-cell">ingen stumt 'd' — vis + t, ikke vidst</td><td class="sentence-cell">Det er vist rigtigt.</td></tr>
-    </table>
-  </div>
-  <div class="level-section">
-    <h3 class="level-header">Niveau 4 (7.-8. klasse) — 3 ord</h3>
-    <table>
-      <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
-      <tr><td class="word-cell">grøntsager</td><td class="ms-cell">grønsager</td><td class="hint-cell">Gulerødder, broccoli og andet sundt</td><td class="pattern-cell">stumt t i -nts-</td><td class="sentence-cell">Husk at spise dine grøntsager.</td></tr>
-      <tr><td class="word-cell">psykolog</td><td class="ms-cell">sykolog</td><td class="hint-cell">En person man snakker med om følelser</td><td class="pattern-cell">stumt p i ps-</td><td class="sentence-cell">Hun gik til psykolog for at få det bedre.</td></tr>
       <tr><td class="word-cell">spaghetti</td><td class="ms-cell">spagetti</td><td class="hint-cell">Lange, tynde nudler fra Italien</td><td class="pattern-cell">stumt h i gh</td><td class="sentence-cell">Vi fik spaghetti med kødsovs til aftensmad.</td></tr>
+      <tr><td class="word-cell">told</td><td class="ms-cell">tol</td><td class="hint-cell">Afgift på varer</td><td class="pattern-cell">stumt 'd' efter 'l'</td><td class="sentence-cell">Der skal betales told på varen.</td></tr>
+      <tr><td class="word-cell">vist</td><td class="ms-cell">vidst</td><td class="hint-cell">Nok, formentlig</td><td class="pattern-cell">ingen stumt 'd' — vis + t, ikke vidst</td><td class="sentence-cell">Det er vist rigtigt.</td></tr>
     </table>
   </div>
   <a href="#toc" class="back-to-top">↑ Tilbage til indholdsfortegnelsen</a>
 </section>
 <section class="category" id="dobbeltkonsonant">
-  <div class="cat-header"><h2>🔠 Dobbeltkonsonant</h2><span class="cat-count">93 ord</span></div>
+  <div class="cat-header"><h2>🔠 Dobbeltkonsonant</h2><span class="cat-count">89 ord</span></div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 26 ord</h3>
+    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 23 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">brumme</td><td class="ms-cell">brume</td><td class="hint-cell">Dyb summende lyd</td><td class="pattern-cell">dobbelt 'm' efter kort vokal</td><td class="sentence-cell">Bjørnen kan brumme helt vildt.</td></tr>
-      <tr><td class="word-cell">bukke</td><td class="ms-cell">buke</td><td class="hint-cell">Bøje sig ned som hilsen</td><td class="pattern-cell">bu_ke → kk</td><td class="sentence-cell">Skuespillerne skal bukke efter forestillingen.</td></tr>
       <tr><td class="word-cell">bukser</td><td class="ms-cell">bukkser</td><td class="hint-cell">Tøj til benene</td><td class="pattern-cell">enkelt-k (kort vokal + to kons.)</td><td class="sentence-cell">Jeg har fået nye bukser i gave.</td></tr>
       <tr><td class="word-cell">dippe</td><td class="ms-cell">dipe</td><td class="hint-cell">Dyppe mad i sovs</td><td class="pattern-cell">di_pe → pp</td><td class="sentence-cell">Man kan dippe grøntsager i hummus.</td></tr>
-      <tr><td class="word-cell">hakke</td><td class="ms-cell">hake</td><td class="hint-cell">Skære i små stykker</td><td class="pattern-cell">ha_ke → kk</td><td class="sentence-cell">Kan du hakke løget i små tern?</td></tr>
       <tr><td class="word-cell">hoppe</td><td class="ms-cell">hope</td><td class="hint-cell">Springe op og ned</td><td class="pattern-cell">dobbelt-p efter kort 'o'</td><td class="sentence-cell">Kaninen kan hoppe højt.</td></tr>
       <tr><td class="word-cell">kaffe</td><td class="ms-cell">kafe</td><td class="hint-cell">Varm drik til voksne</td><td class="pattern-cell">dobbelt-f efter kort 'a'</td><td class="sentence-cell">Mor drikker kaffe om morgenen.</td></tr>
       <tr><td class="word-cell">katte</td><td class="ms-cell">kate</td><td class="hint-cell">Flere mjav-dyr</td><td class="pattern-cell">dobbelt-t efter kort 'a'</td><td class="sentence-cell">Der er to katte i haven.</td></tr>
       <tr><td class="word-cell">kokken</td><td class="ms-cell">koken</td><td class="hint-cell">Personen der laver maden</td><td class="pattern-cell">ko_ken → kk</td><td class="sentence-cell">Kokken lavede den bedste suppe.</td></tr>
       <tr><td class="word-cell">kopper</td><td class="ms-cell">koper</td><td class="hint-cell">Man drikker af dem</td><td class="pattern-cell">dobbelt 'p' efter kort vokal</td><td class="sentence-cell">Sæt to kopper på bordet til os.</td></tr>
       <tr><td class="word-cell">masse</td><td class="ms-cell">mase</td><td class="hint-cell">Rigtig mange</td><td class="pattern-cell">dobbelt 's' efter kort vokal</td><td class="sentence-cell">Der var en masse børn til festen.</td></tr>
-      <tr><td class="word-cell">nikke</td><td class="ms-cell">nike</td><td class="hint-cell">Bevæge hovedet op og ned</td><td class="pattern-cell">ni_ke → kk</td><td class="sentence-cell">Hun begyndte at nikke til musikken.</td></tr>
       <tr><td class="word-cell">nisse</td><td class="ms-cell">nise</td><td class="hint-cell">Lille julevæsen</td><td class="pattern-cell">dobbelt 's' efter kort vokal</td><td class="sentence-cell">Julemanden har en lille nisse med sig.</td></tr>
       <tr><td class="word-cell">puffe</td><td class="ms-cell">pufe</td><td class="hint-cell">Give et lille skub</td><td class="pattern-cell">pu_fe → ff</td><td class="sentence-cell">Du må ikke puffe til de andre i køen.</td></tr>
       <tr><td class="word-cell">putte</td><td class="ms-cell">pute</td><td class="hint-cell">Lægge noget et sted</td><td class="pattern-cell">dobbelt-t efter kort 'u'</td><td class="sentence-cell">Du kan putte bogen i tasken.</td></tr>
@@ -318,7 +214,7 @@
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 2 (3.-4. klasse) — 22 ord</h3>
+    <h3 class="level-header">Niveau 2 (3.-4. klasse) — 21 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">bade</td><td class="ms-cell">badde</td><td class="hint-cell">Vaske sig i vand</td><td class="pattern-cell">enkelt-d (lang vokal 'a')</td><td class="sentence-cell">Om sommeren kan vi bade i søen.</td></tr>
@@ -338,7 +234,6 @@
       <tr><td class="word-cell">stige</td><td class="ms-cell">stigge</td><td class="hint-cell">Gå opad</td><td class="pattern-cell">enkelt konsonant, lang vokal som kontrast</td><td class="sentence-cell">Priserne kan stige meget hurtigt.</td></tr>
       <tr><td class="word-cell">stopper</td><td class="ms-cell">stoper</td><td class="hint-cell">Holder op med noget</td><td class="pattern-cell">dobbelt-p efter kort 'o'</td><td class="sentence-cell">Bussen stopper ved næste holdeplads.</td></tr>
       <tr><td class="word-cell">svømme</td><td class="ms-cell">svøme</td><td class="hint-cell">Bevæge sig i vand</td><td class="pattern-cell">dobbelt 'm' efter kort vokal</td><td class="sentence-cell">Vi skal lære at svømme i skolen.</td></tr>
-      <tr><td class="word-cell">tappe</td><td class="ms-cell">tape</td><td class="hint-cell">Hælde væske fra en beholder</td><td class="pattern-cell">ta_pe → pp</td><td class="sentence-cell">Far skal tappe øl fra tønden.</td></tr>
       <tr><td class="word-cell">tappe</td><td class="ms-cell">tape</td><td class="hint-cell">Hælde væske ud</td><td class="pattern-cell">dobbelt-p efter kort 'a'</td><td class="sentence-cell">Far skal tappe øl fra tønden.</td></tr>
       <tr><td class="word-cell">trappe</td><td class="ms-cell">trape</td><td class="hint-cell">Man går op ad den</td><td class="pattern-cell">dobbelt 'p' efter kort vokal</td><td class="sentence-cell">Gå op ad trappe til første sal.</td></tr>
       <tr><td class="word-cell">tromme</td><td class="ms-cell">trome</td><td class="hint-cell">Musikinstrument man slår på</td><td class="pattern-cell">dobbelt-m efter kort 'o'</td><td class="sentence-cell">Han spiller på sin tromme i bandet.</td></tr>
@@ -405,62 +300,54 @@
   <a href="#toc" class="back-to-top">↑ Tilbage til indholdsfortegnelsen</a>
 </section>
 <section class="category" id="sammensatte-ord">
-  <div class="cat-header"><h2>🔗 Sammensatte ord</h2><span class="cat-count">48 ord</span></div>
+  <div class="cat-header"><h2>🔗 Sammensatte ord</h2><span class="cat-count">46 ord</span></div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 22 ord</h3>
-    <table>
-      <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
-      <tr><td class="word-cell">bilnøgle</td><td class="ms-cell">bilsnøgle</td><td class="hint-cell">Låser køretøjet op</td><td class="pattern-cell">'bil' + 'nøgle'</td><td class="sentence-cell">Far ledte efter sin bilnøgle.</td></tr>
-      <tr><td class="word-cell">blyant</td><td class="ms-cell">blysant</td><td class="hint-cell">Man skriver med den</td><td class="pattern-cell">sammensat af 'bly' + 'ant'</td><td class="sentence-cell">Jeg tegner med min blyant.</td></tr>
-      <tr><td class="word-cell">bustur</td><td class="ms-cell">busstur</td><td class="hint-cell">En rejse med offentlig transport</td><td class="pattern-cell">'bus' + 'tur'</td><td class="sentence-cell">Vi tog på bustur til stranden.</td></tr>
-      <tr><td class="word-cell">cykelsti</td><td class="ms-cell">cykelti</td><td class="hint-cell">Sti kun til cykler</td><td class="pattern-cell">'cykel' + 'sti'</td><td class="sentence-cell">Der er en ny cykelsti langs vejen.</td></tr>
-      <tr><td class="word-cell">fiskedam</td><td class="ms-cell">fiskesdam</td><td class="hint-cell">Lille sø med svømmende dyr</td><td class="pattern-cell">sammensat med fuge-e: 'fiske' + 'dam'</td><td class="sentence-cell">Der er en fiskedam nede i parken.</td></tr>
-      <tr><td class="word-cell">fodbold</td><td class="ms-cell">fodsbold</td><td class="hint-cell">Sport med en bold</td><td class="pattern-cell">'fod' + 'bold'</td><td class="sentence-cell">Vi spiller fodbold i haven.</td></tr>
-      <tr><td class="word-cell">fuglehus</td><td class="ms-cell">fugleshus</td><td class="hint-cell">Lille træhus til fugle</td><td class="pattern-cell">sammensat med fuge-e: 'fugle' + 'hus'</td><td class="sentence-cell">Vi byggede et fuglehus til haven.</td></tr>
-      <tr><td class="word-cell">hundehus</td><td class="ms-cell">hundeshus</td><td class="hint-cell">Hus til en hund</td><td class="pattern-cell">sammensat med fuge-e: 'hunde' + 'hus'</td><td class="sentence-cell">Hunden sover i sit hundehus.</td></tr>
-      <tr><td class="word-cell">legeplads</td><td class="ms-cell">legesplads</td><td class="hint-cell">Sted med gynger og rutsjebane</td><td class="pattern-cell">'lege' + 'plads'</td><td class="sentence-cell">Der er en stor legeplads ved skolen.</td></tr>
-      <tr><td class="word-cell">legetøj</td><td class="ms-cell">legestøj</td><td class="hint-cell">Ting man leger med</td><td class="pattern-cell">'lege' + 'tøj'</td><td class="sentence-cell">Rummet var fyldt med legetøj.</td></tr>
-      <tr><td class="word-cell">madpakke</td><td class="ms-cell">madspakke</td><td class="hint-cell">Frokost man tager med</td><td class="pattern-cell">'mad' + 'pakke'</td><td class="sentence-cell">Min madpakke er i tasken.</td></tr>
-      <tr><td class="word-cell">regnbue</td><td class="ms-cell">regnsbue</td><td class="hint-cell">Farver på himlen efter regn</td><td class="pattern-cell">sammensat af 'regn' + 'bue'</td><td class="sentence-cell">Se, der er en flot regnbue!</td></tr>
-      <tr><td class="word-cell">regnjakke</td><td class="ms-cell">regnsjakke</td><td class="hint-cell">Jakke til regnvejr</td><td class="pattern-cell">'regn' + 'jakke'</td><td class="sentence-cell">Tag din regnjakke på, det regner ude.</td></tr>
-      <tr><td class="word-cell">sandkasse</td><td class="ms-cell">sandskasse</td><td class="hint-cell">Sted med sand til leg</td><td class="pattern-cell">sammensat af 'sand' + 'kasse'</td><td class="sentence-cell">Børnene leger i en sandkasse i haven.</td></tr>
-      <tr><td class="word-cell">sengetid</td><td class="ms-cell">sengestid</td><td class="hint-cell">Klokken hvor man sover</td><td class="pattern-cell">'senge' + 'tid'</td><td class="sentence-cell">Klokken otte er det sengetid.</td></tr>
-      <tr><td class="word-cell">skolegård</td><td class="ms-cell">skolesgård</td><td class="hint-cell">Udendørs areal ved en skole</td><td class="pattern-cell">'skole' + 'gård'</td><td class="sentence-cell">Vi spiller bold i vores skolegård.</td></tr>
-      <tr><td class="word-cell">skoletaske</td><td class="ms-cell">skolestaske</td><td class="hint-cell">Taske til skolen</td><td class="pattern-cell">'skole' + 'taske'</td><td class="sentence-cell">Min skoletaske er blå.</td></tr>
-      <tr><td class="word-cell">snebold</td><td class="ms-cell">snesbold</td><td class="hint-cell">Rund kugle lavet af sne</td><td class="pattern-cell">'sne' + 'bold'</td><td class="sentence-cell">Han kastede en snebold efter sin søster.</td></tr>
-      <tr><td class="word-cell">solhat</td><td class="ms-cell">solshat</td><td class="hint-cell">Beskytter hovedet mod stråler</td><td class="pattern-cell">'sol' + 'hat'</td><td class="sentence-cell">Tag din solhat med på stranden.</td></tr>
-      <tr><td class="word-cell">solskin</td><td class="ms-cell">solkin</td><td class="hint-cell">Når det er lyst og varmt ude</td><td class="pattern-cell">'sol' + 'skin'</td><td class="sentence-cell">Der er dejligt solskin i dag.</td></tr>
-      <tr><td class="word-cell">sovepude</td><td class="ms-cell">sovespude</td><td class="hint-cell">Pude man sover på</td><td class="pattern-cell">sammensat med fuge-e: 'sove' + 'pude'</td><td class="sentence-cell">Min sovepude er blød og dejlig.</td></tr>
-      <tr><td class="word-cell">tandpasta</td><td class="ms-cell">tandspasta</td><td class="hint-cell">Bruges til at børste tænder</td><td class="pattern-cell">'tand' + 'pasta'</td><td class="sentence-cell">Husk at bruge tandpasta når du børster tænder.</td></tr>
-    </table>
-  </div>
-  <div class="level-section">
-    <h3 class="level-header">Niveau 2 (3.-4. klasse) — 26 ord</h3>
+    <h3 class="level-header">Niveau 2 (3.-4. klasse) — 46 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">arbejdsdag</td><td class="ms-cell">arbejdssdag</td><td class="hint-cell">En dag hvor man arbejder</td><td class="pattern-cell">sammensat med fuge-s: 'arbejds' + 'dag'</td><td class="sentence-cell">Far har en lang arbejdsdag i dag.</td></tr>
       <tr><td class="word-cell">badeværelse</td><td class="ms-cell">badesværelse</td><td class="hint-cell">Rum med brusebad og toilet</td><td class="pattern-cell">'bade' + 'værelse'</td><td class="sentence-cell">Vi har et nyt badeværelse i huset.</td></tr>
       <tr><td class="word-cell">badminton</td><td class="ms-cell">badmniton</td><td class="hint-cell">Sport med fjerbold</td><td class="pattern-cell">sammensat fremmedord</td><td class="sentence-cell">Vi spiller badminton i hallen.</td></tr>
+      <tr><td class="word-cell">bilnøgle</td><td class="ms-cell">bilsnøgle</td><td class="hint-cell">Låser køretøjet op</td><td class="pattern-cell">'bil' + 'nøgle'</td><td class="sentence-cell">Far ledte efter sin bilnøgle.</td></tr>
+      <tr><td class="word-cell">blyant</td><td class="ms-cell">blysant</td><td class="hint-cell">Man skriver med den</td><td class="pattern-cell">sammensat af 'bly' + 'ant'</td><td class="sentence-cell">Jeg tegner med min blyant.</td></tr>
       <tr><td class="word-cell">bordtennis</td><td class="ms-cell">bordstennis</td><td class="hint-cell">Pingpong</td><td class="pattern-cell">'bord' + 'tennis'</td><td class="sentence-cell">Vi spiller bordtennis i kælderen.</td></tr>
+      <tr><td class="word-cell">bustur</td><td class="ms-cell">busstur</td><td class="hint-cell">En rejse med offentlig transport</td><td class="pattern-cell">'bus' + 'tur'</td><td class="sentence-cell">Vi tog på bustur til stranden.</td></tr>
       <tr><td class="word-cell">cykelhjelm</td><td class="ms-cell">cykelshjelm</td><td class="hint-cell">Hjelm til cykling</td><td class="pattern-cell">sammensat af 'cykel' + 'hjelm'</td><td class="sentence-cell">Husk altid din cykelhjelm.</td></tr>
+      <tr><td class="word-cell">cykelsti</td><td class="ms-cell">cykelti</td><td class="hint-cell">Sti kun til cykler</td><td class="pattern-cell">'cykel' + 'sti'</td><td class="sentence-cell">Der er en ny cykelsti langs vejen.</td></tr>
       <tr><td class="word-cell">dyreparken</td><td class="ms-cell">dyresparken</td><td class="hint-cell">Sted med mange dyr</td><td class="pattern-cell">sammensat med fuge-e: 'dyre' + 'park'</td><td class="sentence-cell">Vi besøgte dyreparken i weekenden.</td></tr>
+      <tr><td class="word-cell">fiskedam</td><td class="ms-cell">fiskesdam</td><td class="hint-cell">Lille sø med svømmende dyr</td><td class="pattern-cell">sammensat med fuge-e: 'fiske' + 'dam'</td><td class="sentence-cell">Der er en fiskedam nede i parken.</td></tr>
+      <tr><td class="word-cell">fodbold</td><td class="ms-cell">fodsbold</td><td class="hint-cell">Sport med en bold</td><td class="pattern-cell">'fod' + 'bold'</td><td class="sentence-cell">Vi spiller fodbold i haven.</td></tr>
       <tr><td class="word-cell">fodboldbane</td><td class="ms-cell">fodsboldbane</td><td class="hint-cell">Bane man spiller på</td><td class="pattern-cell">'fod' + 'bold' + 'bane'</td><td class="sentence-cell">Der er en stor fodboldbane bag skolen.</td></tr>
       <tr><td class="word-cell">frikvarter</td><td class="ms-cell">friskvarter</td><td class="hint-cell">Pause mellem timerne</td><td class="pattern-cell">'fri' + 'kvarter'</td><td class="sentence-cell">I næste frikvarter spiller vi fodbold.</td></tr>
       <tr><td class="word-cell">fuglebad</td><td class="ms-cell">fuglesbad</td><td class="hint-cell">Skål med vand til fugle i haven</td><td class="pattern-cell">sammensat med fuge-e: 'fugle' + 'bad'</td><td class="sentence-cell">Der står et fuglebad ude i haven.</td></tr>
-      <tr><td class="word-cell">huskat</td><td class="ms-cell">husskat</td><td class="hint-cell">Kat der bor indendørs</td><td class="pattern-cell">sammensat af 'hus' + 'kat'</td><td class="sentence-cell">Vores huskat hedder Misser.</td></tr>
+      <tr><td class="word-cell">fuglehus</td><td class="ms-cell">fugleshus</td><td class="hint-cell">Lille træhus til fugle</td><td class="pattern-cell">sammensat med fuge-e: 'fugle' + 'hus'</td><td class="sentence-cell">Vi byggede et fuglehus til haven.</td></tr>
+      <tr><td class="word-cell">hundehus</td><td class="ms-cell">hundeshus</td><td class="hint-cell">Hus til en hund</td><td class="pattern-cell">sammensat med fuge-e: 'hunde' + 'hus'</td><td class="sentence-cell">Hunden sover i sit hundehus.</td></tr>
       <tr><td class="word-cell">håndklæde</td><td class="ms-cell">håndsklæde</td><td class="hint-cell">Tørrer sig med efter bad</td><td class="pattern-cell">'hånd' + 'klæde'</td><td class="sentence-cell">Husk at tage et håndklæde med.</td></tr>
       <tr><td class="word-cell">isterning</td><td class="ms-cell">issterning</td><td class="hint-cell">Frossen vandklump</td><td class="pattern-cell">sammensat af 'is' + 'terning'</td><td class="sentence-cell">Læg en isterning i glasset med saft.</td></tr>
       <tr><td class="word-cell">legehus</td><td class="ms-cell">legeshus</td><td class="hint-cell">Lille hus til børn i haven</td><td class="pattern-cell">sammensat med fuge-e: 'lege' + 'hus'</td><td class="sentence-cell">Vi har et legehus ude i haven.</td></tr>
+      <tr><td class="word-cell">legeplads</td><td class="ms-cell">legesplads</td><td class="hint-cell">Sted med gynger og rutsjebane</td><td class="pattern-cell">'lege' + 'plads'</td><td class="sentence-cell">Der er en stor legeplads ved skolen.</td></tr>
+      <tr><td class="word-cell">legetøj</td><td class="ms-cell">legestøj</td><td class="hint-cell">Ting man leger med</td><td class="pattern-cell">'lege' + 'tøj'</td><td class="sentence-cell">Rummet var fyldt med legetøj.</td></tr>
       <tr><td class="word-cell">løbesko</td><td class="ms-cell">løbeko</td><td class="hint-cell">Sko man løber i</td><td class="pattern-cell">'løbe' + 'sko'</td><td class="sentence-cell">Jeg har fået nye løbesko til træning.</td></tr>
       <tr><td class="word-cell">madlavning</td><td class="ms-cell">madslavning</td><td class="hint-cell">At lave mad</td><td class="pattern-cell">sammensat af 'mad' + 'lavning'</td><td class="sentence-cell">Far er god til madlavning.</td></tr>
+      <tr><td class="word-cell">madpakke</td><td class="ms-cell">madspakke</td><td class="hint-cell">Frokost man tager med</td><td class="pattern-cell">'mad' + 'pakke'</td><td class="sentence-cell">Min madpakke er i tasken.</td></tr>
       <tr><td class="word-cell">mellemrum</td><td class="ms-cell">mellemsrum</td><td class="hint-cell">Plads imellem to ting</td><td class="pattern-cell">'mellem' + 'rum'</td><td class="sentence-cell">Husk mellemrum mellem ordene.</td></tr>
       <tr><td class="word-cell">postkasse</td><td class="ms-cell">postskasse</td><td class="hint-cell">Boks til breve ved hoveddøren</td><td class="pattern-cell">'post' + 'kasse'</td><td class="sentence-cell">Er der noget i vores postkasse i dag?</td></tr>
+      <tr><td class="word-cell">regnbue</td><td class="ms-cell">regnsbue</td><td class="hint-cell">Farver på himlen efter regn</td><td class="pattern-cell">sammensat af 'regn' + 'bue'</td><td class="sentence-cell">Se, der er en flot regnbue!</td></tr>
+      <tr><td class="word-cell">regnjakke</td><td class="ms-cell">regnsjakke</td><td class="hint-cell">Jakke til regnvejr</td><td class="pattern-cell">'regn' + 'jakke'</td><td class="sentence-cell">Tag din regnjakke på, det regner ude.</td></tr>
       <tr><td class="word-cell">rugbrød</td><td class="ms-cell">rugsbrød</td><td class="hint-cell">Mørkt dansk brød</td><td class="pattern-cell">sammensat af 'rug' + 'brød'</td><td class="sentence-cell">Vi spiser rugbrød til frokost.</td></tr>
+      <tr><td class="word-cell">sandkasse</td><td class="ms-cell">sandskasse</td><td class="hint-cell">Sted med sand til leg</td><td class="pattern-cell">sammensat af 'sand' + 'kasse'</td><td class="sentence-cell">Børnene leger i en sandkasse i haven.</td></tr>
+      <tr><td class="word-cell">sengetid</td><td class="ms-cell">sengestid</td><td class="hint-cell">Klokken hvor man sover</td><td class="pattern-cell">'senge' + 'tid'</td><td class="sentence-cell">Klokken otte er det sengetid.</td></tr>
       <tr><td class="word-cell">sengetøj</td><td class="ms-cell">sengestøj</td><td class="hint-cell">Det man har i sengen</td><td class="pattern-cell">'senge' + 'tøj'</td><td class="sentence-cell">Jeg fik nyt sengetøj til min fødselsdag.</td></tr>
+      <tr><td class="word-cell">skolegård</td><td class="ms-cell">skolesgård</td><td class="hint-cell">Udendørs areal ved en skole</td><td class="pattern-cell">'skole' + 'gård'</td><td class="sentence-cell">Vi spiller bold i vores skolegård.</td></tr>
+      <tr><td class="word-cell">skoletaske</td><td class="ms-cell">skolestaske</td><td class="hint-cell">Taske til skolen</td><td class="pattern-cell">'skole' + 'taske'</td><td class="sentence-cell">Min skoletaske er blå.</td></tr>
       <tr><td class="word-cell">skovsøen</td><td class="ms-cell">skovøen</td><td class="hint-cell">En sø i skoven</td><td class="pattern-cell">sammensat af 'skov' + 'sø' + '-en'</td><td class="sentence-cell">Vi gik en tur rundt om skovsøen.</td></tr>
+      <tr><td class="word-cell">snebold</td><td class="ms-cell">snesbold</td><td class="hint-cell">Rund kugle lavet af sne</td><td class="pattern-cell">'sne' + 'bold'</td><td class="sentence-cell">Han kastede en snebold efter sin søster.</td></tr>
+      <tr><td class="word-cell">solhat</td><td class="ms-cell">solshat</td><td class="hint-cell">Beskytter hovedet mod stråler</td><td class="pattern-cell">'sol' + 'hat'</td><td class="sentence-cell">Tag din solhat med på stranden.</td></tr>
+      <tr><td class="word-cell">solskin</td><td class="ms-cell">solkin</td><td class="hint-cell">Når det er lyst og varmt ude</td><td class="pattern-cell">'sol' + 'skin'</td><td class="sentence-cell">Der er dejligt solskin i dag.</td></tr>
+      <tr><td class="word-cell">sovepude</td><td class="ms-cell">sovespude</td><td class="hint-cell">Pude man sover på</td><td class="pattern-cell">sammensat med fuge-e: 'sove' + 'pude'</td><td class="sentence-cell">Min sovepude er blød og dejlig.</td></tr>
       <tr><td class="word-cell">soveværelse</td><td class="ms-cell">sovesværelse</td><td class="hint-cell">Rum hvor man sover</td><td class="pattern-cell">'sove' + 'værelse'</td><td class="sentence-cell">Mit soveværelse ligger ovenpå.</td></tr>
-      <tr><td class="word-cell">svømmehal</td><td class="ms-cell">svømmeshal</td><td class="hint-cell">Bygning med svømmebassiner</td><td class="pattern-cell">'svømme' + 'hal'</td><td class="sentence-cell">Vi tager i svømmehal hver lørdag.</td></tr>
       <tr><td class="word-cell">tandlæge</td><td class="ms-cell">tandslæge</td><td class="hint-cell">En der tjekker tænder</td><td class="pattern-cell">'tand' + 'læge'</td><td class="sentence-cell">Jeg skal til tandlæge i morgen.</td></tr>
+      <tr><td class="word-cell">tandpasta</td><td class="ms-cell">tandspasta</td><td class="hint-cell">Bruges til at børste tænder</td><td class="pattern-cell">'tand' + 'pasta'</td><td class="sentence-cell">Husk at bruge tandpasta når du børster tænder.</td></tr>
       <tr><td class="word-cell">tegnestift</td><td class="ms-cell">tegnetift</td><td class="hint-cell">Lille metalstift til opslagstavlen</td><td class="pattern-cell">sammensat med fuge-e: 'tegne' + 'stift'</td><td class="sentence-cell">Sæt plakaten op med en tegnestift.</td></tr>
       <tr><td class="word-cell">vandkande</td><td class="ms-cell">vandskande</td><td class="hint-cell">Kande til at vande blomster</td><td class="pattern-cell">sammensat af 'vand' + 'kande'</td><td class="sentence-cell">Hent en vandkande til blomsterne.</td></tr>
       <tr><td class="word-cell">vindmølle</td><td class="ms-cell">vindsmølle</td><td class="hint-cell">Mølle der drives af vind</td><td class="pattern-cell">sammensat af 'vind' + 'mølle'</td><td class="sentence-cell">Den gamle vindmølle står på bakken.</td></tr>
@@ -489,7 +376,7 @@
       <tr><td class="word-cell">malet</td><td class="ms-cell">malede</td><td class="hint-cell">Har lavet kunst med farver (førnutid)</td><td class="pattern-cell">tillægsform: '-et'</td><td class="sentence-cell">Hun har malet et smukt billede.</td></tr>
       <tr><td class="word-cell">pakkede</td><td class="ms-cell">pakked</td><td class="hint-cell">Lagde ting i en kasse (datid)</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Vi pakkede kufferten inden ferien.</td></tr>
       <tr><td class="word-cell">sad</td><td class="ms-cell">siddede</td><td class="hint-cell">At sidde i fortid</td><td class="pattern-cell">uregelmæssig datid af 'sidde'</td><td class="sentence-cell">Vi sad stille i klassen.</td></tr>
-      <tr><td class="word-cell">sang</td><td class="ms-cell">syngede</td><td class="hint-cell">Datid af 'synge'</td><td class="pattern-cell">uregelmæssig: 'y'->'a'</td><td class="sentence-cell">Vi sang fødselsdagssang for ham.</td></tr>
+      <tr><td class="word-cell">sang</td><td class="ms-cell">syngede</td><td class="hint-cell">Datid af 'synge'</td><td class="pattern-cell">uregelmæssig: 'y'-&gt;'a'</td><td class="sentence-cell">Vi sang fødselsdagssang for ham.</td></tr>
       <tr><td class="word-cell">sov</td><td class="ms-cell">sovede</td><td class="hint-cell">Lå i sengen med lukkede øjne</td><td class="pattern-cell">uregelmæssig datid</td><td class="sentence-cell">Barnet sov hele natten.</td></tr>
       <tr><td class="word-cell">sovet</td><td class="ms-cell">sovede</td><td class="hint-cell">Har ligget og drømt (førnutid)</td><td class="pattern-cell">tillægsform: '-et'</td><td class="sentence-cell">Katten har sovet på sofaen.</td></tr>
       <tr><td class="word-cell">spist</td><td class="ms-cell">spiset</td><td class="hint-cell">Har indtaget mad (førnutid)</td><td class="pattern-cell">tillægsform: '-t'</td><td class="sentence-cell">Vi har spist al maden.</td></tr>
@@ -508,10 +395,10 @@
       <tr><td class="word-cell">bragte</td><td class="ms-cell">bragede</td><td class="hint-cell">At bringe i fortid</td><td class="pattern-cell">uregelmæssig datid af 'bringe'</td><td class="sentence-cell">Posten bragte en pakke til os.</td></tr>
       <tr><td class="word-cell">cyklede</td><td class="ms-cell">cykled</td><td class="hint-cell">Kørte på to hjul i fortiden</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Jeg cyklede til skole i dag.</td></tr>
       <tr><td class="word-cell">drømte</td><td class="ms-cell">drømede</td><td class="hint-cell">Så billeder mens man sov (datid)</td><td class="pattern-cell">datid: '-te'</td><td class="sentence-cell">Jeg drømte om at flyve i nat.</td></tr>
-      <tr><td class="word-cell">fandt</td><td class="ms-cell">findede</td><td class="hint-cell">Datid af 'finde'</td><td class="pattern-cell">uregelmæssig: 'i'->'a'</td><td class="sentence-cell">Vi fandt en fin sten på stranden.</td></tr>
+      <tr><td class="word-cell">fandt</td><td class="ms-cell">findede</td><td class="hint-cell">Datid af 'finde'</td><td class="pattern-cell">uregelmæssig: 'i'-&gt;'a'</td><td class="sentence-cell">Vi fandt en fin sten på stranden.</td></tr>
       <tr><td class="word-cell">fortalte</td><td class="ms-cell">fortalede</td><td class="hint-cell">Sagde en historie (datid)</td><td class="pattern-cell">uregelmæssig datid af 'fortælle'</td><td class="sentence-cell">Bedstemor fortalte et eventyr.</td></tr>
       <tr><td class="word-cell">gemte</td><td class="ms-cell">gemede</td><td class="hint-cell">Skjulte noget</td><td class="pattern-cell">datid med '-te': gem + '-te'</td><td class="sentence-cell">Barnet gemte sig bag sofaen.</td></tr>
-      <tr><td class="word-cell">glemte</td><td class="ms-cell">glemede</td><td class="hint-cell">Huskede det ikke</td><td class="pattern-cell">datid: '-te' (mm->m+te)</td><td class="sentence-cell">Jeg glemte min madpakke derhjemme.</td></tr>
+      <tr><td class="word-cell">glemte</td><td class="ms-cell">glemede</td><td class="hint-cell">Huskede det ikke</td><td class="pattern-cell">datid: '-te' (mm-&gt;m+te)</td><td class="sentence-cell">Jeg glemte min madpakke derhjemme.</td></tr>
       <tr><td class="word-cell">havde</td><td class="ms-cell">havede</td><td class="hint-cell">Ejede noget i fortiden</td><td class="pattern-cell">uregelmæssig datid</td><td class="sentence-cell">Vi havde det sjovt til festen.</td></tr>
       <tr><td class="word-cell">kastede</td><td class="ms-cell">kasted</td><td class="hint-cell">Smed noget gennem luften</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Han kastede bolden over hegnet.</td></tr>
       <tr><td class="word-cell">købte</td><td class="ms-cell">købede</td><td class="hint-cell">Betalte for en vare i fortiden</td><td class="pattern-cell">datid: '-te'</td><td class="sentence-cell">Vi købte is nede i kiosken.</td></tr>
@@ -522,7 +409,7 @@
       <tr><td class="word-cell">skrev</td><td class="ms-cell">skrivede</td><td class="hint-cell">Satte ord på papir i fortiden</td><td class="pattern-cell">uregelmæssig datid</td><td class="sentence-cell">Hun skrev et langt brev til sin veninde.</td></tr>
       <tr><td class="word-cell">sluttede</td><td class="ms-cell">slutted</td><td class="hint-cell">Det var forbi</td><td class="pattern-cell">datid med '-ede': slutt + '-ede'</td><td class="sentence-cell">Filmen sluttede klokken ni.</td></tr>
       <tr><td class="word-cell">spurgte</td><td class="ms-cell">spurgede</td><td class="hint-cell">At spørge i fortid</td><td class="pattern-cell">uregelmæssig datid af 'spørge'</td><td class="sentence-cell">Læreren spurgte om vi var klar.</td></tr>
-      <tr><td class="word-cell">svarede</td><td class="ms-cell">svared</td><td class="hint-cell">Gav svar på et spørgsmål (datid)</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Hun svarede rigtigt på alle spørgsmål.</td></tr>
+      <tr><td class="word-cell">svarede</td><td class="ms-cell">svared</td><td class="hint-cell">Reagerede på et spørgsmål (datid)</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Hun svarede rigtigt på alle spørgsmål.</td></tr>
       <tr><td class="word-cell">svømmede</td><td class="ms-cell">svømmed</td><td class="hint-cell">Bevægede sig i vandet i fortiden</td><td class="pattern-cell">datid med '-ede': svømm + '-ede'</td><td class="sentence-cell">Vi svømmede i søen hele dagen.</td></tr>
       <tr><td class="word-cell">troede</td><td class="ms-cell">troed</td><td class="hint-cell">Mente noget var sandt (datid)</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Han troede på julemanden.</td></tr>
       <tr><td class="word-cell">tænkte</td><td class="ms-cell">tænkede</td><td class="hint-cell">Brugte hovedet i fortiden</td><td class="pattern-cell">datid: '-te'</td><td class="sentence-cell">Jeg tænkte på dig hele dagen.</td></tr>
@@ -539,12 +426,12 @@
       <tr><td class="word-cell">begyndte</td><td class="ms-cell">begyndede</td><td class="hint-cell">Startede på noget</td><td class="pattern-cell">datid: '-te'</td><td class="sentence-cell">Koncerten begyndte præcis klokken otte.</td></tr>
       <tr><td class="word-cell">behandlede</td><td class="ms-cell">behandled</td><td class="hint-cell">Tog sig af nogen i fortiden</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Lægen behandlede patienten med det samme.</td></tr>
       <tr><td class="word-cell">besluttede</td><td class="ms-cell">beslutted</td><td class="hint-cell">Valgte hvad man ville gøre</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Familien besluttede at flytte til landet.</td></tr>
-      <tr><td class="word-cell">bestemte</td><td class="ms-cell">bestemede</td><td class="hint-cell">Tog en beslutning</td><td class="pattern-cell">datid: '-te' (mm->m+te)</td><td class="sentence-cell">Hun bestemte sig for at tage en pause.</td></tr>
+      <tr><td class="word-cell">bestemte</td><td class="ms-cell">bestemede</td><td class="hint-cell">Tog en beslutning</td><td class="pattern-cell">datid: '-te' (mm-&gt;m+te)</td><td class="sentence-cell">Hun bestemte sig for at tage en pause.</td></tr>
       <tr><td class="word-cell">forberedte</td><td class="ms-cell">forberedede</td><td class="hint-cell">Gjorde sig klar til noget (datid)</td><td class="pattern-cell">datid: '-te'</td><td class="sentence-cell">Læreren forberedte en sjov time.</td></tr>
       <tr><td class="word-cell">forestillede</td><td class="ms-cell">forestilled</td><td class="hint-cell">Tænkte sig noget i hovedet (datid)</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Hun forestillede sig en rejse til Mars.</td></tr>
       <tr><td class="word-cell">forklarede</td><td class="ms-cell">forklared</td><td class="hint-cell">Gjorde noget tydeligt for andre</td><td class="pattern-cell">datid med '-ede': forklar + '-ede'</td><td class="sentence-cell">Læreren forklarede reglen tydeligt.</td></tr>
-      <tr><td class="word-cell">forsvandt</td><td class="ms-cell">forsvindede</td><td class="hint-cell">Var der, men blev væk</td><td class="pattern-cell">uregelmæssig: 'i'->'a'</td><td class="sentence-cell">Katten forsvandt ud i mørket.</td></tr>
-      <tr><td class="word-cell">fortsatte</td><td class="ms-cell">fortsatede</td><td class="hint-cell">Blev ved med noget</td><td class="pattern-cell">uregelmæssig: 'æ'->'a'</td><td class="sentence-cell">Regnen fortsatte hele eftermiddagen.</td></tr>
+      <tr><td class="word-cell">forsvandt</td><td class="ms-cell">forsvindede</td><td class="hint-cell">Var der, men blev væk</td><td class="pattern-cell">uregelmæssig: 'i'-&gt;'a'</td><td class="sentence-cell">Katten forsvandt ud i mørket.</td></tr>
+      <tr><td class="word-cell">fortsatte</td><td class="ms-cell">fortsatede</td><td class="hint-cell">Blev ved med noget</td><td class="pattern-cell">uregelmæssig: 'æ'-&gt;'a'</td><td class="sentence-cell">Regnen fortsatte hele eftermiddagen.</td></tr>
       <tr><td class="word-cell">gennemførte</td><td class="ms-cell">gennemførede</td><td class="hint-cell">Fuldførte noget fra start til slut (datid)</td><td class="pattern-cell">datid: '-te'</td><td class="sentence-cell">Holdet gennemførte projektet til tiden.</td></tr>
       <tr><td class="word-cell">indvilligede</td><td class="ms-cell">indvilliged</td><td class="hint-cell">Gik med til noget (datid)</td><td class="pattern-cell">datid: '-ede'</td><td class="sentence-cell">Til sidst indvilligede hun i at deltage.</td></tr>
       <tr><td class="word-cell">lykkedes</td><td class="ms-cell">lykkede</td><td class="hint-cell">Det gik godt, det blev en succes</td><td class="pattern-cell">passiv datid: lykke + '-des'</td><td class="sentence-cell">Det lykkedes os at nå toget.</td></tr>
@@ -563,7 +450,7 @@
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">accepteret</td><td class="ms-cell">accepterede</td><td class="hint-cell">Godkendt noget</td><td class="pattern-cell">tillægsform: accepter + '-et'</td><td class="sentence-cell">Forslaget blev accepteret af alle.</td></tr>
-      <tr><td class="word-cell">analyseret</td><td class="ms-cell">analyserede</td><td class="hint-cell">Undersøgt grundigt</td><td class="pattern-cell">tillægsform: '-et'</td><td class="sentence-cell">Resultaterne er grundigt analyseret.</td></tr>
+      <tr><td class="word-cell">analyseret</td><td class="ms-cell">analyserede</td><td class="hint-cell">Undersøgt grundigt</td><td class="pattern-cell">tillægsform: '-et'</td><td class="sentence-cell">Indholdet blev analyseret.</td></tr>
       <tr><td class="word-cell">argumenteret</td><td class="ms-cell">argumenterede</td><td class="hint-cell">Fremført sine synspunkter</td><td class="pattern-cell">tillægsform: argumenter + '-et'</td><td class="sentence-cell">Eleven har argumenteret overbevisende i sin stil.</td></tr>
       <tr><td class="word-cell">diskuteret</td><td class="ms-cell">diskuterede</td><td class="hint-cell">Drøftet frem og tilbage</td><td class="pattern-cell">tillægsform: '-et'</td><td class="sentence-cell">Emnet blev diskuteret i klassen.</td></tr>
       <tr><td class="word-cell">dokumenteret</td><td class="ms-cell">dokumenterede</td><td class="hint-cell">Nedskrevet som bevis</td><td class="pattern-cell">tillægsform: '-et'</td><td class="sentence-cell">Alt er omhyggeligt dokumenteret i rapporten.</td></tr>
@@ -588,12 +475,11 @@
   <a href="#toc" class="back-to-top">↑ Tilbage til indholdsfortegnelsen</a>
 </section>
 <section class="category" id="lydrette-ord">
-  <div class="cat-header"><h2>🔊 Lydrette ord</h2><span class="cat-count">83 ord</span></div>
+  <div class="cat-header"><h2>🔊 Lydrette ord</h2><span class="cat-count">80 ord</span></div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 0 (Indskoling) — 36 ord</h3>
+    <h3 class="level-header">Niveau 0 (Indskoling) — 34 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
-      <tr><td class="word-cell">af</td><td class="ms-cell">aff</td><td class="hint-cell">Ned fra noget</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Hop af cyklen.</td></tr>
       <tr><td class="word-cell">bad</td><td class="ms-cell">badd</td><td class="hint-cell">Man vasker sig i det</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Jeg tog et varmt bad.</td></tr>
       <tr><td class="word-cell">ben</td><td class="ms-cell">benn</td><td class="hint-cell">Man går på dem</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Hunden har fire ben.</td></tr>
       <tr><td class="word-cell">bi</td><td class="ms-cell">bii</td><td class="hint-cell">Lille insekt der laver honning</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">En lille bi fløj hen til blomsten.</td></tr>
@@ -611,7 +497,6 @@
       <tr><td class="word-cell">kat</td><td class="ms-cell">katt</td><td class="hint-cell">Dyr der siger mjav</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi har en kat der hedder Misser.</td></tr>
       <tr><td class="word-cell">ko</td><td class="ms-cell">koo</td><td class="hint-cell">Stort dyr på bondegården</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Der står en ko ude på marken.</td></tr>
       <tr><td class="word-cell">lam</td><td class="ms-cell">lamm</td><td class="hint-cell">Et lille får</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Der er et lille lam på bondegården.</td></tr>
-      <tr><td class="word-cell">leg</td><td class="ms-cell">legg</td><td class="hint-cell">Noget sjovt man gør</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Leg er sjovt for alle børn.</td></tr>
       <tr><td class="word-cell">lys</td><td class="ms-cell">lyss</td><td class="hint-cell">Det skinner i mørket</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Der er dejligt lys i rummet.</td></tr>
       <tr><td class="word-cell">mad</td><td class="ms-cell">madd</td><td class="hint-cell">Det man spiser</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi skal have mad nu.</td></tr>
       <tr><td class="word-cell">mus</td><td class="ms-cell">muss</td><td class="hint-cell">Lille dyr med lang hale</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Der gemte sig en lille mus under sengen.</td></tr>
@@ -624,15 +509,15 @@
       <tr><td class="word-cell">sol</td><td class="ms-cell">soll</td><td class="hint-cell">Den skinner på himlen</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">I dag skinner sol fra en blå himmel.</td></tr>
       <tr><td class="word-cell">stor</td><td class="ms-cell">sttor</td><td class="hint-cell">Ikke lille</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Elefanten er meget stor.</td></tr>
       <tr><td class="word-cell">sø</td><td class="ms-cell">søø</td><td class="hint-cell">Vand i naturen</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi bor tæt på en sø.</td></tr>
-      <tr><td class="word-cell">tak</td><td class="ms-cell">takk</td><td class="hint-cell">Man siger det når man er taknemmelig</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Tak for gaven!</td></tr>
-      <tr><td class="word-cell">ti</td><td class="ms-cell">tii</td><td class="hint-cell">Tallet efter ni</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Hun kan tælle til ti.</td></tr>
+      <tr><td class="word-cell">tak</td><td class="ms-cell">takk</td><td class="hint-cell">Ord man siger for at vise man er glad for noget</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Tak for gaven!</td></tr>
+      <tr><td class="word-cell">ti</td><td class="ms-cell">tii</td><td class="hint-cell">Tallet efter ni</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Der er ti fingre på to hænder.</td></tr>
       <tr><td class="word-cell">to</td><td class="ms-cell">too</td><td class="hint-cell">Tallet efter et</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Der er to fugle i træet.</td></tr>
       <tr><td class="word-cell">top</td><td class="ms-cell">topp</td><td class="hint-cell">Det allerhøjeste punkt</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi nåede helt op til top af bakken.</td></tr>
       <tr><td class="word-cell">ven</td><td class="ms-cell">venn</td><td class="hint-cell">En man leger med</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Min ven bor lige ved siden af.</td></tr>
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 15 ord</h3>
+    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 14 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">banan</td><td class="ms-cell">bannan</td><td class="hint-cell">Gul frugt</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Aben spiser en banan.</td></tr>
@@ -640,7 +525,6 @@
       <tr><td class="word-cell">finger</td><td class="ms-cell">finnger</td><td class="hint-cell">Sidder på hånden</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Jeg skar mig på min finger i køkkenet.</td></tr>
       <tr><td class="word-cell">fisk</td><td class="ms-cell">fissk</td><td class="hint-cell">Dyr der lever i vand</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi fangede en stor fisk i søen.</td></tr>
       <tr><td class="word-cell">god</td><td class="ms-cell">godd</td><td class="hint-cell">Rar og venlig</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Du er en god ven.</td></tr>
-      <tr><td class="word-cell">hund</td><td class="ms-cell">hunnd</td><td class="hint-cell">Dyr der siger vov</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Min nabo har en hund der er meget stor.</td></tr>
       <tr><td class="word-cell">lampe</td><td class="ms-cell">lammpe</td><td class="hint-cell">Giver lys i mørket</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Tænd den store lampe i stuen.</td></tr>
       <tr><td class="word-cell">melon</td><td class="ms-cell">mellon</td><td class="hint-cell">Stor rund frugt med frø indeni</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi delte en stor melon til dessert.</td></tr>
       <tr><td class="word-cell">panda</td><td class="ms-cell">pannda</td><td class="hint-cell">Sort og hvid bjørn</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">En panda spiser mest bambus.</td></tr>
@@ -669,37 +553,31 @@
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 11 ord</h3>
-    <table>
-      <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
-      <tr><td class="word-cell">flamingo</td><td class="ms-cell">fllamingo</td><td class="hint-cell">Lyserød fugl der står på ét ben</td><td class="pattern-cell">Alle bogstaver lyder som de skrives</td><td class="sentence-cell">En flamingo står elegant på ét ben.</td></tr>
-      <tr><td class="word-cell">karamel</td><td class="ms-cell">karramel</td><td class="hint-cell">Sej sød slik lavet af sukker</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Hun spiste en blød karamel.</td></tr>
-      <tr><td class="word-cell">karrusel</td><td class="ms-cell">karrussel</td><td class="hint-cell">Man kører rundt i den i en forlystelsespark</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi kørte i karrusel i Tivoli.</td></tr>
-      <tr><td class="word-cell">krokodille</td><td class="ms-cell">krrokodille</td><td class="hint-cell">Stort farligt krybdyr med mange tænder</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — husk dobbelt-l og e til sidst</td><td class="sentence-cell">En krokodille lå stille i floden.</td></tr>
-      <tr><td class="word-cell">mandarin</td><td class="ms-cell">manndarin</td><td class="hint-cell">Lille orange citrusfrugt</td><td class="pattern-cell">Alle bogstaver lyder som de skrives</td><td class="sentence-cell">Jeg pakkede en mandarin i min madpakke.</td></tr>
-      <tr><td class="word-cell">marmelade</td><td class="ms-cell">marrmelade</td><td class="hint-cell">Frugtsmørelse til brødet</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Hun smurte marmelade på brødet.</td></tr>
-      <tr><td class="word-cell">maskerade</td><td class="ms-cell">masskerade</td><td class="hint-cell">Fest hvor man er klædt ud</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi skal til maskerade på fredag.</td></tr>
-      <tr><td class="word-cell">mineral</td><td class="ms-cell">minneral</td><td class="hint-cell">Stof fra jordens indre</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Diamant er et sjældent mineral.</td></tr>
-      <tr><td class="word-cell">pelikan</td><td class="ms-cell">pellikan</td><td class="hint-cell">Fugl med stor pose under næbbet</td><td class="pattern-cell">Alle bogstaver lyder som de skrives</td><td class="sentence-cell">En pelikan fangede en fisk i havet.</td></tr>
-      <tr><td class="word-cell">skorpion</td><td class="ms-cell">skkorpion</td><td class="hint-cell">Lille dyr med giftig hale</td><td class="pattern-cell">Alle bogstaver lyder som de skrives</td><td class="sentence-cell">En skorpion lever i varme lande.</td></tr>
-      <tr><td class="word-cell">temperatur</td><td class="ms-cell">temmperatur</td><td class="hint-cell">Mål for varme eller kulde</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Mål din temperatur med et termometer.</td></tr>
-    </table>
-  </div>
-  <div class="level-section">
-    <h3 class="level-header">Niveau 4 (7.-8. klasse) — 11 ord</h3>
+    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 22 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">ambulance</td><td class="ms-cell">ammbulance</td><td class="hint-cell">Køretøj der henter syge mennesker</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi hørte en ambulance køre forbi.</td></tr>
       <tr><td class="word-cell">demokratisk</td><td class="ms-cell">demmokratisk</td><td class="hint-cell">Styret af folkets stemme</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Danmark er et demokratisk land.</td></tr>
       <tr><td class="word-cell">dinosaur</td><td class="ms-cell">dinnosaur</td><td class="hint-cell">Kæmpe dyr der levede for millioner af år siden</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — fire stavelser</td><td class="sentence-cell">En dinosaur kunne blive rigtig stor.</td></tr>
       <tr><td class="word-cell">fantastisk</td><td class="ms-cell">fanntastisk</td><td class="hint-cell">Helt utroligt godt</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Filmen var helt fantastisk.</td></tr>
+      <tr><td class="word-cell">flamingo</td><td class="ms-cell">fllamingo</td><td class="hint-cell">Lyserød fugl der står på ét ben</td><td class="pattern-cell">Alle bogstaver lyder som de skrives</td><td class="sentence-cell">En flamingo står elegant på ét ben.</td></tr>
       <tr><td class="word-cell">kapelmester</td><td class="ms-cell">kappelmester</td><td class="hint-cell">Leder af et orkester</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">En kapelmester leder hele orkestret.</td></tr>
+      <tr><td class="word-cell">karamel</td><td class="ms-cell">karramel</td><td class="hint-cell">Sej sød slik lavet af sukker</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Hun spiste en blød karamel.</td></tr>
+      <tr><td class="word-cell">karrusel</td><td class="ms-cell">karrussel</td><td class="hint-cell">Man kører rundt i den i en forlystelsespark</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi kørte i karrusel i Tivoli.</td></tr>
       <tr><td class="word-cell">katastrofe</td><td class="ms-cell">kattastrofe</td><td class="hint-cell">En stor ulykke</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Stormen var en katastrofe for byen.</td></tr>
       <tr><td class="word-cell">katedral</td><td class="ms-cell">kattedral</td><td class="hint-cell">En meget stor og flot kirke</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — tre stavelser</td><td class="sentence-cell">Vi besøgte en gammel katedral i byen.</td></tr>
+      <tr><td class="word-cell">krokodille</td><td class="ms-cell">krrokodille</td><td class="hint-cell">Stort farligt krybdyr med mange tænder</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — husk dobbelt-l og e til sidst</td><td class="sentence-cell">En krokodille lå stille i floden.</td></tr>
+      <tr><td class="word-cell">mandarin</td><td class="ms-cell">manndarin</td><td class="hint-cell">Lille orange citrusfrugt</td><td class="pattern-cell">Alle bogstaver lyder som de skrives</td><td class="sentence-cell">Jeg pakkede en mandarin i min madpakke.</td></tr>
       <tr><td class="word-cell">maraton</td><td class="ms-cell">marraton</td><td class="hint-cell">Et meget langt løb på 42 kilometer</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — tre stavelser</td><td class="sentence-cell">Min far løb et maraton i København.</td></tr>
+      <tr><td class="word-cell">marmelade</td><td class="ms-cell">marrmelade</td><td class="hint-cell">Frugtsmørelse til brødet</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Hun smurte marmelade på brødet.</td></tr>
+      <tr><td class="word-cell">maskerade</td><td class="ms-cell">masskerade</td><td class="hint-cell">Fest hvor man er klædt ud</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Vi skal til maskerade på fredag.</td></tr>
+      <tr><td class="word-cell">mineral</td><td class="ms-cell">minneral</td><td class="hint-cell">Stof fra jordens indre</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Diamant er et sjældent mineral.</td></tr>
+      <tr><td class="word-cell">pelikan</td><td class="ms-cell">pellikan</td><td class="hint-cell">Fugl med stor pose under næbbet</td><td class="pattern-cell">Alle bogstaver lyder som de skrives</td><td class="sentence-cell">En pelikan fangede en fisk i havet.</td></tr>
       <tr><td class="word-cell">propaganda</td><td class="ms-cell">prropaganda</td><td class="hint-cell">Ensidigt budskab der skal påvirke folk</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Plakaten var ren propaganda.</td></tr>
-      <tr><td class="word-cell">termometer</td><td class="ms-cell">terrmometer</td><td class="hint-cell">Måler hvor varmt eller koldt det er</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — fire stavelser</td><td class="sentence-cell">Termometeret viste 30 grader i dag.</td></tr>
-      <tr><td class="word-cell">trampolin</td><td class="ms-cell">trrampolin</td><td class="hint-cell">Noget man hopper på i haven</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — tre stavelser</td><td class="sentence-cell">Vi hoppede på trampolinen hele dagen.</td></tr>
+      <tr><td class="word-cell">skorpion</td><td class="ms-cell">skkorpion</td><td class="hint-cell">Lille dyr med giftig hale</td><td class="pattern-cell">Alle bogstaver lyder som de skrives</td><td class="sentence-cell">En skorpion lever i varme lande.</td></tr>
+      <tr><td class="word-cell">temperatur</td><td class="ms-cell">temmperatur</td><td class="hint-cell">Mål for varme eller kulde</td><td class="pattern-cell">lydrette ord — staves som det lyder</td><td class="sentence-cell">Mål din temperatur med et termometer.</td></tr>
+      <tr><td class="word-cell">termometer</td><td class="ms-cell">terrmometer</td><td class="hint-cell">Måler hvor varmt eller koldt det er</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — fire stavelser</td><td class="sentence-cell">Mor har et termometer i køkkenet.</td></tr>
+      <tr><td class="word-cell">trampolin</td><td class="ms-cell">trrampolin</td><td class="hint-cell">Noget man hopper på i haven</td><td class="pattern-cell">Alle bogstaver lyder som de skrives — tre stavelser</td><td class="sentence-cell">Vi har en trampolin i haven.</td></tr>
     </table>
   </div>
   <a href="#toc" class="back-to-top">↑ Tilbage til indholdsfortegnelsen</a>
@@ -707,7 +585,7 @@
 <section class="category" id="nutids-r">
   <div class="cat-header"><h2>🏃 Nutids-r</h2><span class="cat-count">83 ord</span></div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 24 ord</h3>
+    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 22 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">bager</td><td class="ms-cell">bage</td><td class="hint-cell">Laver brød eller kage i ovnen (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (mor bager)</td><td class="sentence-cell">Mor bager boller til os.</td></tr>
@@ -718,12 +596,10 @@
       <tr><td class="word-cell">henter</td><td class="ms-cell">hente</td><td class="hint-cell">Går hen og tager noget med tilbage</td><td class="pattern-cell">Nutids-r: 'hente' bliver til 'henter' i nutid</td><td class="sentence-cell">Far henter os fra skole.</td></tr>
       <tr><td class="word-cell">holder</td><td class="ms-cell">holde</td><td class="hint-cell">Har fat i noget med hænderne</td><td class="pattern-cell">Nutids-r: 'holde' bliver til 'holder' i nutid</td><td class="sentence-cell">Hun holder sin bamse tæt.</td></tr>
       <tr><td class="word-cell">hopper</td><td class="ms-cell">hoppe</td><td class="hint-cell">Springer op fra jorden</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (hun hopper)</td><td class="sentence-cell">Hun hopper på trampolinen.</td></tr>
-      <tr><td class="word-cell">hører</td><td class="ms-cell">høre</td><td class="hint-cell">Opfanger lyd med ørerne (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (han hører)</td><td class="sentence-cell">Han hører musik i sine høretelefoner.</td></tr>
       <tr><td class="word-cell">kaster</td><td class="ms-cell">kaste</td><td class="hint-cell">Sender noget gennem luften (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (han kaster)</td><td class="sentence-cell">Han kaster bolden til sin ven.</td></tr>
       <tr><td class="word-cell">kommer</td><td class="ms-cell">komme</td><td class="hint-cell">Er på vej hen til et sted (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (hun kommer)</td><td class="sentence-cell">Hun kommer hjem fra skole klokken to.</td></tr>
       <tr><td class="word-cell">køber</td><td class="ms-cell">købe</td><td class="hint-cell">Betaler penge for en vare</td><td class="pattern-cell">Nutids-r: 'købe' bliver til 'køber' i nutid</td><td class="sentence-cell">Vi køber mælk i supermarkedet.</td></tr>
-      <tr><td class="word-cell">kører</td><td class="ms-cell">køre</td><td class="hint-cell">Styrer en bil eller cykel fremad</td><td class="pattern-cell">Nutids-r: 'køre' bliver til 'kører' i nutid</td><td class="sentence-cell">Far kører os til skole hver morgen.</td></tr>
-      <tr><td class="word-cell">laver</td><td class="ms-cell">lave</td><td class="hint-cell">Er i gang med at lave noget</td><td class="pattern-cell">Nutids-r: 'lave' bliver til 'laver' i nutid</td><td class="sentence-cell">Mor laver mad i køkkenet.</td></tr>
+      <tr><td class="word-cell">laver</td><td class="ms-cell">lave</td><td class="hint-cell">Fremstiller eller tilbereder noget</td><td class="pattern-cell">Nutids-r: 'lave' bliver til 'laver' i nutid</td><td class="sentence-cell">Mor laver mad i køkkenet.</td></tr>
       <tr><td class="word-cell">leger</td><td class="ms-cell">lege</td><td class="hint-cell">Har det sjovt</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (de leger)</td><td class="sentence-cell">De leger i haven.</td></tr>
       <tr><td class="word-cell">passer</td><td class="ms-cell">passe</td><td class="hint-cell">Sørger for at noget er i orden</td><td class="pattern-cell">Nutids-r: 'passe' bliver til 'passer' i nutid</td><td class="sentence-cell">Hun passer godt på sin lillebror.</td></tr>
       <tr><td class="word-cell">ser</td><td class="ms-cell">se</td><td class="hint-cell">Bruger øjnene (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (hun ser)</td><td class="sentence-cell">Hun ser en fugl i træet.</td></tr>
@@ -753,7 +629,7 @@
       <tr><td class="word-cell">rydder</td><td class="ms-cell">rydde</td><td class="hint-cell">Gør et sted rent og pænt</td><td class="pattern-cell">Nutids-r: 'rydde' bliver til 'rydder' i nutid</td><td class="sentence-cell">Vi rydder op på værelset.</td></tr>
       <tr><td class="word-cell">samler</td><td class="ms-cell">samle</td><td class="hint-cell">Bringer ting sammen (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (drengen samler)</td><td class="sentence-cell">Drengen samler frimærker.</td></tr>
       <tr><td class="word-cell">sender</td><td class="ms-cell">sende</td><td class="hint-cell">Får noget bragt til en anden</td><td class="pattern-cell">Nutids-r: 'sende' bliver til 'sender' i nutid</td><td class="sentence-cell">Jeg sender et brev til min mormor.</td></tr>
-      <tr><td class="word-cell">spiller</td><td class="ms-cell">spille</td><td class="hint-cell">Deltager i et spil eller en sport</td><td class="pattern-cell">Nutids-r: 'spille' bliver til 'spiller' i nutid</td><td class="sentence-cell">Vi spiller fodbold efter skole.</td></tr>
+      <tr><td class="word-cell">spiller</td><td class="ms-cell">spille</td><td class="hint-cell">Deltager i en sport eller et brætspil</td><td class="pattern-cell">Nutids-r: 'spille' bliver til 'spiller' i nutid</td><td class="sentence-cell">Vi spiller fodbold efter skole.</td></tr>
       <tr><td class="word-cell">svømmer</td><td class="ms-cell">svømme</td><td class="hint-cell">Bevæger sig i vand</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (han svømmer)</td><td class="sentence-cell">Han svømmer i bassinet.</td></tr>
       <tr><td class="word-cell">tegner</td><td class="ms-cell">tegne</td><td class="hint-cell">Laver billeder med en blyant</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (drengen tegner)</td><td class="sentence-cell">Drengen tegner et hus.</td></tr>
       <tr><td class="word-cell">tænker</td><td class="ms-cell">tænke</td><td class="hint-cell">Bruger hovedet til at overveje (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (han tænker)</td><td class="sentence-cell">Han tænker over opgaven.</td></tr>
@@ -762,7 +638,7 @@
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 22 ord</h3>
+    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 24 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">anvender</td><td class="ms-cell">anvende</td><td class="hint-cell">Bruger noget til et bestemt formål</td><td class="pattern-cell">Nutids-r: 'anvende' bliver til 'anvender' i nutid</td><td class="sentence-cell">Eleven anvender sin nye viden i opgaven.</td></tr>
@@ -775,11 +651,13 @@
       <tr><td class="word-cell">forbinder</td><td class="ms-cell">forbinde</td><td class="hint-cell">Sætter to ting sammen</td><td class="pattern-cell">Nutids-r: 'forbinde' bliver til 'forbinder' i nutid</td><td class="sentence-cell">Broen forbinder de to øer.</td></tr>
       <tr><td class="word-cell">forklarer</td><td class="ms-cell">forklare</td><td class="hint-cell">Gør noget tydeligt for andre</td><td class="pattern-cell">Nutids-r: 'forklare' bliver til 'forklarer' i nutid</td><td class="sentence-cell">Læreren forklarer den svære opgave.</td></tr>
       <tr><td class="word-cell">formulerer</td><td class="ms-cell">formulere</td><td class="hint-cell">Udtrykker noget med præcise ord (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (hun formulerer)</td><td class="sentence-cell">Hun formulerer sine svar klart.</td></tr>
+      <tr><td class="word-cell">hører</td><td class="ms-cell">høre</td><td class="hint-cell">Opfanger lyd med ørerne (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (han hører)</td><td class="sentence-cell">Han hører musik i sine høretelefoner.</td></tr>
       <tr><td class="word-cell">inspirerer</td><td class="ms-cell">inspirere</td><td class="hint-cell">Giver andre lyst til at skabe (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (kunstneren inspirerer)</td><td class="sentence-cell">Kunstneren inspirerer mange unge.</td></tr>
       <tr><td class="word-cell">interesserer</td><td class="ms-cell">interessere</td><td class="hint-cell">Fanger opmærksomheden</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (emnet interesserer)</td><td class="sentence-cell">Emnet interesserer mange elever.</td></tr>
       <tr><td class="word-cell">investerer</td><td class="ms-cell">investere</td><td class="hint-cell">Lægger penge i noget for at få dem igen (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (firmaet investerer)</td><td class="sentence-cell">Firmaet investerer i ny teknologi.</td></tr>
       <tr><td class="word-cell">koncentrerer</td><td class="ms-cell">koncentrere</td><td class="hint-cell">Fokuserer sin opmærksomhed</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (hun koncentrerer)</td><td class="sentence-cell">Hun koncentrerer sig om opgaven.</td></tr>
       <tr><td class="word-cell">konkurrerer</td><td class="ms-cell">konkurrere</td><td class="hint-cell">Kæmper om at vinde (nutid)</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (de konkurrerer)</td><td class="sentence-cell">De konkurrerer om førstepladsen.</td></tr>
+      <tr><td class="word-cell">kører</td><td class="ms-cell">køre</td><td class="hint-cell">Styrer en bil eller cykel fremad</td><td class="pattern-cell">Nutids-r: 'køre' bliver til 'kører' i nutid</td><td class="sentence-cell">Far kører os til skole hver morgen.</td></tr>
       <tr><td class="word-cell">observerer</td><td class="ms-cell">observere</td><td class="hint-cell">Kigger nøje på noget</td><td class="pattern-cell">nutids-r: verbet ender på '-r' i nutid (forskeren observerer)</td><td class="sentence-cell">Forskeren observerer dyret.</td></tr>
       <tr><td class="word-cell">opdager</td><td class="ms-cell">opdage</td><td class="hint-cell">Finder noget nyt og uventet</td><td class="pattern-cell">Nutids-r: 'opdage' bliver til 'opdager' i nutid</td><td class="sentence-cell">Forskeren opdager en ny dyreart.</td></tr>
       <tr><td class="word-cell">overrasker</td><td class="ms-cell">overraske</td><td class="hint-cell">Gør noget uventet for nogen</td><td class="pattern-cell">Nutids-r: 'overraske' bliver til 'overrasker' i nutid</td><td class="sentence-cell">Vi overrasker mor med morgenmad på sengen.</td></tr>
@@ -816,75 +694,75 @@
   <a href="#toc" class="back-to-top">↑ Tilbage til indholdsfortegnelsen</a>
 </section>
 <section class="category" id="fremmedord">
-  <div class="cat-header"><h2>🌍 Fremmedord</h2><span class="cat-count">60 ord</span></div>
+  <div class="cat-header"><h2>🌍 Fremmedord</h2><span class="cat-count">54 ord</span></div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 36 ord</h3>
+    <h3 class="level-header">Niveau 2 (3.-4. klasse) — 9 ord</h3>
+    <table>
+      <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
+      <tr><td class="word-cell">arkitektur</td><td class="ms-cell">arkitketur</td><td class="hint-cell">Kunsten at tegne og bygge huse</td><td class="pattern-cell">Fremmedord fra græsk/latin — staves med 'k' og 'tur' til sidst</td><td class="sentence-cell">Byen er kendt for sin smukke arkitektur.</td></tr>
+      <tr><td class="word-cell">diamant</td><td class="ms-cell">diaamnt</td><td class="hint-cell">Meget dyrt og hårdt krystal</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'di' og 'a' i midten</td><td class="sentence-cell">En diamant er den hårdeste sten i verden.</td></tr>
+      <tr><td class="word-cell">filosofi</td><td class="ms-cell">filoosfi</td><td class="hint-cell">At tænke dybe tanker om livet</td><td class="pattern-cell">Fremmedord fra græsk — 'f' bruges i stedet for 'ph', ender på 'i'</td><td class="sentence-cell">Vi lærte om filosofi i skolen.</td></tr>
+      <tr><td class="word-cell">karate</td><td class="ms-cell">karat</td><td class="hint-cell">Japansk kampsport med spark og slag</td><td class="pattern-cell">Fremmedord fra japansk — staves med 'k' og ender på 'e'</td><td class="sentence-cell">Min bror træner karate to gange om ugen.</td></tr>
+      <tr><td class="word-cell">koreografi</td><td class="ms-cell">koreorgafi</td><td class="hint-cell">Planlagte dansetrin til musik</td><td class="pattern-cell">Fremmedord fra græsk — 'koreo' plus 'grafi', staves med 'e' og 'o'</td><td class="sentence-cell">Hun skal lave koreografi til skolens musical.</td></tr>
+      <tr><td class="word-cell">labyrint</td><td class="ms-cell">labirint</td><td class="hint-cell">Forvirrende system af gange</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'y' i midten</td><td class="sentence-cell">Vi gik vild i den store labyrint.</td></tr>
+      <tr><td class="word-cell">symfoni</td><td class="ms-cell">simfoni</td><td class="hint-cell">Langt musikstykke for et helt orkester</td><td class="pattern-cell">fremmedord fra græsk: 'y' og '-foni' fra græsk</td><td class="sentence-cell">Orkestret spillede en smuk symfoni i koncerthuset.</td></tr>
+      <tr><td class="word-cell">synonym</td><td class="ms-cell">sinonym</td><td class="hint-cell">Ord der betyder det samme som et andet</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'y' to gange</td><td class="sentence-cell">Glad og lykkelig er et synonym.</td></tr>
+      <tr><td class="word-cell">teknologi</td><td class="ms-cell">teknloogi</td><td class="hint-cell">Viden om maskiner og computere</td><td class="pattern-cell">Fremmedord fra græsk — 'tekno' betyder kunst/færdighed, ender på 'gi'</td><td class="sentence-cell">Ny teknologi gør hverdagen lettere.</td></tr>
+    </table>
+  </div>
+  <div class="level-section">
+    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 31 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">akvarium</td><td class="ms-cell">akvairum</td><td class="hint-cell">Glasbeholder med fisk og vand</td><td class="pattern-cell">Fremmedord fra latin — 'kv' bruges i stedet for 'qu'</td><td class="sentence-cell">Vi har et stort akvarium med tropiske fisk.</td></tr>
       <tr><td class="word-cell">astronaut</td><td class="ms-cell">astrnoaut</td><td class="hint-cell">Person der rejser ud i rummet</td><td class="pattern-cell">Fremmedord fra græsk — 'au' staves som det lyder</td><td class="sentence-cell">En astronaut svæver rundt i rumstationen.</td></tr>
-      <tr><td class="word-cell">balkon</td><td class="ms-cell">balokn</td><td class="hint-cell">Lille udendørs platform på en bygning</td><td class="pattern-cell">Fremmedord fra italiensk — staves med 'k' ikke 'c'</td><td class="sentence-cell">Vi sad på balkonen og nød solen.</td></tr>
-      <tr><td class="word-cell">bibliotek</td><td class="ms-cell">bibloitek</td><td class="hint-cell">Sted hvor man låner bøger</td><td class="pattern-cell">Fremmedord fra græsk — 'th' udtales som 't', og 'ek' til sidst</td><td class="sentence-cell">Vi låner bøger på biblioteket hver uge.</td></tr>
+      <tr><td class="word-cell">balkon</td><td class="ms-cell">balokn</td><td class="hint-cell">Lille udendørs platform på en bygning</td><td class="pattern-cell">Fremmedord fra italiensk — staves med 'k' ikke 'c'</td><td class="sentence-cell">Lejligheden har en stor balkon.</td></tr>
+      <tr><td class="word-cell">bibliotek</td><td class="ms-cell">bibloitek</td><td class="hint-cell">Sted hvor man låner bøger</td><td class="pattern-cell">Fremmedord fra græsk — 'th' udtales som 't', og 'ek' til sidst</td><td class="sentence-cell">Vi skal hen på bibliotek og låne bøger.</td></tr>
       <tr><td class="word-cell">cafe</td><td class="ms-cell">kafe</td><td class="hint-cell">Sted hvor man kan købe kaffe og kage</td><td class="pattern-cell">fremmedord fra fransk: udtales ka-fe</td><td class="sentence-cell">Vi mødtes på en cafe i byen.</td></tr>
       <tr><td class="word-cell">champignon</td><td class="ms-cell">sjampinjon</td><td class="hint-cell">En hvid svamp man spiser</td><td class="pattern-cell">ch som sj, gn som nj</td><td class="sentence-cell">Der er champignon på pizzaen.</td></tr>
-      <tr><td class="word-cell">chauffør</td><td class="ms-cell">kauffør</td><td class="hint-cell">Person der kører en bil for andre</td><td class="pattern-cell">fremmedord fra fransk: 'ch' udtales som 'sj' og '-ør' ending</td><td class="sentence-cell">Bussens chauffør var meget venlig.</td></tr>
       <tr><td class="word-cell">cola</td><td class="ms-cell">kola</td><td class="hint-cell">Brun sodavand med bobler</td><td class="pattern-cell">fremmedord fra engelsk: staves som det lyder</td><td class="sentence-cell">Må jeg få en cola til maden?</td></tr>
       <tr><td class="word-cell">computer</td><td class="ms-cell">komputer</td><td class="hint-cell">Elektronisk maskine man kan skrive på</td><td class="pattern-cell">fremmedord fra engelsk: 'c' udtales som 'k'</td><td class="sentence-cell">Far sidder ved sin computer og arbejder.</td></tr>
-      <tr><td class="word-cell">diamant</td><td class="ms-cell">diaamnt</td><td class="hint-cell">Meget dyrt og hårdt krystal</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'di' og 'a' i midten</td><td class="sentence-cell">En diamant er den hårdeste sten i verden.</td></tr>
       <tr><td class="word-cell">garage</td><td class="ms-cell">garag</td><td class="hint-cell">Rum hvor bilen holder</td><td class="pattern-cell">fremmedord fra fransk: '-age' udtales som 'asje'</td><td class="sentence-cell">Far parkerer bilen i garage hver aften.</td></tr>
       <tr><td class="word-cell">gymnasium</td><td class="ms-cell">gimnasium</td><td class="hint-cell">Skole man går på efter folkeskolen</td><td class="pattern-cell">Fremmedord fra græsk/latin — staves med 'y' og 'ium' til sidst</td><td class="sentence-cell">Min storesøster går på gymnasium.</td></tr>
       <tr><td class="word-cell">hobby</td><td class="ms-cell">hobbi</td><td class="hint-cell">Noget man laver i sin fritid</td><td class="pattern-cell">fremmedord fra engelsk: dobbelt-b og 'y' til sidst</td><td class="sentence-cell">Min hobby er at samle på frimærker.</td></tr>
       <tr><td class="word-cell">interview</td><td class="ms-cell">intevriew</td><td class="hint-cell">Samtale hvor man stiller spørgsmål</td><td class="pattern-cell">fremmedord fra engelsk: 'iew' udtales som 'ju'</td><td class="sentence-cell">Journalisten lavede et interview med borgmesteren.</td></tr>
       <tr><td class="word-cell">juice</td><td class="ms-cell">juike</td><td class="hint-cell">Drik lavet af frugt</td><td class="pattern-cell">fremmedord fra engelsk: 'j' udtales som 'dj'</td><td class="sentence-cell">Må jeg få et glas juice til morgenmad?</td></tr>
-      <tr><td class="word-cell">jungle</td><td class="ms-cell">jungl</td><td class="hint-cell">Tæt tropisk skov</td><td class="pattern-cell">Fremmedord fra hindi/engelsk — 'j' udtales som 'dj'</td><td class="sentence-cell">Der bor mange dyr i junglen.</td></tr>
+      <tr><td class="word-cell">jungle</td><td class="ms-cell">jungl</td><td class="hint-cell">Tæt tropisk skov</td><td class="pattern-cell">Fremmedord fra hindi/engelsk — 'j' udtales som 'dj'</td><td class="sentence-cell">Tigeren lever i jungle og skov.</td></tr>
       <tr><td class="word-cell">kalkulator</td><td class="ms-cell">kalkualtor</td><td class="hint-cell">Maskine der regner for dig</td><td class="pattern-cell">Fremmedord fra latin — staves med 'k' to gange, ikke 'c'</td><td class="sentence-cell">Brug en kalkulator til den svære opgave.</td></tr>
-      <tr><td class="word-cell">karate</td><td class="ms-cell">karat</td><td class="hint-cell">Japansk kampsport med spark og slag</td><td class="pattern-cell">Fremmedord fra japansk — staves med 'k' og ender på 'e'</td><td class="sentence-cell">Min bror træner karate to gange om ugen.</td></tr>
       <tr><td class="word-cell">kiwi</td><td class="ms-cell">kivi</td><td class="hint-cell">Grøn frugt med lodden skal</td><td class="pattern-cell">fremmedord fra New Zealand: staves som det lyder</td><td class="sentence-cell">Kiwi smager sødt og surt på samme tid.</td></tr>
-      <tr><td class="word-cell">labyrint</td><td class="ms-cell">labirint</td><td class="hint-cell">Forvirrende system af gange</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'y' i midten</td><td class="sentence-cell">Vi gik vild i den store labyrint.</td></tr>
       <tr><td class="word-cell">massage</td><td class="ms-cell">masage</td><td class="hint-cell">Når nogen bearbejder ens muskler med hænderne</td><td class="pattern-cell">fremmedord fra fransk: '-age' udtales som 'asje'</td><td class="sentence-cell">Mor fik en massage fordi hun havde ondt i ryggen.</td></tr>
       <tr><td class="word-cell">menu</td><td class="ms-cell">meun</td><td class="hint-cell">Liste over mad man kan bestille</td><td class="pattern-cell">fremmedord fra fransk: u til sidst</td><td class="sentence-cell">Tjeneren gav os en menu med mange retter.</td></tr>
       <tr><td class="word-cell">nation</td><td class="ms-cell">nasion</td><td class="hint-cell">Et land og dets folk</td><td class="pattern-cell">fremmedord fra latin: '-tion' udtales som 'sjon'</td><td class="sentence-cell">Danmark er en lille nation i Nordeuropa.</td></tr>
       <tr><td class="word-cell">nervøs</td><td class="ms-cell">nerøvs</td><td class="hint-cell">En følelse af uro og bekymring</td><td class="pattern-cell">fremmedord fra latin: '-øs' ending fra fransk</td><td class="sentence-cell">Jeg er lidt nervøs inden prøven.</td></tr>
       <tr><td class="word-cell">parfume</td><td class="ms-cell">parfum</td><td class="hint-cell">Duftende væske man sprøjter på sig</td><td class="pattern-cell">Fremmedord fra fransk — staves med 'par' og stumt 'e'</td><td class="sentence-cell">Mor fik en ny parfume i gave.</td></tr>
       <tr><td class="word-cell">pizza</td><td class="ms-cell">piza</td><td class="hint-cell">Italiensk ret med tomat og ost</td><td class="pattern-cell">fremmedord fra italiensk: dobbelt-z</td><td class="sentence-cell">Vi spiser pizza til aftensmad.</td></tr>
-      <tr><td class="word-cell">restaurant</td><td class="ms-cell">restaruant</td><td class="hint-cell">Sted hvor man køber og spiser et måltid</td><td class="pattern-cell">fremmedord fra fransk: '-ant' og stumt 'au'</td><td class="sentence-cell">Vi går ud og spiser på en restaurant i aften.</td></tr>
       <tr><td class="word-cell">robot</td><td class="ms-cell">roobt</td><td class="hint-cell">Maskine der kan arbejde selv</td><td class="pattern-cell">fremmedord fra tjekkisk: staves som det lyder</td><td class="sentence-cell">Vi byggede en robot i teknikundervisningen.</td></tr>
       <tr><td class="word-cell">station</td><td class="ms-cell">stasion</td><td class="hint-cell">Sted hvor toget holder</td><td class="pattern-cell">fremmedord fra latin: '-tion' udtales som 'sjon'</td><td class="sentence-cell">Vi mødes på station klokken tre.</td></tr>
       <tr><td class="word-cell">strategi</td><td class="ms-cell">straetgi</td><td class="hint-cell">En klog plan for at nå et mål</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'str' i starten og 'gi' til sidst</td><td class="sentence-cell">Vi lagde en god strategi for fodboldkampen.</td></tr>
       <tr><td class="word-cell">sushi</td><td class="ms-cell">suhsi</td><td class="hint-cell">Japansk mad med ris og fisk</td><td class="pattern-cell">Fremmedord fra japansk — 'sh' udtales som 'sj'</td><td class="sentence-cell">Vi spiste sushi i en japansk restaurant.</td></tr>
       <tr><td class="word-cell">taxi</td><td class="ms-cell">taksi</td><td class="hint-cell">Bil man kan betale for at køre i</td><td class="pattern-cell">fremmedord fra fransk: x i stedet for ks</td><td class="sentence-cell">Vi tog en taxi hjem fra lufthavnen.</td></tr>
-      <tr><td class="word-cell">terapeut</td><td class="ms-cell">teraeput</td><td class="hint-cell">Person der hjælper folk med problemer</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'th' der udtales som 't'</td><td class="sentence-cell">Terapeuten hjalp drengen med at tale om sine følelser.</td></tr>
+      <tr><td class="word-cell">terapeut</td><td class="ms-cell">teraeput</td><td class="hint-cell">Person der hjælper folk med problemer</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'th' der udtales som 't'</td><td class="sentence-cell">Han går til en terapeut en gang om ugen.</td></tr>
       <tr><td class="word-cell">toilet</td><td class="ms-cell">toielt</td><td class="hint-cell">Rum med en kumme man sidder på</td><td class="pattern-cell">fremmedord fra fransk: '-et' udtales blødt</td><td class="sentence-cell">Må jeg gå på toilet i pausen?</td></tr>
       <tr><td class="word-cell">yoghurt</td><td class="ms-cell">yoguhrt</td><td class="hint-cell">Syrlig mælkeprodukt</td><td class="pattern-cell">Fremmedord fra tyrkisk — staves med 'gh' som er stumt</td><td class="sentence-cell">Jeg spiser yoghurt med müsli til morgenmad.</td></tr>
-      <tr><td class="word-cell">zoologisk</td><td class="ms-cell">sooologisk</td><td class="hint-cell">Noget der handler om dyr og dyreliv</td><td class="pattern-cell">zoo (z som s)</td><td class="sentence-cell">Vi tog i den zoologiske have i går.</td></tr>
+      <tr><td class="word-cell">zoologisk</td><td class="ms-cell">sooologisk</td><td class="hint-cell">Noget der handler om dyr og dyreliv</td><td class="pattern-cell">zoo (z som s)</td><td class="sentence-cell">Det er et zoologisk museum med mange dyr.</td></tr>
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 4 (7.-8. klasse) — 24 ord</h3>
+    <h3 class="level-header">Niveau 4 (7.-8. klasse) — 14 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
-      <tr><td class="word-cell">arkitektur</td><td class="ms-cell">arkitketur</td><td class="hint-cell">Kunsten at tegne og bygge huse</td><td class="pattern-cell">Fremmedord fra græsk/latin — staves med 'k' og 'tur' til sidst</td><td class="sentence-cell">Byen er kendt for sin smukke arkitektur.</td></tr>
-      <tr><td class="word-cell">bureau</td><td class="ms-cell">burø</td><td class="hint-cell">Kontor eller skrivebord</td><td class="pattern-cell">fremmedord fra fransk: '-eau' udtales som 'o'</td><td class="sentence-cell">Hun arbejder på et bureau i byen.</td></tr>
       <tr><td class="word-cell">civilisation</td><td class="ms-cell">civilisasion</td><td class="hint-cell">Et samfund med kultur og regler</td><td class="pattern-cell">fremmedord fra latin: 'c' som 's' og '-tion' som 'sjon'</td><td class="sentence-cell">Den egyptiske civilisation byggede pyramiderne.</td></tr>
       <tr><td class="word-cell">encyclopædi</td><td class="ms-cell">enkyclopædi</td><td class="hint-cell">Stort opslagsværk med viden om alt muligt</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'enc', 'y' og 'æ'</td><td class="sentence-cell">Vi slog svaret op i en encyclopædi.</td></tr>
-      <tr><td class="word-cell">filosofi</td><td class="ms-cell">filoosfi</td><td class="hint-cell">At tænke dybe tanker om livet</td><td class="pattern-cell">Fremmedord fra græsk — 'f' bruges i stedet for 'ph', ender på 'i'</td><td class="sentence-cell">Vi lærte om filosofi i skolen.</td></tr>
-      <tr><td class="word-cell">hieroglyf</td><td class="ms-cell">hieroglif</td><td class="hint-cell">Gammelt egyptisk billedtegn</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'ie', 'gl' og 'y'</td><td class="sentence-cell">Egypterne skrev med hieroglyffer på væggene.</td></tr>
+      <tr><td class="word-cell">hieroglyf</td><td class="ms-cell">hieroglif</td><td class="hint-cell">Gammelt egyptisk billedtegn</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'ie', 'gl' og 'y'</td><td class="sentence-cell">En hieroglyf er et gammelt egyptisk tegn.</td></tr>
       <tr><td class="word-cell">ingeniør</td><td class="ms-cell">ingeinør</td><td class="hint-cell">Person der designer broer og maskiner</td><td class="pattern-cell">fremmedord fra fransk: 'g' udtales blødt og '-ør' ending</td><td class="sentence-cell">Min mor er ingeniør og bygger vindmøller.</td></tr>
       <tr><td class="word-cell">journalist</td><td class="ms-cell">jurnalist</td><td class="hint-cell">Person der skriver nyheder</td><td class="pattern-cell">fremmedord fra fransk: 'j' og '-ist' ending</td><td class="sentence-cell">En journalist fra avisen skrev om den nye skole.</td></tr>
       <tr><td class="word-cell">kamouflage</td><td class="ms-cell">kamuflage</td><td class="hint-cell">Farver og mønstre der skjuler noget</td><td class="pattern-cell">fremmedord fra fransk: 'ou' og '-age' udtales som 'asje'</td><td class="sentence-cell">Soldaternes tøj har kamouflage så de ikke kan ses.</td></tr>
-      <tr><td class="word-cell">koreografi</td><td class="ms-cell">koreorgafi</td><td class="hint-cell">Planlagte dansetrin til musik</td><td class="pattern-cell">Fremmedord fra græsk — 'koreo' plus 'grafi', staves med 'e' og 'o'</td><td class="sentence-cell">Danserne øvede koreografien til showet.</td></tr>
       <tr><td class="word-cell">meditation</td><td class="ms-cell">meditasion</td><td class="hint-cell">At sidde stille og finde ro i sindet</td><td class="pattern-cell">Fremmedord fra latin — staves med 'tion' der udtales 'sjon'</td><td class="sentence-cell">Klassen prøvede meditation for at slappe af.</td></tr>
-      <tr><td class="word-cell">meteorologi</td><td class="ms-cell">meteoorlogi</td><td class="hint-cell">Videnskaben om vejret</td><td class="pattern-cell">Fremmedord fra græsk — 'meteor' plus 'logi' (lære), staves med 'eo'</td><td class="sentence-cell">Meteorologi handler om at forudsige vejret.</td></tr>
+      <tr><td class="word-cell">meteorologi</td><td class="ms-cell">meterologi</td><td class="hint-cell">Videnskaben om vejret</td><td class="pattern-cell">Fremmedord fra græsk — 'meteor' plus 'logi' (lære), staves med 'eo'</td><td class="sentence-cell">Meteorologi handler om at forudsige vejret.</td></tr>
       <tr><td class="word-cell">miljø</td><td class="ms-cell">milgø</td><td class="hint-cell">Naturen omkring os</td><td class="pattern-cell">fremmedord fra fransk: 'lj' og '-ø' ending</td><td class="sentence-cell">Vi skal passe godt på vores miljø.</td></tr>
       <tr><td class="word-cell">organisation</td><td class="ms-cell">organisasion</td><td class="hint-cell">En gruppe mennesker der arbejder for et fælles mål</td><td class="pattern-cell">fremmedord fra latin: '-tion' som 'sjon' og 's' i midten</td><td class="sentence-cell">FN er en stor international organisation.</td></tr>
       <tr><td class="word-cell">præsentation</td><td class="ms-cell">præsentasion</td><td class="hint-cell">At vise noget frem for andre</td><td class="pattern-cell">Fremmedord fra latin — 'præ' i starten og 'tion' til sidst</td><td class="sentence-cell">Eleven holdt en flot præsentation for klassen.</td></tr>
-      <tr><td class="word-cell">psykolog</td><td class="ms-cell">psikolog</td><td class="hint-cell">Person der hjælper med tanker og følelser</td><td class="pattern-cell">fremmedord fra græsk: stumt 'p' i 'psyk-'</td><td class="sentence-cell">Skolens psykolog taler med eleverne om trivsel.</td></tr>
-      <tr><td class="word-cell">psykologi</td><td class="ms-cell">psikologi</td><td class="hint-cell">Videnskaben om tanker og følelser</td><td class="pattern-cell">Fremmedord fra græsk — stumt 'p' i starten, staves med 'y' og 'gi'</td><td class="sentence-cell">Psykologi handler om hvordan mennesker tænker.</td></tr>
-      <tr><td class="word-cell">renaissance</td><td class="ms-cell">renæssance</td><td class="hint-cell">Tidsperiode med kunst og genopdagelse</td><td class="pattern-cell">Fremmedord fra fransk — 're' plus 'naissance', 'ai' og stumt 'e'</td><td class="sentence-cell">Perioden renaissance var en tid med stor kunst og videnskab.</td></tr>
       <tr><td class="word-cell">revolution</td><td class="ms-cell">revolusion</td><td class="hint-cell">Stor forandring af et helt samfund</td><td class="pattern-cell">Fremmedord fra latin/fransk — staves med 'tion' der udtales 'sjon'</td><td class="sentence-cell">Den franske revolution ændrede verden.</td></tr>
-      <tr><td class="word-cell">symfoni</td><td class="ms-cell">simfoni</td><td class="hint-cell">Langt musikstykke for et helt orkester</td><td class="pattern-cell">fremmedord fra græsk: 'y' og '-foni' fra græsk</td><td class="sentence-cell">Orkestret spillede en smuk symfoni i koncerthuset.</td></tr>
-      <tr><td class="word-cell">synonym</td><td class="ms-cell">sinonym</td><td class="hint-cell">Ord der betyder det samme som et andet</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'y' to gange</td><td class="sentence-cell">Glad og lykkelig er et synonym.</td></tr>
-      <tr><td class="word-cell">teknologi</td><td class="ms-cell">teknloogi</td><td class="hint-cell">Viden om maskiner og computere</td><td class="pattern-cell">Fremmedord fra græsk — 'tekno' betyder kunst/færdighed, ender på 'gi'</td><td class="sentence-cell">Ny teknologi gør hverdagen lettere.</td></tr>
       <tr><td class="word-cell">vaccination</td><td class="ms-cell">vaccinasion</td><td class="hint-cell">Sprøjte der beskytter mod sygdom</td><td class="pattern-cell">Fremmedord fra latin — dobbelt 'c' og 'tion' der udtales 'sjon'</td><td class="sentence-cell">Børnene fik en vaccination hos lægen.</td></tr>
       <tr><td class="word-cell">xylofon</td><td class="ms-cell">ksylofon</td><td class="hint-cell">Instrument med træstave man slår på</td><td class="pattern-cell">Fremmedord fra græsk — staves med 'x' og 'y', 'fon' betyder lyd</td><td class="sentence-cell">Barnet spillede på sin farverige xylofon.</td></tr>
     </table>
@@ -894,32 +772,26 @@
 <section class="category" id="bloedt-d">
   <div class="cat-header"><h2>🫠 Blødt d</h2><span class="cat-count">61 ord</span></div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 0 (Indskoling) — 10 ord</h3>
+    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 21 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">bid</td><td class="ms-cell">bi</td><td class="hint-cell">Et stykke man tager med tænderne</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'bið'</td><td class="sentence-cell">Kan jeg få en bid af dit æble?</td></tr>
       <tr><td class="word-cell">blad</td><td class="ms-cell">bla</td><td class="hint-cell">Det grønne der sidder på et træ</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Et blad faldt ned fra træet.</td></tr>
       <tr><td class="word-cell">bod</td><td class="ms-cell">bo</td><td class="hint-cell">Lille hus eller stand på et marked</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'boð'</td><td class="sentence-cell">Vi købte slik fra en bod på markedet.</td></tr>
-      <tr><td class="word-cell">fod</td><td class="ms-cell">fo</td><td class="hint-cell">Den sidder for enden af benet</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Jeg slog min fod på stolen.</td></tr>
-      <tr><td class="word-cell">had</td><td class="ms-cell">ha</td><td class="hint-cell">Det modsatte af kærlighed</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Had er en stærk følelse.</td></tr>
-      <tr><td class="word-cell">led</td><td class="ms-cell">le</td><td class="hint-cell">Ikke pæn, grim</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Det var en led heks i eventyret.</td></tr>
-      <tr><td class="word-cell">mud</td><td class="ms-cell">mu</td><td class="hint-cell">Blødt og vådt jord</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Grisen rullede sig i mud.</td></tr>
-      <tr><td class="word-cell">rad</td><td class="ms-cell">ra</td><td class="hint-cell">En lang række af ting</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'rað'</td><td class="sentence-cell">Bilerne stod på rad og række.</td></tr>
-      <tr><td class="word-cell">rod</td><td class="ms-cell">ro</td><td class="hint-cell">Den del af planten under jorden</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'roð'</td><td class="sentence-cell">Træet har en stor rod.</td></tr>
-      <tr><td class="word-cell">sod</td><td class="ms-cell">so</td><td class="hint-cell">Sort støv fra en skorsten</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'soð'</td><td class="sentence-cell">Skorstenen var fuld af sod.</td></tr>
-    </table>
-  </div>
-  <div class="level-section">
-    <h3 class="level-header">Niveau 1 (1.-2. klasse) — 11 ord</h3>
-    <table>
-      <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">bred</td><td class="ms-cell">bre</td><td class="hint-cell">Det modsatte af smal</td><td class="pattern-cell">blødt 'd' til sidst i ordet</td><td class="sentence-cell">Vejen er meget bred her i byen.</td></tr>
       <tr><td class="word-cell">bud</td><td class="ms-cell">bu</td><td class="hint-cell">En person der bringer pakker</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'buð'</td><td class="sentence-cell">Et bud kom med en pakke til os.</td></tr>
+      <tr><td class="word-cell">fod</td><td class="ms-cell">fo</td><td class="hint-cell">Den sidder for enden af benet</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Jeg slog min fod på stolen.</td></tr>
       <tr><td class="word-cell">fred</td><td class="ms-cell">fre</td><td class="hint-cell">Ro og harmoni — det modsatte af krig</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'freð'</td><td class="sentence-cell">Der var fred og ro i huset.</td></tr>
+      <tr><td class="word-cell">had</td><td class="ms-cell">ha</td><td class="hint-cell">Det modsatte af kærlighed</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Had er en stærk følelse.</td></tr>
       <tr><td class="word-cell">hud</td><td class="ms-cell">hu</td><td class="hint-cell">Det der dækker hele kroppen</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'huð'</td><td class="sentence-cell">Solen kan brænde din hud.</td></tr>
+      <tr><td class="word-cell">led</td><td class="ms-cell">le</td><td class="hint-cell">Ikke pæn, grim</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Det var en led heks i eventyret.</td></tr>
+      <tr><td class="word-cell">mud</td><td class="ms-cell">mu</td><td class="hint-cell">Blødt og vådt jord</td><td class="pattern-cell">blødt d til sidst — det høres næsten ikke</td><td class="sentence-cell">Grisen rullede sig i mud.</td></tr>
       <tr><td class="word-cell">nød</td><td class="ms-cell">nø</td><td class="hint-cell">Hård frugt fra et træ med skal</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'nøð'</td><td class="sentence-cell">Egernet gemte en nød i træet.</td></tr>
+      <tr><td class="word-cell">rad</td><td class="ms-cell">ra</td><td class="hint-cell">En lang række af ting</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'rað'</td><td class="sentence-cell">Bilerne stod på rad og række.</td></tr>
+      <tr><td class="word-cell">rod</td><td class="ms-cell">ro</td><td class="hint-cell">Den del af planten under jorden</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'roð'</td><td class="sentence-cell">Træet har en stor rod.</td></tr>
       <tr><td class="word-cell">rød</td><td class="ms-cell">rø</td><td class="hint-cell">Farven på jordbær</td><td class="pattern-cell">blødt 'd' til sidst efter 'ø'</td><td class="sentence-cell">Brandbilen er rød og skinnende.</td></tr>
-      <tr><td class="word-cell">skud</td><td class="ms-cell">sku</td><td class="hint-cell">Lyden fra noget der affyres</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'skuð'</td><td class="sentence-cell">Startskuddet lød og løberne satte af sted.</td></tr>
+      <tr><td class="word-cell">skud</td><td class="ms-cell">sku</td><td class="hint-cell">Lyden fra noget der affyres</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'skuð'</td><td class="sentence-cell">Han hørte et skud ude fra skoven.</td></tr>
+      <tr><td class="word-cell">sod</td><td class="ms-cell">so</td><td class="hint-cell">Sort støv fra en skorsten</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'soð'</td><td class="sentence-cell">Skorstenen var fuld af sod.</td></tr>
       <tr><td class="word-cell">sted</td><td class="ms-cell">ste</td><td class="hint-cell">Et bestemt punkt eller lokation</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'steð'</td><td class="sentence-cell">Vi fandt et dejligt sted at holde picnic.</td></tr>
       <tr><td class="word-cell">tid</td><td class="ms-cell">ti</td><td class="hint-cell">Det uret viser</td><td class="pattern-cell">blødt 'd' til sidst i ordet</td><td class="sentence-cell">Vi har god tid til at nå bussen.</td></tr>
       <tr><td class="word-cell">tråd</td><td class="ms-cell">trå</td><td class="hint-cell">Tynd snor man syr med</td><td class="pattern-cell">Blødt 'd' til sidst — udtales næsten som 'tråð'</td><td class="sentence-cell">Mor syede med en rød tråd.</td></tr>
@@ -938,14 +810,14 @@
       <tr><td class="word-cell">mode</td><td class="ms-cell">moe</td><td class="hint-cell">Tøjstil der er populær lige nu</td><td class="pattern-cell">blødt 'd' mellem to vokaler</td><td class="sentence-cell">Min storesøster interesserer sig for mode.</td></tr>
       <tr><td class="word-cell">rede</td><td class="ms-cell">ree</td><td class="hint-cell">Fuglens hjem i træet</td><td class="pattern-cell">blødt 'd' mellem to vokaler</td><td class="sentence-cell">Fuglen byggede en rede af kviste og mos.</td></tr>
       <tr><td class="word-cell">ride</td><td class="ms-cell">rie</td><td class="hint-cell">Sidde på en hest der bevæger sig</td><td class="pattern-cell">blødt 'd' mellem to vokaler</td><td class="sentence-cell">Min kusine elsker at ride på sin hest.</td></tr>
-      <tr><td class="word-cell">rode</td><td class="ms-cell">roe</td><td class="hint-cell">Lave uorden og rod</td><td class="pattern-cell">blødt 'd' mellem to vokaler</td><td class="sentence-cell">Du må ikke rode på dit værelse.</td></tr>
+      <tr><td class="word-cell">rode</td><td class="ms-cell">roe</td><td class="hint-cell">Lave uorden og kaos</td><td class="pattern-cell">blødt 'd' mellem to vokaler</td><td class="sentence-cell">Du må ikke rode på dit værelse.</td></tr>
       <tr><td class="word-cell">side</td><td class="ms-cell">sie</td><td class="hint-cell">Et blad i en bog</td><td class="pattern-cell">blødt 'd' mellem to vokaler</td><td class="sentence-cell">Slå op på side tyve i bogen.</td></tr>
       <tr><td class="word-cell">skade</td><td class="ms-cell">skae</td><td class="hint-cell">Ødelægge eller gøre ondt på noget</td><td class="pattern-cell">blødt 'd' mellem to vokaler</td><td class="sentence-cell">Pas på ikke at skade blomsten når du plukker den.</td></tr>
       <tr><td class="word-cell">vide</td><td class="ms-cell">vie</td><td class="hint-cell">Have kendskab til noget</td><td class="pattern-cell">blødt 'd' mellem to vokaler</td><td class="sentence-cell">Jeg vil gerne vide mere om rummet.</td></tr>
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 18 ord</h3>
+    <h3 class="level-header">Niveau 3 (5.-6. klasse) — 19 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">bedst</td><td class="ms-cell">best</td><td class="hint-cell">Den allerdygtigste eller allerhøjeste kvalitet</td><td class="pattern-cell">blødt 'd' før konsonant i slutningen</td><td class="sentence-cell">Hun er bedst i klassen til at løbe.</td></tr>
@@ -957,28 +829,28 @@
       <tr><td class="word-cell">fodrer</td><td class="ms-cell">forer</td><td class="hint-cell">Giver mad til dyr</td><td class="pattern-cell">Blødt 'd' i midten — 'd' i 'foder' bevares i bøjningen</td><td class="sentence-cell">Pigen fodrer ænderne i parken.</td></tr>
       <tr><td class="word-cell">gadder</td><td class="ms-cell">gader</td><td class="hint-cell">Tynde grene brugt til hegn</td><td class="pattern-cell">Dobbelt 'd' — 'dd' bruges til at markere kort vokal før blødt d</td><td class="sentence-cell">Hegnet var lavet af gadder.</td></tr>
       <tr><td class="word-cell">hedde</td><td class="ms-cell">hede</td><td class="hint-cell">Det man gør med sit navn</td><td class="pattern-cell">blødt 'd' i dobbelt-d mellem vokaler</td><td class="sentence-cell">Hvad skal den nye hund hedde?</td></tr>
+      <tr><td class="word-cell">hæderlig</td><td class="ms-cell">hæjerlig</td><td class="hint-cell">En person der er ærlig og ordentlig</td><td class="pattern-cell">blødt 'd' mellem vokaler i afledt ord</td><td class="sentence-cell">Han var en ærlig og hæderlig mand.</td></tr>
       <tr><td class="word-cell">madder</td><td class="ms-cell">mader</td><td class="hint-cell">Flere stykker smørrebrød</td><td class="pattern-cell">Dobbelt 'd' — 'dd' markerer kort 'a' før blødt d</td><td class="sentence-cell">Mor smurte madder til madpakken.</td></tr>
       <tr><td class="word-cell">middag</td><td class="ms-cell">midag</td><td class="hint-cell">Måltid midt på dagen</td><td class="pattern-cell">blødt 'd' i dobbelt-d i sammensat ord</td><td class="sentence-cell">Vi spiser middag klokken tolv i kantinen.</td></tr>
       <tr><td class="word-cell">plads</td><td class="ms-cell">plas</td><td class="hint-cell">Et åbent sted eller rum til noget</td><td class="pattern-cell">blødt 'd' før 's' i slutningen</td><td class="sentence-cell">Er der plads til mig på bænken?</td></tr>
       <tr><td class="word-cell">redde</td><td class="ms-cell">rede</td><td class="hint-cell">Hjælpe nogen ud af fare</td><td class="pattern-cell">blødt 'd' i dobbelt-d mellem vokaler</td><td class="sentence-cell">Brandmanden kom for at redde katten fra træet.</td></tr>
       <tr><td class="word-cell">ridder</td><td class="ms-cell">rider</td><td class="hint-cell">Kriger med rustning og sværd</td><td class="pattern-cell">blødt 'd' i dobbelt-d mellem vokaler</td><td class="sentence-cell">Den tapre ridder red afsted på sin hest.</td></tr>
       <tr><td class="word-cell">rødder</td><td class="ms-cell">røder</td><td class="hint-cell">Den del af planten der er under jorden</td><td class="pattern-cell">Dobbelt 'd' — 'dd' markerer kort 'ø' før blødt d</td><td class="sentence-cell">Træets rødder gik dybt ned i jorden.</td></tr>
-      <tr><td class="word-cell">rødlig</td><td class="ms-cell">rølig</td><td class="hint-cell">Lidt rød i farven</td><td class="pattern-cell">Blødt 'd' i 'rød' — bevares når '-lig' tilføjes</td><td class="sentence-cell">Himlen var rødlig ved solnedgang.</td></tr>
+      <tr><td class="word-cell">rødlig</td><td class="ms-cell">rølig</td><td class="hint-cell">En farve der minder om solnedgang</td><td class="pattern-cell">Blødt 'd' i 'rød' — bevares når '-lig' tilføjes</td><td class="sentence-cell">Himlen var rødlig ved solnedgang.</td></tr>
       <tr><td class="word-cell">sidder</td><td class="ms-cell">sider</td><td class="hint-cell">Er placeret på en stol eller bænk</td><td class="pattern-cell">Dobbelt 'd' — 'dd' markerer kort vokal, blødt d-lyd</td><td class="sentence-cell">Katten sidder i vinduet og kigger ud.</td></tr>
       <tr><td class="word-cell">tredive</td><td class="ms-cell">treive</td><td class="hint-cell">Tallet 30</td><td class="pattern-cell">blødt 'd' mellem vokaler i talord</td><td class="sentence-cell">Der er tredive elever i klassen.</td></tr>
     </table>
   </div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 4 (7.-8. klasse) — 10 ord</h3>
+    <h3 class="level-header">Niveau 4 (7.-8. klasse) — 9 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">fodaftryk</td><td class="ms-cell">foaftryk</td><td class="hint-cell">Mærke i sandet fra en fod</td><td class="pattern-cell">Blødt 'd' i 'fod' — bevares i det sammensatte ord</td><td class="sentence-cell">Vi så fodaftryk i sneen fra et stort dyr.</td></tr>
       <tr><td class="word-cell">fredstid</td><td class="ms-cell">frestid</td><td class="hint-cell">En periode uden krig</td><td class="pattern-cell">Blødt 'd' i både 'fred' og 'tid' — to bløde d-lyde</td><td class="sentence-cell">I fredstid kan folk leve trygt.</td></tr>
-      <tr><td class="word-cell">hæderlig</td><td class="ms-cell">hæerlig</td><td class="hint-cell">En person der er ærlig og ordentlig</td><td class="pattern-cell">blødt 'd' mellem vokaler i afledt ord</td><td class="sentence-cell">Han lavede et hæderlig stykke arbejde.</td></tr>
       <tr><td class="word-cell">kodesprog</td><td class="ms-cell">koesprog</td><td class="hint-cell">Hemmeligt sprog kun få forstår</td><td class="pattern-cell">Blødt 'd' i 'kode' — bevares i det sammensatte ord</td><td class="sentence-cell">Børnene opfandt deres eget kodesprog.</td></tr>
       <tr><td class="word-cell">meddele</td><td class="ms-cell">medele</td><td class="hint-cell">Fortælle nogen noget vigtigt</td><td class="pattern-cell">blødt 'd' i dobbelt-d med forstavelse 'med-'</td><td class="sentence-cell">Læreren ville meddele resultatet af prøven.</td></tr>
       <tr><td class="word-cell">meddelelse</td><td class="ms-cell">medelelse</td><td class="hint-cell">En besked til nogen</td><td class="pattern-cell">blødt 'd' i dobbelt-d med forstavelse 'med-'</td><td class="sentence-cell">Der lå en meddelelse på bordet fra mor.</td></tr>
-      <tr><td class="word-cell">middelalder</td><td class="ms-cell">midelalder</td><td class="hint-cell">Historisk periode med riddere og borge</td><td class="pattern-cell">blødt 'd' i dobbelt-d i sammensat ord</td><td class="sentence-cell">I middelalder byggede man store borge af sten.</td></tr>
+      <tr><td class="word-cell">middelalderen</td><td class="ms-cell">midelalderen</td><td class="hint-cell">Historisk periode med riddere og borge</td><td class="pattern-cell">blødt 'd' i dobbelt-d i sammensat ord</td><td class="sentence-cell">I middelalderen byggede man store borge af sten.</td></tr>
       <tr><td class="word-cell">rødgrød</td><td class="ms-cell">rødgrø</td><td class="hint-cell">Dansk dessert lavet af bær</td><td class="pattern-cell">Blødt 'd' i både 'rød' og 'grød' — dobbelt blødt d</td><td class="sentence-cell">Vi fik rødgrød med fløde til dessert.</td></tr>
       <tr><td class="word-cell">stedfortræder</td><td class="ms-cell">stedfortræer</td><td class="hint-cell">En person der tager en andens plads</td><td class="pattern-cell">Blødt 'd' i 'sted' — bevares i det sammensatte ord</td><td class="sentence-cell">Læreren havde en stedfortræder i dag.</td></tr>
       <tr><td class="word-cell">tilbedelse</td><td class="ms-cell">tilbeelse</td><td class="hint-cell">Dyb beundring eller kærlighed</td><td class="pattern-cell">blødt d i til-bed-else — d høres blødt</td><td class="sentence-cell">Hunden viste sin tilbedelse ved at logre med halen.</td></tr>
@@ -994,31 +866,31 @@
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">bage</td><td class="ms-cell">baje</td><td class="hint-cell">Lave brød eller kage i ovnen</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Vi skal bage boller i dag.</td></tr>
       <tr><td class="word-cell">bakke</td><td class="ms-cell">bagge</td><td class="hint-cell">Flad plade man bærer kopper på</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Hun bar en bakke med te og kager.</td></tr>
-      <tr><td class="word-cell">bukke</td><td class="ms-cell">bugge</td><td class="hint-cell">Bøje sig forover som hilsen</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Skuespilleren bukkede for publikum.</td></tr>
-      <tr><td class="word-cell">kage</td><td class="ms-cell">kaje</td><td class="hint-cell">Sød ting man bager og spiser</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Mor bagte en stor chokoladekage.</td></tr>
+      <tr><td class="word-cell">bukke</td><td class="ms-cell">bugge</td><td class="hint-cell">Bøje sig forover som hilsen</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Skuespillerne skal bukke for publikum.</td></tr>
+      <tr><td class="word-cell">kage</td><td class="ms-cell">kaje</td><td class="hint-cell">Sød ting man bager og spiser</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Mor bagte en kage til festen.</td></tr>
       <tr><td class="word-cell">kappe</td><td class="ms-cell">kabbe</td><td class="hint-cell">En lang frakke uden ærmer</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Prinsessen bar en rød kappe.</td></tr>
-      <tr><td class="word-cell">lappe</td><td class="ms-cell">labbe</td><td class="hint-cell">Reparere et hul med et stykke stof</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Far lappede hullet i cykeldækket.</td></tr>
+      <tr><td class="word-cell">lappe</td><td class="ms-cell">labbe</td><td class="hint-cell">Reparere et hul med et stykke stof</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Far skal lappe hullet i cykeldækket.</td></tr>
       <tr><td class="word-cell">lege</td><td class="ms-cell">leje</td><td class="hint-cell">Have det sjovt med en aktivitet</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Børnene vil lege i haven.</td></tr>
-      <tr><td class="word-cell">nikke</td><td class="ms-cell">nigge</td><td class="hint-cell">Bevæge hovedet op og ned for at sige ja</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Han nikkede ja til spørgsmålet.</td></tr>
-      <tr><td class="word-cell">pige</td><td class="ms-cell">pije</td><td class="hint-cell">Et ungt menneske der ikke er en dreng</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Pigen løb hen over legepladsen.</td></tr>
+      <tr><td class="word-cell">nikke</td><td class="ms-cell">nigge</td><td class="hint-cell">Bevæge hovedet op og ned for at sige ja</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Hun kunne se ham nikke ja til spørgsmålet.</td></tr>
+      <tr><td class="word-cell">pige</td><td class="ms-cell">pije</td><td class="hint-cell">Et ungt menneske der ikke er en dreng</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Der var en pige på legepladsen.</td></tr>
       <tr><td class="word-cell">uge</td><td class="ms-cell">uje</td><td class="hint-cell">Syv dage i træk</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Der er syv dage i en uge.</td></tr>
-      <tr><td class="word-cell">vippe</td><td class="ms-cell">vibbe</td><td class="hint-cell">Legeredskab man kan gynge op og ned på</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Børnene legede på vippen i parken.</td></tr>
+      <tr><td class="word-cell">vippe</td><td class="ms-cell">vibbe</td><td class="hint-cell">Legeredskab man kan gynge op og ned på</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Der er en vippe på legepladsen.</td></tr>
     </table>
   </div>
   <div class="level-section">
     <h3 class="level-header">Niveau 2 (3.-4. klasse) — 10 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
-      <tr><td class="word-cell">hakke</td><td class="ms-cell">hagge</td><td class="hint-cell">Hugge i noget med et redskab</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Spætten hakkede i træet.</td></tr>
-      <tr><td class="word-cell">klappe</td><td class="ms-cell">klabbe</td><td class="hint-cell">Slå hænderne sammen</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Alle klappede efter forestillingen.</td></tr>
+      <tr><td class="word-cell">hakke</td><td class="ms-cell">hagge</td><td class="hint-cell">Hugge i noget med et redskab</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Spætten kan hakke hul i træet.</td></tr>
+      <tr><td class="word-cell">klappe</td><td class="ms-cell">klabbe</td><td class="hint-cell">Slå hænderne sammen</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Alle begyndte at klappe efter sangen.</td></tr>
       <tr><td class="word-cell">lige</td><td class="ms-cell">lije</td><td class="hint-cell">Præcis det samme eller helt jævn</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">De to stykker er lige store.</td></tr>
-      <tr><td class="word-cell">lukke</td><td class="ms-cell">lugge</td><td class="hint-cell">Gøre noget der er åbent til at være lukket</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Husk at lukke døren efter dig.</td></tr>
+      <tr><td class="word-cell">lukke</td><td class="ms-cell">lugge</td><td class="hint-cell">Gøre noget der er åbent til at være tæt</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Husk at lukke døren efter dig.</td></tr>
       <tr><td class="word-cell">mage</td><td class="ms-cell">maje</td><td class="hint-cell">En der ligner en anden præcis</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">De to søstre var hinandens mage.</td></tr>
       <tr><td class="word-cell">sige</td><td class="ms-cell">sije</td><td class="hint-cell">Bruge ord til at fortælle noget</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Hvad prøver du at sige?</td></tr>
       <tr><td class="word-cell">stikke</td><td class="ms-cell">stigge</td><td class="hint-cell">Prikke med noget spidst</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Pas på ikke at stikke dig på tornene.</td></tr>
-      <tr><td class="word-cell">stoppe</td><td class="ms-cell">stobbe</td><td class="hint-cell">Holde op med at bevæge sig</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Bussen stoppede ved næste stoppested.</td></tr>
+      <tr><td class="word-cell">stoppe</td><td class="ms-cell">stobbe</td><td class="hint-cell">Holde op med at bevæge sig</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Bussen plejer at stoppe her.</td></tr>
       <tr><td class="word-cell">tage</td><td class="ms-cell">taje</td><td class="hint-cell">Gribe fat i noget</td><td class="pattern-cell">g ikke j</td><td class="sentence-cell">Husk at tage din jakke med.</td></tr>
-      <tr><td class="word-cell">tikke</td><td class="ms-cell">tigge</td><td class="hint-cell">Den lyd et ur laver</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Uret tikkede stille i mørket.</td></tr>
+      <tr><td class="word-cell">tikke</td><td class="ms-cell">tigge</td><td class="hint-cell">Den lyd et ur laver</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Man kan høre uret tikke om natten.</td></tr>
     </table>
   </div>
   <div class="level-section">
@@ -1027,32 +899,41 @@
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">moppe</td><td class="ms-cell">mobbe</td><td class="hint-cell">Redskab til gulvvask</td><td class="pattern-cell">dobbelt 'p' efter kort vokal</td><td class="sentence-cell">Hun brugte en moppe til at vaske gulvet.</td></tr>
       <tr><td class="word-cell">pakke</td><td class="ms-cell">pagge</td><td class="hint-cell">Lægge ting ned i en kasse eller taske</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Vi skal pakke kufferten inden rejsen.</td></tr>
-      <tr><td class="word-cell">rykke</td><td class="ms-cell">rygge</td><td class="hint-cell">Trække hurtigt og hårdt</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Han rykkede i dørhåndtaget.</td></tr>
-      <tr><td class="word-cell">slikke</td><td class="ms-cell">sligge</td><td class="hint-cell">Røre ved noget med tungen</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Katten slikkede sig om munden.</td></tr>
-      <tr><td class="word-cell">slippe</td><td class="ms-cell">slibbe</td><td class="hint-cell">Give slip og lade noget falde</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Slip ikke bolden mens du løber.</td></tr>
-      <tr><td class="word-cell">sukke</td><td class="ms-cell">sugge</td><td class="hint-cell">Trække vejret dybt når man er træt eller ked af det</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Hun sukkede dybt over lektierne.</td></tr>
-      <tr><td class="word-cell">trykke</td><td class="ms-cell">trygge</td><td class="hint-cell">Presse med fingeren på en knap</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Tryk på knappen for at starte maskinen.</td></tr>
+      <tr><td class="word-cell">rykke</td><td class="ms-cell">rygge</td><td class="hint-cell">Trække hurtigt og hårdt</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Du skal rykke stolen hen til bordet.</td></tr>
+      <tr><td class="word-cell">slikke</td><td class="ms-cell">sligge</td><td class="hint-cell">Røre ved noget med tungen</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Katten kan godt lide at slikke sig om munden.</td></tr>
+      <tr><td class="word-cell">slippe</td><td class="ms-cell">slibbe</td><td class="hint-cell">Lade noget falde fra hænderne</td><td class="pattern-cell">pp ikke bb</td><td class="sentence-cell">Pas på ikke at slippe bolden mens du løber.</td></tr>
+      <tr><td class="word-cell">sukke</td><td class="ms-cell">sugge</td><td class="hint-cell">Trække vejret dybt når man er træt eller ked af det</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Det fik hende til at sukke dybt.</td></tr>
+      <tr><td class="word-cell">trykke</td><td class="ms-cell">trygge</td><td class="hint-cell">Presse med fingeren på en knap</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Du skal trykke på knappen for at starte.</td></tr>
       <tr><td class="word-cell">udtrykke</td><td class="ms-cell">udtrygge</td><td class="hint-cell">Sige eller vise hvad man føler</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Det kan være svært at udtrykke sine følelser.</td></tr>
-      <tr><td class="word-cell">vække</td><td class="ms-cell">vægge</td><td class="hint-cell">Få nogen til at vågne</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Vækkeuret vækkede ham klokken syv.</td></tr>
+      <tr><td class="word-cell">vække</td><td class="ms-cell">vægge</td><td class="hint-cell">Få nogen til at vågne</td><td class="pattern-cell">kk ikke gg</td><td class="sentence-cell">Kan du vække mig klokken syv?</td></tr>
     </table>
   </div>
   <a href="#toc" class="back-to-top">↑ Tilbage til indholdsfortegnelsen</a>
 </section>
-<section class="category" id="svaere-ord">
-  <div class="cat-header"><h2>💀 Svære ord</h2><span class="cat-count">9 ord</span></div>
+<section class="category" id="ord-fra-fransk">
+  <div class="cat-header"><h2>🇫🇷 Ord fra Fransk</h2><span class="cat-count">7 ord</span></div>
   <div class="level-section">
-    <h3 class="level-header">Niveau 5 (Svære ord) — 9 ord</h3>
+    <h3 class="level-header">Niveau 5 (Svære ord) — 7 ord</h3>
     <table>
       <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
       <tr><td class="word-cell">bouillon</td><td class="ms-cell">buljon</td><td class="hint-cell">Klar suppe lavet på kød eller grøntsager</td><td class="pattern-cell">ou som u, illon</td><td class="sentence-cell">Mor lavede bouillon til den syge.</td></tr>
-      <tr><td class="word-cell">bureau</td><td class="ms-cell">buro</td><td class="hint-cell">Et kontor eller skrivebord</td><td class="pattern-cell">bu + reau (eau som o)</td><td class="sentence-cell">Hun arbejder på et rejsebureau.</td></tr>
-      <tr><td class="word-cell">chauffør</td><td class="ms-cell">sjåfør</td><td class="hint-cell">Person der kører bil som arbejde</td><td class="pattern-cell">ch som sj, au, ff + ør</td><td class="sentence-cell">Chaufføren kørte bussen til skolen.</td></tr>
+      <tr><td class="word-cell">bureau</td><td class="ms-cell">buro</td><td class="hint-cell">Et kontor eller skrivebord</td><td class="pattern-cell">bu + reau (eau som o)</td><td class="sentence-cell">Han sad ved sit bureau og skrev.</td></tr>
+      <tr><td class="word-cell">chauffør</td><td class="ms-cell">sjåfør</td><td class="hint-cell">Person der kører bil som arbejde</td><td class="pattern-cell">ch som sj, au, ff + ør</td><td class="sentence-cell">Min far arbejder som chauffør.</td></tr>
       <tr><td class="word-cell">croissant</td><td class="ms-cell">kroisant</td><td class="hint-cell">Halvmåneformet brød fra Frankrig</td><td class="pattern-cell">cr + oi + ss + ant</td><td class="sentence-cell">Til morgenmad fik vi croissant med smør.</td></tr>
       <tr><td class="word-cell">jaloux</td><td class="ms-cell">sjalu</td><td class="hint-cell">Misundelig på andre</td><td class="pattern-cell">j som sj, oux</td><td class="sentence-cell">Han blev jaloux da hun snakkede med andre.</td></tr>
-      <tr><td class="word-cell">mayonnaise</td><td class="ms-cell">majonæse</td><td class="hint-cell">Hvid, cremet sovs til mad</td><td class="pattern-cell">mayo + nn + aise</td><td class="sentence-cell">Vil du have mayonnaise på din sandwich?</td></tr>
+      <tr><td class="word-cell">prestige</td><td class="ms-cell">prestisje</td><td class="hint-cell">Høj anseelse og respekt</td><td class="pattern-cell">pre + stige (ige som isje)</td><td class="sentence-cell">Skolen har stor prestige i byen.</td></tr>
       <tr><td class="word-cell">restaurant</td><td class="ms-cell">restarant</td><td class="hint-cell">Et sted hvor man spiser ude</td><td class="pattern-cell">rest + au + rant</td><td class="sentence-cell">Vi spiste på en italiensk restaurant.</td></tr>
-      <tr><td class="word-cell">silhuet</td><td class="ms-cell">siluet</td><td class="hint-cell">En mørk skygge af en figur</td><td class="pattern-cell">sil + hu + et (stumt h)</td><td class="sentence-cell">Man kunne se silhuetten af et træ mod himlen.</td></tr>
-      <tr><td class="word-cell">yacht</td><td class="ms-cell">jagt</td><td class="hint-cell">En stor, flot sejlbåd</td><td class="pattern-cell">y som j, ch stumt</td><td class="sentence-cell">Der lå en stor yacht i havnen.</td></tr>
+    </table>
+  </div>
+  <a href="#toc" class="back-to-top">↑ Tilbage til indholdsfortegnelsen</a>
+</section>
+<section class="category" id="ord-fra-fransk-2">
+  <div class="cat-header"><h2>🇫🇷 Ord fra Fransk 2</h2><span class="cat-count">1 ord</span></div>
+  <div class="level-section">
+    <h3 class="level-header">Niveau 5 (Svære ord) — 1 ord</h3>
+    <table>
+      <tr><th>Ord</th><th>Fejlstavning</th><th>Hint</th><th>Mønster</th><th>Sætning</th></tr>
+      <tr><td class="word-cell">renæssancen</td><td class="ms-cell">renæsancen</td><td class="hint-cell">Tidsperiode med kunst og genopdagelse</td><td class="pattern-cell">re + næs + san + cen</td><td class="sentence-cell">Renæssancen var en tid med stor kunst og videnskab.</td></tr>
     </table>
   </div>
   <a href="#toc" class="back-to-top">↑ Tilbage til indholdsfortegnelsen</a>

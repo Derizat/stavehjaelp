@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.2</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.3</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -4052,8 +4052,7 @@ function renderTrainingResults() {
   }
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startTrainingFromProfile()">\u{1F504} Nyt stavespil</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
@@ -4092,8 +4091,7 @@ function renderReviewResults() {
   html += '</div>';
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startTrainingFromProfile()">\u{1F504} Nyt stavespil</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
@@ -7156,8 +7154,7 @@ function renderScreeningResults(results, risk) {
 
   // Action buttons
   html += '<hr class="divider">';
-  html += '<button class="btn btn-primary btn-full" onclick="startScreening()">\u{1F504} Tag testen igen</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="goHome()">🏠 Hjem</button>';
 
   document.getElementById('screeningResultsContent').innerHTML = html;
 }
@@ -7764,9 +7761,7 @@ function renderFillInResults() {
   html += '</div>';
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-accent btn-full" onclick="startFillIn()">\u270D\uFE0F Ny udfyld-\u00F8velse</button>';
-  html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F4CA} Forts\u00E6t tr\u00E6ning</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
@@ -8098,9 +8093,7 @@ function renderRightOrWrongResults() {
   }
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-primary btn-full" onclick="startRightOrWrong()">\u{1F441}\uFE0F Ny runde</button>';
-  html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F4CA} Forts\u00E6t tr\u00E6ning</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
@@ -8400,9 +8393,7 @@ function renderSpellingPoliceResults() {
   }
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-blue btn-full" onclick="startSpellingPolice()">\u{1F6A8} Ny runde</button>';
-  html += '<button class="btn btn-green btn-full" onclick="startTrainingFromProfile()">\u{1F4CA} Forts\u00E6t tr\u00E6ning</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
@@ -8758,8 +8749,7 @@ function renderWBResults() {
   html += '</div>';
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-green btn-full" onclick="startWordBuilder()">\u{1F9E9} Ny runde</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }
@@ -8999,8 +8989,7 @@ function renderSpkResults() {
   html += '</div>';
 
   html += '<hr class="divider">';
-  html += '<button class="btn btn-green btn-full" onclick="startSpellPick()">\u{1F3AF} Ny runde</button>';
-  html += '<button class="btn btn-blue btn-full" onclick="goHome()">\u{1F3E0} Tilbage til start</button>';
+  html += '<button class="btn btn-accent btn-full" onclick="goHome()">\u{1F3E0} Hjem</button>';
 
   document.getElementById('resultsContent').innerHTML = html;
 }

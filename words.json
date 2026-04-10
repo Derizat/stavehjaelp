@@ -3858,7 +3858,7 @@
                   "hint": "Opfanger lyd med ørerne (nutid)",
                   "patternHint": "nutids-r: verbet ender på '-r' i nutid (han hører)",
                   "sentence": "Han hører musik i sine høretelefoner.",
-                  "level": 1,
+                  "level": 3,
                   "category": "Nutids-r",
                   "misspelling": "høre"
             },
@@ -4326,7 +4326,7 @@
                   "hint": "Styrer en bil eller cykel fremad",
                   "patternHint": "Nutids-r: 'køre' bliver til 'kører' i nutid",
                   "sentence": "Far kører os til skole hver morgen.",
-                  "level": 1,
+                  "level": 3,
                   "category": "Nutids-r",
                   "misspelling": "køre"
             },

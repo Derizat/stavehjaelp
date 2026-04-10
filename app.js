@@ -233,50 +233,46 @@ window.addEventListener('beforeunload', function() {
   if (syncTimer) { clearTimeout(syncTimer); doSyncToSupabase(); }
 });
 
+// Safely load, merge, and save a localStorage JSON field
+function mergeLocalField(key, remoteData, mergeFn) {
+  if (!remoteData) return;
+  try {
+    var local = JSON.parse(localStorage.getItem(key) || 'null');
+    var merged = mergeFn ? mergeFn(local, remoteData) : remoteData;
+    localStorage.setItem(key, JSON.stringify(merged));
+  } catch(e) {}
+}
+
 function syncFromSupabase(name, callback) {
   if (!supabaseClient) { if (callback) callback(); return; }
   supabaseClient.from('profiles').select('*').eq('player', name).single().then(function(res) {
     if (res.data) {
-      // Merge profile_data: Supabase categoryLevels wins (authoritative), keep local if Supabase has none
-      if (res.data.profile_data) {
-        try {
-          var local = JSON.parse(localStorage.getItem(name + '_profile_data') || 'null');
-          var remote = res.data.profile_data;
-          if (local && local.categoryLevels && !remote.categoryLevels) {
-            remote.categoryLevels = local.categoryLevels;
+      mergeLocalField(name + '_profile_data', res.data.profile_data, function(local, remote) {
+        if (local && local.categoryLevels && !remote.categoryLevels) remote.categoryLevels = local.categoryLevels;
+        return remote;
+      });
+      mergeLocalField(name + '_reward_data', res.data.reward_data, function(local, remote) {
+        if (local) {
+          if ((local.totalXP || 0) > (remote.totalXP || 0)) remote.totalXP = local.totalXP;
+          if ((local.gems || 0) > (remote.gems || 0)) remote.gems = local.gems;
+        }
+        return remote;
+      });
+      mergeLocalField(name + '_sr_data', res.data.sr_data);
+      mergeLocalField(name + '_word_stats', res.data.word_stats, function(local, remote) {
+        var merged = local || {};
+        for (var wk in remote) {
+          if (!merged[wk]) { merged[wk] = remote[wk]; }
+          else {
+            merged[wk].correct = Math.max(merged[wk].correct || 0, remote[wk].correct || 0);
+            merged[wk].wrong = Math.max(merged[wk].wrong || 0, remote[wk].wrong || 0);
           }
-          localStorage.setItem(name + '_profile_data', JSON.stringify(remote));
-        } catch(e) {}
+        }
+        return merged;
+      });
+      if (res.data.student_grade !== null) {
+        try { localStorage.setItem(name + '_student_grade', res.data.student_grade.toString()); } catch(e) {}
       }
-      if (res.data.reward_data) {
-        try {
-          // Keep higher XP/gems (don't overwrite with stale data)
-          var localR = JSON.parse(localStorage.getItem(name + '_reward_data') || 'null');
-          var remoteR = res.data.reward_data;
-          if (localR && remoteR) {
-            if ((localR.totalXP || 0) > (remoteR.totalXP || 0)) remoteR.totalXP = localR.totalXP;
-            if ((localR.gems || 0) > (remoteR.gems || 0)) remoteR.gems = localR.gems;
-          }
-          localStorage.setItem(name + '_reward_data', JSON.stringify(remoteR));
-        } catch(e) {}
-      }
-      if (res.data.sr_data) try { localStorage.setItem(name + '_sr_data', JSON.stringify(res.data.sr_data)); } catch(e) {}
-      if (res.data.word_stats) {
-        try {
-          var localWS = JSON.parse(localStorage.getItem(name + '_word_stats') || '{}');
-          var remoteWS = res.data.word_stats;
-          // Merge: keep highest counts from either side
-          for (var wk in remoteWS) {
-            if (!localWS[wk]) { localWS[wk] = remoteWS[wk]; }
-            else {
-              localWS[wk].correct = Math.max(localWS[wk].correct || 0, remoteWS[wk].correct || 0);
-              localWS[wk].wrong = Math.max(localWS[wk].wrong || 0, remoteWS[wk].wrong || 0);
-            }
-          }
-          localStorage.setItem(name + '_word_stats', JSON.stringify(localWS));
-        } catch(e) {}
-      }
-      if (res.data.student_grade !== null) try { localStorage.setItem(name + '_student_grade', res.data.student_grade.toString()); } catch(e) {}
     }
     if (callback) callback();
   }).catch(function() { if (callback) callback(); });
@@ -758,7 +754,7 @@ function formatRelativeTime(isoStr) {
 function showClassDashboard(groupId, groupName) { openDashboard(); }
 function hideClassDashboard() { goHome(); }
 
-// Word bank loaded from words.json
+// ===== ORDBANK OG KATEGORIER =====
 var WORD_BANK = {};
 
 var PATTERN_RULES = {
@@ -1158,7 +1154,7 @@ var LEVEL_GRADE_MAP = {
   4: "Mestret"
 };
 
-// State
+// ===== SPIL-STATE OG HJÆLPEFUNKTIONER =====
 var currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
 var retryAttempt = false;
 var sessionCategoryErrors = {}; // track errors per category for lesson triggers
@@ -1579,7 +1575,7 @@ function resetAll() {
   goHome();
 }
 
-// Voice / TTS
+// ===== LYDE OG TTS =====
 function setVoice(voiceId) {
   try { localStorage.setItem('tts_voice', voiceId); } catch(e) {}
   audioCache = {};
@@ -1791,8 +1787,7 @@ function speakCurrentWord() {
   speakWord(w.word, w.sentence || null);
 }
 
-// Training mode
-// Mixed training queue
+// ===== TRÆNING OG DIKTAT =====
 var mixedQueue = [];
 var mixedIndex = 0;
 var isMixedSession = false;
@@ -2604,8 +2599,6 @@ function showRewardFloat(text) {
   setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 1600);
 }
 
-// ===== END REWARD SYSTEM =====
-
 // ===== BOSS MINIGAME =====
 
 var BOSS_MONSTERS = {
@@ -2701,25 +2694,37 @@ function hideBossPicker() {
   document.getElementById('bossPickerOverlay').classList.add('hidden');
 }
 
+// Shared boss helpers
+function pickSilentServantWord() {
+  var ssLvl = loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1;
+  var ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl + 1);
+  if (ssPool.length === 0) ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl);
+  return ssPool.length > 0 ? pickRandom(ssPool) : null;
+}
+
+function createBossState(word, battleType, boss, idleAnim, wordObj) {
+  return {
+    word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
+    battleType: battleType, boss: boss, idleAnim: idleAnim,
+    deathAnim: pickRandom(BOSS_DEATH_ANIMS),
+    wordObj: wordObj
+  };
+}
+
 function startBossPractice(battleType) {
   hideBossPicker();
   bossPracticeMode = true;
   bossPracticeType = battleType;
-  // Pick a random word matching the player's category levels
   var allWords = buildPoolWithCategoryLevels(ALL_CATEGORIES);
   if (allWords.length === 0) {
-    var cats = Object.keys(WORD_BANK);
-    cats.forEach(function(cat) {
+    Object.keys(WORD_BANK).forEach(function(cat) {
       WORD_BANK[cat].forEach(function(w) { allWords.push(Object.assign({}, w, { category: cat })); });
     });
   }
   var chosen = allWords[Math.floor(Math.random() * allWords.length)];
-  // Silent servant: force word from Stumme bogstaver
   if (battleType === 'silentservant') {
-    var ssLvl = loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1;
-    var ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl + 1);
-    if (ssPool.length === 0) ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl);
-    if (ssPool.length > 0) chosen = pickRandom(ssPool);
+    var ssPick = pickSilentServantWord();
+    if (ssPick) chosen = ssPick;
   }
   var word = chosen.word.toLowerCase();
   var boss = BOSS_MONSTERS[chosen.category] || { emoji: '\uD83D\uDC7E', name: 'Ordbossen' };
@@ -2727,14 +2732,7 @@ function startBossPractice(battleType) {
 
   hide('phase-welcome');
   show('phase-boss');
-
-  bossState = {
-    word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
-    battleType: battleType, boss: boss, idleAnim: idleAnim,
-    deathAnim: pickRandom(BOSS_DEATH_ANIMS),
-    wordObj: chosen
-  };
-
+  bossState = createBossState(word, battleType, boss, idleAnim, chosen);
   renderBossByType(battleType, word, boss, idleAnim);
 }
 
@@ -2758,7 +2756,6 @@ function saveBossSeen(data) {
 }
 
 function testBoss(type) {
-  // Pick a random word from the word bank
   var allWords = Object.values(WORD_BANK).flat();
   var w = allWords[Math.floor(Math.random() * allWords.length)];
   gameMode = 'training';
@@ -2774,14 +2771,7 @@ function testBoss(type) {
   var word = w.word.toLowerCase();
   var boss = BOSS_MONSTERS[w.category] || { emoji: "\uD83D\uDC7E", name: "Ordbossen" };
   var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
-
-  bossState = {
-    word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
-    battleType: type, boss: boss, idleAnim: idleAnim,
-    deathAnim: pickRandom(BOSS_DEATH_ANIMS),
-    wordObj: w
-  };
-
+  bossState = createBossState(word, type, boss, idleAnim, w);
   renderBossByType(type, word, boss, idleAnim);
 }
 
@@ -2810,11 +2800,8 @@ function showBossMinigame(bossData) {
 
   // Silent servant: force word from Stumme bogstaver
   if (battleType === 'silentservant') {
-    var ssLvl = loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1;
-    var ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl + 1);
-    if (ssPool.length === 0) ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl);
-    if (ssPool.length > 0) {
-      var ssPick = pickRandom(ssPool);
+    var ssPick = pickSilentServantWord();
+    if (ssPick) {
       word = ssPick.word.toLowerCase();
       bossData.category = 'Stumme bogstaver';
       boss = BOSS_MONSTERS['Stumme bogstaver'] || boss;
@@ -2840,12 +2827,7 @@ function showBossMinigame(bossData) {
     if (catWords[wi].word.toLowerCase() === word) { wordObj = catWords[wi]; wordObj.category = bossData.category; break; }
   }
 
-  bossState = {
-    word: word, hp: word.length, maxHP: word.length, letterIndex: 0,
-    battleType: battleType, boss: boss, idleAnim: idleAnim,
-    deathAnim: pickRandom(BOSS_DEATH_ANIMS),
-    wordObj: wordObj
-  };
+  bossState = createBossState(word, battleType, boss, idleAnim, wordObj);
 
   // Show instruction first time per boss type
   var seen = loadBossSeen();
@@ -4956,8 +4938,6 @@ function showLevelUpPopup(newLevel) {
   // Level-ups are now manual via the Level Up button on welcome screen
 }
 
-// ===== END GAMIFICATION =====
-
 // ===== SCREENING (Stavevurdering) =====
 
 var NONORD_ITEMS = [
@@ -5510,8 +5490,6 @@ function saveScreeningData(data) {
 function loadScreeningData() {
   try { var raw = localStorage.getItem(playerKey('screening_data')); return raw ? JSON.parse(raw) : null; } catch(e) { return null; }
 }
-
-// ===== END SCREENING =====
 
 // ===== FILL-IN EXERCISE =====
 
@@ -7586,7 +7564,7 @@ function wmFinish() {
   updateRewardBar();
 }
 
-// Welcome buttons
+// ===== VELKOMSTSKÆRM =====
 function renderCategoryLevels() {
   var el = document.getElementById('categoryLevelsDisplay');
   if (!el || ALL_CATEGORIES.length === 0) return;
@@ -7652,7 +7630,7 @@ function renderCategoryLevels() {
 }
 
 
-// Init
+// ===== INITIALISERING =====
 window.addEventListener('load', function() {
   window.speechSynthesis.getVoices();
   // Load word bank from JSON

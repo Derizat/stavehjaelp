@@ -4353,7 +4353,9 @@ function startBossPractice(battleType) {
   var chosen = allWords[Math.floor(Math.random() * allWords.length)];
   // Silent servant: force word from Stumme bogstaver
   if (battleType === 'silentservant') {
-    var ssPool = buildPoolForCategory('Stumme bogstaver', loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1);
+    var ssLvl = loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1;
+    var ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl + 1);
+    if (ssPool.length === 0) ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl);
     if (ssPool.length > 0) chosen = pickRandom(ssPool);
   }
   var word = chosen.word.toLowerCase();
@@ -4451,7 +4453,9 @@ function showBossMinigame(bossData) {
 
   // Silent servant: force word from Stumme bogstaver
   if (battleType === 'silentservant') {
-    var ssPool = buildPoolForCategory('Stumme bogstaver', loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1);
+    var ssLvl = loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1;
+    var ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl + 1);
+    if (ssPool.length === 0) ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl);
     if (ssPool.length > 0) {
       var ssPick = pickRandom(ssPool);
       word = ssPick.word.toLowerCase();
@@ -6057,7 +6061,9 @@ function renderBossSilentServant(word, boss, idleAnim) {
   bossState.ssRound = 0;
 
   // Build 5 rounds using words matching player's level for Stumme bogstaver
-  var stummeWords = buildPoolForCategory('Stumme bogstaver', loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1);
+  var stumLvl = loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1;
+  var stummeWords = buildPoolForCategory('Stumme bogstaver', stumLvl + 1);
+  if (stummeWords.length === 0) stummeWords = buildPoolForCategory('Stumme bogstaver', stumLvl);
   for (var i = stummeWords.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t = stummeWords[i]; stummeWords[i] = stummeWords[j]; stummeWords[j] = t;

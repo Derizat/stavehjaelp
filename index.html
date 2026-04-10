@@ -9,7 +9,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.6</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.7</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -35,6 +35,9 @@
 
 <!-- LESSONS SLIDESHOW OVERLAY -->
 <div id="lessonsSlideshow" class="milestone-overlay hidden"></div>
+
+<!-- SHOP OVERLAY -->
+<div id="shopOverlay" class="milestone-overlay hidden"></div>
 
 <!-- PROFILE PICKER -->
 <div id="phase-profile-picker" class="card">
@@ -79,6 +82,7 @@
   <button class="settings-toggle" onclick="showExercisePicker()">&#x1F4DD; &#xD8;velser</button>
   <button class="settings-toggle" onclick="showBossPicker()">&#x1F47E; Boss-kampe</button>
   <button class="settings-toggle" onclick="showLessonsOverview()">&#x1F4D6; Lektioner</button>
+  <button class="settings-toggle" onclick="openShop()">&#x1F6D2; Shop</button>
   <button class="settings-toggle" onclick="switchPlayer()">&#x1F465; Skift spiller</button>
   <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">&#x2699;&#xFE0F; Indstillinger</button>
   <div class="settings-panel" id="settingsPanel">

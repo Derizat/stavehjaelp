@@ -1156,3 +1156,33 @@
   .cat-progress-bar-fill {
     height: 100%; border-radius: 3px; transition: width 0.3s ease;
   }
+  /* Shop: navn-rammer */
+  .frame-shield .player-name-display { background: linear-gradient(135deg, #1e3a5f, #2d5a8e); border: 2px solid #4a8bc2; border-radius: 8px; padding: 6px 16px; display: inline-block; }
+  .frame-explosion .player-name-display { background: linear-gradient(135deg, #5f1e1e, #8e2d2d); border: 3px solid #f97316; border-radius: 50% 20% 50% 20%; padding: 8px 18px; display: inline-block; }
+  .frame-radioactive .player-name-display { background: repeating-linear-gradient(45deg, #1a1a00, #1a1a00 10px, #2a2a00 10px, #2a2a00 20px); border: 3px solid #fbbf24; border-radius: 4px; padding: 6px 16px; display: inline-block; position: relative; }
+  .frame-radioactive .player-name-display::before { content: '☢️'; position: absolute; top: -12px; right: -8px; font-size: 1rem; }
+  .frame-ribbon .player-name-display { background: linear-gradient(135deg, #3d1040, #5a1860); border: 2px solid #e879f9; border-radius: 12px; padding: 6px 20px; display: inline-block; }
+  .frame-ribbon .player-name-display::before { content: '🎀'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 1.2rem; }
+  .frame-viking .player-name-display { background: linear-gradient(135deg, #2a1a08, #3d2810); border: 3px solid #b8860b; border-radius: 50%; padding: 10px 18px; display: inline-block; }
+  .frame-royal .player-name-display { background: linear-gradient(135deg, #2a2000, #3d3008); border: 3px solid #fbbf24; border-radius: 8px; padding: 8px 20px; display: inline-block; box-shadow: 0 0 12px rgba(251,191,36,0.3); }
+  .frame-royal .player-name-display::before { content: '👑'; position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; }
+  /* Shop: sticker-pladser */
+  .sticker-slot { position: absolute; font-size: 1.8rem; cursor: pointer; opacity: 0.9; transition: transform 0.2s; z-index: 5; }
+  .sticker-slot:hover { transform: scale(1.2); }
+  .sticker-slot.empty { font-size: 1.2rem; opacity: 0.2; }
+  .sticker-slot.empty:hover { opacity: 0.4; }
+  .rewardbar-sticker { font-size: 1.1rem; margin-left: 4px; }
+  /* Shop overlay */
+  .shop-tabs { display: flex; gap: 0; margin-bottom: 16px; border-radius: 10px; overflow: hidden; border: 1px solid #3d4270; }
+  .shop-tab { flex: 1; padding: 10px 8px; text-align: center; background: var(--card2); color: var(--muted); border: none; cursor: pointer; font-size: 0.85rem; font-weight: 700; transition: all 0.2s; }
+  .shop-tab.active { background: var(--accent); color: #fff; }
+  .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-height: 55vh; overflow-y: auto; padding: 4px; }
+  .shop-item { background: var(--card2); border-radius: 12px; padding: 12px; text-align: center; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+  .shop-item:hover { border-color: var(--accent); }
+  .shop-item.owned { border-color: var(--green); opacity: 0.7; }
+  .shop-item.active-item { border-color: var(--green); box-shadow: 0 0 8px rgba(34,211,160,0.3); opacity: 1; }
+  .shop-item-emoji { font-size: 2rem; margin-bottom: 4px; }
+  .shop-item-name { font-size: 0.8rem; font-weight: 700; color: var(--text); }
+  .shop-item-price { font-size: 0.75rem; margin-top: 4px; }
+  .shop-item-tier { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .shop-item-btn { margin-top: 6px; padding: 4px 12px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; }

@@ -49,10 +49,14 @@ function selectPlayer(name) {
     restoreGradeSelection();
     updateDashboardButton();
     updateRewardBar();
+    applyPlayerCosmetics();
   });
 }
 
 function switchPlayer() {
+  // Nulstil kosmetik ved spillerskift
+  applyTheme(null);
+  applyNameStyle(null, null);
   // Flush pending sync for current player before switching
   if (syncTimer && activePlayer) { clearTimeout(syncTimer); doSyncToSupabase(activePlayer); syncTimer = null; }
   activePlayer = '';
@@ -1187,6 +1191,7 @@ function goHome() {
   updateWelcomeAvatar();
   renderCategoryLevels();
   updateDashboardButton();
+  applyPlayerCosmetics();
 }
 
 // Grade selector
@@ -7685,3 +7690,548 @@ function initApp() {
   }
 }
 
+// ===== GEMS SHOP =====
+
+var SHOP_CATALOG = {
+  themes: [
+    // Starter (3-5 gems)
+    { id: 'ocean', name: 'Ocean', emoji: '\u{1F30A}', price: 3, tier: 'starter',
+      vars: { '--bg': '#0a1628', '--card': '#112240', '--card2': '#1a3358', '--accent': '#22d3a0', '--accent2': '#0ea5e9' },
+      gradient: 'radial-gradient(ellipse at 20% 20%, #0c2d5e 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, #0a3d3d 0%, transparent 50%)' },
+    { id: 'forest', name: 'Skov', emoji: '\u{1F332}', price: 4, tier: 'starter',
+      vars: { '--bg': '#0b1a0b', '--card': '#142814', '--card2': '#1e3a1e', '--accent': '#4ade80', '--accent2': '#a3e635' },
+      gradient: 'radial-gradient(ellipse at 30% 30%, #1a3a1a 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, #0d2a0d 0%, transparent 50%)' },
+    { id: 'cherry', name: 'Kirsebaer', emoji: '\u{1F338}', price: 4, tier: 'starter',
+      vars: { '--bg': '#1a0a14', '--card': '#2d142a', '--card2': '#3d1e38', '--accent': '#f472b6', '--accent2': '#e879f9' },
+      gradient: 'radial-gradient(ellipse at 20% 20%, #3d1033 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, #1a0a2e 0%, transparent 50%)' },
+    { id: 'midnight', name: 'Midnat', emoji: '\u{1F319}', price: 3, tier: 'starter',
+      vars: { '--bg': '#050510', '--card': '#0e0e20', '--card2': '#161630', '--accent': '#818cf8', '--accent2': '#6366f1' },
+      gradient: 'radial-gradient(ellipse at 20% 20%, #10103a 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, #050520 0%, transparent 50%)' },
+    // Standard (10-15 gems)
+    { id: 'sunset', name: 'Solnedgang', emoji: '\u{1F305}', price: 10, tier: 'standard',
+      vars: { '--bg': '#1a0c05', '--card': '#2d1a0e', '--card2': '#3d2518', '--accent': '#fb923c', '--accent2': '#f43f5e' },
+      gradient: 'radial-gradient(ellipse at 20% 30%, #4a1a08 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #2d0a1a 0%, transparent 50%)' },
+    { id: 'arctic', name: 'Arktisk', emoji: '\u{1F3D4}\uFE0F', price: 12, tier: 'standard',
+      vars: { '--bg': '#0a1520', '--card': '#152535', '--card2': '#1e3548', '--accent': '#7dd3fc', '--accent2': '#bae6fd' },
+      gradient: 'radial-gradient(ellipse at 30% 20%, #0c3555 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, #0a2540 0%, transparent 50%)' },
+    { id: 'candy', name: 'Slik', emoji: '\u{1F36C}', price: 15, tier: 'standard',
+      vars: { '--bg': '#1a0a1e', '--card': '#2a1430', '--card2': '#381e42', '--accent': '#f0abfc', '--accent2': '#fbbf24' },
+      gradient: 'radial-gradient(ellipse at 20% 20%, #3d1050 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, #1a1040 0%, transparent 50%)' },
+    { id: 'galaxy', name: 'Galakse', emoji: '\u{1F30C}', price: 15, tier: 'standard',
+      vars: { '--bg': '#08051a', '--card': '#12102e', '--card2': '#1c1840', '--accent': '#a78bfa', '--accent2': '#6366f1' },
+      gradient: 'radial-gradient(ellipse at 25% 25%, #2a1060 0%, transparent 50%), radial-gradient(ellipse at 75% 75%, #0a0a40 0%, transparent 50%)' },
+    // Premium (25-40 gems)
+    { id: 'lava', name: 'Lava', emoji: '\u{1F525}', price: 25, tier: 'premium',
+      vars: { '--bg': '#1a0805', '--card': '#2d120e', '--card2': '#3d1c18', '--accent': '#ef4444', '--accent2': '#f97316' },
+      gradient: 'radial-gradient(ellipse at 30% 70%, #4a1008 0%, transparent 50%), radial-gradient(ellipse at 70% 30%, #3d1505 0%, transparent 50%)' },
+    { id: 'dragon', name: 'Drage', emoji: '\u{1F409}', price: 30, tier: 'premium',
+      vars: { '--bg': '#0a1205', '--card': '#162010', '--card2': '#1e2d18', '--accent': '#fbbf24', '--accent2': '#4ade80' },
+      gradient: 'radial-gradient(ellipse at 20% 20%, #1a3008 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, #0d1a0a 0%, transparent 50%)' },
+    { id: 'retro', name: 'Retro', emoji: '\u{1F47E}', price: 35, tier: 'premium',
+      vars: { '--bg': '#000000', '--card': '#0a0a0a', '--card2': '#141414', '--accent': '#22c55e', '--accent2': '#4ade80' },
+      gradient: 'radial-gradient(ellipse at 50% 50%, #001a00 0%, transparent 70%)' },
+    { id: 'rainbow', name: 'Regnbue', emoji: '\u{1F984}', price: 40, tier: 'premium',
+      vars: { '--bg': '#0f0818', '--card': '#1a1028', '--card2': '#241838', '--accent': '#e879f9', '--accent2': '#fb923c' },
+      gradient: 'radial-gradient(ellipse at 20% 20%, #2a1050 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, #102a3a 0%, transparent 50%)' },
+    // Legendarisk (60 gems)
+    { id: 'gold', name: 'Guld', emoji: '\u26A1', price: 60, tier: 'legend',
+      vars: { '--bg': '#0a0800', '--card': '#1a1508', '--card2': '#2a2010', '--accent': '#fbbf24', '--accent2': '#f59e0b' },
+      gradient: 'radial-gradient(ellipse at 30% 30%, #3d2a00 0%, transparent 50%), radial-gradient(ellipse at 70% 70%, #1a1200 0%, transparent 50%)' }
+  ],
+
+  nameStyles: [
+    { id: 'color-red', name: 'Roed', price: 3, tier: 'starter', type: 'color', css: 'color:#ef4444' },
+    { id: 'color-blue', name: 'Blaa', price: 3, tier: 'starter', type: 'color', css: 'color:#3b82f6' },
+    { id: 'color-green', name: 'Groen', price: 3, tier: 'starter', type: 'color', css: 'color:#22c55e' },
+    { id: 'color-purple', name: 'Lilla', price: 3, tier: 'starter', type: 'color', css: 'color:#a855f7' },
+    { id: 'color-orange', name: 'Orange', price: 3, tier: 'starter', type: 'color', css: 'color:#f97316' },
+    { id: 'color-cyan', name: 'Cyan', price: 3, tier: 'starter', type: 'color', css: 'color:#06b6d4' },
+    { id: 'color-pink', name: 'Pink', price: 3, tier: 'starter', type: 'color', css: 'color:#ec4899' },
+    { id: 'color-gold', name: 'Guld', price: 3, tier: 'starter', type: 'color', css: 'color:#fbbf24' },
+    { id: 'glow-red', name: 'Gloed Roed', price: 8, tier: 'standard', type: 'glow', css: 'color:#ef4444;text-shadow:0 0 8px #ef4444,0 0 16px #ef444488' },
+    { id: 'glow-blue', name: 'Gloed Blaa', price: 8, tier: 'standard', type: 'glow', css: 'color:#3b82f6;text-shadow:0 0 8px #3b82f6,0 0 16px #3b82f688' },
+    { id: 'glow-green', name: 'Gloed Groen', price: 8, tier: 'standard', type: 'glow', css: 'color:#22c55e;text-shadow:0 0 8px #22c55e,0 0 16px #22c55e88' },
+    { id: 'glow-purple', name: 'Gloed Lilla', price: 8, tier: 'standard', type: 'glow', css: 'color:#a855f7;text-shadow:0 0 8px #a855f7,0 0 16px #a855f788' },
+    { id: 'glow-orange', name: 'Gloed Orange', price: 8, tier: 'standard', type: 'glow', css: 'color:#f97316;text-shadow:0 0 8px #f97316,0 0 16px #f9731688' },
+    { id: 'glow-cyan', name: 'Gloed Cyan', price: 8, tier: 'standard', type: 'glow', css: 'color:#06b6d4;text-shadow:0 0 8px #06b6d4,0 0 16px #06b6d488' },
+    { id: 'glow-pink', name: 'Gloed Pink', price: 8, tier: 'standard', type: 'glow', css: 'color:#ec4899;text-shadow:0 0 8px #ec4899,0 0 16px #ec489988' },
+    { id: 'glow-gold', name: 'Gloed Guld', price: 8, tier: 'standard', type: 'glow', css: 'color:#fbbf24;text-shadow:0 0 8px #fbbf24,0 0 16px #fbbf2488' },
+    { id: 'bold', name: 'Fed skrift', price: 5, tier: 'starter', type: 'font', css: 'font-family:Fredoka One,cursive' }
+  ],
+
+  nameFrames: [
+    { id: 'shield', name: 'Skjold', emoji: '\u{1F6E1}\uFE0F', price: 15, tier: 'premium', cssClass: 'frame-shield' },
+    { id: 'explosion', name: 'Eksplosion', emoji: '\u{1F4A5}', price: 20, tier: 'premium', cssClass: 'frame-explosion' },
+    { id: 'radioactive', name: 'Radioaktiv', emoji: '\u2622\uFE0F', price: 25, tier: 'premium', cssClass: 'frame-radioactive' },
+    { id: 'ribbon', name: 'Sloejfe', emoji: '\u{1F380}', price: 15, tier: 'premium', cssClass: 'frame-ribbon' },
+    { id: 'viking', name: 'Viking', emoji: '\u2694\uFE0F', price: 30, tier: 'premium', cssClass: 'frame-viking' },
+    { id: 'royal', name: 'Royal', emoji: '\u{1F451}', price: 50, tier: 'legend', cssClass: 'frame-royal' }
+  ],
+
+  stickers: [
+    // Dyr (3-5 gems)
+    { id: 'cat', emoji: '\u{1F431}', name: 'Kat', price: 3, tier: 'starter' },
+    { id: 'dog', emoji: '\u{1F436}', name: 'Hund', price: 3, tier: 'starter' },
+    { id: 'fox', emoji: '\u{1F98A}', name: 'Raev', price: 3, tier: 'starter' },
+    { id: 'frog', emoji: '\u{1F438}', name: 'Froe', price: 3, tier: 'starter' },
+    { id: 'butterfly', emoji: '\u{1F98B}', name: 'Sommerfugl', price: 5, tier: 'starter' },
+    { id: 'turtle', emoji: '\u{1F422}', name: 'Skildpadde', price: 5, tier: 'starter' },
+    { id: 'octopus', emoji: '\u{1F419}', name: 'Blaeksprutte', price: 5, tier: 'starter' },
+    { id: 'dino', emoji: '\u{1F996}', name: 'Dino', price: 5, tier: 'starter' },
+    // Sjove (5-10 gems)
+    { id: 'poo', emoji: '\u{1F4A9}', name: 'Lort', price: 5, tier: 'standard' },
+    { id: 'alien', emoji: '\u{1F47D}', name: 'Alien', price: 5, tier: 'standard' },
+    { id: 'robot', emoji: '\u{1F916}', name: 'Robot', price: 5, tier: 'standard' },
+    { id: 'ghost', emoji: '\u{1F47B}', name: 'Spoegelse', price: 5, tier: 'standard' },
+    { id: 'pumpkin', emoji: '\u{1F383}', name: 'Graeskar', price: 8, tier: 'standard' },
+    { id: 'skull', emoji: '\u{1F480}', name: 'Kranie', price: 8, tier: 'standard' },
+    { id: 'clown', emoji: '\u{1F921}', name: 'Klovn', price: 10, tier: 'standard' },
+    { id: 'zombie', emoji: '\u{1F9DF}', name: 'Zombie', price: 10, tier: 'standard' },
+    // Sejhed (10-15 gems)
+    { id: 'lightning', emoji: '\u26A1', name: 'Lyn', price: 10, tier: 'standard' },
+    { id: 'fire', emoji: '\u{1F525}', name: 'Ild', price: 10, tier: 'standard' },
+    { id: 'diamond', emoji: '\u{1F48E}', name: 'Diamant', price: 10, tier: 'standard' },
+    { id: 'sword', emoji: '\u{1F5E1}\uFE0F', name: 'Svaerd', price: 12, tier: 'standard' },
+    { id: 'pirate', emoji: '\u{1F3F4}\u200D\u2620\uFE0F', name: 'Pirat', price: 12, tier: 'standard' },
+    { id: 'guitar', emoji: '\u{1F3B8}', name: 'Guitar', price: 12, tier: 'standard' },
+    { id: 'skateboard', emoji: '\u{1F6F9}', name: 'Skateboard', price: 15, tier: 'standard' },
+    { id: 'rocket', emoji: '\u{1F680}', name: 'Raket', price: 15, tier: 'standard' },
+    // Natur & mad (5-10 gems)
+    { id: 'rainbow', emoji: '\u{1F308}', name: 'Regnbue', price: 5, tier: 'standard' },
+    { id: 'star', emoji: '\u2B50', name: 'Stjerne', price: 5, tier: 'standard' },
+    { id: 'moon', emoji: '\u{1F319}', name: 'Maane', price: 5, tier: 'standard' },
+    { id: 'pizza', emoji: '\u{1F355}', name: 'Pizza', price: 5, tier: 'standard' },
+    { id: 'icecream', emoji: '\u{1F366}', name: 'Is', price: 5, tier: 'standard' },
+    { id: 'cake', emoji: '\u{1F382}', name: 'Kage', price: 8, tier: 'standard' },
+    { id: 'donut', emoji: '\u{1F369}', name: 'Donut', price: 8, tier: 'standard' },
+    { id: 'taco', emoji: '\u{1F32E}', name: 'Taco', price: 8, tier: 'standard' },
+    // Sjaeldne (25-40 gems)
+    { id: 'trophy', emoji: '\u{1F3C6}', name: 'Trofae', price: 25, tier: 'premium' },
+    { id: 'crown', emoji: '\u{1F451}', name: 'Krone', price: 25, tier: 'premium' },
+    { id: 'unicorn', emoji: '\u{1F984}', name: 'Enhjorning', price: 30, tier: 'premium' },
+    { id: 'dragonSticker', emoji: '\u{1F432}', name: 'Drage', price: 30, tier: 'premium' },
+    { id: 'comet', emoji: '\u2604\uFE0F', name: 'Komet', price: 35, tier: 'premium' },
+    { id: 'volcano', emoji: '\u{1F30B}', name: 'Vulkan', price: 35, tier: 'premium' },
+    { id: 'circus', emoji: '\u{1F3AA}', name: 'Cirkus', price: 40, tier: 'premium' },
+    { id: 'crystal', emoji: '\u{1F52E}', name: 'Krystal', price: 40, tier: 'premium' },
+    // Legendariske (50 gems)
+    { id: 'lightningFox', emoji: '\u26A1\u{1F98A}', name: 'Lynraev', price: 50, tier: 'legend' },
+    { id: 'goldenDragon', emoji: '\u{1F409}\u2728', name: 'Gylden Drage', price: 50, tier: 'legend' }
+  ]
+};
+
+var TIER_COLORS = {
+  starter: '#9ca3af', standard: '#22d3a0', premium: '#a855f7', legend: '#fbbf24'
+};
+var TIER_LABELS = {
+  starter: 'Starter', standard: 'Standard', premium: 'Premium', legend: 'Legendaer'
+};
+
+function getShopData() {
+  var data = loadRewardData();
+  if (!data.shop) {
+    data.shop = {
+      owned: { themes: [], nameplates: [], stickers: [] },
+      active: { theme: null, nameStyle: null, nameFrame: null, stickers: { welcome_1: null, welcome_2: null, welcome_3: null, welcome_4: null, rewardbar: null } }
+    };
+  }
+  return data;
+}
+
+function ownsItem(data, category, itemId) {
+  return data.shop.owned[category] && data.shop.owned[category].indexOf(itemId) >= 0;
+}
+
+function buyItem(category, itemId, price) {
+  var data = getShopData();
+  if (data.gems < price) return false;
+  if (ownsItem(data, category, itemId)) return false;
+  data.gems -= price;
+  if (!data.shop.owned[category]) data.shop.owned[category] = [];
+  data.shop.owned[category].push(itemId);
+  saveRewardData(data);
+  return true;
+}
+
+function activateItem(category, itemId) {
+  var data = getShopData();
+  if (category === 'themes') data.shop.active.theme = itemId;
+  else if (category === 'nameplates') data.shop.active.nameStyle = itemId;
+  else if (category === 'nameFrames') data.shop.active.nameFrame = itemId;
+  saveRewardData(data);
+}
+
+function setSticker(slot, stickerId) {
+  var data = getShopData();
+  data.shop.active.stickers[slot] = stickerId || null;
+  saveRewardData(data);
+}
+
+var DEFAULT_THEME_VARS = {
+  '--bg': '#0f1117', '--card': '#1a1d2e', '--card2': '#222540',
+  '--accent': '#f5a623', '--accent2': '#7c3aed',
+  '--green': '#22d3a0', '--red': '#f43f5e', '--blue': '#0ea5e9',
+  '--text': '#e8eaf6', '--muted': '#8892b0'
+};
+var DEFAULT_GRADIENT = 'radial-gradient(ellipse at 20% 20%, #1e1060 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, #0d2a1a 0%, transparent 50%)';
+
+function applyTheme(themeId) {
+  var root = document.documentElement;
+  if (!themeId) {
+    Object.keys(DEFAULT_THEME_VARS).forEach(function(k) { root.style.setProperty(k, DEFAULT_THEME_VARS[k]); });
+    document.body.style.backgroundImage = DEFAULT_GRADIENT;
+    return;
+  }
+  var theme = SHOP_CATALOG.themes.find(function(t) { return t.id === themeId; });
+  if (!theme) return;
+  Object.keys(DEFAULT_THEME_VARS).forEach(function(k) {
+    root.style.setProperty(k, theme.vars[k] || DEFAULT_THEME_VARS[k]);
+  });
+  if (theme.gradient) document.body.style.backgroundImage = theme.gradient;
+}
+
+function applyPlayerCosmetics() {
+  var data = getShopData();
+  applyTheme(data.shop.active.theme);
+  applyNameStyle(data.shop.active.nameStyle, data.shop.active.nameFrame);
+  renderActiveStickers(data.shop.active.stickers);
+}
+
+function applyNameStyle(styleId, frameId) {
+  var nameEl = document.getElementById('playerNameDisplay');
+  var avatarSection = document.getElementById('welcomeAvatarSection');
+  if (!nameEl) return;
+
+  // Reset
+  nameEl.removeAttribute('style');
+  // Fjern alle ramme-klasser
+  var frameClasses = ['frame-shield','frame-explosion','frame-radioactive','frame-ribbon','frame-viking','frame-royal'];
+  frameClasses.forEach(function(cls) { if (avatarSection) avatarSection.classList.remove(cls); });
+
+  // Anvend tekst-stil
+  if (styleId) {
+    var style = SHOP_CATALOG.nameStyles.find(function(s) { return s.id === styleId; });
+    if (style) nameEl.setAttribute('style', style.css);
+  }
+
+  // Anvend ramme
+  if (frameId) {
+    var frame = SHOP_CATALOG.nameFrames.find(function(f) { return f.id === frameId; });
+    if (frame && avatarSection) avatarSection.classList.add(frame.cssClass);
+  }
+}
+
+function renderActiveStickers(stickers) {
+  if (!stickers) return;
+  var card = document.getElementById('phase-welcome');
+  if (!card) return;
+
+  // Fjern gamle sticker-pladser
+  card.querySelectorAll('.sticker-slot').forEach(function(el) { el.remove(); });
+
+  var positions = {
+    welcome_1: 'top:8px;left:8px',
+    welcome_2: 'top:8px;right:8px',
+    welcome_3: 'bottom:8px;left:8px',
+    welcome_4: 'bottom:8px;right:8px'
+  };
+
+  // Sørg for at card har position:relative
+  card.style.position = 'relative';
+
+  Object.keys(positions).forEach(function(slot) {
+    var el = document.createElement('div');
+    el.className = 'sticker-slot' + (stickers[slot] ? '' : ' empty');
+    el.setAttribute('style', 'position:absolute;' + positions[slot]);
+    el.onclick = function() { openStickerPicker(slot); };
+    if (stickers[slot]) {
+      var sticker = SHOP_CATALOG.stickers.find(function(s) { return s.id === stickers[slot]; });
+      el.textContent = sticker ? sticker.emoji : stickers[slot];
+    } else {
+      el.textContent = '+';
+    }
+    card.appendChild(el);
+  });
+
+  // Reward bar sticker
+  var bar = document.getElementById('rewardBar');
+  if (bar) {
+    var existing = bar.querySelector('.rewardbar-sticker');
+    if (existing) existing.remove();
+    if (stickers.rewardbar) {
+      var sticker = SHOP_CATALOG.stickers.find(function(s) { return s.id === stickers.rewardbar; });
+      if (sticker) {
+        var badge = document.createElement('span');
+        badge.className = 'rewardbar-sticker';
+        badge.textContent = sticker.emoji;
+        bar.appendChild(badge);
+      }
+    }
+  }
+}
+
+var shopTab = 'themes';
+
+function openShop() {
+  shopTab = 'themes';
+  renderShop();
+  document.getElementById('shopOverlay').classList.remove('hidden');
+}
+
+function closeShop() {
+  document.getElementById('shopOverlay').classList.add('hidden');
+}
+
+function switchShopTab(tab) {
+  shopTab = tab;
+  renderShop();
+}
+
+function renderShop() {
+  var data = getShopData();
+  var overlay = document.getElementById('shopOverlay');
+
+  var html = '<div style="background:var(--card);border-radius:16px;padding:20px;max-width:420px;margin:0 auto;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;position:relative">';
+
+  // Header
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+  html += '<h2 style="color:var(--accent);font-size:1.3rem">\u{1F6D2} Shop</h2>';
+  html += '<div style="display:flex;align-items:center;gap:12px">';
+  html += '<span style="color:var(--blue);font-weight:700">\u{1F48E} ' + data.gems + '</span>';
+  html += '<button onclick="closeShop()" style="background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer">\u2715</button>';
+  html += '</div></div>';
+
+  // Faner
+  html += '<div class="shop-tabs">';
+  html += '<button class="shop-tab' + (shopTab === 'themes' ? ' active' : '') + '" onclick="switchShopTab(\'themes\')">\u{1F3A8} Temaer</button>';
+  html += '<button class="shop-tab' + (shopTab === 'names' ? ' active' : '') + '" onclick="switchShopTab(\'names\')">\u270F\uFE0F Navne</button>';
+  html += '<button class="shop-tab' + (shopTab === 'stickers' ? ' active' : '') + '" onclick="switchShopTab(\'stickers\')">\u2B50 Stickers</button>';
+  html += '</div>';
+
+  // Indhold
+  html += '<div class="shop-grid">';
+  if (shopTab === 'themes') html += renderShopThemes(data);
+  else if (shopTab === 'names') html += renderShopNames(data);
+  else if (shopTab === 'stickers') html += renderShopStickers(data);
+  html += '</div>';
+
+  html += '</div>';
+  overlay.innerHTML = html;
+}
+
+function renderShopThemes(data) {
+  var html = '';
+  SHOP_CATALOG.themes.forEach(function(theme) {
+    var owned = ownsItem(data, 'themes', theme.id);
+    var isActive = data.shop.active.theme === theme.id;
+    var canAfford = data.gems >= theme.price;
+    var cls = 'shop-item' + (isActive ? ' active-item' : (owned ? ' owned' : ''));
+
+    var previewBg = theme.vars['--bg'] || '#0f1117';
+    var previewAccent = theme.vars['--accent'] || '#f5a623';
+
+    html += '<div class="' + cls + '">';
+    html += '<div style="width:100%;height:40px;border-radius:8px;margin-bottom:6px;background:' + previewBg + ';border:1px solid ' + previewAccent + '"></div>';
+    html += '<div class="shop-item-emoji">' + theme.emoji + '</div>';
+    html += '<div class="shop-item-name">' + theme.name + '</div>';
+    html += '<div class="shop-item-tier" style="color:' + TIER_COLORS[theme.tier] + '">' + TIER_LABELS[theme.tier] + '</div>';
+
+    if (isActive) {
+      html += '<div class="shop-item-btn" style="background:var(--green);color:#fff">Aktiv \u2714</div>';
+    } else if (owned) {
+      html += '<div class="shop-item-btn" style="background:var(--card);color:var(--green);border:1px solid var(--green)" onclick="event.stopPropagation();shopActivateTheme(\'' + theme.id + '\')">Brug</div>';
+    } else {
+      html += '<div class="shop-item-btn" style="background:' + (canAfford ? 'var(--accent)' : 'var(--muted)') + ';color:#fff" onclick="event.stopPropagation();shopBuyTheme(\'' + theme.id + '\',' + theme.price + ')">\u{1F48E} ' + theme.price + '</div>';
+    }
+    html += '</div>';
+  });
+  return html;
+}
+
+function shopBuyTheme(id, price) {
+  if (buyItem('themes', id, price)) {
+    activateItem('themes', id);
+    applyTheme(id);
+    renderShop();
+    updateRewardBar();
+    var gemsEl = document.getElementById('welcomeGemsDisplay');
+    if (gemsEl) gemsEl.textContent = '\u{1F48E} ' + loadRewardData().gems;
+  }
+}
+
+function shopActivateTheme(id) {
+  activateItem('themes', id);
+  applyTheme(id);
+  renderShop();
+}
+
+function renderShopNames(data) {
+  var html = '<div style="grid-column:1/-1;font-size:0.8rem;font-weight:700;color:var(--accent);padding:4px 0">Tekst-farver & effekter</div>';
+
+  SHOP_CATALOG.nameStyles.forEach(function(style) {
+    var owned = ownsItem(data, 'nameplates', style.id);
+    var isActive = data.shop.active.nameStyle === style.id;
+    var canAfford = data.gems >= style.price;
+    var cls = 'shop-item' + (isActive ? ' active-item' : (owned ? ' owned' : ''));
+
+    html += '<div class="' + cls + '">';
+    html += '<div style="font-size:1.3rem;margin-bottom:4px;' + style.css + '">Abc</div>';
+    html += '<div class="shop-item-name">' + style.name + '</div>';
+    html += '<div class="shop-item-tier" style="color:' + TIER_COLORS[style.tier] + '">' + TIER_LABELS[style.tier] + '</div>';
+
+    if (isActive) {
+      html += '<div class="shop-item-btn" style="background:var(--green);color:#fff">Aktiv \u2714</div>';
+    } else if (owned) {
+      html += '<div class="shop-item-btn" style="background:var(--card);color:var(--green);border:1px solid var(--green)" onclick="event.stopPropagation();shopActivateName(\'' + style.id + '\')">Brug</div>';
+    } else {
+      html += '<div class="shop-item-btn" style="background:' + (canAfford ? 'var(--accent)' : 'var(--muted)') + ';color:#fff" onclick="event.stopPropagation();shopBuyName(\'' + style.id + '\',' + style.price + ')">\u{1F48E} ' + style.price + '</div>';
+    }
+    html += '</div>';
+  });
+
+  html += '<div style="grid-column:1/-1;font-size:0.8rem;font-weight:700;color:var(--accent);padding:8px 0 4px">Navne-rammer</div>';
+
+  SHOP_CATALOG.nameFrames.forEach(function(frame) {
+    var owned = ownsItem(data, 'nameplates', frame.id);
+    var isActive = data.shop.active.nameFrame === frame.id;
+    var canAfford = data.gems >= frame.price;
+    var cls = 'shop-item' + (isActive ? ' active-item' : (owned ? ' owned' : ''));
+
+    html += '<div class="' + cls + '">';
+    html += '<div class="shop-item-emoji">' + frame.emoji + '</div>';
+    html += '<div class="shop-item-name">' + frame.name + '</div>';
+    html += '<div class="shop-item-tier" style="color:' + TIER_COLORS[frame.tier] + '">' + TIER_LABELS[frame.tier] + '</div>';
+
+    if (isActive) {
+      html += '<div class="shop-item-btn" style="background:var(--green);color:#fff">Aktiv \u2714</div>';
+    } else if (owned) {
+      html += '<div class="shop-item-btn" style="background:var(--card);color:var(--green);border:1px solid var(--green)" onclick="event.stopPropagation();shopActivateFrame(\'' + frame.id + '\')">Brug</div>';
+    } else {
+      html += '<div class="shop-item-btn" style="background:' + (canAfford ? 'var(--accent)' : 'var(--muted)') + ';color:#fff" onclick="event.stopPropagation();shopBuyFrame(\'' + frame.id + '\',' + frame.price + ')">\u{1F48E} ' + frame.price + '</div>';
+    }
+    html += '</div>';
+  });
+  return html;
+}
+
+function shopBuyName(id, price) {
+  if (buyItem('nameplates', id, price)) {
+    activateItem('nameplates', id);
+    applyNameStyle(id, getShopData().shop.active.nameFrame);
+    renderShop();
+    updateRewardBar();
+    var gemsEl = document.getElementById('welcomeGemsDisplay');
+    if (gemsEl) gemsEl.textContent = '\u{1F48E} ' + loadRewardData().gems;
+  }
+}
+
+function shopActivateName(id) {
+  activateItem('nameplates', id);
+  applyNameStyle(id, getShopData().shop.active.nameFrame);
+  renderShop();
+}
+
+function shopBuyFrame(id, price) {
+  if (buyItem('nameplates', id, price)) {
+    var data = getShopData();
+    data.shop.active.nameFrame = id;
+    saveRewardData(data);
+    applyNameStyle(data.shop.active.nameStyle, id);
+    renderShop();
+    updateRewardBar();
+    var gemsEl = document.getElementById('welcomeGemsDisplay');
+    if (gemsEl) gemsEl.textContent = '\u{1F48E} ' + loadRewardData().gems;
+  }
+}
+
+function shopActivateFrame(id) {
+  var data = getShopData();
+  data.shop.active.nameFrame = id;
+  saveRewardData(data);
+  applyNameStyle(data.shop.active.nameStyle, id);
+  renderShop();
+}
+
+function renderShopStickers(data) {
+  var html = '';
+
+  // Sticker-placering sektion
+  html += '<div style="grid-column:1/-1;background:var(--card);border-radius:10px;padding:10px;margin-bottom:8px;border:1px solid #3d4270">';
+  html += '<div style="font-size:0.8rem;font-weight:700;color:var(--accent);margin-bottom:8px">Mine pladser</div>';
+  html += '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
+  var slotLabels = { welcome_1: 'Hjoerne 1', welcome_2: 'Hjoerne 2', welcome_3: 'Hjoerne 3', welcome_4: 'Hjoerne 4', rewardbar: 'Badge' };
+  Object.keys(slotLabels).forEach(function(slot) {
+    var stickerId = data.shop.active.stickers[slot];
+    var sticker = stickerId ? SHOP_CATALOG.stickers.find(function(s) { return s.id === stickerId; }) : null;
+    html += '<div style="text-align:center;cursor:pointer" onclick="openStickerPicker(\'' + slot + '\')">';
+    html += '<div style="width:40px;height:40px;border-radius:8px;background:var(--card2);border:2px dashed #3d4270;display:flex;align-items:center;justify-content:center;font-size:1.4rem">';
+    html += sticker ? sticker.emoji : '<span style="color:#3d4270">+</span>';
+    html += '</div>';
+    html += '<div style="font-size:0.6rem;color:var(--muted);margin-top:2px">' + slotLabels[slot] + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  // Stickers til salg
+  html += '<div style="grid-column:1/-1;font-size:0.8rem;font-weight:700;color:var(--accent);padding:4px 0">Koeb stickers</div>';
+
+  SHOP_CATALOG.stickers.forEach(function(sticker) {
+    var owned = ownsItem(data, 'stickers', sticker.id);
+    var canAfford = data.gems >= sticker.price;
+    var cls = 'shop-item' + (owned ? ' owned' : '');
+
+    html += '<div class="' + cls + '">';
+    html += '<div class="shop-item-emoji">' + sticker.emoji + '</div>';
+    html += '<div class="shop-item-name">' + sticker.name + '</div>';
+    html += '<div class="shop-item-tier" style="color:' + TIER_COLORS[sticker.tier] + '">' + TIER_LABELS[sticker.tier] + '</div>';
+
+    if (owned) {
+      html += '<div class="shop-item-btn" style="background:var(--green);color:#fff">Ejet \u2714</div>';
+    } else {
+      html += '<div class="shop-item-btn" style="background:' + (canAfford ? 'var(--accent)' : 'var(--muted)') + ';color:#fff" onclick="event.stopPropagation();shopBuySticker(\'' + sticker.id + '\',' + sticker.price + ')">\u{1F48E} ' + sticker.price + '</div>';
+    }
+    html += '</div>';
+  });
+  return html;
+}
+
+function shopBuySticker(id, price) {
+  if (buyItem('stickers', id, price)) {
+    renderShop();
+    updateRewardBar();
+    var gemsEl = document.getElementById('welcomeGemsDisplay');
+    if (gemsEl) gemsEl.textContent = '\u{1F48E} ' + loadRewardData().gems;
+  }
+}
+
+function openStickerPicker(slot) {
+  var data = getShopData();
+  var owned = data.shop.owned.stickers || [];
+  if (owned.length === 0) return;
+
+  var html = '<div style="background:var(--card);border-radius:16px;padding:20px;max-width:340px;margin:0 auto;text-align:center">';
+  html += '<h3 style="color:var(--accent);margin-bottom:12px">Vaelg sticker</h3>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:14px">';
+
+  // "Ingen" mulighed
+  html += '<div style="width:48px;height:48px;border-radius:10px;background:var(--card2);border:2px solid #3d4270;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.8rem;color:var(--muted)" onclick="pickSticker(\'' + slot + '\',null)">\u2715</div>';
+
+  owned.forEach(function(id) {
+    var sticker = SHOP_CATALOG.stickers.find(function(s) { return s.id === id; });
+    if (!sticker) return;
+    var isActive = data.shop.active.stickers[slot] === id;
+    html += '<div style="width:48px;height:48px;border-radius:10px;background:var(--card2);border:2px solid ' + (isActive ? 'var(--green)' : '#3d4270') + ';display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.8rem" onclick="pickSticker(\'' + slot + '\',\'' + id + '\')">' + sticker.emoji + '</div>';
+  });
+
+  html += '</div>';
+  html += '<button class="btn" onclick="renderShop()" style="font-size:0.85rem">Annuller</button>';
+  html += '</div>';
+
+  document.getElementById('shopOverlay').innerHTML = html;
+}
+
+function pickSticker(slot, stickerId) {
+  setSticker(slot, stickerId);
+  applyPlayerCosmetics();
+  renderShop();
+}

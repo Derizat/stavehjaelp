@@ -6099,34 +6099,6 @@ function renderBossSilentServant(word, boss, idleAnim) {
     rounds.push({ correct: sw.word.toLowerCase(), wrong: sw.misspelling.toLowerCase(), hasSilent: true, hint: sw.hint || '' });
   }
 
-  var otherCats = Object.keys(WORD_BANK).filter(function(c) { return c !== 'Stumme bogstaver'; });
-  var otherWords = [];
-  otherCats.forEach(function(cat) { WORD_BANK[cat].forEach(function(w) { otherWords.push(w); }); });
-  for (var oi = otherWords.length - 1; oi > 0; oi--) {
-    var oj = Math.floor(Math.random() * (oi + 1));
-    var ot = otherWords[oi]; otherWords[oi] = otherWords[oj]; otherWords[oj] = ot;
-  }
-
-  // Build a set of all known words to avoid fake versions that are real words
-  var allKnownWords = {};
-  Object.keys(WORD_BANK).forEach(function(cat) {
-    WORD_BANK[cat].forEach(function(w) { allKnownWords[w.word.toLowerCase()] = true; });
-  });
-
-  for (var ni = 0; ni < otherWords.length && rounds.length < 5; ni++) {
-    var nw = otherWords[ni].word.toLowerCase();
-    if (usedWords[nw]) continue;
-    var fakeVersion = null;
-    if (nw.match(/^v/) && !nw.match(/^hv/)) fakeVersion = 'h' + nw;
-    else if (nw.match(/^j/) && !nw.match(/^hj/)) fakeVersion = 'h' + nw;
-    else continue;
-    // Skip if fake version is also a real word (e.g. jul -> hjul)
-    if (fakeVersion && fakeVersion !== nw && !allKnownWords[fakeVersion]) {
-      usedWords[nw] = true;
-      rounds.push({ correct: nw, wrong: fakeVersion, hasSilent: false, hint: otherWords[ni].hint || '' });
-    }
-  }
-
   for (var si2 = 0; si2 < stummeWords.length && rounds.length < 5; si2++) {
     var sw2 = stummeWords[si2];
     if (usedWords[sw2.word.toLowerCase()] || !sw2.misspelling) continue;

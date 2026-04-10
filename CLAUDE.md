@@ -41,7 +41,7 @@ Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 - id (uuid), player (text), word (text), answer (text), correct (boolean), attempt (int), category (text), level (int), grade (int), created_at (timestamptz)
 
 **profiles** — syncer spillerdata på tværs af enheder:
-- player (text, primary key), profile_data (jsonb), reward_data (jsonb), sr_data (jsonb), student_grade (int), updated_at (timestamptz)
+- player (text, primary key), profile_data (jsonb), reward_data (jsonb), sr_data (jsonb), student_grade (int), word_stats (jsonb), updated_at (timestamptz)
 
 **groups** — klasser og vennegrupper:
 - id (uuid, PK), name (text), join_code (text, unique), type (text: 'class'/'friendgroup'), created_by (text), created_at (timestamptz)
@@ -158,6 +158,7 @@ Navn, Klassetrin, XP, Streak, Rigtige %, Antal svar, Sidst aktiv, [Fjern]
 - `{player}_sr_data` — spaced repetition øveord
 - `{player}_screening_data` — stavevurdering-resultater
 - `{player}_student_grade` — valgt klassetrin (0-8)
+- `{player}_word_stats` — per-ord statistik (correct/wrong tællere per ord)
 
 ## API-nøgler
 

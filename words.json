@@ -5771,7 +5771,7 @@
       "word": "trykke",
       "hint": "Presse med fingeren på en knap",
       "patternHint": "kk ikke gg",
-      "sentence": "Tryk på knappen for at starte maskinen.",
+      "sentence": "Du skal trykke på knappen for at starte maskinen.",
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "trygge"
@@ -5789,7 +5789,7 @@
       "word": "slippe",
       "hint": "Give slip og lade noget falde",
       "patternHint": "pp ikke bb",
-      "sentence": "Slip ikke bolden mens du løber.",
+      "sentence": "Du må ikke slippe bolden mens du løber.",
       "level": 3,
       "category": "Konsonantlyde",
       "misspelling": "slibbe"

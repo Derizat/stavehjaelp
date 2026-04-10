@@ -3783,7 +3783,7 @@ function renderWord() {
   // Show sentence with blank for the word
   if (sentEl) {
     if (w.sentence) {
-      var sentRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøå]*\\b', 'i');
+      var sentRegex = new RegExp('(?<![a-zA-ZæøåÆØÅ])' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøå]*(?![a-zA-ZæøåÆØÅ])', 'i');
       var blankSpan = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);padding:2px 4px">&nbsp;</span>';
       var cloze = w.sentence.replace(sentRegex, blankSpan);
       if (cloze === w.sentence) cloze = w.sentence + ' ' + blankSpan;
@@ -8127,7 +8127,7 @@ function buildSpellingPoliceItem(wordObj) {
   var sentence = wordObj.sentence;
 
   // Find the target word in the sentence (case-insensitive match including inflected forms)
-  var regex = new RegExp('\\b(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\w*)\\b', 'i');
+  var regex = new RegExp('(?<![a-zA-ZæøåÆØÅ])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøåA-ZÆØÅ]*)(?![a-zA-ZæøåÆØÅ])', 'i');
   var match = sentence.match(regex);
   if (!match) return null;
 
@@ -9033,7 +9033,7 @@ function renderSentenceWord(wordObj) {
 
   // Build cloze sentence: replace the word with ___
   var sentence = w.sentence || '';
-  var wordRegex = new RegExp('\\b' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøå]*\\b', 'i');
+  var wordRegex = new RegExp('(?<![a-zA-ZæøåÆØÅ])' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøå]*(?![a-zA-ZæøåÆØÅ])', 'i');
   var blank = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);padding:2px 4px">&nbsp;</span>';
   var clozeText = sentence.replace(wordRegex, blank);
 

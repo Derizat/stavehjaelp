@@ -3445,7 +3445,7 @@ function startTrainingFromProfile() {
   var wordList = allWords.map(function(w) { return w.word.toLowerCase(); });
   fetchMisspellings(wordList, function(misByWord) {
     mixedQueue = [];
-    var exerciseTypes = ['fillin', 'rightorwrong', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
+    var exerciseTypes = ['fillin', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
 
     // Reserve 1 slot for pro word
     var normalSlots = proWord ? 9 : 10;
@@ -4290,7 +4290,6 @@ var BOSS_ALL_TYPES = ['scramble', 'memory', 'cardcast', 'rain', 'reverse', 'pacm
 
 var EXERCISE_TYPES = [
   { id: 'fillin', emoji: '\u{270F}\uFE0F', name: 'Udfyld bogstav', fn: 'startFillIn' },
-  { id: 'rightorwrong', emoji: '\u{2705}', name: 'Rigtigt/forkert', fn: 'startRightOrWrong' },
   { id: 'spellingpolice', emoji: '\u{1F46E}', name: 'Stavepolitiet', fn: 'startSpellingPolice' },
   { id: 'wordbuilder', emoji: '\u{1F9F1}', name: 'Ordbyggeren', fn: 'startWordBuilder' },
   { id: 'spellpick', emoji: '\u{1F3AF}', name: 'Stavev\u00E6lger', fn: 'startSpellPick' },

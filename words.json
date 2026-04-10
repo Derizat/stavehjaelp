@@ -3078,15 +3078,6 @@
                   "misspelling": "osst"
             },
             {
-                  "word": "leg",
-                  "hint": "Noget sjovt man gør",
-                  "patternHint": "lydrette ord — staves som det lyder",
-                  "sentence": "Leg er sjovt for alle børn.",
-                  "level": 0,
-                  "category": "Lydrette ord",
-                  "misspelling": "legg"
-            },
-            {
                   "word": "bad",
                   "hint": "Man vasker sig i det",
                   "patternHint": "lydrette ord — staves som det lyder",
@@ -3499,15 +3490,6 @@
                   "level": 0,
                   "category": "Lydrette ord",
                   "misspelling": "opp"
-            },
-            {
-                  "word": "af",
-                  "hint": "Ned fra noget",
-                  "patternHint": "lydrette ord — staves som det lyder",
-                  "sentence": "Hop af cyklen.",
-                  "level": 0,
-                  "category": "Lydrette ord",
-                  "misspelling": "aff"
             },
             {
                   "word": "ned",

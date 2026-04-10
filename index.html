@@ -8886,13 +8886,13 @@ function pickSpkOption(btn, picked) {
   var buttons = btn.parentNode.querySelectorAll('button');
 
   for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i] === btn) continue;
     buttons[i].disabled = true;
     if (buttons[i].textContent === word) {
       buttons[i].style.background = 'var(--green)';
       buttons[i].style.color = '#fff';
-    } else if (buttons[i] === btn && !ok) {
-      buttons[i].style.background = 'var(--red)';
-      buttons[i].style.color = '#fff';
+    } else {
+      buttons[i].style.opacity = '0.3';
     }
   }
 
@@ -8916,15 +8916,12 @@ function pickSpkOption(btn, picked) {
   document.getElementById('spkScoreCorrect').textContent = spkResults.filter(function(r) { return r.correct; }).length;
   document.getElementById('spkScoreWrong').textContent = spkResults.filter(function(r) { return !r.correct; }).length;
 
-  var box = document.getElementById('spkFeedbackBox');
-  box.style.display = 'block';
-  if (ok) {
-    box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt!</div>';
-  } else {
-    box.innerHTML = '<div class="feedback-wrong">\u274C Forkert! Det rigtige er: <strong>' + w.word + '</strong></div>';
-  }
-
-  document.getElementById('spkNextBtn').classList.remove('hidden');
+  // Turn clicked button into next button
+  btn.style.background = ok ? 'var(--green)' : 'var(--red)';
+  btn.style.color = '#fff';
+  var feedbackText = ok ? '\u2714 Rigtigt!' : '\u2717 Forkert! \u2014 ' + w.word;
+  btn.textContent = feedbackText + ' \u2014 N\u00E6ste \u27A1';
+  btn.onclick = function() { nextSpkWord(); };
 }
 
 function nextSpkWord() {

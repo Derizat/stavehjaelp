@@ -6398,55 +6398,25 @@ function rollChestReward() {
 }
 
 function showTreasureChest() {
-  var result = rollChestReward();
-  var colors = CHEST_RARITY_COLORS[result.rarity];
-
-  var overlay = document.getElementById('chestOverlay');
-  overlay.innerHTML = '<div class="chest-card" style="border-color:' + colors.border + '">' +
-    '<div class="chest-emoji" id="chestEmoji" style="cursor:pointer" onclick="openChest()">\uD83D\uDDC3\uFE0F</div>' +
-    '<div class="chest-rarity" style="color:' + colors.border + '">' + colors.label + ' Skattekiste!</div>' +
-    '<div style="font-size:0.85rem;color:var(--muted);margin-top:4px" id="chestTapHint">Tryk for at \u00E5bne!</div>' +
-    '<div class="chest-reward hidden" id="chestReward">' +
-    '<div style="font-size:2.5rem;margin-bottom:8px">' + result.reward.emoji + '</div>' +
-    '<div style="font-size:1.2rem;font-weight:800;color:var(--text)">' + result.reward.text + '</div>' +
-    '</div>' +
-    '<button class="btn btn-accent hidden" id="chestCloseBtn" onclick="closeChest()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
-    '</div>';
-  overlay.classList.remove('hidden');
-  overlay._chestResult = result;
-
-  pendingChest = false;
-}
-
-function applyChestReward(result) {
+  // Award 3 gems
   var data = loadRewardData();
-  var r = result.reward;
-  if (r.type === 'xp') { data.totalXP += r.amount; data.todayXP += r.amount; }
-  else if (r.type === 'gems') { data.gems += r.amount; }
-  else if (r.type === 'combo') { data.totalXP += r.xp; data.todayXP += r.xp; data.gems += r.gems; }
-  // 'message' type = no reward, just encouragement
+  data.gems += 3;
   saveRewardData(data);
   updateRewardBar();
+
+  var overlay = document.getElementById('chestOverlay');
+  overlay.innerHTML = '<div class="chest-card" style="border-color:var(--accent);cursor:pointer" onclick="closeChest()">' +
+    '<div style="font-size:2.5rem;margin-bottom:8px">\uD83D\uDC8E</div>' +
+    '<div style="font-size:1.3rem;font-weight:800;color:var(--text)">+3 Diamanter</div>' +
+    '<div style="font-size:0.85rem;color:var(--muted);margin-top:8px">Klik for at forts\u00E6tte</div>' +
+    '</div>';
+  overlay.classList.remove('hidden');
+  pendingChest = false;
 }
 
 function closeChest() {
   document.getElementById('chestOverlay').classList.add('hidden');
   proceedAfterInterrupt();
-}
-
-function openChest() {
-  var overlay = document.getElementById('chestOverlay');
-  var result = overlay._chestResult;
-  if (!result) return;
-  overlay._chestResult = null; // prevent double open
-  document.getElementById('chestEmoji').textContent = '\uD83C\uDF81';
-  document.getElementById('chestEmoji').classList.add('chest-opened');
-  document.getElementById('chestEmoji').style.cursor = 'default';
-  document.getElementById('chestEmoji').removeAttribute('onclick');
-  document.getElementById('chestTapHint').style.display = 'none';
-  document.getElementById('chestReward').classList.remove('hidden');
-  document.getElementById('chestCloseBtn').classList.remove('hidden');
-  applyChestReward(result);
 }
 
 // ===== AVATAR PROGRESSION =====

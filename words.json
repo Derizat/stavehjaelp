@@ -863,6 +863,15 @@
                   "level": 4,
                   "category": "Stumme bogstaver",
                   "misspelling": "grønsager"
+            },
+            {
+                  "word": "grædt",
+                  "hint": "Fældet tårer",
+                  "patternHint": "stumt 'd' i '-dt'",
+                  "sentence": "Barnet havde grædt hele natten.",
+                  "level": 2,
+                  "category": "Stumme bogstaver",
+                  "misspelling": "græt"
             }
       ],
       "Dobbeltkonsonant": [

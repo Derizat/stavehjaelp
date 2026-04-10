@@ -6412,9 +6412,18 @@ function showTreasureChest() {
     '</div>';
   overlay.classList.remove('hidden');
   pendingChest = false;
+  document.addEventListener('keydown', chestKeyHandler);
+}
+
+function chestKeyHandler(e) {
+  if (e.key === 'Enter') {
+    document.removeEventListener('keydown', chestKeyHandler);
+    closeChest();
+  }
 }
 
 function closeChest() {
+  document.removeEventListener('keydown', chestKeyHandler);
   document.getElementById('chestOverlay').classList.add('hidden');
   proceedAfterInterrupt();
 }

@@ -3316,7 +3316,7 @@
                   "hint": "Køretøj der henter syge mennesker",
                   "patternHint": "lydrette ord — staves som det lyder",
                   "sentence": "Vi hørte en ambulance køre forbi.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "ammbulance"
             },
@@ -3397,7 +3397,7 @@
                   "hint": "En stor ulykke",
                   "patternHint": "lydrette ord — staves som det lyder",
                   "sentence": "Stormen var en katastrofe for byen.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "kattastrofe"
             },
@@ -3406,7 +3406,7 @@
                   "hint": "Styret af folkets stemme",
                   "patternHint": "lydrette ord — staves som det lyder",
                   "sentence": "Danmark er et demokratisk land.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "demmokratisk"
             },
@@ -3415,7 +3415,7 @@
                   "hint": "Helt utroligt godt",
                   "patternHint": "lydrette ord — staves som det lyder",
                   "sentence": "Filmen var helt fantastisk.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "fanntastisk"
             },
@@ -3424,7 +3424,7 @@
                   "hint": "Ensidigt budskab der skal påvirke folk",
                   "patternHint": "lydrette ord — staves som det lyder",
                   "sentence": "Plakaten var ren propaganda.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "prropaganda"
             },
@@ -3433,7 +3433,7 @@
                   "hint": "Leder af et orkester",
                   "patternHint": "lydrette ord — staves som det lyder",
                   "sentence": "En kapelmester leder hele orkestret.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "kappelmester"
             },
@@ -3658,7 +3658,7 @@
                   "hint": "Måler hvor varmt eller koldt det er",
                   "patternHint": "Alle bogstaver lyder som de skrives — fire stavelser",
                   "sentence": "Mor har et termometer i køkkenet.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "terrmometer"
             },
@@ -3667,7 +3667,7 @@
                   "hint": "Noget man hopper på i haven",
                   "patternHint": "Alle bogstaver lyder som de skrives — tre stavelser",
                   "sentence": "Vi har en trampolin i haven.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "trrampolin"
             },
@@ -3676,7 +3676,7 @@
                   "hint": "Et meget langt løb på 42 kilometer",
                   "patternHint": "Alle bogstaver lyder som de skrives — tre stavelser",
                   "sentence": "Min far løb et maraton i København.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "marraton"
             },
@@ -3685,7 +3685,7 @@
                   "hint": "Kæmpe dyr der levede for millioner af år siden",
                   "patternHint": "Alle bogstaver lyder som de skrives — fire stavelser",
                   "sentence": "En dinosaur kunne blive rigtig stor.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "dinnosaur"
             },
@@ -3694,7 +3694,7 @@
                   "hint": "En meget stor og flot kirke",
                   "patternHint": "Alle bogstaver lyder som de skrives — tre stavelser",
                   "sentence": "Vi besøgte en gammel katedral i byen.",
-                  "level": 4,
+                  "level": 3,
                   "category": "Lydrette ord",
                   "misspelling": "kattedral"
             }

@@ -1559,7 +1559,7 @@
 
 <!-- BOSS MINIGAME -->
 <div id="phase-boss" class="card hidden">
-  <div class="phase-label">&#x2694;&#xFE0F; Ord-Boss!</div>
+  <div class="phase-label" id="bossPhaseLabel">&#x2694;&#xFE0F; Ord-Boss!</div>
   <div id="bossContent"></div>
 </div>
 
@@ -4535,6 +4535,12 @@ function renderBossHeader(boss, idleAnim, hp, maxHP) {
     var lvlStr = (wo.level !== undefined) ? ' \u2014 niveau ' + wo.level : '';
     catBadge = '<div style="font-size:0.75rem;color:var(--muted);margin-bottom:4px">' + icon + ' ' + (wo.category || '') + lvlStr + '</div>';
   }
+  // Update phase label with boss name
+  var label = document.getElementById('bossPhaseLabel');
+  if (label && bossState) {
+    var typeName = BOSS_INSTRUCTIONS[bossState.battleType] ? BOSS_INSTRUCTIONS[bossState.battleType].name : '';
+    label.innerHTML = '\u2694\uFE0F Ord-Boss: ' + boss.name + (typeName ? ' \u2014 ' + typeName : '');
+  }
   return '<div style="text-align:center">' +
     catBadge +
     '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>' +
@@ -4766,7 +4772,7 @@ function renderBossMemory(word, boss, idleAnim) {
   // Play the word aloud
   speakWord(word, null);
 
-  // Show word for 4 seconds then hide
+  // Show word for 2 seconds then hide
   setTimeout(function() {
     var wordEl = document.getElementById('bossMemoryWord');
     if (wordEl) wordEl.style.opacity = '0';
@@ -4778,7 +4784,7 @@ function renderBossMemory(word, boss, idleAnim) {
       var inp = document.getElementById('bossMemInput');
       if (inp) inp.focus();
     }, 500);
-  }, 4000);
+  }, 2000);
 }
 
 function checkBossMemory() {

@@ -1823,15 +1823,6 @@
                   "misspelling": "friskvarter"
             },
             {
-                  "word": "svømmehal",
-                  "hint": "Bygning med svømmebassiner",
-                  "patternHint": "'svømme' + 'hal'",
-                  "sentence": "Vi tager i svømmehal hver lørdag.",
-                  "level": 2,
-                  "category": "Sammensatte ord",
-                  "misspelling": "svømmeshal"
-            },
-            {
                   "word": "arbejdsdag",
                   "hint": "En dag hvor man arbejder",
                   "patternHint": "sammensat med fuge-s: 'arbejds' + 'dag'",

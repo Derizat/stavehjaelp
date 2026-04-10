@@ -1958,15 +1958,6 @@
                   "misspelling": "rugsbrød"
             },
             {
-                  "word": "huskat",
-                  "hint": "Kat der bor indendørs",
-                  "patternHint": "sammensat af 'hus' + 'kat'",
-                  "sentence": "Vores huskat hedder Misser.",
-                  "level": 2,
-                  "category": "Sammensatte ord",
-                  "misspelling": "husskat"
-            },
-            {
                   "word": "vandkande",
                   "hint": "Kande til at vande blomster",
                   "patternHint": "sammensat af 'vand' + 'kande'",

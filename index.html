@@ -4351,6 +4351,11 @@ function startBossPractice(battleType) {
     });
   }
   var chosen = allWords[Math.floor(Math.random() * allWords.length)];
+  // Silent servant: force word from Stumme bogstaver
+  if (battleType === 'silentservant') {
+    var ssPool = buildPoolForCategory('Stumme bogstaver', loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1);
+    if (ssPool.length > 0) chosen = pickRandom(ssPool);
+  }
   var word = chosen.word.toLowerCase();
   var boss = BOSS_MONSTERS[chosen.category] || { emoji: '\uD83D\uDC7E', name: 'Ordbossen' };
   var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
@@ -4443,6 +4448,17 @@ function showBossMinigame(bossData) {
   var boss = BOSS_MONSTERS[bossData.category] || { emoji: "\uD83D\uDC7E", name: "Ordbossen" };
   var battleType = pickRandom(BOSS_BATTLE_TYPES);
   var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
+
+  // Silent servant: force word from Stumme bogstaver
+  if (battleType === 'silentservant') {
+    var ssPool = buildPoolForCategory('Stumme bogstaver', loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1);
+    if (ssPool.length > 0) {
+      var ssPick = pickRandom(ssPool);
+      word = ssPick.word.toLowerCase();
+      bossData.category = 'Stumme bogstaver';
+      boss = BOSS_MONSTERS['Stumme bogstaver'] || boss;
+    }
+  }
 
   // Memory boss: pick a word 2 levels above the player's category level
   if (battleType === 'memory' && bossData.category) {

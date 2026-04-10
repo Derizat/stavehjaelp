@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.2</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -2738,6 +2738,7 @@ var CATEGORY_ICONS = {
 };
 
 var ALL_CATEGORIES = [];
+var PRO_CATEGORIES = ['Ord fra Fransk', 'Ord fra Fransk 2'];
 
 // Show category badge for levels 0-3, hide for 4+
 function updatePatternBadge(badgeId, category, wordLevel) {
@@ -3117,28 +3118,41 @@ function countMasteredCategories(levels) {
 
 function buildPoolWithCategoryLevels(categories) {
   var levels = loadCategoryLevels();
-  var masteredCount = countMasteredCategories(levels);
   var pool = [];
   for (var i = 0; i < categories.length; i++) {
     var cat = categories[i];
     if (!WORD_BANK[cat]) continue;
-    // Ord fra Fransk: requires mastered categories + purchased with gems
-    if (cat === 'Ord fra Fransk') {
-      if (!isFrenchUnlocked()) continue;
-      var frenchTotal = (WORD_BANK['Ord fra Fransk'] || []).length;
-      if (getFrenchProgress() >= frenchTotal) continue;
-    }
-    if (cat === 'Ord fra Fransk 2') {
-      if (!isFrench2Unlocked()) continue;
-      var french2Total = (WORD_BANK['Ord fra Fransk 2'] || []).length;
-      if (getFrenchProgress('Ord fra Fransk 2') >= french2Total) continue;
-    }
+    // Skip pro categories — handled separately by buildProPool
+    if (PRO_CATEGORIES.indexOf(cat) !== -1) continue;
     var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
     // Skip mastered categories
     if (CATEGORY_MAX_LEVELS[cat] !== undefined && catLevel >= CATEGORY_MAX_LEVELS[cat]) continue;
     pool = pool.concat(buildPoolForCategory(cat, catLevel));
   }
   return pool;
+}
+
+function buildProPool() {
+  var pool = [];
+  if (isFrenchUnlocked()) {
+    var frenchTotal = (WORD_BANK['Ord fra Fransk'] || []).length;
+    if (getFrenchProgress() < frenchTotal) {
+      pool = pool.concat((WORD_BANK['Ord fra Fransk'] || []).map(function(w) { return Object.assign({}, w, { category: 'Ord fra Fransk' }); }));
+    }
+  }
+  if (isFrench2Unlocked()) {
+    var french2Total = (WORD_BANK['Ord fra Fransk 2'] || []).length;
+    if (getFrenchProgress('Ord fra Fransk 2') < french2Total) {
+      pool = pool.concat((WORD_BANK['Ord fra Fransk 2'] || []).map(function(w) { return Object.assign({}, w, { category: 'Ord fra Fransk 2' }); }));
+    }
+  }
+  // Filter out words with streak >= 2
+  var stats = loadWordStats();
+  var filtered = pool.filter(function(w) {
+    var s = stats[w.word.toLowerCase()];
+    return !s || (s.streak || 0) < 2;
+  });
+  return filtered.length > 0 ? filtered : pool;
 }
 
 function resetAll() {
@@ -3389,18 +3403,30 @@ function startTrainingFromProfile() {
   if (pool.length === 0) {
     for (var ci2 = 0; ci2 < categories.length; ci2++) {
       var cat2 = categories[ci2];
-      if (!WORD_BANK[cat2]) continue;
+      if (!WORD_BANK[cat2] || PRO_CATEGORIES.indexOf(cat2) !== -1) continue;
       pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
     }
   }
   pool = shuffle(pool);
 
+  // Pick 1 pro word if any pro category is unlocked
+  var proPool = buildProPool();
+  var proWord = null;
+  if (proPool.length > 0) {
+    proPool = shuffle(proPool);
+    proWord = proPool[0];
+  }
+
   // Fetch DB misspellings first, then build mixed queue
-  var wordList = pool.map(function(w) { return w.word.toLowerCase(); });
+  var allWords = pool.concat(proWord ? [proWord] : []);
+  var wordList = allWords.map(function(w) { return w.word.toLowerCase(); });
   fetchMisspellings(wordList, function(misByWord) {
     mixedQueue = [];
     var exerciseTypes = ['fillin', 'rightorwrong', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
-    for (var i = 0; i < pool.length && mixedQueue.length < 10; i++) {
+
+    // Reserve 1 slot for pro word
+    var normalSlots = proWord ? 9 : 10;
+    for (var i = 0; i < pool.length && mixedQueue.length < normalSlots; i++) {
       var w = pool[i];
       if (sessionUsedWords[w.word.toLowerCase()]) continue; // skip duplicates
       var isExerciseSlot = (mixedQueue.length % 2 === 1);
@@ -3438,6 +3464,34 @@ function startTrainingFromProfile() {
         morphemes: morphemesData
       });
     }
+    // Insert pro word at random position
+    if (proWord && !sessionUsedWords[proWord.word.toLowerCase()]) {
+      var pw = proWord;
+      var pwBlanks = generateBlanks(pw);
+      var pwDbMis = misByWord[pw.word.toLowerCase()] || [];
+      var pwSpItem = buildSpellingPoliceItem(pw);
+      var pwMorphemes = parseMorphemes(pw.patternHint, pw.word);
+      var pwType = 'diktat';
+      var pwShuffled = exerciseTypes.slice();
+      for (var pst = pwShuffled.length - 1; pst > 0; pst--) {
+        var psj = Math.floor(Math.random() * (pst + 1));
+        var ptmp = pwShuffled[pst]; pwShuffled[pst] = pwShuffled[psj]; pwShuffled[psj] = ptmp;
+      }
+      for (var pti = 0; pti < pwShuffled.length; pti++) {
+        var pt = pwShuffled[pti];
+        if (pt === 'fillin' && pwBlanks) { pwType = pt; break; }
+        else if (pt === 'rightorwrong' && pwDbMis.length > 0) { pwType = pt; break; }
+        else if (pt === 'spellingpolice' && pwSpItem) { pwType = pt; break; }
+        else if (pt === 'wordbuilder' && pwMorphemes) { pwType = pt; break; }
+        else if (pt === 'spellpick') { pwType = pt; break; }
+        else if (pt === 'sentence' && pw.hint && pw.level >= 1) { pwType = pt; break; }
+      }
+      sessionUsedWords[pw.word.toLowerCase()] = true;
+      var proItem = { wordObj: pw, type: pwType, blanks: pwBlanks, dbMisspelling: pwDbMis.length > 0 ? pwDbMis[0] : null, spItem: pwSpItem, morphemes: pwMorphemes };
+      var insertPos = Math.floor(Math.random() * (mixedQueue.length + 1));
+      mixedQueue.splice(insertPos, 0, proItem);
+    }
+
     console.log('Mixed queue types:', mixedQueue.map(function(q) { return q.type; }));
 
     if (mixedQueue.length === 0) {

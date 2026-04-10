@@ -6006,13 +6006,13 @@ function pickSpellOption(btn, picked) {
 
   // Highlight correct/wrong
   for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i] === btn) continue;
     buttons[i].disabled = true;
     if (buttons[i].textContent === currentWord) {
       buttons[i].style.background = 'var(--green)';
       buttons[i].style.color = '#fff';
-    } else if (buttons[i] === btn && !correct) {
-      buttons[i].style.background = 'var(--red)';
-      buttons[i].style.color = '#fff';
+    } else {
+      buttons[i].style.opacity = '0.3';
     }
   }
 
@@ -6021,6 +6021,10 @@ function pickSpellOption(btn, picked) {
     updateBossHP();
     bossHitAnim();
     if (bossState.hp <= 0) {
+      btn.disabled = true;
+      btn.style.background = 'var(--green)';
+      btn.style.color = '#fff';
+      btn.textContent = '\u2714 Rigtigt!';
       setTimeout(function() { bossDefeated(); }, 800);
       return;
     }
@@ -6028,11 +6032,14 @@ function pickSpellOption(btn, picked) {
     bossAttackAnim();
   }
 
-  // Next round after delay
-  setTimeout(function() {
+  // Turn clicked button into "next" button
+  btn.style.background = correct ? 'var(--green)' : 'var(--red)';
+  btn.style.color = '#fff';
+  btn.textContent = correct ? '\u2714 Rigtigt! \u2014 N\u00E6ste \u27A1' : '\u2717 Forkert! \u2014 N\u00E6ste \u27A1';
+  btn.onclick = function() {
     bossState.spRound++;
     buildSpellpickRound();
-  }, 1200);
+  };
 }
 
 // --- Type 10: SILENT SERVANT (stumtjeneren) ---

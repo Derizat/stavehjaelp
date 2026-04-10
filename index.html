@@ -1168,7 +1168,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.1</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -1786,8 +1786,8 @@ function updateWordStats(word, correct, category) {
   var stats = loadWordStats();
   var key = word.toLowerCase();
   if (!stats[key]) stats[key] = { word: word, correct: 0, wrong: 0, category: category || '' };
-  if (correct) stats[key].correct++;
-  else stats[key].wrong++;
+  if (correct) { stats[key].correct++; stats[key].streak = (stats[key].streak || 0) + 1; }
+  else { stats[key].wrong++; stats[key].streak = 0; }
   if (category) stats[key].category = category;
   saveWordStats(stats);
 }
@@ -3012,13 +3012,21 @@ function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelli
 }
 
 function buildPoolForCategory(cat, catLevel) {
+  var stats = loadWordStats();
   var pool = (WORD_BANK[cat] || []).filter(function(w) { return w.level === catLevel; });
   if (pool.length < 3) {
     pool = (WORD_BANK[cat] || []).filter(function(w) {
       return w.level >= Math.max(0, catLevel - 1) && w.level <= catLevel + 1;
     });
   }
-  return pool.map(function(w) { return Object.assign({}, w, { category: cat }); });
+  // Filter out words answered correctly 2+ times in a row
+  var filtered = pool.filter(function(w) {
+    var s = stats[w.word.toLowerCase()];
+    return !s || (s.streak || 0) < 2;
+  });
+  // Fallback: if all words are mastered, use full pool so player can still play
+  if (filtered.length === 0) filtered = pool;
+  return filtered.map(function(w) { return Object.assign({}, w, { category: cat }); });
 }
 
 // Pick a boss word from one level higher than player's current level, excluding used words

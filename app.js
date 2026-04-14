@@ -1371,9 +1371,14 @@ function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelli
   if (!category || ALL_CATEGORIES.indexOf(category) === -1) return;
   // Ord fra Fransk / Fransk 2: track unique correct words instead of normal level system
   if (category === 'Ord fra Fransk' || category === 'Ord fra Fransk 2') return;
-  // Only count wrong answers as category errors if the mistake matches the category-specific misspelling
+  // Tilfældige tastefejl straffes ikke: hvis svaret ikke matcher kategoriens
+  // forventede misspelling, tæller det som "ikke-kategori-fejl" (true i historik).
+  // Korrekte svar og kategori-typiske fejl tælles som normalt.
+  var historyEntry = correct;
   if (!correct && misspelling && userAnswer) {
-    if (userAnswer.toLowerCase().trim() !== misspelling.toLowerCase()) return;
+    if (userAnswer.toLowerCase().trim() !== misspelling.toLowerCase()) {
+      historyEntry = true;
+    }
   }
   var levels = loadCategoryLevels();
   if (!levels[category]) levels[category] = { level: 1, history: [] };
@@ -1383,7 +1388,7 @@ function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelli
   // Only track answers for words at the player's current level
   var wl = (wordLevel !== undefined) ? wordLevel : cat.level;
   if (wl === cat.level) {
-    cat.history.push(correct);
+    cat.history.push(historyEntry);
     if (cat.history.length > 10) cat.history = cat.history.slice(-10);
 
     var total = cat.history.length;

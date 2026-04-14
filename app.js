@@ -4262,6 +4262,36 @@ function renderBossSpellpick(word, boss, idleAnim) {
 var misspellingCache = {};
 var misspellingCacheTime = 0;
 
+// Levenshtein-afstand bruges til at filtrere urealistiske "stavefejl" fra databasen
+function levenshteinDistance(a, b) {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+  var prev = [];
+  for (var i = 0; i <= b.length; i++) prev[i] = i;
+  for (var i = 1; i <= a.length; i++) {
+    var curr = [i];
+    for (var j = 1; j <= b.length; j++) {
+      var cost = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+      curr[j] = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
+    }
+    prev = curr;
+  }
+  return prev[b.length];
+}
+
+// Filtrerer brugerens forkerte svar så kun sandsynlige stavefejl bruges som
+// distraktorer — afviser fulde sætninger, tegnsætning, og svar der er for langt
+// fra det rigtige ord (typos, fejltryk, legacy rightorwrong-svar som "rigtigt").
+function isPlausibleMisspelling(word, attempt) {
+  if (!attempt || attempt === word) return false;
+  if (!/^[a-zæøå]+$/.test(attempt)) return false;
+  if (attempt.length < Math.max(2, word.length - 3)) return false;
+  if (attempt.length > word.length + 3) return false;
+  var maxDist = Math.max(2, Math.floor(word.length / 3));
+  return levenshteinDistance(word, attempt) <= maxDist;
+}
+
 function fetchMisspellings(words, callback) {
   if (!supabaseClient) { callback({}); return; }
 
@@ -4286,7 +4316,7 @@ function fetchMisspellings(words, callback) {
           var r = res.data[i];
           var w = r.word.toLowerCase();
           var a = r.answer.toLowerCase().trim();
-          if (a && a !== w) {
+          if (isPlausibleMisspelling(w, a)) {
             if (!misByWord[w]) misByWord[w] = {};
             misByWord[w][a] = (misByWord[w][a] || 0) + 1;
           }

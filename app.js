@@ -1172,6 +1172,7 @@ var sessionCorrectStreak = 0; // consecutive correct answers for boss trigger
 var pendingChest = false;
 var pendingInterruptAction = null; // stores what to do after boss/chest
 var sessionUsedWords = {}; // tracks words used in session to prevent repeats
+var sessionStartLevels = null; // snapshot af categoryLevels ved sessionstart (kun blandet træning)
 
 // Utility
 function show(id) { var el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
@@ -1819,6 +1820,13 @@ function startTrainingFromProfile() {
   sessionUsedWords = {};
   results = [];
 
+  // Snapshot af kategori-niveauer til at vise op/ned-ændringer i resultat-oversigten
+  var startLevels = loadCategoryLevels();
+  sessionStartLevels = {};
+  for (var slCat in startLevels) {
+    sessionStartLevels[slCat] = startLevels[slCat].level;
+  }
+
   var pool = buildPoolWithCategoryLevels(categories);
   if (pool.length === 0) {
     for (var ci2 = 0; ci2 < categories.length; ci2++) {
@@ -2422,6 +2430,23 @@ function renderResults(opts) {
   html += '<div class="score-box"><div class="num num-yellow">' + Math.round(correct / res.length * 100) + '%</div><div class="lbl">Score</div></div>';
   html += '</div>';
 
+  // Kategori-niveau ændringer (kun hvis der er nogle)
+  if (opts.categoryChanges && opts.categoryChanges.length > 0) {
+    html += '<div class="level-changes">';
+    html += '<h2 style="margin-bottom:8px;font-size:1.1rem">\u{1F4C8} Niveau-ændringer</h2>';
+    for (var ci = 0; ci < opts.categoryChanges.length; ci++) {
+      var ch = opts.categoryChanges[ci];
+      var up = ch.after > ch.before;
+      var icon = up ? '\u2B06\uFE0F' : '\u2B07\uFE0F';
+      var color = up ? 'var(--green)' : 'var(--red)';
+      html += '<div class="level-change-row" style="color:' + color + '">';
+      html += '<span>' + icon + ' <strong>' + ch.category + '</strong></span>';
+      html += '<span>' + ch.before + ' \u2192 ' + ch.after + '</span>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
   // Word list
   var wordsToShow = opts.showAllWords !== false ? res : wrong;
   if (wordsToShow.length > 0) {
@@ -2462,12 +2487,25 @@ function renderResults(opts) {
   document.getElementById('resultsContent').innerHTML = html;
 }
 
+function computeLevelChanges() {
+  if (!sessionStartLevels) return [];
+  var current = loadCategoryLevels();
+  var changes = [];
+  for (var cat in sessionStartLevels) {
+    var before = sessionStartLevels[cat];
+    var after = (current[cat] && current[cat].level !== undefined) ? current[cat].level : before;
+    if (after !== before) changes.push({ category: cat, before: before, after: after });
+  }
+  return changes;
+}
+
 function renderTrainingResults() {
   renderResults({
     resultsList: results,
     messages: ['Godt gået med træningen! \u{1F4AA}', 'Flot indsats! Du bliver bedre og bedre \u{1F31F}', 'Stærkt! Øvelse gør mester \u2B50'],
     summary: 'Du fik ' + results.filter(function(r) { return r.correct; }).length + ' ud af ' + results.length + ' rigtige i træningen.',
-    showLessons: true
+    showLessons: true,
+    categoryChanges: computeLevelChanges()
   });
 }
 

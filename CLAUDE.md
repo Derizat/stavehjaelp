@@ -61,9 +61,8 @@ Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 
 | Mode | gameMode | Beskrivelse | Sandsynlighed |
 |---|---|---|---|
-| **Diktat** | training | Hør ord → skriv det | 20% + fallback |
+| **Diktat** | training | Hør ord → skriv det | 50% (alle lige slots) |
 | **Udfyld bogstav** | fillin | Vælg rigtigt bogstav fra muligheder | Lige fordelt |
-| **Rigtigt/forkert** | rightorwrong | Speed-runde: er ordet stavet rigtigt? | Lige fordelt |
 | **Stavepolitiet** | spellingpolice | Find stavefejlen i dyr-lineup | Lige fordelt |
 | **Ordbyggeren** | wordbuilder | Byg ord af morfem-klodser | Lige fordelt |
 

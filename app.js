@@ -1179,7 +1179,7 @@ function hide(id) { var el = document.getElementById(id); if (el) el.classList.a
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
 function goHome() {
-  ['phase-test','phase-results','phase-fillin','phase-rightorwrong','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-spellpick','phase-wordmemory','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker','phase-dashboard'].forEach(function(id) { hide(id); });
+  ['phase-test','phase-results','phase-fillin','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-spellpick','phase-wordmemory','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker','phase-dashboard'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
   cleanupPacman();
@@ -1832,104 +1832,106 @@ function startTrainingFromProfile() {
     proWord = proPool[0];
   }
 
-  // Fetch DB misspellings first, then build mixed queue
-  var allWords = pool.concat(proWord ? [proWord] : []);
-  var wordList = allWords.map(function(w) { return w.word.toLowerCase(); });
-  fetchMisspellings(wordList, function(misByWord) {
-    mixedQueue = [];
-    var exerciseTypes = ['fillin', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
+  mixedQueue = [];
+  var exerciseTypes = ['fillin', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
 
-    // Reserve 1 slot for pro word
-    var normalSlots = proWord ? 9 : 10;
-    for (var i = 0; i < pool.length && mixedQueue.length < normalSlots; i++) {
-      var w = pool[i];
-      if (sessionUsedWords[w.word.toLowerCase()]) continue; // skip duplicates
-      var isExerciseSlot = (mixedQueue.length % 2 === 1);
-      var chosenType = 'diktat';
+  // Reserve 1 slot for pro word
+  var normalSlots = proWord ? 9 : 10;
+  for (var i = 0; i < pool.length && mixedQueue.length < normalSlots; i++) {
+    var w = pool[i];
+    if (sessionUsedWords[w.word.toLowerCase()]) continue; // skip duplicates
+    var isExerciseSlot = (mixedQueue.length % 2 === 1);
+    var chosenType = 'diktat';
 
-      var blanksData = generateBlanks(w);
-      var dbMis = misByWord[w.word.toLowerCase()] || [];
-      var spItemData = buildSpellingPoliceItem(w);
-      var morphemesData = parseMorphemes(w.patternHint, w.word);
+    var blanksData = generateBlanks(w);
+    var spItemData = buildSpellingPoliceItem(w);
+    var morphemesData = parseMorphemes(w.patternHint, w.word);
 
-      if (isExerciseSlot) {
-        var shuffledTypes = exerciseTypes.slice();
-        for (var st = shuffledTypes.length - 1; st > 0; st--) {
-          var sj = Math.floor(Math.random() * (st + 1));
-          var tmp = shuffledTypes[st]; shuffledTypes[st] = shuffledTypes[sj]; shuffledTypes[sj] = tmp;
-        }
-        for (var ti = 0; ti < shuffledTypes.length; ti++) {
-          var t = shuffledTypes[ti];
-          if (t === 'fillin' && blanksData) { chosenType = t; break; }
-          else if (t === 'rightorwrong' && dbMis.length > 0) { chosenType = t; break; }
-          else if (t === 'spellingpolice' && spItemData) { chosenType = t; break; }
-          else if (t === 'wordbuilder' && morphemesData) { chosenType = t; break; }
-          else if (t === 'spellpick') { chosenType = t; break; }
-          else if (t === 'sentence' && w.hint && w.level >= 1) { chosenType = t; break; }
-        }
+    if (isExerciseSlot) {
+      var shuffledTypes = exerciseTypes.slice();
+      for (var st = shuffledTypes.length - 1; st > 0; st--) {
+        var sj = Math.floor(Math.random() * (st + 1));
+        var tmp = shuffledTypes[st]; shuffledTypes[st] = shuffledTypes[sj]; shuffledTypes[sj] = tmp;
       }
-
-      sessionUsedWords[w.word.toLowerCase()] = true;
-      mixedQueue.push({
-        wordObj: w,
-        type: chosenType,
-        blanks: blanksData,
-        dbMisspelling: dbMis.length > 0 ? dbMis[0] : null,
-        spItem: spItemData,
-        morphemes: morphemesData
-      });
-    }
-    // Insert pro word at random position
-    if (proWord && !sessionUsedWords[proWord.word.toLowerCase()]) {
-      var pw = proWord;
-      var pwBlanks = generateBlanks(pw);
-      var pwDbMis = misByWord[pw.word.toLowerCase()] || [];
-      var pwSpItem = buildSpellingPoliceItem(pw);
-      var pwMorphemes = parseMorphemes(pw.patternHint, pw.word);
-      var pwType = 'diktat';
-      var pwShuffled = exerciseTypes.slice();
-      for (var pst = pwShuffled.length - 1; pst > 0; pst--) {
-        var psj = Math.floor(Math.random() * (pst + 1));
-        var ptmp = pwShuffled[pst]; pwShuffled[pst] = pwShuffled[psj]; pwShuffled[psj] = ptmp;
+      for (var ti = 0; ti < shuffledTypes.length; ti++) {
+        var t = shuffledTypes[ti];
+        if (t === 'fillin' && blanksData) { chosenType = t; break; }
+        else if (t === 'spellingpolice' && spItemData) { chosenType = t; break; }
+        else if (t === 'wordbuilder' && morphemesData) { chosenType = t; break; }
+        else if (t === 'spellpick') { chosenType = t; break; }
+        else if (t === 'sentence' && w.hint && w.level >= 1) { chosenType = t; break; }
       }
-      for (var pti = 0; pti < pwShuffled.length; pti++) {
-        var pt = pwShuffled[pti];
-        if (pt === 'fillin' && pwBlanks) { pwType = pt; break; }
-        else if (pt === 'rightorwrong' && pwDbMis.length > 0) { pwType = pt; break; }
-        else if (pt === 'spellingpolice' && pwSpItem) { pwType = pt; break; }
-        else if (pt === 'wordbuilder' && pwMorphemes) { pwType = pt; break; }
-        else if (pt === 'spellpick') { pwType = pt; break; }
-        else if (pt === 'sentence' && pw.hint && pw.level >= 1) { pwType = pt; break; }
-      }
-      sessionUsedWords[pw.word.toLowerCase()] = true;
-      var proItem = { wordObj: pw, type: pwType, blanks: pwBlanks, dbMisspelling: pwDbMis.length > 0 ? pwDbMis[0] : null, spItem: pwSpItem, morphemes: pwMorphemes };
-      var insertPos = Math.floor(Math.random() * (mixedQueue.length + 1));
-      mixedQueue.splice(insertPos, 0, proItem);
     }
 
-    console.log('Mixed queue types:', mixedQueue.map(function(q) { return q.type; }));
-
-    if (mixedQueue.length === 0) {
-      alert('Ingen ord fundet til tr\u00E6ning.');
-      return;
+    sessionUsedWords[w.word.toLowerCase()] = true;
+    mixedQueue.push({
+      wordObj: w,
+      type: chosenType,
+      blanks: blanksData,
+      spItem: spItemData,
+      morphemes: morphemesData
+    });
+  }
+  // Insert pro word at random position
+  if (proWord && !sessionUsedWords[proWord.word.toLowerCase()]) {
+    var pw = proWord;
+    var pwBlanks = generateBlanks(pw);
+    var pwSpItem = buildSpellingPoliceItem(pw);
+    var pwMorphemes = parseMorphemes(pw.patternHint, pw.word);
+    var pwType = 'diktat';
+    var pwShuffled = exerciseTypes.slice();
+    for (var pst = pwShuffled.length - 1; pst > 0; pst--) {
+      var psj = Math.floor(Math.random() * (pst + 1));
+      var ptmp = pwShuffled[pst]; pwShuffled[pst] = pwShuffled[psj]; pwShuffled[psj] = ptmp;
     }
+    for (var pti = 0; pti < pwShuffled.length; pti++) {
+      var pt = pwShuffled[pti];
+      if (pt === 'fillin' && pwBlanks) { pwType = pt; break; }
+      else if (pt === 'spellingpolice' && pwSpItem) { pwType = pt; break; }
+      else if (pt === 'wordbuilder' && pwMorphemes) { pwType = pt; break; }
+      else if (pt === 'spellpick') { pwType = pt; break; }
+      else if (pt === 'sentence' && pw.hint && pw.level >= 1) { pwType = pt; break; }
+    }
+    sessionUsedWords[pw.word.toLowerCase()] = true;
+    var proItem = { wordObj: pw, type: pwType, blanks: pwBlanks, spItem: pwSpItem, morphemes: pwMorphemes };
+    var insertPos = Math.floor(Math.random() * (mixedQueue.length + 1));
+    mixedQueue.splice(insertPos, 0, proItem);
+  }
 
-    mixedIndex = 0;
-    hide('phase-welcome');
-    updateRewardBar();
-    document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
+  console.log('Mixed queue types:', mixedQueue.map(function(q) { return q.type; }));
 
-    renderMixedItem();
-  });
+  if (mixedQueue.length === 0) {
+    alert('Ingen ord fundet til tr\u00E6ning.');
+    return;
+  }
+
+  mixedIndex = 0;
+  hide('phase-welcome');
+  updateRewardBar();
+  document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
+
+  renderMixedItem();
 }
 
 function hideAllExercisePhases() {
-  ['phase-test', 'phase-fillin', 'phase-rightorwrong', 'phase-spellingpolice', 'phase-wordbuilder', 'phase-sentence', 'phase-spellpick', 'phase-wordmemory'].forEach(function(id) { hide(id); });
+  ['phase-test', 'phase-fillin', 'phase-spellingpolice', 'phase-wordbuilder', 'phase-sentence', 'phase-spellpick', 'phase-wordmemory'].forEach(function(id) { hide(id); });
+}
+
+function trackExerciseType(type) {
+  if (!type || !activePlayer) return;
+  var key = playerKey('exercise_stats');
+  var stats = {};
+  try { stats = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
+  stats[type] = (stats[type] || 0) + 1;
+  stats._total = (stats._total || 0) + 1;
+  stats._updatedAt = Date.now();
+  try { localStorage.setItem(key, JSON.stringify(stats)); } catch(e) {}
 }
 
 function renderMixedItem() {
   if (mixedIndex >= mixedQueue.length) { finishMixedTraining(); return; }
   var item = mixedQueue[mixedIndex];
+  trackExerciseType(item.type);
   hideAllExercisePhases();
   hide('phase-boss');
   document.getElementById('chestOverlay').classList.add('hidden');
@@ -2791,7 +2793,6 @@ function showBossMinigame(bossData) {
   sessionBossCount++;
   hide('phase-test');
   hide('phase-fillin');
-  hide('phase-rightorwrong');
   hide('phase-spellingpolice');
   hide('phase-wordbuilder');
   hide('phase-sentence');
@@ -4583,7 +4584,6 @@ function continueAfterBoss() {
 
   if (!isMixedSession) {
     if (gameMode === 'fillin') show('phase-fillin');
-    else if (gameMode === 'rightorwrong') show('phase-rightorwrong');
     else if (gameMode === 'spellingpolice') show('phase-spellingpolice');
     else if (gameMode === 'wordbuilder') show('phase-wordbuilder');
     else if (gameMode === 'sentence') show('phase-sentence');
@@ -4612,16 +4612,6 @@ function proceedAfterInterrupt() {
     } else {
       show('phase-fillin');
       renderFillInWord();
-    }
-    return;
-  }
-
-  if (gameMode === 'rightorwrong') {
-    if (action === 'finish') {
-      finishRightOrWrong();
-    } else {
-      show('phase-rightorwrong');
-      renderRightOrWrongWord();
     }
     return;
   }
@@ -6068,314 +6058,6 @@ function renderFillInResults() {
   });
 }
 
-// ===== RIGHT OR WRONG EXERCISE =====
-
-
-// Right or wrong state
-var rfItems = [], rfIndex = 0, rfResults = [];
-var rfCombo = 0, rfMaxCombo = 0;
-var rfAnswered = false;
-
-function startRightOrWrong() {
-  var profile = loadProfile() || {};
-  var categories = ALL_CATEGORIES;
-  isMixedSession = false;
-  gameMode = 'rightorwrong';
-  pendingBoss = null;
-  sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
-  sessionUsedWords = {};
-  pendingChest = false;
-
-  var pool = buildPoolWithCategoryLevels(categories);
-  if (pool.length === 0) {
-    for (var ci2 = 0; ci2 < categories.length; ci2++) {
-      var cat2 = categories[ci2];
-      if (!WORD_BANK[cat2]) continue;
-      pool = pool.concat(WORD_BANK[cat2].map(function(w) { return Object.assign({}, w, { category: cat2 }); }));
-    }
-  }
-  pool = shuffle(pool);
-
-  // Fetch DB misspellings, then build items using only words with real user errors
-  var wordList = pool.map(function(w) { return w.word.toLowerCase(); });
-  fetchMisspellings(wordList, function(misByWord) {
-    rfItems = [];
-    for (var i = 0; i < pool.length && rfItems.length < 20; i++) {
-      var dbMis = misByWord[pool[i].word.toLowerCase()];
-      if (!dbMis || dbMis.length === 0) continue;
-      // ~50% correct, ~50% misspelled (using most common DB misspelling)
-      if (Math.random() < 0.5) {
-        rfItems.push({ word: pool[i].word, displayed: pool[i].word, isCorrect: true, explanation: '', category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
-      } else {
-        rfItems.push({ word: pool[i].word, displayed: dbMis[0], isCorrect: false, explanation: '', category: pool[i].category, patternHint: pool[i].patternHint || '', level: pool[i].level || 0 });
-      }
-    }
-
-    if (rfItems.length < 5) {
-      alert('Ikke nok ord med bruger-stavefejl endnu. Pr\u00F8v igen senere eller brug en anden \u00F8velse.');
-      return;
-    }
-
-    rfItems = shuffle(rfItems);
-    rfIndex = 0;
-    rfResults = [];
-    results = [];
-    rfCombo = 0;
-    rfMaxCombo = 0;
-    for (var ri = 0; ri < rfItems.length; ri++) sessionUsedWords[rfItems[ri].word.toLowerCase()] = true;
-
-    document.getElementById('rfScoreCorrect').textContent = '0';
-    document.getElementById('rfScoreWrong').textContent = '0';
-
-    hide('phase-welcome');
-    show('phase-rightorwrong');
-    updateRewardBar();
-
-    var b = document.createElement('div');
-    b.className = 'session-badge';
-    b.innerHTML = '\u{1F441}\uFE0F Rigtigt eller forkert \u2014 er ordet stavet rigtigt?';
-    document.getElementById('phase-rightorwrong').appendChild(b);
-
-    renderRightOrWrongWord();
-  });
-}
-
-function renderRightOrWrongWord() {
-  var chestOv = document.getElementById('chestOverlay');
-  var bossOv = document.getElementById('bossOverlay');
-  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
-
-  var item = rfItems[rfIndex];
-  var total = rfItems.length;
-
-  document.getElementById('rfWordNum').textContent = (rfResults.length + 1);
-  document.getElementById('rfProgressBar').style.width = ((rfResults.length / total) * 100) + '%';
-  updatePatternBadge('rfPatternBadge', item.category, item.level);
-  document.getElementById('rfFeedbackBox').style.display = 'none';
-  document.getElementById('rfCorrectionBox').classList.add('hidden');
-  document.getElementById('rfNextBtn').classList.add('hidden');
-  document.getElementById('rfWordDisplay').textContent = item.displayed;
-  document.getElementById('rfHint').textContent = 'Er dette ord stavet rigtigt?';
-  rfPendingCorrection = null;
-
-  // Reset flash
-  var card = document.getElementById('phase-rightorwrong');
-  card.classList.remove('rf-flash-correct', 'rf-flash-wrong');
-
-  // Enable buttons
-  rfAnswered = false;
-  var btns = document.querySelectorAll('.rf-btn');
-  btns.forEach(function(b) { b.classList.remove('disabled'); });
-
-  // Update combo display
-  updateRFCombo();
-
-}
-
-function updateRFCombo() {
-  var el = document.getElementById('rfCombo');
-  if (rfCombo >= 2) {
-    el.textContent = '\u{1F525} ' + rfCombo + 'x combo!';
-    el.classList.remove('pop');
-    void el.offsetWidth; // force reflow
-    el.classList.add('pop');
-  } else {
-    el.textContent = '';
-  }
-}
-
-function checkRightOrWrong(answeredCorrect) {
-  if (rfAnswered) return;
-  rfAnswered = true;
-
-  var item = rfItems[rfIndex];
-  var identifiedCorrectly = (answeredCorrect === item.isCorrect);
-
-  // Disable buttons
-  var btns = document.querySelectorAll('.rf-btn');
-  btns.forEach(function(b) { b.classList.add('disabled'); });
-
-  // Flash feedback
-  var card = document.getElementById('phase-rightorwrong');
-
-  // If player correctly identified a misspelling → ask them to write the correct spelling
-  if (identifiedCorrectly && !item.isCorrect) {
-    card.classList.add('rf-flash-correct');
-    document.getElementById('rfFeedbackBox').style.display = 'none';
-    document.getElementById('rfCorrectionBox').classList.remove('hidden');
-    var inp = document.getElementById('rfCorrectionInput');
-    inp.value = '';
-    inp.focus();
-    // Store state for correction check
-    rfPendingCorrection = item;
-    return;
-  }
-
-  // All other cases: resolve immediately
-  if (identifiedCorrectly) {
-    card.classList.add('rf-flash-correct');
-  } else {
-    card.classList.add('rf-flash-wrong');
-  }
-  resolveRightOrWrong(identifiedCorrectly, answeredCorrect, null);
-}
-
-var rfPendingCorrection = null;
-
-function checkRFCorrection() {
-  var item = rfPendingCorrection;
-  if (!item) return;
-  rfPendingCorrection = null;
-
-  var inp = document.getElementById('rfCorrectionInput');
-  var answer = inp.value.trim().toLowerCase();
-  var correctionOk = (answer === item.word.toLowerCase());
-
-  document.getElementById('rfCorrectionBox').classList.add('hidden');
-
-  var card = document.getElementById('phase-rightorwrong');
-  if (!correctionOk) {
-    card.classList.remove('rf-flash-correct');
-    card.classList.add('rf-flash-wrong');
-  }
-
-  // Player spotted the error but must also spell it right to get full credit
-  resolveRightOrWrong(correctionOk, false, answer);
-}
-
-function resolveRightOrWrong(ok, answeredCorrect, correctionAnswer) {
-  var item = rfItems[rfIndex];
-
-  // Feedback
-  var box = document.getElementById('rfFeedbackBox');
-  box.style.display = 'block';
-  if (ok) {
-    if (item.isCorrect) {
-      box.innerHTML = '<div class="feedback-correct">\u2705 Rigtigt! "' + item.word + '" er korrekt stavet</div>';
-    } else {
-      box.innerHTML = '<div class="feedback-correct">\u2705 Perfekt! Du stavede det rigtigt: <strong>' + item.word + '</strong></div>';
-    }
-  } else {
-    if (correctionAnswer !== null) {
-      // Player spotted the error but spelled the correction wrong
-      box.innerHTML = '<div class="feedback-wrong">\u274C T\u00E6t p\u00E5! Du skrev "' + correctionAnswer + '" \u2014 det rigtige er: <strong>' + item.word + '</strong>' +
-        (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
-    } else if (item.isCorrect) {
-      box.innerHTML = '<div class="feedback-wrong">\u274C "' + item.word + '" er faktisk stavet rigtigt!</div>';
-    } else {
-      box.innerHTML = '<div class="feedback-wrong">\u274C Det er forkert stavet! Rigtigt: <strong>' + item.word + '</strong>' +
-        (item.explanation ? '<br><span style="font-size:0.9rem">' + item.explanation + '</span>' : '') + '</div>';
-    }
-  }
-
-  // Record result
-  var userAnswer = correctionAnswer || (answeredCorrect ? 'rigtigt' : 'forkert');
-  var result = {
-    word: item.word, correct: ok, selfCorrected: false,
-    userAnswer: userAnswer,
-    category: item.category, patternHint: item.patternHint, level: item.level
-  };
-  rfResults.push(result);
-  results.push(result);
-
-  // SR update + Supabase
-  updateSRWord(item.word, ok, item.category);
-  logAnswer(item.word, userAnswer, ok, 1, item.category, item.level || 0);
-  updateCategoryLevel(item.category, ok, item.level || 0);
-
-  // Gamification
-  if (ok) {
-    sessionCorrectCount++;
-    sessionCorrectStreak++;
-    rfCombo++;
-    if (rfCombo > rfMaxCombo) rfMaxCombo = rfCombo;
-    if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
-      sessionCorrectStreak = 0;
-      pendingBoss = pickBossWord({ word: item.word, category: item.category });
-      pendingChest = true;
-    }
-  } else {
-    sessionCorrectStreak = 0;
-    rfCombo = 0;
-    trackCategoryError(item.category);
-  }
-
-  // Update scores
-  document.getElementById('rfScoreCorrect').textContent = rfResults.filter(function(r) { return r.correct; }).length;
-  document.getElementById('rfScoreWrong').textContent = rfResults.filter(function(r) { return !r.correct; }).length;
-
-  document.getElementById('rfNextBtn').classList.remove('hidden');
-}
-
-function nextRightOrWrongWord() {
-  if (isMixedSession) { nextMixedItem(); return; }
-  var chestOv = document.getElementById('chestOverlay');
-  var bossOv = document.getElementById('bossOverlay');
-  if ((chestOv && !chestOv.classList.contains('hidden')) || (bossOv && !bossOv.classList.contains('hidden'))) return;
-
-  // Boss first
-  if (pendingBoss) {
-    pendingInterruptAction = (rfIndex + 1) >= rfItems.length ? 'finish' : 'continue';
-    rfIndex++;
-    showBossMinigame(pendingBoss);
-    return;
-  }
-
-  // Chest
-  if (pendingChest) {
-    pendingChest = false;
-    pendingInterruptAction = (rfIndex + 1) >= rfItems.length ? 'finish' : 'continue';
-    rfIndex++;
-    showTreasureChest();
-    return;
-  }
-
-  rfIndex++;
-
-  if (rfIndex >= rfItems.length) {
-    finishRightOrWrong();
-  } else {
-    renderRightOrWrongWord();
-  }
-}
-
-function finishRightOrWrong() {
-  hide('phase-rightorwrong');
-
-  var correctCount = rfResults.filter(function(r) { return r.correct; }).length;
-  var totalCount = rfResults.length;
-  var prevXP = loadRewardData().totalXP || 0;
-  var rewardResult = awardSessionXP(correctCount, totalCount);
-  var rewardData = loadRewardData();
-  var newXP = rewardData.totalXP || 0;
-  var prevLevel = getAvatarLevel(prevXP);
-  var newLevel = getAvatarLevel(newXP);
-  updateRewardBar();
-  showRewardOverlay(rewardResult.xpEarned, rewardResult.gemsEarned);
-  if (rewardResult.dailyGoalReached) {
-    setTimeout(function() { showRewardFloat('Dagligt m\u00E5l n\u00E5et! +5 \u{1F48E}'); }, 800);
-  }
-  if (newLevel.index > prevLevel.index) {
-    setTimeout(function() { showLevelUpPopup(newLevel); }, 2200);
-  }
-
-  renderRightOrWrongResults();
-}
-
-function renderRightOrWrongResults() {
-  var correct = rfResults.filter(function(r) { return r.correct; }).length;
-  var pct = correct / rfResults.length;
-  var msg = pct >= 0.8 ? 'Skarpt øje! Du er god til at se fejl! \u{1F31F}' : pct >= 0.5 ? 'Godt gået! Øvelse gør mester \u{1F4AA}' : 'Bliv ved! Det bliver lettere med øvelse \u{1F680}';
-  var summary = correct + ' ud af ' + rfResults.length + ' rigtige.';
-  if (rfMaxCombo >= 3) summary += ' Bedste combo: <strong>' + rfMaxCombo + 'x</strong> \u{1F525}';
-  renderResults({
-    resultsList: rfResults,
-    messages: [msg],
-    summary: summary,
-    showAllWords: false
-  });
-}
 
 // ===== SPELLING POLICE EXERCISE =====
 

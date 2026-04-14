@@ -9,7 +9,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.7</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.8.8</div>
   <p>Evidensbaseret stavetræning med AI</p>
 </header>
 
@@ -314,34 +314,6 @@
   </div>
   <div id="spFeedbackBox" style="display:none; margin-top:12px;"></div>
   <button class="btn btn-green btn-full hidden" id="spNextBtn" onclick="nextSpellingPolice()">&#x27A1;&#xFE0F; N&#xe6;ste sag</button>
-</div>
-
-<!-- RIGHT OR WRONG EXERCISE -->
-<div id="phase-rightorwrong" class="card hidden rf-flash">
-  <div class="phase-label" id="rfPhaseLabel">&#x1F441;&#xFE0F; Rigtigt eller forkert?</div>
-  <div class="progress-bar-wrap"><div class="progress-bar" id="rfProgressBar" style="width:0%"></div></div>
-  <div class="score-row">
-    <div class="score-box"><div class="num num-yellow" id="rfWordNum">1</div><div class="lbl">Ord nr.</div></div>
-    <div class="score-box"><div class="num num-green" id="rfScoreCorrect">0</div><div class="lbl">Rigtige &#x2713;</div></div>
-    <div class="score-box"><div class="num num-red" id="rfScoreWrong">0</div><div class="lbl">Fejl &#x2717;</div></div>
-  </div>
-  <div class="pattern-badge" id="rfPatternBadge">&#x1F520; M&#xf8;nster</div>
-  <div class="rf-combo" id="rfCombo"></div>
-  <div class="listen-box">
-    <div class="rf-word" id="rfWordDisplay"></div>
-    <p class="hint-text" id="rfHint">Er dette ord stavet rigtigt?</p>
-  </div>
-  <div class="rf-buttons" id="rfButtons">
-    <button class="rf-btn rf-btn-correct" onclick="checkRightOrWrong(true)">&#x2705; Rigtigt</button>
-    <button class="rf-btn rf-btn-wrong" onclick="checkRightOrWrong(false)">&#x274C; Forkert</button>
-  </div>
-  <div id="rfFeedbackBox" style="display:none; margin-top:12px;"></div>
-  <div id="rfCorrectionBox" class="hidden" style="margin-top:12px;text-align:center">
-    <p style="font-weight:700;color:var(--accent);margin-bottom:8px">Godt spottet! Skriv det rigtigt:</p>
-    <input type="text" id="rfCorrectionInput" class="spelling-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="max-width:280px;margin:0 auto" onkeydown="if(event.key==='Enter')checkRFCorrection()">
-    <button class="btn btn-green" id="rfCorrectionBtn" onclick="checkRFCorrection()" style="margin-top:8px">Tjek</button>
-  </div>
-  <button class="btn btn-green btn-full hidden" id="rfNextBtn" onclick="nextRightOrWrongWord()">&#x27A1;&#xFE0F; N&#xe6;ste ord</button>
 </div>
 
 <!-- SCREENING INTRO -->

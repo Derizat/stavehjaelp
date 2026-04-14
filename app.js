@@ -1832,70 +1832,79 @@ function startTrainingFromProfile() {
     proWord = proPool[0];
   }
 
-  mixedQueue = [];
-  var exerciseTypes = ['fillin', 'spellingpolice', 'wordbuilder', 'spellpick', 'sentence'];
+  // Kvote-baseret kø: 5 diktat + 1 af hver variation-type (fillin, spellingpolice,
+  // wordbuilder, spellpick, sentence). Matcher ord → type i rækkefølge efter
+  // sjældenhed (wordbuilder sjældnest) så flaskehalse ikke skæver fordelingen.
+  var CANDIDATE_POOL_SIZE = 30;
+  var candidates = pool.slice(0, CANDIDATE_POOL_SIZE);
+  if (proWord) candidates = [proWord].concat(candidates); // pro-ordet får første match-chance
 
-  // Reserve 1 slot for pro word
-  var normalSlots = proWord ? 9 : 10;
-  for (var i = 0; i < pool.length && mixedQueue.length < normalSlots; i++) {
-    var w = pool[i];
-    if (sessionUsedWords[w.word.toLowerCase()]) continue; // skip duplicates
-    var isExerciseSlot = (mixedQueue.length % 2 === 1);
-    var chosenType = 'diktat';
-
-    var blanksData = generateBlanks(w);
-    var spItemData = buildSpellingPoliceItem(w);
-    var morphemesData = parseMorphemes(w.patternHint, w.word);
-
-    if (isExerciseSlot) {
-      var shuffledTypes = exerciseTypes.slice();
-      for (var st = shuffledTypes.length - 1; st > 0; st--) {
-        var sj = Math.floor(Math.random() * (st + 1));
-        var tmp = shuffledTypes[st]; shuffledTypes[st] = shuffledTypes[sj]; shuffledTypes[sj] = tmp;
-      }
-      for (var ti = 0; ti < shuffledTypes.length; ti++) {
-        var t = shuffledTypes[ti];
-        if (t === 'fillin' && blanksData) { chosenType = t; break; }
-        else if (t === 'spellingpolice' && spItemData) { chosenType = t; break; }
-        else if (t === 'wordbuilder' && morphemesData) { chosenType = t; break; }
-        else if (t === 'spellpick') { chosenType = t; break; }
-        else if (t === 'sentence' && w.hint && w.level >= 1) { chosenType = t; break; }
-      }
-    }
-
-    sessionUsedWords[w.word.toLowerCase()] = true;
-    mixedQueue.push({
+  var enriched = candidates.map(function(w) {
+    return {
       wordObj: w,
-      type: chosenType,
-      blanks: blanksData,
-      spItem: spItemData,
-      morphemes: morphemesData
-    });
+      blanks: generateBlanks(w),
+      spItem: buildSpellingPoliceItem(w),
+      morphemes: parseMorphemes(w.patternHint, w.word),
+      sentenceOk: !!(w.hint && w.level >= 1)
+    };
+  });
+
+  function isEligibleFor(type, e) {
+    if (type === 'wordbuilder') return !!e.morphemes;
+    if (type === 'sentence') return e.sentenceOk;
+    if (type === 'fillin') return !!e.blanks;
+    if (type === 'spellingpolice') return !!e.spItem;
+    if (type === 'spellpick') return true;
+    return false;
   }
-  // Insert pro word at random position
-  if (proWord && !sessionUsedWords[proWord.word.toLowerCase()]) {
-    var pw = proWord;
-    var pwBlanks = generateBlanks(pw);
-    var pwSpItem = buildSpellingPoliceItem(pw);
-    var pwMorphemes = parseMorphemes(pw.patternHint, pw.word);
-    var pwType = 'diktat';
-    var pwShuffled = exerciseTypes.slice();
-    for (var pst = pwShuffled.length - 1; pst > 0; pst--) {
-      var psj = Math.floor(Math.random() * (pst + 1));
-      var ptmp = pwShuffled[pst]; pwShuffled[pst] = pwShuffled[psj]; pwShuffled[psj] = ptmp;
+
+  var usedKey = {};
+  function takeEligible(type) {
+    for (var i = 0; i < enriched.length; i++) {
+      var e = enriched[i];
+      var k = e.wordObj.word.toLowerCase();
+      if (usedKey[k]) continue;
+      if (isEligibleFor(type, e)) {
+        usedKey[k] = true;
+        return { wordObj: e.wordObj, type: type, blanks: e.blanks, spItem: e.spItem, morphemes: e.morphemes };
+      }
     }
-    for (var pti = 0; pti < pwShuffled.length; pti++) {
-      var pt = pwShuffled[pti];
-      if (pt === 'fillin' && pwBlanks) { pwType = pt; break; }
-      else if (pt === 'spellingpolice' && pwSpItem) { pwType = pt; break; }
-      else if (pt === 'wordbuilder' && pwMorphemes) { pwType = pt; break; }
-      else if (pt === 'spellpick') { pwType = pt; break; }
-      else if (pt === 'sentence' && pw.hint && pw.level >= 1) { pwType = pt; break; }
+    return null;
+  }
+
+  var queue = [];
+  var targets = ['wordbuilder', 'sentence', 'fillin', 'spellingpolice', 'spellpick'];
+  for (var ti = 0; ti < targets.length; ti++) {
+    var target = targets[ti];
+    var item = takeEligible(target);
+    if (item) {
+      queue.push(item);
+    } else {
+      // Fallback: brug spellpick (altid eligible) og log unfulfilled
+      trackUnfulfilledType(target);
+      var fb = takeEligible('spellpick');
+      if (fb) queue.push(fb);
     }
-    sessionUsedWords[pw.word.toLowerCase()] = true;
-    var proItem = { wordObj: pw, type: pwType, blanks: pwBlanks, spItem: pwSpItem, morphemes: pwMorphemes };
-    var insertPos = Math.floor(Math.random() * (mixedQueue.length + 1));
-    mixedQueue.splice(insertPos, 0, proItem);
+  }
+
+  // Fyld resten med diktat (op til 10 items total)
+  while (queue.length < 10) {
+    var filled = false;
+    for (var j = 0; j < enriched.length; j++) {
+      var ej = enriched[j];
+      var kj = ej.wordObj.word.toLowerCase();
+      if (usedKey[kj]) continue;
+      usedKey[kj] = true;
+      queue.push({ wordObj: ej.wordObj, type: 'diktat', blanks: ej.blanks, spItem: ej.spItem, morphemes: ej.morphemes });
+      filled = true;
+      break;
+    }
+    if (!filled) break; // pool tom (sker kun hvis <10 unikke kandidater)
+  }
+
+  mixedQueue = shuffle(queue);
+  for (var qi = 0; qi < mixedQueue.length; qi++) {
+    sessionUsedWords[mixedQueue[qi].wordObj.word.toLowerCase()] = true;
   }
 
   console.log('Mixed queue types:', mixedQueue.map(function(q) { return q.type; }));
@@ -1925,6 +1934,16 @@ function trackExerciseType(type) {
   stats[type] = (stats[type] || 0) + 1;
   stats._total = (stats._total || 0) + 1;
   stats._updatedAt = Date.now();
+  try { localStorage.setItem(key, JSON.stringify(stats)); } catch(e) {}
+}
+
+function trackUnfulfilledType(type) {
+  if (!type || !activePlayer) return;
+  var key = playerKey('exercise_stats');
+  var stats = {};
+  try { stats = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
+  stats._unfulfilled = stats._unfulfilled || {};
+  stats._unfulfilled[type] = (stats._unfulfilled[type] || 0) + 1;
   try { localStorage.setItem(key, JSON.stringify(stats)); } catch(e) {}
 }
 

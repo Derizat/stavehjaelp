@@ -57,14 +57,26 @@ Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 ## Øvelsestyper
 
 ### Blandet træning (startTrainingFromProfile)
-"Fortsæt træning"-knappen bygger en session med 10 ord hvor hver får tilfældig øvelsestype:
+"Fortsæt træning"-knappen bygger en session med 10 ord via kvote-baseret matching:
+- 5 diktat + 1 af hver: fillin, spellingpolice, wordbuilder, spellpick, sentence
+- Kandidat-pool: 30 ord fra `buildPoolWithCategoryLevels` (+ proWord først)
+- Rarest-first matching: wordbuilder først (14.3% eligible), så sentence/fillin/spellingpolice, til sidst spellpick
+- Fallback: hvis en type ikke kan matches → ekstra spellpick + `_unfulfilled[type]++` i `exercise_stats`
+- Pro-ordet gives første match-chance (placeret forrest i kandidat-listen)
 
-| Mode | gameMode | Beskrivelse | Sandsynlighed |
+| Mode | gameMode | Beskrivelse | Kvote/10 |
 |---|---|---|---|
-| **Diktat** | training | Hør ord → skriv det | 50% (alle lige slots) |
-| **Udfyld bogstav** | fillin | Vælg rigtigt bogstav fra muligheder | Lige fordelt |
-| **Stavepolitiet** | spellingpolice | Find stavefejlen i dyr-lineup | Lige fordelt |
-| **Ordbyggeren** | wordbuilder | Byg ord af morfem-klodser | Lige fordelt |
+| **Diktat** | training | Hør ord → skriv det | 5 |
+| **Udfyld bogstav** | fillin | Vælg rigtigt bogstav fra muligheder | 1 |
+| **Stavepolitiet** | spellingpolice | Find stavefejlen i dyr-lineup | 1 |
+| **Ordbyggeren** | wordbuilder | Byg ord af morfem-klodser | 1 |
+| **Vælg stavemåde** | spellpick | Vælg det rigtigt stavede ord ud af varianter | 1 |
+| **Skriv en sætning** | sentence | Skriv egen sætning med ordet | 1 |
+
+### Frekvens-tracking
+- `trackExerciseType(type)` kaldes fra `renderMixedItem` — tæller i `{player}_exercise_stats`
+- `trackUnfulfilledType(type)` kaldes når kvote-matching fejler — `_unfulfilled[type]++`
+- `_total` og `_updatedAt` vedligeholdes automatisk
 
 - `isMixedSession` flag styrer om vi er i blandet modus
 - `mixedQueue` holder alle 10 items med pre-beregnet data

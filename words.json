@@ -4214,13 +4214,13 @@
                   "misspelling": "overraske"
             },
             {
-                  "word": "fantiserer",
+                  "word": "fantaserer",
                   "hint": "Forestiller sig ting i tankerne",
-                  "patternHint": "Nutids-r: 'fantisere' bliver til 'fantiserer' i nutid",
-                  "sentence": "Han fantiserer om at rejse til rummet.",
+                  "patternHint": "Nutids-r: 'fantasere' bliver til 'fantaserer' i nutid",
+                  "sentence": "Han fantaserer om at rejse til rummet.",
                   "level": 3,
                   "category": "Nutids-r",
-                  "misspelling": "fantisere"
+                  "misspelling": "fantasere"
             },
             {
                   "word": "eksperimenterer",

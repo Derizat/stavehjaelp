@@ -76,7 +76,7 @@ NEW_WORDS = {
         {"word": "betragter", "hint": "Ser grundigt på noget", "patternHint": "Nutids-r: 'betragte' bliver til 'betragter' i nutid", "sentence": "Pigen betragter sommerfuglen i haven.", "level": 3, "category": "Nutids-r"},
         {"word": "udfordrer", "hint": "Giver nogen en svær opgave", "patternHint": "Nutids-r: 'udfordre' bliver til 'udfordrer' i nutid", "sentence": "Spillet udfordrer os med nye baner.", "level": 3, "category": "Nutids-r"},
         {"word": "overrasker", "hint": "Gør noget uventet for nogen", "patternHint": "Nutids-r: 'overraske' bliver til 'overrasker' i nutid", "sentence": "Vi overrasker mor med morgenmad på sengen.", "level": 3, "category": "Nutids-r"},
-        {"word": "fantiserer", "hint": "Forestiller sig ting i tankerne", "patternHint": "Nutids-r: 'fantisere' bliver til 'fantiserer' i nutid", "sentence": "Han fantiserer om at rejse til rummet.", "level": 3, "category": "Nutids-r"},
+        {"word": "fantaserer", "hint": "Forestiller sig ting i tankerne", "patternHint": "Nutids-r: 'fantasere' bliver til 'fantaserer' i nutid", "sentence": "Han fantaserer om at rejse til rummet.", "level": 3, "category": "Nutids-r"},
         # niv 4 — komplekse verber
         {"word": "identificerer", "hint": "Finder ud af hvad noget er", "patternHint": "Nutids-r: 'identificere' bliver til 'identificerer' i nutid", "sentence": "Politiet identificerer fingeraftrykkene.", "level": 4, "category": "Nutids-r"},
         {"word": "eksperimenterer", "hint": "Prøver nye ting for at lære", "patternHint": "Nutids-r: 'eksperimentere' bliver til 'eksperimenterer' i nutid", "sentence": "Klassen eksperimenterer med kemiske stoffer.", "level": 4, "category": "Nutids-r"},

@@ -4211,11 +4211,11 @@
     "word_m": "audio/word_overrasker_m.mp3",
     "sentence_m": "audio/sentence_overrasker_m.mp3"
   },
-  "fantiserer": {
-    "word": "audio/word_fantiserer.mp3",
-    "sentence": "audio/sentence_fantiserer.mp3",
-    "word_m": "audio/word_fantiserer_m.mp3",
-    "sentence_m": "audio/sentence_fantiserer_m.mp3"
+  "fantaserer": {
+    "word": "audio/word_fantaserer.mp3",
+    "sentence": "audio/sentence_fantaserer.mp3",
+    "word_m": "audio/word_fantaserer_m.mp3",
+    "sentence_m": "audio/sentence_fantaserer_m.mp3"
   },
   "eksperimenterer": {
     "word": "audio/word_eksperimenterer.mp3",

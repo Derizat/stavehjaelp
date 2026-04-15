@@ -5752,6 +5752,60 @@
                   "level": 5,
                   "category": "Ord fra Fransk 2",
                   "misspelling": "renæsancen"
+            },
+            {
+                  "word": "connaisseur",
+                  "hint": "En person med fin smag og stor viden om noget",
+                  "patternHint": "conn + ai + ss + eur",
+                  "sentence": "Han er en connaisseur inden for vin og ost.",
+                  "level": 5,
+                  "category": "Ord fra Fransk 2",
+                  "misspelling": "konnosør"
+            },
+            {
+                  "word": "plateau",
+                  "hint": "Et fladt højt område eller et stabilt niveau",
+                  "patternHint": "pla + teau (eau som o)",
+                  "sentence": "Temperaturen nåede et plateau midt på dagen.",
+                  "level": 5,
+                  "category": "Ord fra Fransk 2",
+                  "misspelling": "plato"
+            },
+            {
+                  "word": "rendezvous",
+                  "hint": "Et aftalt møde på et bestemt sted",
+                  "patternHint": "ren + dez + vous (vous som vu)",
+                  "sentence": "De havde rendezvous ved fontænen klokken tre.",
+                  "level": 5,
+                  "category": "Ord fra Fransk 2",
+                  "misspelling": "randevu"
+            },
+            {
+                  "word": "ragout",
+                  "hint": "En tyk, krydret gryderet med kød og grøntsager",
+                  "patternHint": "ra + gout (out som u)",
+                  "sentence": "Bedstemor lavede en lækker ragout med oksekød.",
+                  "level": 5,
+                  "category": "Ord fra Fransk 2",
+                  "misspelling": "ragu"
+            },
+            {
+                  "word": "pendant",
+                  "hint": "Noget der svarer til eller matcher noget andet",
+                  "patternHint": "pen + dant (ant som ang)",
+                  "sentence": "Bogen er et pendant til den franske film.",
+                  "level": 5,
+                  "category": "Ord fra Fransk 2",
+                  "misspelling": "pendang"
+            },
+            {
+                  "word": "abonnement",
+                  "hint": "En fast aftale om at modtage noget regelmæssigt",
+                  "patternHint": "abon + ne + ment",
+                  "sentence": "Vi har et abonnement på avisen.",
+                  "level": 5,
+                  "category": "Ord fra Fransk 2",
+                  "misspelling": "abonement"
             }
       ]
 }

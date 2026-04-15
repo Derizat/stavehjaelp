@@ -7765,7 +7765,7 @@ function renderShop() {
   var data = getShopData();
   var overlay = document.getElementById('shopOverlay');
 
-  var html = '<div style="background:var(--card);border-radius:16px;padding:20px;max-width:420px;margin:0 auto;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;position:relative">';
+  var html = '<div style="background:var(--card);border-radius:16px;padding:20px;max-width:560px;width:95%;margin:0 auto;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;position:relative">';
 
   // Header
   html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';

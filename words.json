@@ -5118,15 +5118,6 @@
                   "misspelling": "le"
             },
             {
-                  "word": "mud",
-                  "hint": "Blødt og vådt jord",
-                  "patternHint": "blødt d til sidst — det høres næsten ikke",
-                  "sentence": "Grisen rullede sig i mud.",
-                  "level": 1,
-                  "category": "Blødt d",
-                  "misspelling": "mu"
-            },
-            {
                   "word": "bod",
                   "hint": "Lille hus eller stand på et marked",
                   "patternHint": "Blødt 'd' til sidst — udtales næsten som 'boð'",

@@ -4997,12 +4997,6 @@
     "word_m": "audio/word_led_m.mp3",
     "sentence_m": "audio/sentence_led_m.mp3"
   },
-  "mud": {
-    "word": "audio/word_mud.mp3",
-    "sentence": "audio/sentence_mud.mp3",
-    "word_m": "audio/word_mud_m.mp3",
-    "sentence_m": "audio/sentence_mud_m.mp3"
-  },
   "bod": {
     "word": "audio/word_bod.mp3",
     "sentence": "audio/sentence_bod.mp3",

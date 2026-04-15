@@ -1368,6 +1368,16 @@ function purchaseFrench2() {
   return true;
 }
 
+// Progressivt oprykningskrav: afstand til mestring bestemmer strengheden.
+// Tidlige niveauer skal føles belønnende, mens mestring kræver vedvarende præstation.
+function getLevelUpThreshold(currentLevel, maxLevel) {
+  var levelsLeft = maxLevel - currentLevel;
+  if (levelsLeft <= 1) return { minAnswers: 50, minPct: 0.90 }; // mestring
+  if (levelsLeft === 2) return { minAnswers: 20, minPct: 0.85 };
+  if (levelsLeft === 3) return { minAnswers: 10, minPct: 0.82 };
+  return { minAnswers: 5, minPct: 0.80 }; // første niveau(er)
+}
+
 function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelling) {
   if (!category || ALL_CATEGORIES.indexOf(category) === -1) return;
   // Ord fra Fransk / Fransk 2: track unique correct words instead of normal level system
@@ -1385,23 +1395,44 @@ function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelli
   if (!levels[category]) levels[category] = { level: 1, history: [] };
   var cat = levels[category];
   var maxLevel = CATEGORY_MAX_LEVELS[category] !== undefined ? CATEGORY_MAX_LEVELS[category] : 4;
+  var startLevel = CATEGORY_START_LEVELS[category] !== undefined ? CATEGORY_START_LEVELS[category] : 1;
 
-  // Only track answers for words at the player's current level
+  // Mestret kategori: tæl vedligeholds-svar på top-niveau (word.level === maxLevel-1).
+  // Gentagne fejl her → falder tilbage til max-1 (un-master).
+  if (cat.level >= maxLevel) {
+    if (wordLevel === maxLevel - 1) {
+      cat.history.push(historyEntry);
+      if (cat.history.length > 10) cat.history = cat.history.slice(-10);
+      var mCorrect = cat.history.filter(function(h) { return h; }).length;
+      if (cat.history.length >= 5 && mCorrect / cat.history.length < 0.4) {
+        cat.level = maxLevel - 1;
+        cat.history = [];
+      }
+    }
+    levels[category] = cat;
+    saveCategoryLevels(levels);
+    return;
+  }
+
+  // Kun svar på ord på spillerens nuværende niveau tæller
   var wl = (wordLevel !== undefined) ? wordLevel : cat.level;
   if (wl === cat.level) {
+    var threshold = getLevelUpThreshold(cat.level, maxLevel);
     cat.history.push(historyEntry);
-    if (cat.history.length > 10) cat.history = cat.history.slice(-10);
+    // Dynamisk historik-loft: matcher nuværende niveaus krav (men altid mindst 10)
+    var maxHistory = Math.max(10, threshold.minAnswers);
+    if (cat.history.length > maxHistory) cat.history = cat.history.slice(-maxHistory);
 
     var total = cat.history.length;
     var correctCount = cat.history.filter(function(h) { return h; }).length;
 
-    // Level up at ≥80% correct with at least 5 answers
-    if (total >= 5 && correctCount / total >= 0.8 && cat.level < maxLevel) {
+    // Oprykning: progressivt krav afhænger af afstand til mestring
+    if (total >= threshold.minAnswers && correctCount / total >= threshold.minPct && cat.level < maxLevel) {
       cat.level++;
       cat.history = [];
     }
-    // Level down at <40% correct with at least 5 answers (never below start level)
-    else if (total >= 5 && correctCount / total < 0.4 && cat.level > (CATEGORY_START_LEVELS[category] !== undefined ? CATEGORY_START_LEVELS[category] : 1)) {
+    // Nedrykning: uændret — <40% af 5+ svar, aldrig under startniveau
+    else if (total >= 5 && correctCount / total < 0.4 && cat.level > startLevel) {
       cat.level--;
       cat.history = [];
     }
@@ -1507,6 +1538,34 @@ function purchaseFrench() {
   if (gemsEl) gemsEl.innerHTML = '\u{1F48E} ' + data.gems;
   renderCategoryLevels();
   return true;
+}
+
+// Vedligeholds-pool: mestrede kategorier bidrager med deres top-niveau-ord
+// (word.level === max-1). Bruges som low-frequency injection i blandet træning
+// så færdigheden holdes vedlige og kan falde tilbage ved gentagne fejl.
+function buildMaintenancePool() {
+  var levels = loadCategoryLevels();
+  var stats = loadWordStats();
+  var pool = [];
+  for (var i = 0; i < ALL_CATEGORIES.length; i++) {
+    var cat = ALL_CATEGORIES[i];
+    if (!WORD_BANK[cat] || PRO_CATEGORIES.indexOf(cat) !== -1) continue;
+    var catLevel = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
+    var maxLvl = CATEGORY_MAX_LEVELS[cat] !== undefined ? CATEGORY_MAX_LEVELS[cat] : 5;
+    if (catLevel < maxLvl) continue; // kun mestrede
+    var topLevel = maxLvl - 1;
+    var words = (WORD_BANK[cat] || []).filter(function(w) { return w.level === topLevel; });
+    // Filtrér ord med streak ≥2 (spilleren kan dem) så der kommer variation
+    var filtered = words.filter(function(w) {
+      var s = stats[w.word.toLowerCase()];
+      return !s || (s.streak || 0) < 2;
+    });
+    if (filtered.length === 0) filtered = words; // fallback hvis alle mestrede
+    for (var j = 0; j < filtered.length; j++) {
+      pool.push(Object.assign({}, filtered[j], { category: cat }));
+    }
+  }
+  return pool;
 }
 
 function countMasteredCategories(levels) {
@@ -1898,6 +1957,24 @@ function startTrainingFromProfile() {
       var fb = takeEligible('spellpick');
       if (fb) queue.push(fb);
     }
+  }
+
+  // Vedligeholds-slot: hvis der findes mestrede kategorier, inject 1 tilfældigt
+  // top-niveau ord derfra som diktat (10% af sessionen). Holder færdigheden varm
+  // og udløser demaster hvis spilleren fejler gentagne gange.
+  var maintPool = shuffle(buildMaintenancePool()).filter(function(w) {
+    return !usedKey[w.word.toLowerCase()];
+  });
+  if (maintPool.length > 0 && queue.length < 10) {
+    var mw = maintPool[0];
+    usedKey[mw.word.toLowerCase()] = true;
+    queue.push({
+      wordObj: mw,
+      type: 'diktat',
+      blanks: generateBlanks(mw),
+      spItem: buildSpellingPoliceItem(mw),
+      morphemes: parseMorphemes(mw.patternHint, mw.word)
+    });
   }
 
   // Fyld resten med diktat (op til 10 items total)

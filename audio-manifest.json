@@ -5692,5 +5692,23 @@
     "sentence": "audio/sentence_croissant.mp3",
     "word_m": "audio/word_croissant_m.mp3",
     "sentence_m": "audio/sentence_croissant_m.mp3"
+  },
+  "grædt": {
+    "word": "audio/word_graedt.mp3",
+    "sentence": "audio/sentence_graedt.mp3",
+    "word_m": "audio/word_graedt_m.mp3",
+    "sentence_m": "audio/sentence_graedt_m.mp3"
+  },
+  "middelalderen": {
+    "word": "audio/word_middelalderen.mp3",
+    "sentence": "audio/sentence_middelalderen.mp3",
+    "word_m": "audio/word_middelalderen_m.mp3",
+    "sentence_m": "audio/sentence_middelalderen_m.mp3"
+  },
+  "renæssancen": {
+    "word": "audio/word_renaessancen.mp3",
+    "sentence": "audio/sentence_renaessancen.mp3",
+    "word_m": "audio/word_renaessancen_m.mp3",
+    "sentence_m": "audio/sentence_renaessancen_m.mp3"
   }
 }

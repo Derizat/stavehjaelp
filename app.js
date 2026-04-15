@@ -823,7 +823,7 @@ var CATEGORY_LESSONS = {
       { word: "ha<span class='highlight'>l</span>v", note: "l'et er stumt" },
       { word: "gul<span class='highlight'>d</span>", note: "d'et er stumt" }
     ],
-    tip: "\u{1F4A1} Trick: Pr\u00F8v at sige ordet langsomt. Kan du h\u00F8re alle bogstaverne? Hvis ikke, er der nok et stumt bogstav gemt!"
+    tip: "\u{1F4A1} Trick: Kig efter m\u00F8nstrene! 'h' er ofte stumt foran 'v' (hvid, hvem) eller 'j' (hjem, hj\u00E6lp). 'd' og 'l' kan gemme sig til sidst som i guld og halv."
   },
   "Dobbeltkonsonant": {
     emoji: "\u270C\uFE0F",

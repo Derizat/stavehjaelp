@@ -1023,6 +1023,83 @@ function dismissLessonPopup() {
 
 var pendingLesson = false;
 
+// ===== WIZARD LESSONS (interaktiv trolmand) =====
+
+var WIZARD_SCENARIOS = {
+  "Dobbeltkonsonant": [
+    {
+      setup: "Jeg vil lave en kage til min fødselsdag.",
+      riddle: "I opskriften står et ord — hvilken stavemåde er rigtig?",
+      options: ["bage", "bagge"],
+      correct: 0,
+      reveal: "Det rigtige er BAGE. Vokalen 'a' er LANG (baaaa-ge), så enkelt 'g'. Hvis det var hop-pe, ville 'o' være kort og vi skulle have dobbelt p."
+    },
+    {
+      setup: "Jeg vil sidde på min stol og slappe af.",
+      riddle: "Skal jeg skrive 'sidde' eller 'side' i min dagbog?",
+      options: ["sidde", "side"],
+      correct: 0,
+      reveal: "AHA — jeg vil SIDDE (kort 'i' → dobbelt d). En SIDE er noget helt andet (en side i en bog)!"
+    },
+    {
+      setup: "Jeg er ved at koge vand til min te.",
+      riddle: "Hvilken stavemåde af 'koppe' er rigtig?",
+      options: ["koppe", "kope"],
+      correct: 0,
+      reveal: "KOPPE er rigtigt — kort 'o' så dobbelt p. Tænk på lyden: 'kop-pe', ikke 'koo-pe'."
+    },
+    {
+      setup: "Min ven spørger hvad jeg hedder.",
+      riddle: "Skal jeg skrive 'jeg hedder' eller 'jeg heder'?",
+      options: ["hedder", "heder"],
+      correct: 0,
+      reveal: "HEDDER er rigtigt — kort 'e' så dobbelt d. En HEDE er forresten et landskab med lyng — helt andet ord!"
+    },
+    {
+      setup: "Der er en MASSE æbler i træet.",
+      riddle: "Skal jeg skrive 'masse' eller 'mase'?",
+      options: ["masse", "mase"],
+      correct: 0,
+      reveal: "MASSE betyder mange — kort 'a' så dobbelt s. At MASE er noget andet (presse på)!"
+    },
+    {
+      setup: "Jeg elsker at hoppe på trampolin.",
+      riddle: "Hvordan staves det?",
+      options: ["hoppe", "hope"],
+      correct: 0,
+      reveal: "HOPPE — kort 'o' så dobbelt p. Tip: føles vokalen 'o' kort eller lang? Kort = dobbelt."
+    },
+    {
+      setup: "Børnene klapper i takt til musikken.",
+      riddle: "Hvordan staves grundformen?",
+      options: ["klappe", "klape"],
+      correct: 0,
+      reveal: "KLAPPE — kort 'a' så dobbelt p. Prøv at sige det langsomt: klap-pe."
+    },
+    {
+      setup: "Jeg vil slikke is en hel time!",
+      riddle: "Hvordan staves det?",
+      options: ["slikke", "slike"],
+      correct: 0,
+      reveal: "SLIKKE — kort 'i' så dobbelt k. Lang vokal som i 'rige' ville være enkelt."
+    }
+  ]
+};
+
+// State for nuværende wizard-session
+var wizardCurrentScenario = null;
+var wizardCurrentCategory = null;
+var wizardPhase = null;
+var wizardTries = 0;
+var wizardFirstTryCorrect = false;
+var wizardDoorOrder = [0, 1];
+var wizardLastDeath = null;
+
+function showWizardLesson(category) {
+  console.log('[wizard] showWizardLesson called for', category);
+  // Stub — udfyldes i senere tasks
+}
+
 // --- Lessons slideshow ---
 var lessonSlideIndex = 0;
 

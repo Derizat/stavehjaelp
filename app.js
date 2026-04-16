@@ -1094,6 +1094,7 @@ var wizardTries = 0;
 var wizardFirstTryCorrect = false;
 var wizardDoorOrder = [0, 1];
 var wizardLastDeath = null;
+var wizardSessionId = 0;
 
 function showWizardLesson(category) {
   var scenarios = WIZARD_SCENARIOS[category];
@@ -1113,12 +1114,16 @@ function showWizardLesson(category) {
   // Shuffle dør-position så rigtigt ord ikke altid er venstre
   wizardDoorOrder = Math.random() < 0.5 ? [0, 1] : [1, 0];
 
+  wizardSessionId++;
+  var mySession = wizardSessionId;
   renderWizardOverlay();
   pendingLesson = true;
 
-  // Auto-overgang til riddle efter 2.5s
+  // Auto-overgang til riddle efter 2.5s — kun hvis sessionen stadig er aktuel
   setTimeout(function() {
-    if (wizardPhase === 'intro') wizardTransitionTo('riddle');
+    if (wizardSessionId === mySession && wizardPhase === 'intro') {
+      wizardTransitionTo('riddle');
+    }
   }, 2500);
 }
 
@@ -1145,11 +1150,15 @@ function renderWizardOverlay() {
 
   overlay.innerHTML = html;
 
-  // Aktiver idle-float på karakter efter intro-animation
-  setTimeout(function() {
-    var ch = document.getElementById('wizardChar');
-    if (ch) ch.classList.add('idle');
-  }, 750);
+  // Aktiver idle-float når intro-animationen er færdig (mere pålideligt end setTimeout)
+  var ch = document.getElementById('wizardChar');
+  if (ch) {
+    ch.addEventListener('animationend', function onIntroEnd(e) {
+      if (e.animationName !== 'wizard-char-in') return;
+      ch.removeEventListener('animationend', onIntroEnd);
+      ch.classList.add('idle');
+    });
+  }
 }
 
 function wizardTransitionTo(phase) {

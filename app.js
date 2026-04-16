@@ -1168,6 +1168,76 @@ function wizardTransitionTo(phase) {
     wizardChangeSpeech(wizardCurrentScenario.riddle);
     wizardRenderDoors();
   }
+  else if (phase === 'reveal') {
+    wizardRenderReveal();
+  }
+  else if (phase === 'done') {
+    wizardComplete();
+  }
+}
+
+function wizardRenderReveal() {
+  // Fade ud forkert dør
+  var doors = document.querySelectorAll('.wizard-door');
+  for (var i = 0; i < doors.length; i++) {
+    var idx = parseInt(doors[i].getAttribute('data-idx'), 10);
+    if (idx !== wizardCurrentScenario.correct) {
+      doors[i].classList.add('fade-out');
+      (function(d) { setTimeout(function() { d.style.display = 'none'; }, 260); })(doors[i]);
+    }
+  }
+
+  // Find positionen af den rigtige dør og placer pegefingeren mellem trolmand og dør
+  var correctDoorPosition = wizardDoorOrder.indexOf(wizardCurrentScenario.correct);
+  // Pegefinger emoji (peger ned mod døre)
+  var stage = document.querySelector('.wizard-stage');
+  if (stage && !document.getElementById('wizardPointer')) {
+    var pointer = document.createElement('div');
+    pointer.id = 'wizardPointer';
+    pointer.className = 'wizard-pointer';
+    pointer.style.left = correctDoorPosition === 0 ? '20%' : '70%';
+    pointer.innerHTML = '👇';
+    stage.appendChild(pointer);
+  }
+
+  // Skift speech til reveal-tekst
+  setTimeout(function() {
+    wizardChangeSpeech(wizardCurrentScenario.reveal);
+  }, 300);
+
+  // Tilføj "Forstået!" knap
+  var footer = document.getElementById('wizardFooter');
+  if (footer) {
+    footer.innerHTML = '<button class="wizard-done-btn" onclick="wizardTransitionTo(\'done\')">Forstået! 💪</button>';
+  }
+}
+
+function wizardComplete() {
+  // Tildel XP
+  var xpReward = wizardFirstTryCorrect ? 15 : 10;
+  if (typeof loadRewardData === 'function' && typeof saveRewardData === 'function') {
+    var data = loadRewardData();
+    data.totalXP = (data.totalXP || 0) + xpReward;
+    data.todayXP = (data.todayXP || 0) + xpReward;
+    saveRewardData(data);
+    if (typeof updateRewardBar === 'function') updateRewardBar();
+    if (typeof showRewardFloat === 'function') showRewardFloat('+' + xpReward + ' XP ✨');
+  }
+
+  // Fade ud overlay
+  var overlay = document.getElementById('wizardOverlay');
+  if (overlay) {
+    overlay.classList.add('fading-out');
+    setTimeout(function() {
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }, 280);
+  }
+
+  pendingLesson = false;
+
+  // Reset state
+  wizardCurrentScenario = null;
+  wizardPhase = null;
 }
 
 function wizardChangeSpeech(newText) {
@@ -1198,8 +1268,41 @@ function wizardRenderDoors() {
 }
 
 function wizardPickDoor(optIdx, btn) {
-  console.log('[wizard] Door picked, idx:', optIdx, 'correct:', wizardCurrentScenario.correct);
-  // Stub — udvides i Task 4 og 5
+  if (wizardPhase !== 'riddle') return; // ignorer dobbeltklik
+  var isCorrect = (optIdx === wizardCurrentScenario.correct);
+
+  if (isCorrect) {
+    if (wizardTries === 0) wizardFirstTryCorrect = true;
+    wizardHandleCorrect(btn);
+  } else {
+    wizardHandleWrong(optIdx, btn);
+  }
+}
+
+function wizardHandleCorrect(btn) {
+  wizardPhase = 'correct';
+  btn.classList.add('correct-flash');
+
+  var ch = document.getElementById('wizardChar');
+  if (ch) {
+    ch.classList.remove('idle');
+    ch.classList.add('cheer');
+    setTimeout(function() {
+      ch.classList.remove('cheer');
+      ch.classList.add('idle');
+    }, 600);
+  }
+
+  wizardChangeSpeech(wizardFirstTryCorrect ? 'Perfekt! 🌟' : 'Næsten! Kig her...');
+
+  setTimeout(function() { wizardTransitionTo('reveal'); }, 1200);
+}
+
+function wizardHandleWrong(optIdx, btn) {
+  // Stub — implementeres i Task 5
+  console.log('[wizard] Wrong answer (death animation kommer i Task 5)');
+  wizardTries++;
+  btn.classList.add('disabled');
 }
 
 // --- Lessons slideshow ---

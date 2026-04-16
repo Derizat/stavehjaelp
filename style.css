@@ -1301,3 +1301,71 @@
   @media (max-width: 340px) {
     .wizard-doors { flex-direction: column; }
   }
+
+  .wizard-door.correct-flash {
+    background: var(--green) !important;
+    color: #fff !important;
+    border-color: var(--green) !important;
+    box-shadow: 0 0 24px var(--green);
+    animation: wizard-correct-bounce 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes wizard-correct-bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+
+  .wizard-character.cheer {
+    animation: wizard-cheer 600ms ease-out;
+  }
+  @keyframes wizard-cheer {
+    0% { transform: rotate(0); }
+    25% { transform: rotate(-8deg); }
+    50% { transform: rotate(8deg); }
+    75% { transform: rotate(-4deg); }
+    100% { transform: rotate(0); }
+  }
+
+  .wizard-pointer {
+    position: absolute;
+    font-size: 2rem;
+    bottom: 20px;
+    opacity: 0;
+    animation: wizard-pointer-in 350ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  @keyframes wizard-pointer-in {
+    to { opacity: 1; transform: translateY(-4px); }
+  }
+
+  .wizard-footer {
+    text-align: center;
+    margin-top: 8px;
+    min-height: 48px;
+  }
+
+  .wizard-footer .wizard-done-btn {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0;
+    animation: wizard-done-in 250ms ease-out forwards;
+    animation-delay: 800ms;
+  }
+  @keyframes wizard-done-in {
+    to { opacity: 1; }
+  }
+  .wizard-done-btn:active {
+    transform: scale(0.95);
+  }
+
+  .wizard-door.fade-out {
+    animation: wizard-door-out 250ms ease-out forwards;
+  }
+  @keyframes wizard-door-out {
+    to { opacity: 0; transform: scale(0.9); }
+  }

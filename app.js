@@ -1354,152 +1354,81 @@ function wizardHandleWrong(optIdx, btn) {
   // Marker dør som forkert + disabled
   btn.classList.add('wrong-flash', 'disabled');
 
-  // Trigger tilfældig død-animation
+  // Trigger tilfældig død-animation (sætter selv speech-bobble teksten)
   wizardTriggerDeath(pickWizardDeath());
 
-  // Skift speech midlertidigt
-  wizardChangeSpeech('Hov hov hov...');
-
-  // Efter 1.8s: tilbage til riddle med kun én dør tilbage
+  // Efter 2.0s: tilbage til riddle med kun én dør tilbage
   setTimeout(function() {
     if (wizardPhase !== 'wrong-1') return;
     wizardChangeSpeech(wizardCurrentScenario.riddle);
     wizardPhase = 'riddle'; // tillader klik igen
     wizardClearDeathEffects();
-  }, 1800);
+  }, 2000);
 }
 
-var WIZARD_DEATHS = ['anvil', 'dragon', 'lightning', 'banana', 'ufo', 'rock', 'ghost', 'explosion'];
+var WIZARD_DEATHS = ['anvil', 'dragon', 'lightning', 'banana', 'ghost'];
 
 function pickWizardDeath() {
   var pool = WIZARD_DEATHS.filter(function(d) { return d !== wizardLastDeath; });
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+// Død-definitioner: hver death er en sekvens af emoji-skift på karakteren
+// + speech-bobble reaktion + valgfri card-effekt (shake/flash). Ingen overlappende
+// effect-overlays — én visuel ad gangen, klar sekvens.
+var WIZARD_DEATH_DEFS = {
+  anvil:     { react: '😨', impact: '🔨', dead: '🥞', speech1: 'Hov hov hov...',  speech2: 'Av! Hvor kom DEN fra?!',  card: 'shake' },
+  dragon:    { react: '😱', impact: '🔥', dead: '🥵', speech1: 'Åh nej, ikke dragen!', speech2: 'Min hat brænder!',     card: 'flash-red' },
+  lightning: { react: '😲', impact: '⚡', dead: '🤪', speech1: 'Hvad var det?!',   speech2: 'Z-z-zåh! Det stak lidt!', card: 'flash-white' },
+  banana:    { react: '🤔', impact: '🍌', dead: '🤕', speech1: 'Hvad ligger d... WHOOPS!', speech2: 'Hvem lagde den der?!', card: 'shake' },
+  ghost:     { react: '😬', impact: '👻', dead: '😱', speech1: 'Var det en lyd?', speech2: 'AAAH! Et spøgelse!',      card: 'shake' }
+};
+
 function wizardTriggerDeath(deathName) {
-  var stage = document.querySelector('.wizard-stage');
+  var def = WIZARD_DEATH_DEFS[deathName];
+  if (!def) return;
   var ch = document.getElementById('wizardChar');
-  if (!stage || !ch) return;
+  var card = document.querySelector('.wizard-card');
+  if (!ch || !card) return;
   wizardLastDeath = deathName;
 
-  if (deathName === 'anvil') {
-    var warning = document.createElement('div');
-    warning.className = 'wizard-warning wizard-effect-overlay';
-    warning.innerHTML = '⚠️';
-    stage.appendChild(warning);
-    var anvil = document.createElement('div');
-    anvil.className = 'wizard-anvil wizard-effect-overlay';
-    anvil.innerHTML = '🔨';
-    stage.appendChild(anvil);
-    setTimeout(function() {
-      ch.classList.remove('idle');
-      ch.classList.add('flat');
-      ch.innerHTML = '🥞';
-    }, 900);
-    var stars = document.createElement('div');
-    stars.className = 'wizard-stars wizard-effect-overlay';
-    stars.innerHTML = '⭐💫⭐';
-    stage.appendChild(stars);
-  }
-  else if (deathName === 'dragon') {
-    var dragon = document.createElement('div');
-    dragon.className = 'wizard-dragon wizard-effect-overlay';
-    dragon.innerHTML = '🐉';
-    stage.appendChild(dragon);
-    var flames = document.createElement('div');
-    flames.className = 'wizard-flames wizard-effect-overlay';
-    flames.innerHTML = '🔥🔥🔥';
-    stage.appendChild(flames);
-    setTimeout(function() {
-      ch.classList.remove('idle');
-      ch.classList.add('charred');
-    }, 1200);
-  }
-  else if (deathName === 'lightning') {
-    var cloud = document.createElement('div');
-    cloud.className = 'wizard-cloud wizard-effect-overlay';
-    cloud.innerHTML = '☁️';
-    stage.appendChild(cloud);
-    var bolt = document.createElement('div');
-    bolt.className = 'wizard-bolt wizard-effect-overlay';
-    bolt.innerHTML = '⚡';
-    stage.appendChild(bolt);
-    setTimeout(function() {
-      ch.classList.remove('idle');
-      ch.classList.add('zapped');
-    }, 700);
-  }
-  else if (deathName === 'banana') {
-    var banana = document.createElement('div');
-    banana.className = 'wizard-banana wizard-effect-overlay';
-    banana.innerHTML = '🍌';
-    stage.appendChild(banana);
-    setTimeout(function() {
-      ch.classList.remove('idle');
-      ch.classList.add('slipping');
-    }, 600);
-  }
-  else if (deathName === 'ufo') {
-    var ufo = document.createElement('div');
-    ufo.className = 'wizard-ufo wizard-effect-overlay';
-    ufo.innerHTML = '🛸';
-    stage.appendChild(ufo);
-    var beam = document.createElement('div');
-    beam.className = 'wizard-beam wizard-effect-overlay';
-    stage.appendChild(beam);
-    setTimeout(function() {
-      ch.classList.remove('idle');
-      ch.classList.add('abducted');
-    }, 1100);
-  }
-  else if (deathName === 'rock') {
-    var rock = document.createElement('div');
-    rock.className = 'wizard-rock wizard-effect-overlay';
-    rock.innerHTML = '🪨';
-    stage.appendChild(rock);
-    setTimeout(function() {
-      ch.classList.remove('idle');
-      ch.classList.add('flat');
-      ch.innerHTML = '🥞';
-    }, 800);
-  }
-  else if (deathName === 'ghost') {
-    var ghost = document.createElement('div');
-    ghost.className = 'wizard-ghost wizard-effect-overlay';
-    ghost.innerHTML = '👻';
-    stage.appendChild(ghost);
-    setTimeout(function() {
-      ch.classList.remove('idle');
-      ch.classList.add('scared');
-      ch.innerHTML = '😨';
-    }, 800);
-  }
-  else if (deathName === 'explosion') {
-    var spark = document.createElement('div');
-    spark.className = 'wizard-spark wizard-effect-overlay';
-    spark.innerHTML = '✨';
-    stage.appendChild(spark);
-    var boom = document.createElement('div');
-    boom.className = 'wizard-boom wizard-effect-overlay';
-    boom.innerHTML = '💥';
-    stage.appendChild(boom);
-    setTimeout(function() {
-      ch.classList.remove('idle');
-      ch.classList.add('charred');
-      ch.innerHTML = '🤯';
-    }, 1100);
-  }
+  // Step 1: trolmand reagerer (med det samme)
+  ch.classList.remove('idle');
+  ch.innerHTML = def.react;
+  wizardChangeSpeech(def.speech1);
+
+  // Step 2: impact (300ms — én stor emoji erstatter karakteren et øjeblik)
+  setTimeout(function() {
+    ch.classList.add('impact-flash');
+    ch.innerHTML = def.impact;
+    if (def.card) card.classList.add('card-' + def.card);
+  }, 300);
+
+  // Step 3: død-tilstand (800ms efter start — karakter til "død" emoji + ny speech)
+  setTimeout(function() {
+    ch.classList.remove('impact-flash');
+    ch.innerHTML = def.dead;
+    wizardChangeSpeech(def.speech2);
+  }, 800);
+
+  // Step 4: ryd card-effekt (efter dens animation er færdig)
+  setTimeout(function() {
+    card.classList.remove('card-shake', 'card-flash-red', 'card-flash-white');
+  }, 1500);
 }
 
 function wizardClearDeathEffects() {
   var ch = document.getElementById('wizardChar');
   if (ch) {
-    ch.classList.remove('flat', 'charred', 'zapped', 'slipping', 'abducted', 'scared');
+    ch.classList.remove('impact-flash');
     ch.style.transform = '';
     ch.style.filter = '';
     ch.innerHTML = '🧙‍♂️';
     ch.classList.add('idle');
   }
+  var card = document.querySelector('.wizard-card');
+  if (card) card.classList.remove('card-shake', 'card-flash-red', 'card-flash-white');
+  // Ryd evt. gamle effect-overlays (hvis der findes nogen fra ældre kode-stier)
   var effects = document.querySelectorAll('.wizard-effect-overlay');
   for (var i = 0; i < effects.length; i++) {
     effects[i].parentNode.removeChild(effects[i]);

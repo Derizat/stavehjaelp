@@ -2828,6 +2828,13 @@ document.addEventListener('keydown', function(e) {
   if (lessonOv && !lessonOv.classList.contains('hidden')) {
     e.preventDefault(); dismissLessonPopup(); return;
   }
+
+  // Wizard lesson overlay — kun når "Forstået!" knappen er synlig (skipper ikke selve gåden)
+  var wizOv = document.getElementById('wizardOverlay');
+  if (wizOv && !wizOv.classList.contains('fading-out')) {
+    var doneBtn = wizOv.querySelector('.wizard-done-btn');
+    if (doneBtn) { e.preventDefault(); wizardTransitionTo('done'); return; }
+  }
 });
 
 document.addEventListener('keydown', function(e) {

@@ -982,6 +982,12 @@ function checkLessonTrigger(category) {
 }
 
 function showLessonPopup(category) {
+  // Delegation: hvis kategorien har wizard-scenarier, brug det interaktive flow
+  if (typeof WIZARD_SCENARIOS !== 'undefined' && WIZARD_SCENARIOS[category] && WIZARD_SCENARIOS[category].length > 0) {
+    showWizardLesson(category);
+    return;
+  }
+
   var lesson = CATEGORY_LESSONS[category];
   if (!lesson) return;
 

@@ -1240,21 +1240,6 @@ function wizardRenderReveal() {
     }
   }
 
-  // Find positionen af den rigtige dør og placer pegefingeren mellem trolmand og dør
-  var correctDoorPosition = wizardDoorOrder.indexOf(wizardCurrentScenario.correct);
-  var stage = document.querySelector('.wizard-stage');
-  if (stage) {
-    // Fjern eventuel tidligere pointer (fx hvis reveal renderes igen efter retry)
-    var existing = document.getElementById('wizardPointer');
-    if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
-    var pointer = document.createElement('div');
-    pointer.id = 'wizardPointer';
-    pointer.className = 'wizard-pointer';
-    pointer.style.left = correctDoorPosition === 0 ? '20%' : '70%';
-    pointer.innerHTML = '👇';
-    stage.appendChild(pointer);
-  }
-
   // Skift speech til reveal-tekst
   setTimeout(function() {
     wizardChangeSpeech(wizardCurrentScenario.reveal);

@@ -1148,3 +1148,113 @@
   .shop-item-price { font-size: 0.75rem; margin-top: 4px; }
   .shop-item-tier { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
   .shop-item-btn { margin-top: 6px; padding: 4px 12px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+
+/* === Wizard lesson === */
+.wizard-overlay {
+  position: fixed; inset: 0;
+  background: rgba(13, 15, 38, 0.85);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: wizard-overlay-in 250ms ease-out forwards;
+}
+@keyframes wizard-overlay-in {
+  to { opacity: 1; }
+}
+.wizard-overlay.fading-out {
+  animation: wizard-overlay-out 250ms ease-out forwards;
+}
+@keyframes wizard-overlay-out {
+  to { opacity: 0; }
+}
+
+.wizard-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 420px;
+  width: calc(100% - 32px);
+  border: 2px solid var(--accent);
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+  transform: translateY(40px);
+  animation: wizard-card-in 350ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 100ms;
+}
+@keyframes wizard-card-in {
+  to { transform: translateY(0); }
+}
+
+.wizard-header {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.wizard-stage {
+  display: flex; align-items: flex-start; gap: 12px;
+  min-height: 140px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.wizard-character {
+  font-size: 4rem;
+  flex-shrink: 0;
+  transform: translateX(-100px) scale(0.7);
+  opacity: 0;
+  animation: wizard-char-in 400ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 300ms;
+  filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.5));
+}
+@keyframes wizard-char-in {
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+.wizard-character.idle {
+  animation: wizard-float 2.4s ease-in-out infinite alternate;
+}
+@keyframes wizard-float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-6px); }
+}
+
+.wizard-speech {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--bg);
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 2px solid var(--accent2);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  font-weight: 600;
+  position: relative;
+  flex: 1;
+  opacity: 0;
+  transform: scale(0);
+  animation: wizard-speech-in 250ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 700ms;
+}
+.wizard-speech::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 20px;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid var(--accent2);
+}
+@keyframes wizard-speech-in {
+  to { opacity: 1; transform: scale(1); }
+}
+.wizard-speech.text-changing {
+  animation: wizard-speech-pulse 400ms ease-out;
+}
+@keyframes wizard-speech-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}

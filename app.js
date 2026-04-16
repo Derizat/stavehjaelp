@@ -1096,8 +1096,66 @@ var wizardDoorOrder = [0, 1];
 var wizardLastDeath = null;
 
 function showWizardLesson(category) {
-  console.log('[wizard] showWizardLesson called for', category);
-  // Stub — udfyldes i senere tasks
+  var scenarios = WIZARD_SCENARIOS[category];
+  if (!scenarios || scenarios.length === 0) {
+    console.warn('[wizard] No scenarios for', category, '— falling back to legacy popup');
+    showLessonPopup(category); // fallback (vil aldrig kalde os igen pga. delegation — se Task 9)
+    return;
+  }
+
+  // Vælg scenarie (simpel for nu — rotation tilføjes i Task 8)
+  wizardCurrentScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+  wizardCurrentCategory = category;
+  wizardPhase = 'intro';
+  wizardTries = 0;
+  wizardFirstTryCorrect = false;
+
+  // Shuffle dør-position så rigtigt ord ikke altid er venstre
+  wizardDoorOrder = Math.random() < 0.5 ? [0, 1] : [1, 0];
+
+  renderWizardOverlay();
+  pendingLesson = true;
+
+  // Auto-overgang til riddle efter 2.5s
+  setTimeout(function() {
+    if (wizardPhase === 'intro') wizardTransitionTo('riddle');
+  }, 2500);
+}
+
+function renderWizardOverlay() {
+  var overlay = document.getElementById('wizardOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'wizardOverlay';
+    overlay.className = 'wizard-overlay';
+    document.body.appendChild(overlay);
+  } else {
+    overlay.className = 'wizard-overlay';
+  }
+
+  var html = '<div class="wizard-card">';
+  html += '<div class="wizard-header">🧙‍♂️ Trolmandens gåde</div>';
+  html += '<div class="wizard-stage">';
+  html += '<div class="wizard-character" id="wizardChar">🧙‍♂️</div>';
+  html += '<div class="wizard-speech" id="wizardSpeech">' + escapeHtml(wizardCurrentScenario.setup) + '</div>';
+  html += '</div>';
+  html += '<div class="wizard-doors" id="wizardDoors"></div>';
+  html += '<div class="wizard-footer" id="wizardFooter"></div>';
+  html += '</div>';
+
+  overlay.innerHTML = html;
+
+  // Aktiver idle-float på karakter efter intro-animation
+  setTimeout(function() {
+    var ch = document.getElementById('wizardChar');
+    if (ch) ch.classList.add('idle');
+  }, 750);
+}
+
+function wizardTransitionTo(phase) {
+  wizardPhase = phase;
+  // Stub — udvides i senere tasks
+  console.log('[wizard] Transition to phase:', phase);
 }
 
 // --- Lessons slideshow ---

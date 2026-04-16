@@ -1096,6 +1096,49 @@ var wizardDoorOrder = [0, 1];
 var wizardLastDeath = null;
 var wizardSessionId = 0;
 
+function loadWizardRecent() {
+  if (typeof activePlayer === 'undefined' || !activePlayer) return {};
+  try {
+    var raw = localStorage.getItem(playerKey('wizard_recent'));
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function saveWizardRecent(data) {
+  if (typeof activePlayer === 'undefined' || !activePlayer) return;
+  try { localStorage.setItem(playerKey('wizard_recent'), JSON.stringify(data)); } catch(e) {}
+}
+
+function pickScenarioForCategory(category) {
+  var scenarios = WIZARD_SCENARIOS[category] || [];
+  if (scenarios.length === 0) return null;
+  if (scenarios.length === 1) return { scenario: scenarios[0], index: 0 };
+
+  var recent = loadWizardRecent();
+  var recentList = recent[category] || [];
+
+  // Filtrer scenarier der ikke er i recent
+  var available = [];
+  for (var i = 0; i < scenarios.length; i++) {
+    if (recentList.indexOf(i) === -1) available.push(i);
+  }
+  // Hvis alle er recente, nulstil
+  if (available.length === 0) {
+    recentList = [];
+    available = scenarios.map(function(_, i) { return i; });
+  }
+
+  var pickedIdx = available[Math.floor(Math.random() * available.length)];
+
+  // Opdater recent (max 3)
+  recentList.push(pickedIdx);
+  if (recentList.length > 3) recentList = recentList.slice(-3);
+  recent[category] = recentList;
+  saveWizardRecent(recent);
+
+  return { scenario: scenarios[pickedIdx], index: pickedIdx };
+}
+
 function showWizardLesson(category) {
   var scenarios = WIZARD_SCENARIOS[category];
   if (!scenarios || scenarios.length === 0) {
@@ -1104,8 +1147,12 @@ function showWizardLesson(category) {
     return;
   }
 
-  // Vælg scenarie (simpel for nu — rotation tilføjes i Task 8)
-  wizardCurrentScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+  var picked = pickScenarioForCategory(category);
+  if (!picked) {
+    console.warn('[wizard] No scenario could be picked for', category);
+    return;
+  }
+  wizardCurrentScenario = picked.scenario;
   wizardCurrentCategory = category;
   wizardPhase = 'intro';
   wizardTries = 0;

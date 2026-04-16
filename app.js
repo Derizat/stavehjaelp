@@ -1042,18 +1042,18 @@ var WIZARD_SCENARIOS = {
       reveal: "AHA — jeg vil SIDDE (kort 'i' → dobbelt d). En SIDE er noget helt andet (en side i en bog)!"
     },
     {
-      setup: "Jeg er ved at koge vand til min te.",
-      riddle: "Hvilken stavemåde af 'koppe' er rigtig?",
-      options: ["koppe", "kope"],
+      setup: "Jeg drikker varm te af min yndlings-kop.",
+      riddle: "Hvis jeg har to af dem — hvordan staves det så?",
+      options: ["kopper", "koper"],
       correct: 0,
-      reveal: "KOPPE er rigtigt — kort 'o' så dobbelt p. Tænk på lyden: 'kop-pe', ikke 'koo-pe'."
+      reveal: "KOPPER — kort 'o' så dobbelt p. Tip: sig vokalen højt; er den kort? Så dobbelt!"
     },
     {
-      setup: "Pizzaen kommer lige ud af ovnen \u2014 jeg skal r\u00F8re ved den.",
+      setup: "Pizzaen kommer lige ud af ovnen — jeg skal røre ved den.",
       riddle: "Skal jeg skrive 'hedde' eller 'hede' om temperaturen?",
       options: ["hede", "hedde"],
       correct: 0,
-      reveal: "HEDE betyder varm (lang 'e' \u2192 enkelt d). At HEDDE er noget helt andet (kort 'e' \u2192 dobbelt d), fx 'jeg hedder Anna'."
+      reveal: "HEDE betyder varm (lang 'e' → enkelt d). At HEDDE er noget helt andet (kort 'e' → dobbelt d), fx 'jeg hedder Anna'."
     },
     {
       setup: "Der er en MASSE æbler i træet.",

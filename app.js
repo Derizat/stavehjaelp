@@ -1189,9 +1189,11 @@ function wizardRenderReveal() {
 
   // Find positionen af den rigtige dør og placer pegefingeren mellem trolmand og dør
   var correctDoorPosition = wizardDoorOrder.indexOf(wizardCurrentScenario.correct);
-  // Pegefinger emoji (peger ned mod døre)
   var stage = document.querySelector('.wizard-stage');
-  if (stage && !document.getElementById('wizardPointer')) {
+  if (stage) {
+    // Fjern eventuel tidligere pointer (fx hvis reveal renderes igen efter retry)
+    var existing = document.getElementById('wizardPointer');
+    if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
     var pointer = document.createElement('div');
     pointer.id = 'wizardPointer';
     pointer.className = 'wizard-pointer';
@@ -1213,10 +1215,15 @@ function wizardRenderReveal() {
 }
 
 function wizardComplete() {
-  // Tildel XP
+  // Tildel XP — håndter dato-skift så stale todayXP fra tidligere dag ikke tælles med
   var xpReward = wizardFirstTryCorrect ? 15 : 10;
   if (typeof loadRewardData === 'function' && typeof saveRewardData === 'function') {
     var data = loadRewardData();
+    var today = (typeof getTodayStr === 'function') ? getTodayStr() : '';
+    if (today && data.todayDate !== today) {
+      data.todayXP = 0;
+      data.todayDate = today;
+    }
     data.totalXP = (data.totalXP || 0) + xpReward;
     data.todayXP = (data.todayXP || 0) + xpReward;
     saveRewardData(data);
@@ -1237,7 +1244,11 @@ function wizardComplete() {
 
   // Reset state
   wizardCurrentScenario = null;
+  wizardCurrentCategory = null;
   wizardPhase = null;
+  wizardTries = 0;
+  wizardFirstTryCorrect = false;
+  wizardLastDeath = null;
 }
 
 function wizardChangeSpeech(newText) {

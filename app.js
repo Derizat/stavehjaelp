@@ -1049,11 +1049,11 @@ var WIZARD_SCENARIOS = {
       reveal: "KOPPE er rigtigt — kort 'o' så dobbelt p. Tænk på lyden: 'kop-pe', ikke 'koo-pe'."
     },
     {
-      setup: "Min ven spørger hvad jeg hedder.",
-      riddle: "Skal jeg skrive 'jeg hedder' eller 'jeg heder'?",
-      options: ["hedder", "heder"],
+      setup: "Pizzaen kommer lige ud af ovnen \u2014 jeg skal r\u00F8re ved den.",
+      riddle: "Skal jeg skrive 'hedde' eller 'hede' om temperaturen?",
+      options: ["hede", "hedde"],
       correct: 0,
-      reveal: "HEDDER er rigtigt — kort 'e' så dobbelt d. En HEDE er forresten et landskab med lyng — helt andet ord!"
+      reveal: "HEDE betyder varm (lang 'e' \u2192 enkelt d). At HEDDE er noget helt andet (kort 'e' \u2192 dobbelt d), fx 'jeg hedder Anna'."
     },
     {
       setup: "Der er en MASSE æbler i træet.",

@@ -1310,10 +1310,71 @@ function wizardHandleCorrect(btn) {
 }
 
 function wizardHandleWrong(optIdx, btn) {
-  // Stub — implementeres i Task 5
-  console.log('[wizard] Wrong answer (death animation kommer i Task 5)');
+  wizardPhase = 'wrong-1';
   wizardTries++;
-  btn.classList.add('disabled');
+
+  // Marker dør som forkert + disabled
+  btn.classList.add('wrong-flash', 'disabled');
+
+  // Trigger død-animation (kun ambolt for nu — flere i Task 6)
+  wizardTriggerDeath('anvil');
+
+  // Skift speech midlertidigt
+  wizardChangeSpeech('Hov hov hov...');
+
+  // Efter 1.8s: tilbage til riddle med kun én dør tilbage
+  setTimeout(function() {
+    if (wizardPhase !== 'wrong-1') return;
+    wizardChangeSpeech(wizardCurrentScenario.riddle);
+    wizardPhase = 'riddle'; // tillader klik igen
+    wizardClearDeathEffects();
+  }, 1800);
+}
+
+function wizardTriggerDeath(deathName) {
+  var stage = document.querySelector('.wizard-stage');
+  var ch = document.getElementById('wizardChar');
+  if (!stage || !ch) return;
+  wizardLastDeath = deathName;
+
+  if (deathName === 'anvil') {
+    // Tilføj warning, ambolt og stjerner
+    var warning = document.createElement('div');
+    warning.className = 'wizard-warning wizard-effect-overlay';
+    warning.innerHTML = '⚠️';
+    stage.appendChild(warning);
+
+    var anvil = document.createElement('div');
+    anvil.className = 'wizard-anvil wizard-effect-overlay';
+    anvil.innerHTML = '🔨'; // hammer (ambolt-emoji findes ikke standard)
+    stage.appendChild(anvil);
+
+    // Trolmanden bliver flad ved impact
+    setTimeout(function() {
+      ch.classList.remove('idle');
+      ch.classList.add('flat');
+      ch.innerHTML = '🥞'; // pandekage
+    }, 900);
+
+    // Stjerner kredser
+    var stars = document.createElement('div');
+    stars.className = 'wizard-stars wizard-effect-overlay';
+    stars.innerHTML = '⭐💫⭐';
+    stage.appendChild(stars);
+  }
+}
+
+function wizardClearDeathEffects() {
+  var ch = document.getElementById('wizardChar');
+  if (ch) {
+    ch.classList.remove('flat');
+    ch.innerHTML = '🧙‍♂️';
+    ch.classList.add('idle');
+  }
+  var effects = document.querySelectorAll('.wizard-effect-overlay');
+  for (var i = 0; i < effects.length; i++) {
+    effects[i].parentNode.removeChild(effects[i]);
+  }
 }
 
 // --- Lessons slideshow ---

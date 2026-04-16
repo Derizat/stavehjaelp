@@ -1316,8 +1316,8 @@ function wizardHandleWrong(optIdx, btn) {
   // Marker dør som forkert + disabled
   btn.classList.add('wrong-flash', 'disabled');
 
-  // Trigger død-animation (kun ambolt for nu — flere i Task 6)
-  wizardTriggerDeath('anvil');
+  // Trigger tilfældig død-animation
+  wizardTriggerDeath(pickWizardDeath());
 
   // Skift speech midlertidigt
   wizardChangeSpeech('Hov hov hov...');
@@ -1331,6 +1331,13 @@ function wizardHandleWrong(optIdx, btn) {
   }, 1800);
 }
 
+var WIZARD_DEATHS = ['anvil', 'dragon', 'lightning', 'banana', 'ufo', 'rock', 'ghost', 'explosion'];
+
+function pickWizardDeath() {
+  var pool = WIZARD_DEATHS.filter(function(d) { return d !== wizardLastDeath; });
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 function wizardTriggerDeath(deathName) {
   var stage = document.querySelector('.wizard-stage');
   var ch = document.getElementById('wizardChar');
@@ -1338,36 +1345,120 @@ function wizardTriggerDeath(deathName) {
   wizardLastDeath = deathName;
 
   if (deathName === 'anvil') {
-    // Tilføj warning, ambolt og stjerner
     var warning = document.createElement('div');
     warning.className = 'wizard-warning wizard-effect-overlay';
     warning.innerHTML = '⚠️';
     stage.appendChild(warning);
-
     var anvil = document.createElement('div');
     anvil.className = 'wizard-anvil wizard-effect-overlay';
-    anvil.innerHTML = '🔨'; // hammer (ambolt-emoji findes ikke standard)
+    anvil.innerHTML = '🔨';
     stage.appendChild(anvil);
-
-    // Trolmanden bliver flad ved impact
     setTimeout(function() {
       ch.classList.remove('idle');
       ch.classList.add('flat');
-      ch.innerHTML = '🥞'; // pandekage
+      ch.innerHTML = '🥞';
     }, 900);
-
-    // Stjerner kredser
     var stars = document.createElement('div');
     stars.className = 'wizard-stars wizard-effect-overlay';
     stars.innerHTML = '⭐💫⭐';
     stage.appendChild(stars);
+  }
+  else if (deathName === 'dragon') {
+    var dragon = document.createElement('div');
+    dragon.className = 'wizard-dragon wizard-effect-overlay';
+    dragon.innerHTML = '🐉';
+    stage.appendChild(dragon);
+    var flames = document.createElement('div');
+    flames.className = 'wizard-flames wizard-effect-overlay';
+    flames.innerHTML = '🔥🔥🔥';
+    stage.appendChild(flames);
+    setTimeout(function() {
+      ch.classList.remove('idle');
+      ch.classList.add('charred');
+    }, 1200);
+  }
+  else if (deathName === 'lightning') {
+    var cloud = document.createElement('div');
+    cloud.className = 'wizard-cloud wizard-effect-overlay';
+    cloud.innerHTML = '☁️';
+    stage.appendChild(cloud);
+    var bolt = document.createElement('div');
+    bolt.className = 'wizard-bolt wizard-effect-overlay';
+    bolt.innerHTML = '⚡';
+    stage.appendChild(bolt);
+    setTimeout(function() {
+      ch.classList.remove('idle');
+      ch.classList.add('zapped');
+    }, 700);
+  }
+  else if (deathName === 'banana') {
+    var banana = document.createElement('div');
+    banana.className = 'wizard-banana wizard-effect-overlay';
+    banana.innerHTML = '🍌';
+    stage.appendChild(banana);
+    setTimeout(function() {
+      ch.classList.remove('idle');
+      ch.classList.add('slipping');
+    }, 600);
+  }
+  else if (deathName === 'ufo') {
+    var ufo = document.createElement('div');
+    ufo.className = 'wizard-ufo wizard-effect-overlay';
+    ufo.innerHTML = '🛸';
+    stage.appendChild(ufo);
+    var beam = document.createElement('div');
+    beam.className = 'wizard-beam wizard-effect-overlay';
+    stage.appendChild(beam);
+    setTimeout(function() {
+      ch.classList.remove('idle');
+      ch.classList.add('abducted');
+    }, 1100);
+  }
+  else if (deathName === 'rock') {
+    var rock = document.createElement('div');
+    rock.className = 'wizard-rock wizard-effect-overlay';
+    rock.innerHTML = '🪨';
+    stage.appendChild(rock);
+    setTimeout(function() {
+      ch.classList.remove('idle');
+      ch.classList.add('flat');
+      ch.innerHTML = '🥞';
+    }, 800);
+  }
+  else if (deathName === 'ghost') {
+    var ghost = document.createElement('div');
+    ghost.className = 'wizard-ghost wizard-effect-overlay';
+    ghost.innerHTML = '👻';
+    stage.appendChild(ghost);
+    setTimeout(function() {
+      ch.classList.remove('idle');
+      ch.classList.add('scared');
+      ch.innerHTML = '😨';
+    }, 800);
+  }
+  else if (deathName === 'explosion') {
+    var spark = document.createElement('div');
+    spark.className = 'wizard-spark wizard-effect-overlay';
+    spark.innerHTML = '✨';
+    stage.appendChild(spark);
+    var boom = document.createElement('div');
+    boom.className = 'wizard-boom wizard-effect-overlay';
+    boom.innerHTML = '💥';
+    stage.appendChild(boom);
+    setTimeout(function() {
+      ch.classList.remove('idle');
+      ch.classList.add('charred');
+      ch.innerHTML = '🤯';
+    }, 1100);
   }
 }
 
 function wizardClearDeathEffects() {
   var ch = document.getElementById('wizardChar');
   if (ch) {
-    ch.classList.remove('flat');
+    ch.classList.remove('flat', 'charred', 'zapped', 'slipping', 'abducted', 'scared');
+    ch.style.transform = '';
+    ch.style.filter = '';
     ch.innerHTML = '🧙‍♂️';
     ch.classList.add('idle');
   }

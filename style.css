@@ -1259,3 +1259,45 @@
     50% { transform: scale(1.03); }
     100% { transform: scale(1); }
   }
+
+  .wizard-doors {
+    display: flex; gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .wizard-door {
+    flex: 1;
+    background: var(--card2);
+    border: 2px solid var(--accent2);
+    color: var(--text);
+    padding: 18px 12px;
+    border-radius: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+    opacity: 0;
+    transform: translateY(20px);
+    text-align: center;
+  }
+  .wizard-door.appearing {
+    animation: wizard-door-in 320ms ease-out forwards;
+  }
+  @keyframes wizard-door-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .wizard-door:hover:not(.disabled) {
+    transform: scale(1.03);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+    background: var(--card);
+  }
+
+  .wizard-door.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  @media (max-width: 340px) {
+    .wizard-doors { flex-direction: column; }
+  }

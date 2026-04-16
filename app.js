@@ -1163,8 +1163,43 @@ function renderWizardOverlay() {
 
 function wizardTransitionTo(phase) {
   wizardPhase = phase;
-  // Stub — udvides i senere tasks
-  console.log('[wizard] Transition to phase:', phase);
+
+  if (phase === 'riddle') {
+    wizardChangeSpeech(wizardCurrentScenario.riddle);
+    wizardRenderDoors();
+  }
+}
+
+function wizardChangeSpeech(newText) {
+  var bubble = document.getElementById('wizardSpeech');
+  if (!bubble) return;
+  bubble.classList.add('text-changing');
+  setTimeout(function() {
+    bubble.innerHTML = escapeHtml(newText);
+  }, 180);
+  setTimeout(function() {
+    bubble.classList.remove('text-changing');
+  }, 400);
+}
+
+function wizardRenderDoors() {
+  var container = document.getElementById('wizardDoors');
+  if (!container) return;
+  var html = '';
+  for (var i = 0; i < wizardDoorOrder.length; i++) {
+    var optIdx = wizardDoorOrder[i];
+    var word = wizardCurrentScenario.options[optIdx];
+    html += '<button class="wizard-door appearing" data-idx="' + optIdx + '" ';
+    html += 'style="animation-delay:' + (i * 100) + 'ms" ';
+    html += 'onclick="wizardPickDoor(' + optIdx + ', this)">';
+    html += escapeHtml(word) + '</button>';
+  }
+  container.innerHTML = html;
+}
+
+function wizardPickDoor(optIdx, btn) {
+  console.log('[wizard] Door picked, idx:', optIdx, 'correct:', wizardCurrentScenario.correct);
+  // Stub — udvides i Task 4 og 5
 }
 
 // --- Lessons slideshow ---

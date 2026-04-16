@@ -1034,57 +1034,57 @@ var pendingLesson = false;
 var WIZARD_SCENARIOS = {
   "Dobbeltkonsonant": [
     {
-      setup: "Jeg vil lave en kage til min fødselsdag.",
-      riddle: "I opskriften står et ord — hvilken stavemåde er rigtig?",
+      setup: "Jeg har planlagt en stor fødselsdag og skal lave en lækker dessert i ovnen.",
+      riddle: "Hvordan staves det jeg skal — 'bage' eller 'bagge'?",
       options: ["bage", "bagge"],
       correct: 0,
-      reveal: "Det rigtige er BAGE. Vokalen 'a' er LANG (baaaa-ge), så enkelt 'g'. Hvis det var hop-pe, ville 'o' være kort og vi skulle have dobbelt p."
+      reveal: "Det rigtige er BAGE. Vokalen 'a' er LANG (baaaa-ge), så enkelt 'g'. Kort vokal som i 'hop-pe' ville have dobbelt."
     },
     {
-      setup: "Jeg vil sidde på min stol og slappe af.",
-      riddle: "Skal jeg skrive 'sidde' eller 'side' i min dagbog?",
+      setup: "Jeg er træt og vil hvile mig på stolen.",
+      riddle: "Hvordan staves det — 'sidde' eller 'side'?",
       options: ["sidde", "side"],
       correct: 0,
       reveal: "AHA — jeg vil SIDDE (kort 'i' → dobbelt d). En SIDE er noget helt andet (en side i en bog)!"
     },
     {
-      setup: "Jeg drikker varm te af min yndlings-kop.",
-      riddle: "Hvis jeg har to af dem — hvordan staves det så?",
+      setup: "Jeg drikker varm te. Hvis jeg vil have to af dem på bordet...",
+      riddle: "Hvordan staves det — 'kopper' eller 'koper'?",
       options: ["kopper", "koper"],
       correct: 0,
       reveal: "KOPPER — kort 'o' så dobbelt p. Tip: sig vokalen højt; er den kort? Så dobbelt!"
     },
     {
-      setup: "Pizzaen kommer lige ud af ovnen — jeg skal røre ved den.",
-      riddle: "Skal jeg skrive 'hedde' eller 'hede' om temperaturen?",
+      setup: "Pizzaen kommer lige ud af ovnen — den er meget varm.",
+      riddle: "Hvordan staves temperaturen — 'hede' eller 'hedde'?",
       options: ["hede", "hedde"],
       correct: 0,
       reveal: "HEDE betyder varm (lang 'e' → enkelt d). At HEDDE er noget helt andet (kort 'e' → dobbelt d), fx 'jeg hedder Anna'."
     },
     {
-      setup: "Der er en MASSE æbler i træet.",
-      riddle: "Skal jeg skrive 'masse' eller 'mase'?",
+      setup: "Der er rigtig mange æbler i træet i år!",
+      riddle: "Hvordan staves antal-ordet — 'masse' eller 'mase'?",
       options: ["masse", "mase"],
       correct: 0,
       reveal: "MASSE betyder mange — kort 'a' så dobbelt s. At MASE er noget andet (presse på)!"
     },
     {
-      setup: "Jeg elsker at hoppe på trampolin.",
-      riddle: "Hvordan staves det?",
+      setup: "På trampolinen kan jeg sætte af og flyve op i luften.",
+      riddle: "Hvordan staves verbet — 'hoppe' eller 'hope'?",
       options: ["hoppe", "hope"],
       correct: 0,
       reveal: "HOPPE — kort 'o' så dobbelt p. Tip: føles vokalen 'o' kort eller lang? Kort = dobbelt."
     },
     {
-      setup: "Børnene klapper i takt til musikken.",
-      riddle: "Hvordan staves grundformen?",
+      setup: "Til koncerten viser publikum begejstring med hænderne.",
+      riddle: "Hvordan staves grundformen — 'klappe' eller 'klape'?",
       options: ["klappe", "klape"],
       correct: 0,
       reveal: "KLAPPE — kort 'a' så dobbelt p. Prøv at sige det langsomt: klap-pe."
     },
     {
-      setup: "Jeg vil slikke is en hel time!",
-      riddle: "Hvordan staves det?",
+      setup: "En kold is om sommeren er noget af det bedste der findes.",
+      riddle: "Hvordan staves det jeg gør med isen — 'slikke' eller 'slike'?",
       options: ["slikke", "slike"],
       correct: 0,
       reveal: "SLIKKE — kort 'i' så dobbelt k. Lang vokal som i 'rige' ville være enkelt."

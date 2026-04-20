@@ -1361,6 +1361,43 @@
     to { opacity: 0; transform: scale(0.9); }
   }
 
+  /* Lesson-fase eksempler */
+  .wizard-lesson-examples {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin-bottom: 12px;
+  }
+  .wizard-example {
+    background: var(--card2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-align: center;
+  }
+  .wizard-example-word {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .wizard-example-note {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .wizard-example .highlight {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .wizard-tip {
+    background: rgba(34, 211, 160, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 0.82rem;
+    color: var(--green);
+    text-align: center;
+  }
+
   .wizard-door.wrong-flash {
     background: rgba(244, 63, 94, 0.3) !important;
     border-color: var(--red) !important;

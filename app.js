@@ -1101,6 +1101,9 @@ var wizardFirstTryCorrect = false;
 var wizardDoorOrder = [0, 1];
 var wizardLastDeath = null;
 var wizardSessionId = 0;
+var wizardScenarios = [];       // 2 scenarier pr. session
+var wizardRiddleIndex = 0;      // hvilken gåde vi er på (0 eller 1)
+var wizardCorrectCount = 0;     // antal korrekte første-forsøg (0-2)
 
 function loadWizardRecent() {
   if (typeof activePlayer === 'undefined' || !activePlayer) return {};
@@ -1149,22 +1152,31 @@ function showWizardLesson(category) {
   var scenarios = WIZARD_SCENARIOS[category];
   if (!scenarios || scenarios.length === 0) {
     console.warn('[wizard] No scenarios for', category, '— falling back to legacy popup');
-    showLessonPopup(category); // fallback (vil aldrig kalde os igen pga. delegation — se Task 9)
+    showLessonPopup(category);
     return;
   }
 
-  var picked = pickScenarioForCategory(category);
-  if (!picked) {
-    console.warn('[wizard] No scenario could be picked for', category);
+  // Vælg 2 scenarier (kald pickScenarioForCategory to gange — den undgår automatisk gentagelse)
+  wizardScenarios = [];
+  for (var si = 0; si < 2; si++) {
+    var picked = pickScenarioForCategory(category);
+    if (picked) wizardScenarios.push(picked.scenario);
+  }
+  if (wizardScenarios.length === 0) {
+    console.warn('[wizard] No scenarios could be picked for', category);
     return;
   }
-  wizardCurrentScenario = picked.scenario;
+  // Fallback: hvis kun 1 scenarie kunne vælges, brug det som begge
+  if (wizardScenarios.length < 2) wizardScenarios.push(wizardScenarios[0]);
+
+  wizardRiddleIndex = 0;
+  wizardCorrectCount = 0;
+  wizardCurrentScenario = wizardScenarios[0];
   wizardCurrentCategory = category;
   wizardPhase = 'intro';
   wizardTries = 0;
   wizardFirstTryCorrect = false;
 
-  // Shuffle dør-position så rigtigt ord ikke altid er venstre
   wizardDoorOrder = Math.random() < 0.5 ? [0, 1] : [1, 0];
 
   wizardSessionId++;
@@ -1172,10 +1184,10 @@ function showWizardLesson(category) {
   renderWizardOverlay();
   pendingLesson = true;
 
-  // Auto-overgang til riddle efter 2.5s — kun hvis sessionen stadig er aktuel
+  // Auto-overgang til lesson efter 2.5s
   setTimeout(function() {
     if (wizardSessionId === mySession && wizardPhase === 'intro') {
-      wizardTransitionTo('riddle');
+      wizardTransitionTo('lesson');
     }
   }, 2500);
 }
@@ -1191,11 +1203,14 @@ function renderWizardOverlay() {
     overlay.className = 'wizard-overlay';
   }
 
+  var lessonData = CATEGORY_LESSONS[wizardCurrentCategory];
+  var introText = lessonData ? 'Hej! Lad mig lære dig om ' + wizardCurrentCategory.toLowerCase() + '!' : 'Hej! Jeg har en gåde til dig!';
+
   var html = '<div class="wizard-card">';
-  html += '<div class="wizard-header">🧙‍♂️ Trolmandens gåde</div>';
+  html += '<div class="wizard-header">🧙‍♂️ Trolmandens lektion</div>';
   html += '<div class="wizard-stage">';
   html += '<div class="wizard-character" id="wizardChar">🧙‍♂️</div>';
-  html += '<div class="wizard-speech" id="wizardSpeech">' + escapeHtml(wizardCurrentScenario.setup) + '</div>';
+  html += '<div class="wizard-speech" id="wizardSpeech">' + escapeHtml(introText) + '</div>';
   html += '</div>';
   html += '<div class="wizard-doors" id="wizardDoors"></div>';
   html += '<div class="wizard-footer" id="wizardFooter"></div>';
@@ -1217,15 +1232,54 @@ function renderWizardOverlay() {
 function wizardTransitionTo(phase) {
   wizardPhase = phase;
 
-  if (phase === 'riddle') {
-    wizardChangeSpeech(wizardCurrentScenario.riddle);
-    wizardRenderDoors();
+  if (phase === 'lesson') {
+    wizardRenderLesson();
+  }
+  else if (phase === 'riddle') {
+    // Sæt nuværende scenarie og shuffle døre for denne gåde
+    wizardCurrentScenario = wizardScenarios[wizardRiddleIndex];
+    wizardTries = 0;
+    wizardFirstTryCorrect = false;
+    wizardDoorOrder = Math.random() < 0.5 ? [0, 1] : [1, 0];
+    wizardChangeSpeech(wizardCurrentScenario.setup);
+    // Vis riddle-tekst + døre efter et øjeblik (lad setup-teksten læses)
+    setTimeout(function() {
+      if (wizardPhase !== 'riddle') return;
+      wizardChangeSpeech(wizardCurrentScenario.riddle);
+      wizardRenderDoors();
+    }, 2000);
   }
   else if (phase === 'reveal') {
     wizardRenderReveal();
   }
   else if (phase === 'done') {
     wizardComplete();
+  }
+}
+
+function wizardRenderLesson() {
+  var lessonData = CATEGORY_LESSONS[wizardCurrentCategory];
+  if (!lessonData) { wizardTransitionTo('riddle'); return; }
+
+  // Vis reglen i speech-boblen
+  wizardChangeSpeech(lessonData.rule.replace(/<[^>]+>/g, ''));
+
+  // Vis eksempler + tip + "Klar!" knap i doors-/footer-området
+  var container = document.getElementById('wizardDoors');
+  var html = '<div class="wizard-lesson-examples">';
+  for (var i = 0; i < lessonData.examples.length; i++) {
+    var ex = lessonData.examples[i];
+    var wordText = ex.word.replace(/<[^>]+>/g, '');
+    html += '<div class="wizard-example"><span class="wizard-example-word">' + ex.word + '</span>';
+    html += '<span class="wizard-example-note">' + escapeHtml(ex.note) + '</span></div>';
+  }
+  html += '</div>';
+  if (container) container.innerHTML = html;
+
+  var footer = document.getElementById('wizardFooter');
+  if (footer) {
+    footer.innerHTML = '<div class="wizard-tip">' + lessonData.tip + '</div>';
+    footer.innerHTML += '<button class="wizard-done-btn" onclick="wizardTransitionTo(\'riddle\')" style="animation-delay:200ms">Klar til gåderne! 🎯</button>';
   }
 }
 
@@ -1240,21 +1294,38 @@ function wizardRenderReveal() {
     }
   }
 
+  // Track korrekte
+  if (wizardFirstTryCorrect) wizardCorrectCount++;
+
   // Skift speech til reveal-tekst
   setTimeout(function() {
     wizardChangeSpeech(wizardCurrentScenario.reveal);
   }, 300);
 
-  // Tilføj "Forstået!" knap
+  // Knap afhænger af om der er flere gåder
   var footer = document.getElementById('wizardFooter');
   if (footer) {
-    footer.innerHTML = '<button class="wizard-done-btn" onclick="wizardTransitionTo(\'done\')">Forstået! 💪</button>';
+    if (wizardRiddleIndex < wizardScenarios.length - 1) {
+      footer.innerHTML = '<button class="wizard-done-btn" onclick="wizardNextRiddle()">Næste gåde! 🎯</button>';
+    } else {
+      footer.innerHTML = '<button class="wizard-done-btn" onclick="wizardTransitionTo(\'done\')">Forstået! 💪</button>';
+    }
   }
 }
 
+function wizardNextRiddle() {
+  wizardRiddleIndex++;
+  // Ryd døre og footer
+  var container = document.getElementById('wizardDoors');
+  if (container) container.innerHTML = '';
+  var footer = document.getElementById('wizardFooter');
+  if (footer) footer.innerHTML = '';
+  wizardTransitionTo('riddle');
+}
+
 function wizardComplete() {
-  // Tildel XP — håndter dato-skift så stale todayXP fra tidligere dag ikke tælles med
-  var xpReward = wizardFirstTryCorrect ? 15 : 10;
+  // Tildel XP — base 10 + 5 bonus pr. rigtig-første-forsøg gåde (max 20 for 2/2)
+  var xpReward = 10 + (wizardCorrectCount * 5);
   if (typeof loadRewardData === 'function' && typeof saveRewardData === 'function') {
     var data = loadRewardData();
     var today = (typeof getTodayStr === 'function') ? getTodayStr() : '';
@@ -1287,6 +1358,9 @@ function wizardComplete() {
   wizardTries = 0;
   wizardFirstTryCorrect = false;
   wizardLastDeath = null;
+  wizardScenarios = [];
+  wizardRiddleIndex = 0;
+  wizardCorrectCount = 0;
 }
 
 function wizardChangeSpeech(newText) {

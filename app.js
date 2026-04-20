@@ -558,7 +558,7 @@ async function loadClassOverview(groupId, timeFilter) {
     return;
   }
 
-  // Fetch profiles and answers in parallel
+  // Fetch profiles, current answers og forrige periodes svar parallelt
   var profilesPromise = supabaseClient.from('profiles').select('player, reward_data, profile_data, student_grade, updated_at').in('player', studentNames);
   var answersQuery = supabaseClient.from('answers').select('player, correct, category').in('player', studentNames);
   if (timeFilter === 'week') {
@@ -567,24 +567,36 @@ async function loadClassOverview(groupId, timeFilter) {
     answersQuery = answersQuery.gte('created_at', new Date(Date.now() - 30 * ONE_DAY_MS).toISOString());
   }
 
-  var results = await Promise.all([profilesPromise, answersQuery.limit(10000)]);
+  // Forrige periodes svar (30-60 dage siden) til trend-sammenligning
+  var prevFrom = new Date(Date.now() - 60 * ONE_DAY_MS).toISOString();
+  var prevTo = new Date(Date.now() - 30 * ONE_DAY_MS).toISOString();
+  var prevAnswersQuery = supabaseClient.from('answers').select('player, correct, category').in('player', studentNames)
+    .gte('created_at', prevFrom).lt('created_at', prevTo);
+
+  var results = await Promise.all([profilesPromise, answersQuery.limit(10000), prevAnswersQuery.limit(10000)]);
   var profiles = results[0].data || [];
   var answers = results[1].data || [];
+  var prevAnswers = results[2].data || [];
 
-  // Aggregate answer stats per player
-  var answerStats = {};
-  for (var a = 0; a < answers.length; a++) {
-    var row = answers[a];
-    if (!answerStats[row.player]) answerStats[row.player] = { total: 0, correct: 0, cats: {} };
-    answerStats[row.player].total++;
-    if (row.correct) answerStats[row.player].correct++;
-    // Per-category stats
-    if (row.category) {
-      if (!answerStats[row.player].cats[row.category]) answerStats[row.player].cats[row.category] = { total: 0, correct: 0 };
-      answerStats[row.player].cats[row.category].total++;
-      if (row.correct) answerStats[row.player].cats[row.category].correct++;
+  // Aggregér svar-statistik pr. spiller (nuværende periode)
+  function aggregateAnswers(answerList) {
+    var stats = {};
+    for (var a = 0; a < answerList.length; a++) {
+      var row = answerList[a];
+      if (!stats[row.player]) stats[row.player] = { total: 0, correct: 0, cats: {} };
+      stats[row.player].total++;
+      if (row.correct) stats[row.player].correct++;
+      if (row.category) {
+        if (!stats[row.player].cats[row.category]) stats[row.player].cats[row.category] = { total: 0, correct: 0 };
+        stats[row.player].cats[row.category].total++;
+        if (row.correct) stats[row.player].cats[row.category].correct++;
+      }
     }
+    return stats;
   }
+
+  var answerStats = aggregateAnswers(answers);
+  var prevAnswerStats = aggregateAnswers(prevAnswers);
 
   var profileMap = {};
   for (var p = 0; p < profiles.length; p++) {
@@ -600,6 +612,8 @@ async function loadClassOverview(groupId, timeFilter) {
     var avatarTitle = (typeof AVATAR_LEVELS !== 'undefined' && AVATAR_LEVELS[avatarIdx]) ? AVATAR_LEVELS[avatarIdx].title : '-';
     var lastActive = prof.updated_at ? formatRelativeTime(prof.updated_at) : '-';
 
+    var prevStats = prevAnswerStats[name] || { total: 0, correct: 0, cats: {} };
+
     return {
       name: name,
       grade: prof.student_grade || 0,
@@ -609,6 +623,7 @@ async function loadClassOverview(groupId, timeFilter) {
       totalAnswers: stats.total,
       lastActive: lastActive,
       catStats: stats.cats,
+      prevCatStats: prevStats.cats,
       profileData: prof.profile_data || {},
       rewardData: rd
     };
@@ -732,9 +747,25 @@ function renderStudentDetail(student) {
         '<span style="font-weight:700;font-size:0.78rem;color:' + lvlColor + ';min-width:50px;text-align:right">' + lvlText + '</span>';
 
       if (catPct >= 0) {
+        // Trend-sammenligning med forrige periode (30-60 dage siden)
+        var prevCatStat = (student.prevCatStats || {})[cat] || { total: 0, correct: 0 };
+        var prevPct = prevCatStat.total > 0 ? Math.round(100 * prevCatStat.correct / prevCatStat.total) : -1;
+        var trendHtml = '';
+        if (prevPct >= 0) {
+          var diff = catPct - prevPct;
+          if (diff > 5) {
+            trendHtml = '<span style="font-size:0.72rem;color:var(--green);white-space:nowrap" title="For 30-60 dage siden: ' + prevPct + '%">⬆️ ' + prevPct + '%</span>';
+          } else if (diff < -5) {
+            trendHtml = '<span style="font-size:0.72rem;color:var(--red);white-space:nowrap" title="For 30-60 dage siden: ' + prevPct + '%">⬇️ ' + prevPct + '%</span>';
+          } else {
+            trendHtml = '<span style="font-size:0.72rem;color:var(--muted);white-space:nowrap" title="For 30-60 dage siden: ' + prevPct + '%">➡️ ' + prevPct + '%</span>';
+          }
+        }
+
         html += '<div class="cat-progress-bar" style="min-width:50px;max-width:80px">' +
           '<div class="cat-progress-bar-fill" style="width:' + catPct + '%;background:' + barColor + '"></div></div>' +
           '<span style="font-size:0.75rem;font-weight:700;color:' + barColor + ';min-width:35px;text-align:right">' + catPct + '%</span>' +
+          (trendHtml ? trendHtml : '') +
           '<span style="font-size:0.7rem;color:var(--muted);min-width:25px;text-align:right">(' + catStat.total + ')</span>';
       } else {
         html += '<span style="font-size:0.75rem;color:var(--muted);min-width:110px;text-align:right">Ingen svar</span>';

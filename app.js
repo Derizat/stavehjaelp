@@ -1317,6 +1317,14 @@ function wizardRenderReveal() {
   }
 }
 
+function wizardRetryAfterDeath() {
+  wizardChangeSpeech(wizardCurrentScenario.riddle);
+  wizardPhase = 'riddle';
+  wizardClearDeathEffects();
+  var footer = document.getElementById('wizardFooter');
+  if (footer) footer.innerHTML = '';
+}
+
 function wizardNextRiddle() {
   wizardRiddleIndex++;
   var container = document.getElementById('wizardDoors');
@@ -1434,13 +1442,14 @@ function wizardHandleWrong(optIdx, btn) {
   // Trigger tilfældig død-animation (sætter selv speech-bobble teksten)
   wizardTriggerDeath(pickWizardDeath());
 
-  // Efter 2.0s: tilbage til riddle med kun én dør tilbage
+  // Vis "Prøv igen"-knap efter død-animationen er færdig (1.2s)
   setTimeout(function() {
     if (wizardPhase !== 'wrong-1') return;
-    wizardChangeSpeech(wizardCurrentScenario.riddle);
-    wizardPhase = 'riddle'; // tillader klik igen
-    wizardClearDeathEffects();
-  }, 2000);
+    var footer = document.getElementById('wizardFooter');
+    if (footer) {
+      footer.innerHTML = '<button class="wizard-done-btn" onclick="wizardRetryAfterDeath()">Prøv igen! 💪</button>';
+    }
+  }, 1200);
 }
 
 var WIZARD_DEATHS = ['anvil', 'dragon', 'lightning', 'banana', 'ghost'];

@@ -352,15 +352,22 @@ async function joinClass(joinCode) {
   var res = await supabaseClient.from('groups').select('id, name').eq('join_code', joinCode).single();
   if (res.error || !res.data) { alert('Ingen klasse fundet med koden "' + joinCode + '"'); return; }
 
+  // Tjek om spilleren allerede er medlem (evt. som lærer)
+  var existingMember = await supabaseClient.from('group_members').select('role').eq('group_id', res.data.id).eq('player', activePlayer).maybeSingle();
+  if (existingMember.data) {
+    if (existingMember.data.role === 'teacher') {
+      alert('Du er allerede tilmeldt som lærer i denne klasse');
+    } else {
+      alert('Du er allerede tilmeldt denne klasse');
+    }
+    return;
+  }
+
   var memberRes = await supabaseClient.from('group_members').insert({
     group_id: res.data.id, player: activePlayer, role: 'student'
   });
   if (memberRes.error) {
-    if (memberRes.error.message.indexOf('duplicate') !== -1 || memberRes.error.code === '23505') {
-      alert('Du er allerede tilmeldt denne klasse');
-    } else {
-      alert('Fejl: ' + memberRes.error.message);
-    }
+    alert('Fejl: ' + memberRes.error.message);
     return;
   }
 

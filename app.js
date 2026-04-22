@@ -1090,11 +1090,11 @@ var WIZARD_SCENARIOS = {
       reveal: "KOPPER — kort 'o' så dobbelt p. Tip: sig vokalen højt; er den kort? Så dobbelt!"
     },
     {
-      setup: "Pizzaen kommer lige ud af ovnen — den er meget varm.",
-      riddle: "Hvordan staves temperaturen — 'hede' eller 'hedde'?",
-      options: ["hede", "hedde"],
+      setup: "Vores hund elsker at lave huller ude i haven.",
+      riddle: "Hvordan staves det hunden gør — 'grave' eller 'gravve'?",
+      options: ["grave", "gravve"],
       correct: 0,
-      reveal: "HEDE betyder varm (lang 'e' → enkelt d). At HEDDE er noget helt andet (kort 'e' → dobbelt d), fx 'jeg hedder Anna'."
+      reveal: "GRAVE — lang 'a' (graaave), så enkelt v. Husk: er vokalen lang? Så kun én konsonant!"
     },
     {
       setup: "Der er rigtig mange æbler i træet i år!",

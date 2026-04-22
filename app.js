@@ -741,34 +741,30 @@ function renderStudentDetail(student) {
       var catPct = catStat.total > 0 ? Math.round(100 * catStat.correct / catStat.total) : -1;
       var barColor = catPct >= 80 ? 'var(--green)' : catPct >= 50 ? 'var(--accent)' : 'var(--red)';
 
+      // Trend-sammenligning med forrige periode (30-60 dage siden)
+      var prevCatStat = (student.prevCatStats || {})[cat] || { total: 0, correct: 0 };
+      var prevPct = prevCatStat.total > 0 ? Math.round(100 * prevCatStat.correct / prevCatStat.total) : -1;
+
+      // Format: ikon | kategori | Niv X/Y (Z%) trend (W%)
       html += '<div class="cat-progress-row">' +
         '<span style="width:22px;text-align:center">' + icon + '</span>' +
-        '<span style="flex:1;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + cat + '</span>' +
-        '<span style="font-weight:700;font-size:0.78rem;color:' + lvlColor + ';min-width:50px;text-align:right">' + lvlText + '</span>';
+        '<span style="flex:1;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + cat + '</span>';
 
       if (catPct >= 0) {
-        // Trend-sammenligning med forrige periode (30-60 dage siden)
-        var prevCatStat = (student.prevCatStats || {})[cat] || { total: 0, correct: 0 };
-        var prevPct = prevCatStat.total > 0 ? Math.round(100 * prevCatStat.correct / prevCatStat.total) : -1;
-        var trendHtml = '';
+        var pctColor2 = catPct >= 80 ? 'var(--green)' : catPct >= 50 ? 'var(--accent)' : 'var(--red)';
+        html += '<span style="font-weight:700;font-size:0.8rem;color:' + lvlColor + '">' + lvlText + '</span>' +
+          '<span style="font-weight:700;font-size:0.8rem;color:' + pctColor2 + ';min-width:38px;text-align:right">(' + catPct + '%)</span>';
+
         if (prevPct >= 0) {
           var diff = catPct - prevPct;
-          if (diff > 5) {
-            trendHtml = '<span style="font-size:0.72rem;color:var(--green);white-space:nowrap" title="For 30-60 dage siden: ' + prevPct + '%">⬆️ ' + prevPct + '%</span>';
-          } else if (diff < -5) {
-            trendHtml = '<span style="font-size:0.72rem;color:var(--red);white-space:nowrap" title="For 30-60 dage siden: ' + prevPct + '%">⬇️ ' + prevPct + '%</span>';
-          } else {
-            trendHtml = '<span style="font-size:0.72rem;color:var(--muted);white-space:nowrap" title="For 30-60 dage siden: ' + prevPct + '%">➡️ ' + prevPct + '%</span>';
-          }
+          var trendIcon = diff > 5 ? '⬆️' : diff < -5 ? '⬇️' : '➡️';
+          var trendColor = diff > 5 ? 'var(--green)' : diff < -5 ? 'var(--red)' : 'var(--muted)';
+          html += '<span style="font-size:0.78rem;color:' + trendColor + '">' + trendIcon + '</span>' +
+            '<span style="font-size:0.75rem;color:var(--muted)">(' + prevPct + '%)</span>';
         }
-
-        html += '<div class="cat-progress-bar" style="min-width:50px;max-width:80px">' +
-          '<div class="cat-progress-bar-fill" style="width:' + catPct + '%;background:' + barColor + '"></div></div>' +
-          '<span style="font-size:0.75rem;font-weight:700;color:' + barColor + ';min-width:35px;text-align:right">' + catPct + '%</span>' +
-          (trendHtml ? trendHtml : '') +
-          '<span style="font-size:0.7rem;color:var(--muted);min-width:25px;text-align:right">(' + catStat.total + ')</span>';
       } else {
-        html += '<span style="font-size:0.75rem;color:var(--muted);min-width:110px;text-align:right">Ingen svar</span>';
+        html += '<span style="font-size:0.78rem;color:' + lvlColor + '">' + lvlText + '</span>' +
+          '<span style="font-size:0.75rem;color:var(--muted);margin-left:auto">Ingen svar</span>';
       }
 
       html += '</div>';

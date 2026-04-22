@@ -1255,6 +1255,19 @@ function renderWizardOverlay() {
     });
   }
 
+  // Lås speech-bobblen fast efter entry-animation (forhindrer at text-changing
+  // genudløser wizard-speech-in ved at override animation med inline styles)
+  var speech = document.getElementById('wizardSpeech');
+  if (speech) {
+    speech.addEventListener('animationend', function onSpeechIn(e) {
+      if (e.animationName !== 'wizard-speech-in') return;
+      speech.removeEventListener('animationend', onSpeechIn);
+      speech.style.opacity = '1';
+      speech.style.transform = 'scale(1)';
+      speech.style.animation = 'none';
+    });
+  }
+
   // "Videre"-knap i intro (i stedet for auto-timeout)
   var footer = document.getElementById('wizardFooter');
   if (footer) {

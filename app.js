@@ -1251,6 +1251,7 @@ function renderWizardOverlay() {
     ch.addEventListener('animationend', function onIntroEnd(e) {
       if (e.animationName !== 'wizard-char-in') return;
       ch.removeEventListener('animationend', onIntroEnd);
+      ch.style.opacity = '1';
       ch.classList.add('idle');
     });
   }

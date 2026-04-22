@@ -747,24 +747,25 @@ function renderStudentDetail(student) {
 
       // Format: ikon | kategori | Niv X/Y (Z%) trend (W%)
       html += '<div class="cat-progress-row">' +
-        '<span style="width:22px;text-align:center">' + icon + '</span>' +
-        '<span style="flex:1;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + cat + '</span>';
+        '<span style="width:22px;text-align:center;flex-shrink:0">' + icon + '</span>' +
+        '<span style="width:130px;flex-shrink:0;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + cat + '</span>' +
+        '<span style="width:55px;flex-shrink:0;font-weight:700;font-size:0.8rem;color:' + lvlColor + '">' + lvlText + '</span>';
 
       if (catPct >= 0) {
         var pctColor2 = catPct >= 80 ? 'var(--green)' : catPct >= 50 ? 'var(--accent)' : 'var(--red)';
-        html += '<span style="font-weight:700;font-size:0.8rem;color:' + lvlColor + '">' + lvlText + '</span>' +
-          '<span style="font-weight:700;font-size:0.8rem;color:' + pctColor2 + ';min-width:38px;text-align:right">(' + catPct + '%)</span>';
+        html += '<span style="width:40px;flex-shrink:0;font-weight:700;font-size:0.8rem;color:' + pctColor2 + ';text-align:right">(' + catPct + '%)</span>';
 
         if (prevPct >= 0) {
           var diff = catPct - prevPct;
-          var trendIcon = diff > 5 ? '⬆️' : diff < -5 ? '⬇️' : '➡️';
-          var trendColor = diff > 5 ? 'var(--green)' : diff < -5 ? 'var(--red)' : 'var(--muted)';
-          html += '<span style="font-size:0.78rem;color:' + trendColor + '">' + trendIcon + '</span>' +
+          var trendIcon, trendColor;
+          if (diff > 5) { trendIcon = '⬆️'; trendColor = 'var(--green)'; }
+          else if (diff < -5) { trendIcon = '⬇️'; trendColor = 'var(--red)'; }
+          else { trendIcon = '➡️'; trendColor = 'var(--muted)'; }
+          html += '<span style="width:24px;flex-shrink:0;font-size:0.78rem;color:' + trendColor + ';text-align:center">' + trendIcon + '</span>' +
             '<span style="font-size:0.75rem;color:var(--muted)">(' + prevPct + '%)</span>';
         }
       } else {
-        html += '<span style="font-size:0.78rem;color:' + lvlColor + '">' + lvlText + '</span>' +
-          '<span style="font-size:0.75rem;color:var(--muted);margin-left:auto">Ingen svar</span>';
+        html += '<span style="font-size:0.75rem;color:var(--muted)">Ingen svar</span>';
       }
 
       html += '</div>';

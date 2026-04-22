@@ -2845,9 +2845,11 @@ document.addEventListener('keydown', function(e) {
     return;
   }
 
-  // Boss phase: click visible Fortsæt button
+  // Boss phase: click visible Fortsæt button (men ikke hvis stave-input er aktivt)
   var bossPhase = document.getElementById('phase-boss');
   if (bossPhase && !bossPhase.classList.contains('hidden')) {
+    var bossSpellInput = document.getElementById('bossSpellInput');
+    if (bossSpellInput) return; // stave-fasen håndterer selv Enter
     var bossBtn = bossPhase.querySelector('.btn-green[onclick*="continueAfterBoss"]');
     if (bossBtn) { e.preventDefault(); continueAfterBoss(); return; }
   }

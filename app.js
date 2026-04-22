@@ -1070,56 +1070,56 @@ var WIZARD_SCENARIOS = {
   "Dobbeltkonsonant": [
     {
       setup: "Jeg har planlagt en stor fødselsdag og skal lave en lækker dessert i ovnen.",
-      riddle: "Hvordan staves det jeg skal — 'bage' eller 'bagge'?",
+      riddle: "Hvordan staves det jeg skal — 'bage' eller 'bagge'? Lyt efter vokalen — er den lang eller kort?",
       options: ["bage", "bagge"],
       correct: 0,
       reveal: "Det rigtige er BAGE. Vokalen 'a' er LANG (baaaa-ge), så enkelt 'g'. Kort vokal som i 'hop-pe' ville have dobbelt."
     },
     {
       setup: "Jeg er træt og vil hvile mig på stolen.",
-      riddle: "Hvordan staves det — 'sidde' eller 'side'?",
+      riddle: "Hvordan staves det — 'sidde' eller 'side'? Lyt efter vokalen — er den lang eller kort?",
       options: ["sidde", "side"],
       correct: 0,
       reveal: "AHA — jeg vil SIDDE (kort 'i' → dobbelt d). En SIDE er noget helt andet (en side i en bog)!"
     },
     {
       setup: "Jeg drikker varm te. Hvis jeg vil have to af dem på bordet...",
-      riddle: "Hvordan staves det — 'kopper' eller 'koper'?",
+      riddle: "Hvordan staves det — 'kopper' eller 'koper'? Lyt efter vokalen — er den lang eller kort?",
       options: ["kopper", "koper"],
       correct: 0,
       reveal: "KOPPER — kort 'o' så dobbelt p. Tip: sig vokalen højt; er den kort? Så dobbelt!"
     },
     {
       setup: "Vores hund elsker at lave huller ude i haven.",
-      riddle: "Hvordan staves det hunden gør — 'grave' eller 'gravve'?",
+      riddle: "Hvordan staves det hunden gør — 'grave' eller 'gravve'? Lyt efter vokalen — er den lang eller kort?",
       options: ["grave", "gravve"],
       correct: 0,
       reveal: "GRAVE — lang 'a' (graaave), så enkelt v. Husk: er vokalen lang? Så kun én konsonant!"
     },
     {
       setup: "Der er rigtig mange æbler i træet i år!",
-      riddle: "Hvordan staves antal-ordet — 'masse' eller 'mase'?",
+      riddle: "Hvordan staves antal-ordet — 'masse' eller 'mase'? Lyt efter vokalen — er den lang eller kort?",
       options: ["masse", "mase"],
       correct: 0,
       reveal: "MASSE betyder mange — kort 'a' så dobbelt s. At MASE er noget andet (presse på)!"
     },
     {
       setup: "På trampolinen kan jeg sætte af og flyve op i luften.",
-      riddle: "Hvordan staves verbet — 'hoppe' eller 'hope'?",
+      riddle: "Hvordan staves verbet — 'hoppe' eller 'hope'? Lyt efter vokalen — er den lang eller kort?",
       options: ["hoppe", "hope"],
       correct: 0,
       reveal: "HOPPE — kort 'o' så dobbelt p. Tip: føles vokalen 'o' kort eller lang? Kort = dobbelt."
     },
     {
       setup: "Til koncerten viser publikum begejstring med hænderne.",
-      riddle: "Hvordan staves grundformen — 'klappe' eller 'klape'?",
+      riddle: "Hvordan staves grundformen — 'klappe' eller 'klape'? Lyt efter vokalen — er den lang eller kort?",
       options: ["klappe", "klape"],
       correct: 0,
       reveal: "KLAPPE — kort 'a' så dobbelt p. Prøv at sige det langsomt: klap-pe."
     },
     {
       setup: "En kold is om sommeren er noget af det bedste der findes.",
-      riddle: "Hvordan staves det jeg gør med isen — 'slikke' eller 'slike'?",
+      riddle: "Hvordan staves det jeg gør med isen — 'slikke' eller 'slike'? Lyt efter vokalen — er den lang eller kort?",
       options: ["slikke", "slike"],
       correct: 0,
       reveal: "SLIKKE — kort 'i' så dobbelt k. Lang vokal som i 'rige' ville være enkelt."

@@ -3299,7 +3299,7 @@ var BOSS_MONSTERS = {
   "Konsonantlyde": { emoji: "\uD83E\uDD87", name: "Lydflagermussen" }
 };
 
-var BOSS_BATTLE_TYPES = ['memory', 'cardcast', 'silentservant'];
+var BOSS_BATTLE_TYPES = ['memory', 'cardcast', 'silentservant', 'pacman', 'snake'];
 var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];
 var BOSS_IDLE_ANIMS = ['boss-idle-float', 'boss-idle-pulse', 'boss-idle-wobble'];
 var BOSS_VICTORY_MSGS = [
@@ -3328,7 +3328,7 @@ var BOSS_INSTRUCTIONS = {
 var bossPracticeMode = false;
 var bossPracticeType = null;
 
-var BOSS_DISABLED_TYPES = ['scramble', 'spellpick', 'rain', 'reverse', 'pacman', 'highway', 'snake'];
+var BOSS_DISABLED_TYPES = ['scramble', 'spellpick', 'rain', 'reverse', 'highway'];
 var BOSS_ALL_TYPES = BOSS_BATTLE_TYPES.concat(BOSS_DISABLED_TYPES);
 
 var EXERCISE_TYPES = [
@@ -5246,8 +5246,12 @@ function cleanupSnake() {
 }
 
 // --- Boss defeated (shared) ---
+// Boss-typer der kræver stavning efter arcade-fasen for at give fuld bonus
+var BOSS_SPELL_AFTER = ['pacman', 'snake'];
+
 function bossDefeated() {
   var defeatedWord = bossState ? bossState.word : '';
+  var battleType = bossState ? bossState.battleType : '';
   var deathAnim = bossState ? bossState.deathAnim : 'boss-death-spin';
   if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
   cleanupPacman();
@@ -5261,21 +5265,75 @@ function bossDefeated() {
     monster.className = 'boss-monster ' + deathAnim;
   }
 
+  var needsSpelling = BOSS_SPELL_AFTER.indexOf(battleType) !== -1 && defeatedWord;
   var victoryMsg = pickRandom(BOSS_VICTORY_MSGS);
+
   setTimeout(function() {
     var content = document.getElementById('bossContent');
-    content.innerHTML = '<div style="text-align:center;padding:30px">' +
-      '<div style="font-size:4rem;margin-bottom:12px">\uD83C\uDF89</div>' +
-      '<h2 style="color:var(--green);margin-bottom:8px">' + victoryMsg + '</h2>' +
-      '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">\uD83D\uDC8E +3 Diamanter</p>' +
-      '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">\u27A1\uFE0F Forts\u00E6t</button>' +
-      '</div>';
+    if (needsSpelling) {
+      content.innerHTML = '<div style="text-align:center;padding:24px">' +
+        '<div style="font-size:3rem;margin-bottom:8px">🎉</div>' +
+        '<h2 style="color:var(--green);margin-bottom:8px">' + victoryMsg + '</h2>' +
+        '<p style="color:var(--muted);margin-bottom:14px;font-size:0.9rem">Stav nu ordet korrekt for bonus-XP!</p>' +
+        '<input type="text" id="bossSpellInput" class="spelling-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ' +
+        'style="max-width:260px;margin:0 auto;display:block;text-align:center;font-size:1.2rem;letter-spacing:2px" ' +
+        'onkeydown="if(event.key===\'Enter\')checkBossSpelling()">' +
+        '<button class="btn btn-green" onclick="checkBossSpelling()" style="margin-top:10px">Tjek ✏️</button>' +
+        '</div>';
+      // Gem ordet til tjek
+      content.dataset.bossWord = defeatedWord;
+      setTimeout(function() {
+        var inp = document.getElementById('bossSpellInput');
+        if (inp) inp.focus();
+      }, 100);
+    } else {
+      content.innerHTML = '<div style="text-align:center;padding:30px">' +
+        '<div style="font-size:4rem;margin-bottom:12px">🎉</div>' +
+        '<h2 style="color:var(--green);margin-bottom:8px">' + victoryMsg + '</h2>' +
+        '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">💎 +3 Diamanter</p>' +
+        '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">➡️ Fortsæt</button>' +
+        '</div>';
+    }
   }, 1700);
 
   var data = loadRewardData();
   data.gems = (data.gems || 0) + 3;
   saveRewardData(data);
   updateRewardBar();
+}
+
+function checkBossSpelling() {
+  var content = document.getElementById('bossContent');
+  var input = document.getElementById('bossSpellInput');
+  if (!content || !input) return;
+  var word = content.dataset.bossWord || '';
+  var answer = input.value.trim().toLowerCase();
+  var correct = answer === word.toLowerCase();
+
+  if (correct) {
+    var data = loadRewardData();
+    data.totalXP = (data.totalXP || 0) + 5;
+    var today = (typeof getTodayStr === 'function') ? getTodayStr() : '';
+    if (today && data.todayDate !== today) { data.todayXP = 0; data.todayDate = today; }
+    data.todayXP = (data.todayXP || 0) + 5;
+    saveRewardData(data);
+    updateRewardBar();
+    content.innerHTML = '<div style="text-align:center;padding:30px">' +
+      '<div style="font-size:4rem;margin-bottom:12px">🌟</div>' +
+      '<h2 style="color:var(--green);margin-bottom:8px">Perfekt stavet!</h2>' +
+      '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">💎 +3 Diamanter &middot; ⚡ +5 XP bonus</p>' +
+      '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">➡️ Fortsæt</button>' +
+      '</div>';
+  } else {
+    content.innerHTML = '<div style="text-align:center;padding:30px">' +
+      '<div style="font-size:3rem;margin-bottom:12px">😅</div>' +
+      '<h2 style="color:var(--accent);margin-bottom:8px">Tæt på!</h2>' +
+      '<p style="color:var(--text);font-size:1rem;margin-bottom:4px">Du skrev: <strong>' + escapeHtml(answer) + '</strong></p>' +
+      '<p style="color:var(--green);font-size:1.1rem;font-weight:700">Det rigtige er: <strong style="letter-spacing:2px">' + escapeHtml(word) + '</strong></p>' +
+      '<p style="color:var(--accent);font-weight:700;font-size:1rem;margin-top:10px">💎 +3 Diamanter</p>' +
+      '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">➡️ Fortsæt</button>' +
+      '</div>';
+  }
 }
 
 function continueAfterBoss() {

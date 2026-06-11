@@ -7,6 +7,10 @@ Dansk stavetrænings-app til børn (0-8. klasse). Single-page HTML app uden buil
 Alt ligger i `index.html` — HTML, CSS og JavaScript (~6500 linjer).
 Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 
+JavaScript-moduler der loades INDEN `app.js` (ingen indbyrdes afhængigheder):
+- `sfx.js` — WebAudio-lydeffekter, global `SFX`, muteknap `#muteBtn` i header, localStorage-nøgle `sound_muted`
+- `fx.js` — visuelle effekter, global `FX`: burst, damageNumber, confetti, slotPop, combo-badge
+
 ## Vigtige dele
 
 - **Ordbank**: `WORD_BANK` objekt med 8 kategorier (lydrette ord, stumme bogstaver, dobbeltkonsonant, for-/efterstavelser, sammensatte ord, verbernes bøjning, navneordsendelser, nutids-r)
@@ -24,7 +28,7 @@ Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 - `activePlayer` — den valgte spillers navn
 - `playerKey(key)` — returnerer `activePlayer + '_' + key` — bruges til ALLE localStorage-kald
 - Per-spiller nøgler: `profile_data`, `reward_data`, `sr_data`, `screening_data`, `student_grade`
-- Delte nøgler (ikke prefixed): `tts_voice`, `gcloud_tts_key`
+- Delte nøgler (ikke prefixed): `tts_voice`, `gcloud_tts_key`, `sound_muted`
 - `players_list` — JSON-array af spillernavne i localStorage
 - `last_player` — sidst valgte spiller (til auto-select)
 - Migration fra gammel data: `migrateOldData()` flytter uprefixede nøgler til "Spiller 1"
@@ -101,12 +105,11 @@ Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
 - **Kategori-lektion**: Trigges efter 3 fejl i samme kategori. Bruger `pendingLesson` flag
 - **Interrupt-mønster**: `pendingInterruptAction` gemmer 'finish' eller 'continue' efter boss/kiste. `proceedAfterInterrupt()` genoptager flowet
 
-### Boss-kampe (5 typer)
-1. **scramble** — saml bogstaverne i rækkefølge
-2. **rain** — fang faldende bogstaver (guided mode for niveau 0-2)
-3. **memory** — husk og stav ordet
-4. **reverse** — ordet er baglæns, skriv det rigtigt
-5. **pacman** — saml bogstaver i labyrint, undgå spøgelset
+### Boss-kampe
+
+Den aktive rotation er `BOSS_BATTLE_TYPES = ['memory', 'cardcast', 'silentservant', 'pacman', 'snake']`. Andre typer (scramble, rain, reverse m.fl.) eksisterer i koden men er ikke i rotation.
+
+**Monster-identitet** bestemmes af ordkategori via `BOSS_MONSTERS` (9 navngivne monstre, hvert med AI-genereret sprite i `images/bosses/` + emoji-fallback). Kampen vises i et duel-layout med spillerens avatar mod monsteret.
 
 ### Belønninger
 - XP: 10 per rigtig, 5 per forkert, 15 bonus per boss
@@ -186,6 +189,7 @@ Navn, Klassetrin, XP, Streak, Rigtige %, Antal svar, Sidst aktiv, [Fjern]
 - Versionsnummer vises i header (hardcodet i HTML). Bump ved HVER ændring
 - Alle ændringer committes og pushes til GitHub (Pages)
 - Deploy via GitHub Pages fra main branch
+- `generate-boss-images.js` — engangs boss-sprite-generator via gpt-image-1 (`OPENAI_API_KEY` env var; skip-existing; output `images/bosses/`, rå 1024px-originaler i gitignorerede `images/bosses_raw/`; nedskalering med cwebp)
 
 ## Sprog
 

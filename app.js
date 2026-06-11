@@ -2419,7 +2419,7 @@ function startTrainingFromProfile() {
   isMixedSession = true;
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
   sessionBossCount = 0;
   pendingChest = false;
   wrongCountPerWord = {};
@@ -2749,7 +2749,7 @@ function startReview() {
   gameMode = 'review';
   wrongCountPerWord = {};
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
   sessionUsedWords = {};
   pendingChest = false;
   currentWords = shuffle(getDueWords());
@@ -6612,7 +6612,7 @@ function startFillIn() {
   gameMode = 'fillin';
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
   sessionUsedWords = {};
   pendingChest = false;
 
@@ -6962,7 +6962,7 @@ function startSpellingPolice() {
   gameMode = 'spellingpolice';
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
   sessionUsedWords = {};
   pendingChest = false;
 
@@ -7251,7 +7251,7 @@ function startWordBuilder() {
   gameMode = 'wordbuilder';
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
   sessionUsedWords = {};
   pendingChest = false;
 
@@ -7522,7 +7522,7 @@ function startSpellPick() {
   gameMode = 'spellpick';
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
   sessionUsedWords = {};
   pendingChest = false;
 
@@ -7843,7 +7843,7 @@ function startWhatIsTheWord() {
   gameMode = 'sentence';
   isMixedSession = false;
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
   sessionUsedWords = {};
   pendingChest = false;
   results = [];
@@ -7931,7 +7931,7 @@ function startWordMemory() {
   gameMode = 'wordmemory';
   isMixedSession = false;
   results = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {};
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
 
   // Build pairs from words with parseable morphemes (2 parts)
   var pool = [];

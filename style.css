@@ -1473,3 +1473,67 @@
     line-height: 1;
   }
   .mute-btn:hover { border-color: var(--accent); }
+
+/* ===== FX effects (fx.js) ===== */
+.fx-particle {
+  position: fixed;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  animation: fx-burst 0.65s ease-out forwards;
+}
+@keyframes fx-burst {
+  from { transform: translate(0, 0) scale(1); opacity: 1; }
+  to   { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
+}
+.fx-damage {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: #fde047;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  transform: translateX(-50%);
+  animation: fx-damage-float 0.85s ease-out forwards;
+}
+@keyframes fx-damage-float {
+  to { transform: translate(-50%, -52px); opacity: 0; }
+}
+.fx-confetti {
+  position: fixed;
+  width: 9px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  animation-name: fx-confetti-fall;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes fx-confetti-fall {
+  0%   { opacity: 1; transform: translateY(0) rotate(0); }
+  100% { opacity: 0; transform: translateY(140px) rotate(540deg); }
+}
+.fx-pop { animation: fx-pop 0.35s ease; }
+@keyframes fx-pop {
+  0%   { transform: scale(0.4); }
+  60%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.fx-combo-badge {
+  position: fixed;
+  top: 64px;
+  right: 12px;
+  z-index: 9000;
+  background: var(--card);
+  border: 2px solid var(--accent);
+  border-radius: 22px;
+  padding: 6px 14px;
+  font-family: 'Fredoka One', cursive;
+  color: var(--accent);
+  font-size: 1.05rem;
+  box-shadow: 0 0 14px rgba(245, 166, 35, 0.5);
+}

@@ -9,8 +9,9 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.9.7</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.9.8</div>
   <p>Evidensbaseret stavetræning med AI</p>
+  <button id="muteBtn" class="mute-btn" onclick="SFX.toggleMute()" aria-label="Lyd til/fra">&#x1F50A;</button>
 </header>
 
 <!-- REWARD BAR -->
@@ -433,6 +434,7 @@
 <div id="chestOverlay" class="chest-overlay hidden"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="sfx.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

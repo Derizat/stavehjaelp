@@ -14,7 +14,7 @@
     background-image: radial-gradient(ellipse at 20% 20%, #1e1060 0%, transparent 50%),
                       radial-gradient(ellipse at 80% 80%, #0d2a1a 0%, transparent 50%);
   }
-  header { text-align: center; margin-bottom: 32px; }
+  header { text-align: center; margin-bottom: 32px; position: relative; }
   header .logo {
     font-family: 'Fredoka One', cursive; font-size: 2.8rem;
     background: linear-gradient(135deg, var(--accent), #f97316, var(--accent2));
@@ -1457,3 +1457,19 @@
     0%, 100% { background: var(--card); }
     50% { background: #fff; }
   }
+
+  /* ===== SFX mute button (sfx.js) ===== */
+  .mute-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--card2);
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .mute-btn:hover { border-color: var(--accent); }

@@ -1538,3 +1538,37 @@
   font-size: 1.05rem;
   box-shadow: 0 0 14px rgba(245, 166, 35, 0.5);
 }
+
+/* ===== Boss duel layout ===== */
+.boss-duel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.duel-avatar img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+.duel-vs {
+  font-family: 'Fredoka One', cursive;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+.boss-monster-img {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  display: block;
+}
+.avatar-hop { animation: fx-avatar-hop 0.45s ease; }
+@keyframes fx-avatar-hop {
+  0%, 100% { transform: translateY(0); }
+  40%      { transform: translateY(-14px); }
+}
+.avatar-duck { animation: fx-avatar-duck 0.45s ease; }
+@keyframes fx-avatar-duck {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40%      { transform: translateY(6px) scale(0.92); }
+}

@@ -3555,6 +3555,22 @@ function showBossMinigame(bossData) {
 }
 
 // --- Shared boss UI helpers ---
+function bossMonsterHTML(boss) {
+  if (boss.image) {
+    return '<img src="' + boss.image + '" alt="' + boss.name + '" class="boss-monster-img" ' +
+      'onerror="this.parentNode.textContent=\'' + boss.emoji + '\'">';
+  }
+  return boss.emoji;
+}
+
+function duelAvatarReact(cls) {
+  var a = document.getElementById('duelAvatar');
+  if (!a) return;
+  a.classList.remove('avatar-hop', 'avatar-duck');
+  void a.offsetWidth;
+  a.classList.add(cls);
+}
+
 function renderBossHeader(boss, idleAnim, hp, maxHP) {
   var catBadge = '';
   if (bossState && bossState.wordObj) {
@@ -3575,11 +3591,17 @@ function renderBossHeader(boss, idleAnim, hp, maxHP) {
     var displayName = bossNames[bossState.battleType] || boss.name;
     label.innerHTML = '\u2694\uFE0F Ord-Boss: ' + displayName;
   }
+  var avatarLevel = AVATAR_LEVELS[loadRewardData().displayedLevel || 0];
   return '<div style="text-align:center">' +
     catBadge +
     '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>' +
     '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:4px" id="bossHPText">HP: ' + hp + '/' + maxHP + '</div>' +
-    '<div id="bossMonster" class="boss-monster ' + idleAnim + '">' + boss.emoji + '</div>' +
+    '<div class="boss-duel">' +
+      '<div class="duel-avatar" id="duelAvatar"><img src="' + avatarLevel.image + '" alt="' + avatarLevel.title + '"></div>' +
+      '<div class="duel-vs">VS</div>' +
+      '<div id="bossMonster" class="boss-monster ' + idleAnim + '">' + bossMonsterHTML(boss) + '</div>' +
+    '</div>' +
+    '<div style="font-size:0.85rem;color:var(--muted);margin-top:2px">' + boss.name + '</div>' +
     '</div>';
 }
 
@@ -3618,6 +3640,7 @@ function bossAttackAnim() {
   var monster = document.getElementById('bossMonster');
   if (!monster) return;
   SFX.play('wrong');
+  duelAvatarReact('avatar-duck');
   monster.className = 'boss-monster boss-attack';
   setTimeout(function() {
     if (bossState) monster.className = 'boss-monster ' + bossState.idleAnim;
@@ -3626,7 +3649,7 @@ function bossAttackAnim() {
 
 function revealBossSlot(index, letter) {
   var slot = document.getElementById('bossSlot' + index);
-  if (slot) { slot.textContent = letter; slot.classList.add('revealed'); SFX.play('letterCatch'); FX.slotPop(slot); }
+  if (slot) { slot.textContent = letter; slot.classList.add('revealed'); SFX.play('letterCatch'); FX.slotPop(slot); duelAvatarReact('avatar-hop'); }
 }
 
 // --- Type 1: SCRAMBLE (original) ---

@@ -4,7 +4,7 @@
 // no-op when muted or when WebAudio is unavailable.
 (function () {
   var ctx = null;
-  var muted = localStorage.getItem('sound_muted') === '1';
+  var muted = (function () { try { return localStorage.getItem('sound_muted') === '1'; } catch (e) { return false; } })();
 
   function ensureCtx() {
     if (!ctx) {
@@ -70,6 +70,7 @@
     filter.connect(gain);
     gain.connect(c.destination);
     src.start(t);
+    src.stop(t + dur + 0.05);
   }
 
   var SOUNDS = {
@@ -127,7 +128,7 @@
     isMuted: function () { return muted; },
     toggleMute: function () {
       muted = !muted;
-      localStorage.setItem('sound_muted', muted ? '1' : '0');
+      try { localStorage.setItem('sound_muted', muted ? '1' : '0'); } catch (e) {}
       var btn = document.getElementById('muteBtn');
       if (btn) btn.textContent = muted ? '🔇' : '🔊';
       if (!muted) window.SFX.play('correct');

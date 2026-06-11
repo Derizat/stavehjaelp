@@ -1511,10 +1511,11 @@
   opacity: 0;
   animation-name: fx-confetti-fall;
   animation-timing-function: linear;
-  animation-fill-mode: forwards;
+  animation-fill-mode: both;
 }
 @keyframes fx-confetti-fall {
-  0%   { opacity: 1; transform: translateY(0) rotate(0); }
+  0%   { opacity: 0; transform: translateY(0) rotate(0); }
+  8%   { opacity: 1; }
   100% { opacity: 0; transform: translateY(140px) rotate(540deg); }
 }
 .fx-pop { animation: fx-pop 0.35s ease; }
@@ -1525,7 +1526,7 @@
 }
 .fx-combo-badge {
   position: fixed;
-  top: 64px;
+  top: 90px;
   right: 12px;
   z-index: 9000;
   background: var(--card);

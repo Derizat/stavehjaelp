@@ -31,6 +31,7 @@
   function burst(el, count) {
     if (reduceMotion || !el) return;
     var r = el.getBoundingClientRect();
+    if (!r.width && !r.height) return; // element not visible
     var cx = r.left + r.width / 2;
     var cy = r.top + r.height / 2;
     count = count || 12;
@@ -50,6 +51,7 @@
   function damageNumber(el, n) {
     if (!el || !n) return;
     var r = el.getBoundingClientRect();
+    if (!r.width && !r.height) return; // element not visible
     var d = spawn('fx-damage', {
       left: (r.left + r.width / 2) + 'px',
       top: r.top + 'px'

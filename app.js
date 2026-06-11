@@ -2948,6 +2948,7 @@ function checkSpelling() {
 
   // Streak and boss/chest trigger (reward-based)
   if (ok) {
+    SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
     // Boss + chest triggered as reward after 5 correct in a row
@@ -2957,6 +2958,7 @@ function checkSpelling() {
       pendingChest = true; // chest awarded after boss is defeated
     }
   } else {
+    SFX.play('wrong');
     sessionCorrectStreak = 0;
     trackCategoryError(w.category);
   }
@@ -3597,6 +3599,7 @@ function updateBossHP() {
 function bossHitAnim() {
   var monster = document.getElementById('bossMonster');
   if (!monster) return;
+  SFX.play('bossHit');
   monster.className = 'boss-monster boss-hit';
   setTimeout(function() {
     if (bossState) monster.className = 'boss-monster ' + bossState.idleAnim;
@@ -3606,6 +3609,7 @@ function bossHitAnim() {
 function bossAttackAnim() {
   var monster = document.getElementById('bossMonster');
   if (!monster) return;
+  SFX.play('wrong');
   monster.className = 'boss-monster boss-attack';
   setTimeout(function() {
     if (bossState) monster.className = 'boss-monster ' + bossState.idleAnim;
@@ -3614,7 +3618,7 @@ function bossAttackAnim() {
 
 function revealBossSlot(index, letter) {
   var slot = document.getElementById('bossSlot' + index);
-  if (slot) { slot.textContent = letter; slot.classList.add('revealed'); }
+  if (slot) { slot.textContent = letter; slot.classList.add('revealed'); SFX.play('letterCatch'); }
 }
 
 // --- Type 1: SCRAMBLE (original) ---
@@ -5275,6 +5279,7 @@ function bossDefeated() {
   cleanupSnake();
   if (bossState && bossState._ccKeyHandler) document.removeEventListener('keydown', bossState._ccKeyHandler);
   bossState = null;
+  SFX.play('bossDefeat');
 
   var monster = document.getElementById('bossMonster');
   if (monster) {
@@ -5493,6 +5498,7 @@ function rollChestReward() {
 }
 
 function showTreasureChest() {
+  SFX.play('chestOpen');
   // Award 3 gems
   var data = loadRewardData();
   data.gems += 3;
@@ -5645,6 +5651,7 @@ function doLevelUp() {
   var actualLevel = getAvatarLevel(data.totalXP || 0);
   var newIdx = oldIdx + 1; // level up one step at a time
   if (newIdx > actualLevel.index) return;
+  SFX.play('levelup');
   var oldLevel = AVATAR_LEVELS[oldIdx];
   var newLevel = AVATAR_LEVELS[newIdx];
 
@@ -6756,6 +6763,7 @@ function checkFillIn(chosenIndex) {
 
   // Gamification — boss + chest as reward for 5 correct streak
   if (ok) {
+    SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
@@ -6764,6 +6772,7 @@ function checkFillIn(chosenIndex) {
       pendingChest = true;
     }
   } else {
+    SFX.play('wrong');
     sessionCorrectStreak = 0;
     trackCategoryError(w.category);
   }
@@ -7038,6 +7047,7 @@ function checkSpellingPolice(wordIndex) {
 
   // Gamification
   if (ok) {
+    SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
@@ -7046,6 +7056,7 @@ function checkSpellingPolice(wordIndex) {
       pendingChest = true;
     }
   } else {
+    SFX.play('wrong');
     sessionCorrectStreak = 0;
     trackCategoryError(item.category);
   }
@@ -7376,6 +7387,7 @@ function wordBuilderComplete() {
 
   // Gamification
   if (ok) {
+    SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
@@ -7384,6 +7396,7 @@ function wordBuilderComplete() {
       pendingChest = true;
     }
   } else {
+    SFX.play('wrong');
     sessionCorrectStreak = 0;
     trackCategoryError(w.category);
   }
@@ -7597,6 +7610,7 @@ function pickSpkOption(btn, picked) {
   updateSRWord(w.word, ok, w.category);
 
   if (ok) {
+    SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
@@ -7604,7 +7618,11 @@ function pickSpkOption(btn, picked) {
       pendingBoss = pickBossWord({ word: w.word, category: w.category });
       pendingChest = true;
     }
-  } else { sessionCorrectStreak = 0; trackCategoryError(w.category); }
+  } else {
+    SFX.play('wrong');
+    sessionCorrectStreak = 0;
+    trackCategoryError(w.category);
+  }
 
   document.getElementById('spkScoreCorrect').textContent = spkResults.filter(function(r) { return r.correct; }).length;
   document.getElementById('spkScoreWrong').textContent = spkResults.filter(function(r) { return !r.correct; }).length;
@@ -7747,6 +7765,7 @@ function checkSentence() {
 
   // Gamification
   if (ok) {
+    SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
@@ -7755,6 +7774,7 @@ function checkSentence() {
       pendingChest = true;
     }
   } else {
+    SFX.play('wrong');
     sessionCorrectStreak = 0;
     trackCategoryError(swCurrentWord.category);
   }

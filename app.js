@@ -3308,16 +3308,20 @@ function showRewardFloat(text) {
 // ===== BOSS MINIGAME =====
 
 var BOSS_MONSTERS = {
-  "Stumme bogstaver": { emoji: "\uD83D\uDC7B", name: "Sp\u00F8gelsesbossen" },
-  "Dobbeltkonsonant": { emoji: "\uD83D\uDC09", name: "Dobbeltdragen" },
-  "For- og efterstavelser": { emoji: "\uD83E\uDDD9", name: "Troldmanden" },
-  "Sammensatte ord": { emoji: "\uD83D\uDC79", name: "Samlemonsteret" },
-  "Verbernes b\u00F8jning": { emoji: "\uD83E\uDDDF", name: "B\u00F8jningszombien" },
-  "Navneordsendelser": { emoji: "\uD83D\uDC7E", name: "Endelsesalienen" },
-  "Lydrette ord": { emoji: "\uD83D\uDC3B", name: "Lydbj\u00F8rnen" },
-  "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex" },
-  "Konsonantlyde": { emoji: "\uD83E\uDD87", name: "Lydflagermussen" }
+  "Stumme bogstaver": { emoji: "\uD83D\uDC7B", name: "Sp\u00F8gelsesbossen", image: "images/bosses/stumme-bogstaver.webp" },
+  "Dobbeltkonsonant": { emoji: "\uD83D\uDC09", name: "Dobbeltdragen", image: "images/bosses/dobbeltkonsonant.webp" },
+  "For- og efterstavelser": { emoji: "\uD83E\uDDD9", name: "Troldmanden", image: "images/bosses/for-efterstavelser.webp" },
+  "Sammensatte ord": { emoji: "\uD83D\uDC79", name: "Samlemonsteret", image: "images/bosses/sammensatte-ord.webp" },
+  "Verbernes b\u00F8jning": { emoji: "\uD83E\uDDDF", name: "B\u00F8jningszombien", image: "images/bosses/verbernes-bojning.webp" },
+  "Navneordsendelser": { emoji: "\uD83D\uDC7E", name: "Endelsesalienen", image: "images/bosses/navneordsendelser.webp" },
+  "Lydrette ord": { emoji: "\uD83D\uDC3B", name: "Lydbj\u00F8rnen", image: "images/bosses/lydrette-ord.webp" },
+  "Nutids-r": { emoji: "\uD83E\uDD96", name: "R-Rex", image: "images/bosses/nutids-r.webp" },
+  "Konsonantlyde": { emoji: "\uD83E\uDD87", name: "Lydflagermussen", image: "images/bosses/konsonantlyde.webp" }
 };
+// Preload boss sprites so the first fight doesn't flash the fallback emoji
+Object.keys(BOSS_MONSTERS).forEach(function (k) {
+  if (BOSS_MONSTERS[k].image) { var img = new Image(); img.src = BOSS_MONSTERS[k].image; }
+});
 
 var BOSS_BATTLE_TYPES = ['memory', 'cardcast', 'silentservant', 'pacman', 'snake'];
 var BOSS_DEATH_ANIMS = ['boss-death-spin', 'boss-death-explode', 'boss-death-melt', 'boss-death-launch'];

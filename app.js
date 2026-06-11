@@ -3591,6 +3591,11 @@ function renderBossWordSlots(word) {
 }
 
 function updateBossHP() {
+  var prev = bossState._shownHP;
+  if (typeof prev === 'number' && bossState.hp < prev) {
+    FX.damageNumber(document.getElementById('bossMonster'), prev - bossState.hp);
+  }
+  bossState._shownHP = bossState.hp;
   var pct = (bossState.hp / bossState.maxHP) * 100;
   document.getElementById('bossHPBar').style.width = pct + '%';
   document.getElementById('bossHPText').textContent = 'HP: ' + bossState.hp + '/' + bossState.maxHP;
@@ -3600,6 +3605,7 @@ function bossHitAnim() {
   var monster = document.getElementById('bossMonster');
   if (!monster) return;
   SFX.play('bossHit');
+  FX.burst(monster);
   monster.className = 'boss-monster boss-hit';
   setTimeout(function() {
     if (bossState) monster.className = 'boss-monster ' + bossState.idleAnim;
@@ -3618,7 +3624,7 @@ function bossAttackAnim() {
 
 function revealBossSlot(index, letter) {
   var slot = document.getElementById('bossSlot' + index);
-  if (slot) { slot.textContent = letter; slot.classList.add('revealed'); SFX.play('letterCatch'); }
+  if (slot) { slot.textContent = letter; slot.classList.add('revealed'); SFX.play('letterCatch'); FX.slotPop(slot); }
 }
 
 // --- Type 1: SCRAMBLE (original) ---
@@ -5280,6 +5286,7 @@ function bossDefeated() {
   if (bossState && bossState._ccKeyHandler) document.removeEventListener('keydown', bossState._ccKeyHandler);
   bossState = null;
   SFX.play('bossDefeat');
+  FX.confetti(document.getElementById('bossContent'));
 
   var monster = document.getElementById('bossMonster');
   if (monster) {

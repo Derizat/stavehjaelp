@@ -3591,7 +3591,8 @@ function renderBossHeader(boss, idleAnim, hp, maxHP) {
     var displayName = bossNames[bossState.battleType] || boss.name;
     label.innerHTML = '\u2694\uFE0F Ord-Boss: ' + displayName;
   }
-  var avatarLevel = AVATAR_LEVELS[loadRewardData().displayedLevel || 0];
+  var avatarIdx = loadRewardData().displayedLevel || 0;
+  var avatarLevel = AVATAR_LEVELS[avatarIdx] || AVATAR_LEVELS[0];
   return '<div style="text-align:center">' +
     catBadge +
     '<div class="boss-hp-wrap"><div class="boss-hp-bar" id="bossHPBar" style="width:100%"></div></div>' +

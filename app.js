@@ -2951,6 +2951,7 @@ function checkSpelling() {
     SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
+    FX.combo.set(sessionCorrectStreak);
     // Boss + chest triggered as reward after 5 correct in a row
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
@@ -2960,6 +2961,7 @@ function checkSpelling() {
   } else {
     SFX.play('wrong');
     sessionCorrectStreak = 0;
+    FX.combo.reset();
     trackCategoryError(w.category);
   }
 
@@ -6773,6 +6775,7 @@ function checkFillIn(chosenIndex) {
     SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
+    FX.combo.set(sessionCorrectStreak);
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: w.word, category: w.category });
@@ -6781,6 +6784,7 @@ function checkFillIn(chosenIndex) {
   } else {
     SFX.play('wrong');
     sessionCorrectStreak = 0;
+    FX.combo.reset();
     trackCategoryError(w.category);
   }
 
@@ -7057,6 +7061,7 @@ function checkSpellingPolice(wordIndex) {
     SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
+    FX.combo.set(sessionCorrectStreak);
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: item.word, category: item.category });
@@ -7065,6 +7070,7 @@ function checkSpellingPolice(wordIndex) {
   } else {
     SFX.play('wrong');
     sessionCorrectStreak = 0;
+    FX.combo.reset();
     trackCategoryError(item.category);
   }
 
@@ -7397,6 +7403,7 @@ function wordBuilderComplete() {
     SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
+    FX.combo.set(sessionCorrectStreak);
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: w.word, category: w.category });
@@ -7405,6 +7412,7 @@ function wordBuilderComplete() {
   } else {
     SFX.play('wrong');
     sessionCorrectStreak = 0;
+    FX.combo.reset();
     trackCategoryError(w.category);
   }
 
@@ -7620,6 +7628,7 @@ function pickSpkOption(btn, picked) {
     SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
+    FX.combo.set(sessionCorrectStreak);
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: w.word, category: w.category });
@@ -7628,6 +7637,7 @@ function pickSpkOption(btn, picked) {
   } else {
     SFX.play('wrong');
     sessionCorrectStreak = 0;
+    FX.combo.reset();
     trackCategoryError(w.category);
   }
 
@@ -7775,6 +7785,7 @@ function checkSentence() {
     SFX.play('correct');
     sessionCorrectCount++;
     sessionCorrectStreak++;
+    FX.combo.set(sessionCorrectStreak);
     if (sessionCorrectStreak >= BOSS_TRIGGER_STREAK) {
       sessionCorrectStreak = 0;
       pendingBoss = pickBossWord({ word: swCurrentWord.word, category: swCurrentWord.category });
@@ -7783,6 +7794,7 @@ function checkSentence() {
   } else {
     SFX.play('wrong');
     sessionCorrectStreak = 0;
+    FX.combo.reset();
     trackCategoryError(swCurrentWord.category);
   }
 

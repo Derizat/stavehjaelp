@@ -3620,8 +3620,8 @@ function renderBossWordSlots(word) {
 }
 
 function updateBossHP() {
-  var prev = bossState._shownHP;
-  if (typeof prev === 'number' && bossState.hp < prev) {
+  var prev = (typeof bossState._shownHP === 'number') ? bossState._shownHP : bossState.maxHP;
+  if (bossState.hp < prev) {
     FX.damageNumber(document.getElementById('bossMonster'), prev - bossState.hp);
   }
   bossState._shownHP = bossState.hp;
@@ -3652,9 +3652,15 @@ function bossAttackAnim() {
   }, 500);
 }
 
-function revealBossSlot(index, letter) {
+function revealBossSlot(index, letter, silent) {
   var slot = document.getElementById('bossSlot' + index);
-  if (slot) { slot.textContent = letter; slot.classList.add('revealed'); SFX.play('letterCatch'); FX.slotPop(slot); duelAvatarReact('avatar-hop'); }
+  if (!slot) return;
+  slot.textContent = letter;
+  slot.classList.add('revealed');
+  if (silent) return;
+  SFX.play('letterCatch');
+  FX.slotPop(slot);
+  duelAvatarReact('avatar-hop');
 }
 
 // --- Type 1: SCRAMBLE (original) ---
@@ -3867,7 +3873,7 @@ function checkBossMemory() {
   if (answer === bossState.word) {
     // All correct!
     for (var i = 0; i < bossState.word.length; i++) {
-      revealBossSlot(i, bossState.word[i]);
+      revealBossSlot(i, bossState.word[i], true);
     }
     bossState.hp = 0;
     updateBossHP(); bossHitAnim();
@@ -3893,7 +3899,7 @@ function checkBossMemory() {
     // Lost — reveal the word, no chest reward
     pendingChest = false;
     for (var ri = 0; ri < bossState.word.length; ri++) {
-      revealBossSlot(ri, bossState.word[ri]);
+      revealBossSlot(ri, bossState.word[ri], true);
     }
     var content = document.getElementById('bossContent');
     content.innerHTML += '<div style="text-align:center;margin-top:16px">' +
@@ -3955,7 +3961,7 @@ function checkBossReverse() {
 
   if (answer === bossState.word) {
     for (var i = 0; i < bossState.word.length; i++) {
-      revealBossSlot(i, bossState.word[i]);
+      revealBossSlot(i, bossState.word[i], true);
     }
     bossState.hp = 0;
     updateBossHP(); bossHitAnim();
@@ -5259,6 +5265,7 @@ function pickSilentOption(btn, picked) {
   }
 
   if (correct) {
+    SFX.play('correct');
     bossState.ssCorrect++;
     bossState.hp--;
     if (bossState.ssCorrect >= SS_ITEMS.length) {
@@ -5266,6 +5273,7 @@ function pickSilentOption(btn, picked) {
       return;
     }
   } else {
+    SFX.play('wrong');
     bossState.ssWrong++;
     if (bossState.ssWrong >= 2) {
       setTimeout(function() { bossLost(); }, 800);

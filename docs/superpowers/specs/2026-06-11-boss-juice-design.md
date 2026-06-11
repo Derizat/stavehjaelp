@@ -15,6 +15,7 @@ The repo's CLAUDE.md was stale. Verified against app.js:
 - Boss **monster identity is per word category**, not per game: `BOSS_MONSTERS` (app.js:3306) already maps 9 categories to named monsters with emoji (Spøgelsesbossen, Dobbeltdragen, Troldmanden, Samlemonsteret, Bøjningszombien, Endelsesalienen, Lydbjørnen, R-Rex, Lydflagermussen).
 - The **battle type is picked at random** per fight from `BOSS_BATTLE_TYPES = ['memory', 'cardcast', 'silentservant', 'pacman', 'snake']` (app.js:3318). scramble/rain/reverse/highway/spellpick exist in code but are not in the active rotation.
 - All games share UI helpers: `renderBossHeader` (3554), `updateBossHP` (3592), `bossHitAnim` (3598), `bossAttackAnim` (3605), `revealBossSlot` (3614), `bossDefeated` (5268) — so juice hooks go in ~6 shared functions, not in every game.
+- Post-implementation correction: the `silentservant` battle type renders its own coat-rack UI and does not use `renderBossHeader`/`revealBossSlot`/`bossHitAnim` — it gets correct/wrong sounds + victory confetti/fanfare, but intentionally no duel layout, sprites, or hit particles (the coat rack IS its visual).
 
 ## Decided scope
 

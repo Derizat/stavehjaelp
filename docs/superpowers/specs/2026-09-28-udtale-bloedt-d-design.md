@@ -52,18 +52,18 @@ A word belongs to a tier by regex on the word form. Order is easiest to hardest 
 | Tier | Rule | Examples | Count today |
 |---|---|---|---|
 | 1 `final` | vowel + `d` at the end | mad, hvid, rød, tid, bad, god | 37 |
-| 2 `medial` | vowel + `d` + `e/er/en/et/es` at the end, not tier 3 | bade, side, pude, glæde, hvede, rede | ~23 |
+| 2 `medial` | vowel + `d` or `dd` + `e/er/en/et/es/ene` at the end, not tier 3 | bade, side, sidder, hedde, hvede, rede | ~35 |
 | 3 `past` | ends in `ede`, is a past-tense verb | legede, hoppede, malede, troede | ~28 |
-| 4 `sentence` | every word from tiers 1–3 presented as its `sentence` | "Mor er hjemme hele dagen." | ~88 |
+| 4 `sentence` | every word from tiers 1–3 presented as its `sentence` | "Mor er hjemme hele dagen." | ~100 |
 | 5 `pair` | the real minimal pairs below, target side random | ned / nej | 9 |
 
-Tier 3 vs 2: the regex `ede$` catches non-verbs (*hvede*, *rede*, *lede*, *allerede*). `udtale-data.js` holds an explicit list `notPastTense` of those, which stay in tier 2. Words with double d before the ending (*reddede*) are included; the learner's error form there is `-jede`.
+Tier 3 vs 2: the regex `ede$` also catches non-verbs (*hvede*, *rede*, *lede*, *allerede*). Tier 3 therefore requires the word's `category` to be `Verbernes bøjning`; every other `ede$` word stays in tier 2. Words with double d before the ending (*reddede*) are included; the learner's error form there is `-jede`.
 
 Words that are in the extras list but not in `words.json` (*ved, hed, bød, fed, øde, møde*) are added to tier 1 or 2 by the same regex and have no sentence, so they are excluded from tier 4.
 
 ### Error form
 
-`errorForm(word)`: replace `dd` with `j`, then any remaining vowel-following `d` with `j`. Only the soft-d occurrences are replaced; a hard d at the start of a word (*dag*) is not touched because it never follows a vowel. Examples: *hvid* → *hvij*, *bidder* → *bijer*, *bade* → *baje*, *reddede* → *rejede*, *rødgrød* → *røjgrøj*. This is a label for the judge, not a claim about phonetics.
+`errorForm(word)`: replace `dd` with `j`, then any remaining vowel-following `d` with `j`. Only the soft-d occurrences are replaced; a hard d at the start of a word (*dag*) is not touched because it never follows a vowel. Examples: *hvid* → *hvij*, *bidder* → *bijer*, *bade* → *baje*, *reddede* → *rejeje*, *rødgrød* → *røjgrøj*. This is a label for the judge, not a claim about phonetics.
 
 ### Real pairs
 
@@ -126,7 +126,7 @@ Stats box on the front page: per tier, percent correct over all time and over th
 
 - `words.json` fails to load: show an error and stop. Nothing works without it.
 - An MP3 404s: fall back to browser TTS for that item, as above.
-- No `da-DK` browser voice either: the "Hør ordet" button is disabled with the note "ingen lyd tilgængelig"; the exercise still works because the parent can read the word aloud.
+- No `da-DK` browser voice either: the note says "Ingen dansk stemme, læs ordet højt selv"; the exercise still works because the parent can read the word aloud.
 - localStorage unavailable: stats are kept in memory for the session and the stats box says they will not be saved.
 
 ## Testing

@@ -4,8 +4,12 @@ Dansk stavetrænings-app til børn (0-8. klasse). Single-page HTML app uden buil
 
 ## Arkitektur
 
-Alt ligger i `index.html` — HTML, CSS og JavaScript (~6500 linjer).
-Ordbanken ligger i `words.json` (653 ord, 8 kategorier, 5 niveauer).
+- `index.html` (~440 linjer) — markup, faser og settings-panel. Versionsnummer hardcodet i headeren
+- `app.js` (~8500 linjer) — al logik
+- `style.css` (~1400 linjer) — al styling
+- `words.json` — ordbanken (643 ord, 11 kategorier, niveau 0-5). Loades med `fetch` i `initApp()` og lægges i `WORD_BANK`
+
+Statiske oversigtssider (ikke en del af spillet): `stumme-bogstaver.html`, `ordbank.html`, `overview.html`. Dokumentation: `PÆDAGOGIK.md`, `ordbank-oversigt.md`, `saetninger-oversigt.md`, `lektioner.txt`.
 
 JavaScript-moduler der loades INDEN `app.js` (ingen indbyrdes afhængigheder):
 - `sfx.js` — WebAudio-lydeffekter, global `SFX`, muteknap `#muteBtn` i header, localStorage-nøgle `sound_muted`
@@ -13,24 +17,24 @@ JavaScript-moduler der loades INDEN `app.js` (ingen indbyrdes afhængigheder):
 
 ## Vigtige dele
 
-- **Ordbank**: `WORD_BANK` objekt med 8 kategorier (lydrette ord, stumme bogstaver, dobbeltkonsonant, for-/efterstavelser, sammensatte ord, verbernes bøjning, navneordsendelser, nutids-r)
-- **Staveregler**: `PATTERN_RULES` objekt med børnevenlige forklaringer per kategori
-- **Kategori-lektioner**: `CATEGORY_LESSONS` — popup med regler, eksempler og tricks. Trigges efter 3 fejl i samme kategori
+- **Ordbank**: `WORD_BANK` med 11 kategorier: Lydrette ord, Stumme bogstaver, Dobbeltkonsonant, Sammensatte ord, Verbernes bøjning, Nutids-r, Fremmedord, Blødt d, Konsonantlyde, Ord fra Fransk, Ord fra Fransk 2
+- **Kategori-niveauer**: Hver kategori har sit eget niveau pr. spiller (`profile.categoryLevels`). `CATEGORY_START_LEVELS` / `CATEGORY_MAX_LEVELS` definerer start og loft (mestring). Oprykning styres af `getLevelUpThreshold` — progressivt strengere jo tættere på mestring (fra 5 svar/80% op til 50 svar/90%). Tilfældige tastefejl (svar der ikke matcher kategoriens typiske misspelling) tæller ikke imod
+- **Fransk-kategorier**: `PRO_CATEGORIES` — låses op for gems (`purchaseFrench` / `purchaseFrench2`). Tracker unikke korrekte ord i stedet for niveausystemet
+- **Staveregler**: `PATTERN_RULES` med børnevenlige forklaringer per kategori
+- **Lektioner**: `CATEGORY_LESSONS` (statisk popup) og `WIZARD_SCENARIOS` (interaktiv troldmands-lektion med to døre, død-animationer m.m.). `showLessonPopup` delegerer til wizard hvis kategorien har scenarier. Trigges af `checkLessonTrigger` ved struggle: 2 svar med 0 rigtige, eller ≥3 svar med <60% rigtige. Desuden "Lektioner"-knap med slideshow-oversigt
 - **TTS**: Pre-genererede MP3-filer i `audio/` med to stemmer (kvinde: Neural2-F, mand: Wavenet-G med `_m` suffix). `audio-manifest.json` mapper ord til filer. Browser SpeechSynthesis som fallback
-- **AI-analyse**: Anthropic API (Claude) til personlig feedback efter diagnostisk test — med fuld offline fallback
-- **Spaced repetition**: Fejlord gemmes i localStorage og kan øves igen næste gang
-- **Adaptiv diagnostik**: Starter let, bliver sværere baseret på korrekte svar. Estimerer staveniveau 0-4
-- **Gamification**: Boss-kampe (5 typer), skattekister (4 sjældenheder), avatar-progression (8 niveauer med XP)
+- **Spaced repetition**: Fejlord gemmes i `sr_data` (intervaller 0/1/3/7/14 dage) og kan øves via "review"-mode
+- **Gamification**: Boss-kampe, skattekister (4 sjældenheder), avatar-progression (30 niveauer, Kylling → Ræve-Kongen), shop
 - **Stavevurdering**: Dysleksiscreening med 4 deltests (nonord, fonologisk, ordkæder, RAN)
+- **Misspellings fra rigtige data**: `fetchMisspellings` henter hyppige forkerte svar fra Supabase `answers`-tabellen (filtreret med `isPlausibleMisspelling`, 5 min cache) og bruger dem som distraktorer; `generateFallbackMisspellings` som fallback
+
+Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `anthropic_api_key`), men der er pt. ingen kode der kalder Anthropic API — feltet er en rest fra den gamle AI-analyse.
 
 ## Multi-profil system
 
 - `activePlayer` — den valgte spillers navn
-- `playerKey(key)` — returnerer `activePlayer + '_' + key` — bruges til ALLE localStorage-kald
-- Per-spiller nøgler: `profile_data`, `reward_data`, `sr_data`, `screening_data`, `student_grade`
-- Delte nøgler (ikke prefixed): `tts_voice`, `gcloud_tts_key`, `sound_muted`
-- `players_list` — JSON-array af spillernavne i localStorage
-- `last_player` — sidst valgte spiller (til auto-select)
+- `playerKey(key)` — returnerer `activePlayer + '_' + key` — bruges til ALLE per-spiller localStorage-kald
+- `players_list` — JSON-array af spillernavne; `last_player` — sidst valgte spiller (auto-select)
 - Migration fra gammel data: `migrateOldData()` flytter uprefixede nøgler til "Spiller 1"
 
 ## Supabase
@@ -38,10 +42,11 @@ JavaScript-moduler der loades INDEN `app.js` (ingen indbyrdes afhængigheder):
 - **Projekt**: `https://cfkddsiwwujbbxjuthie.supabase.co`
 - **Anon key**: `sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt`
 - **RLS**: Disabled på alle tabeller
+- **OBS (juli 2026)**: Hosten svarer ikke længere i DNS (NXDOMAIN) — projektet er formentlig pauset/slettet. Appen kører videre lokalt uden sync
 
 ### Tabeller
 
-**answers** — logger hvert svar fra alle øvelsestyper:
+**answers** — logger hvert svar fra alle øvelsestyper (batches via `answerQueue` + `flushAnswers`):
 - id (uuid), player (text), word (text), answer (text), correct (boolean), attempt (int), category (text), level (int), grade (int), created_at (timestamptz)
 
 **profiles** — syncer spillerdata på tværs af enheder:
@@ -61,63 +66,59 @@ JavaScript-moduler der loades INDEN `app.js` (ingen indbyrdes afhængigheder):
 ## Øvelsestyper
 
 ### Blandet træning (startTrainingFromProfile)
-"Fortsæt træning"-knappen bygger en session med 10 ord via kvote-baseret matching:
-- 5 diktat + 1 af hver: fillin, spellingpolice, wordbuilder, spellpick, sentence
-- Kandidat-pool: 30 ord fra `buildPoolWithCategoryLevels` (+ proWord først)
-- Rarest-first matching: wordbuilder først (14.3% eligible), så sentence/fillin/spellingpolice, til sidst spellpick
-- Fallback: hvis en type ikke kan matches → ekstra spellpick + `_unfulfilled[type]++` i `exercise_stats`
-- Pro-ordet gives første match-chance (placeret forrest i kandidat-listen)
+"Start stavespil"-knappen bygger en session med 10 ord via kvote-baseret matching:
+- 1 af hver variation-type (wordbuilder, sentence, fillin, spellingpolice, spellpick) + evt. 1 vedligeholdelses-diktat fra mestrede kategorier (`buildMaintenancePool`) + resten diktat
+- Kandidat-pool: 30 ord fra `buildPoolWithCategoryLevels` (alle kategorier, ord matches til spillerens kategoriniveau)
+- Rarest-first matching: wordbuilder først, spellpick sidst. Fallback ved manglende match: ekstra spellpick + `_unfulfilled[type]++` i `exercise_stats`
+- Fransk pro-ord får første match-chance (placeret forrest i kandidat-listen)
+- `sessionStartLevels` snapshotter kategoriniveauer så resultatskærmen kan vise op/ned-ændringer
 
-| Mode | gameMode | Beskrivelse | Kvote/10 |
-|---|---|---|---|
-| **Diktat** | training | Hør ord → skriv det | 5 |
-| **Udfyld bogstav** | fillin | Vælg rigtigt bogstav fra muligheder | 1 |
-| **Stavepolitiet** | spellingpolice | Find stavefejlen i dyr-lineup | 1 |
-| **Ordbyggeren** | wordbuilder | Byg ord af morfem-klodser | 1 |
-| **Vælg stavemåde** | spellpick | Vælg det rigtigt stavede ord ud af varianter | 1 |
-| **Skriv en sætning** | sentence | Skriv egen sætning med ordet | 1 |
+| Mode | type-id | Beskrivelse |
+|---|---|---|
+| **Diktat** | diktat | Hør ord → skriv det |
+| **Udfyld bogstav** | fillin | Vælg rigtigt bogstav fra muligheder |
+| **Stavepolitiet** | spellingpolice | Find stavefejlen i dyr-lineup |
+| **Ordbyggeren** | wordbuilder | Byg ord af morfem-klodser |
+| **Stavevælger** | spellpick | Vælg det rigtigt stavede ord ud af varianter |
+| **Udfyld sætningen** | sentence | Skriv ordet der passer i sætningen |
 
-### Frekvens-tracking
-- `trackExerciseType(type)` kaldes fra `renderMixedItem` — tæller i `{player}_exercise_stats`
-- `trackUnfulfilledType(type)` kaldes når kvote-matching fejler — `_unfulfilled[type]++`
-- `_total` og `_updatedAt` vedligeholdes automatisk
+- `isMixedSession` flag styrer om vi er i blandet modus; `mixedQueue` holder alle items med pre-beregnet data
+- `renderMixedItem()` skifter mellem phases baseret på type; hver modes "next"-funktion redirecter til `nextMixedItem()` når `isMixedSession` er true
+- `trackExerciseType(type)` tæller frekvens i `{player}_exercise_stats` (`_total`, `_unfulfilled`, `_updatedAt`)
 
-- `isMixedSession` flag styrer om vi er i blandet modus
-- `mixedQueue` holder alle 10 items med pre-beregnet data
-- `renderMixedItem()` skifter mellem phases baseret på type
-- Hver modes "next"-funktion redirecter til `nextMixedItem()` når `isMixedSession` er true
-
-### Standalone modes
-- **diagnostic** — Adaptiv stavetest, estimerer niveau
-- **review** — Spaced repetition gennemgang af øveord
+### Standalone
+- **Øvelser-knap** (`showExercisePicker`): øv en enkelt type — de 5 variation-typer + `wordmemory` (Ord-memory, vendespil)
+- **Boss-kampe-knap** (`showBossPicker`): øv boss-minigames direkte (practice mode)
+- **review** — spaced repetition-gennemgang af øveord
+- **Stavevurdering** (`startScreening`) — dysleksiscreening
+- Den gamle adaptive diagnostik-test er fjernet; `gameMode` er nu kun `'training' | 'review'`
 
 ### Øvelsesspecifik logik
-
 - **generateBlanks(wordObj)** — udleder blanks fra patternHint for fillin-mode
-- **generateMisspelling(wordObj)** — laver realistiske stavefejl per kategori
 - **buildSpellingPoliceItem(wordObj)** — indsætter stavefejl i sætning
 - **parseMorphemes(hint, word)** — parser '+' notation i patternHint til morfem-klodser
 
 ## Gamification-flow
 
-- **Boss**: Trigges efter 5 rigtige i træk (belønning). Bruger `pendingBoss` flag
+- **Boss**: Trigges efter 5 rigtige i træk (`BOSS_TRIGGER_STREAK`), max 2 per session (`MAX_BOSSES_PER_SESSION`). Bruger `pendingBoss` flag
 - **Skattekiste**: Gives efter boss er besejret. Bruger `pendingChest` flag
-- **Kategori-lektion**: Trigges efter 3 fejl i samme kategori. Bruger `pendingLesson` flag
+- **Lektion**: Bruger `pendingLesson` flag
 - **Interrupt-mønster**: `pendingInterruptAction` gemmer 'finish' eller 'continue' efter boss/kiste. `proceedAfterInterrupt()` genoptager flowet
 
 ### Boss-kampe
-
-Den aktive rotation er `BOSS_BATTLE_TYPES = ['memory', 'cardcast', 'silentservant', 'pacman', 'snake']`. Andre typer (scramble, rain, reverse m.fl.) eksisterer i koden men er ikke i rotation.
-
-**Monster-identitet** bestemmes af ordkategori via `BOSS_MONSTERS` (9 navngivne monstre, hvert med AI-genereret sprite i `images/bosses/` + emoji-fallback). Kampen vises i et duel-layout med spillerens avatar mod monsteret.
+- Aktiv rotation (`BOSS_BATTLE_TYPES`): **memory** (husk og stav ordet), **cardcast** (kast bogstav-kort), **silentservant** (stumtjeneren — vælg rigtig stavemåde), **pacman** (saml bogstaver i labyrint), **snake** (styr slangen til bogstaverne)
+- Deaktiverede men stadig i koden (`BOSS_DISABLED_TYPES`, kan testes via boss-picker): scramble, spellpick, rain, reverse, highway
+- **Monster-identitet** bestemmes af ordkategori via `BOSS_MONSTERS` (9 navngivne monstre, hvert med AI-genereret sprite i `images/bosses/` + emoji-fallback). Kampen vises i et duel-layout med spillerens avatar mod monsteret
 
 ### Belønninger
-- XP: 10 per rigtig, 5 per forkert, 15 bonus per boss
-- Gems: session-belønning + kiste-drops
-- Streak: daglig streak med freeze-system
-- Avatar: 8 niveauer (Baby Ræv → Stavedragen) baseret på total XP
-- Skattekister: 4 sjældenheder (60% almindelig → 5% episk)
-- Milestones: ved 3, 7, 14, 30, 50, 100 dages streak
+- XP (`awardSessionXP`): 5 per rigtig, 2 per forkert, +3 per selvrettet svar, +10 for gennemført session
+- Gems: 2 per session + 5 ved dagligt mål (100 XP) + kiste-drops
+- Streak: daglig streak med milestone-overlay
+- Avatar: 30 niveauer (`AVATAR_LEVELS`, 0 → 32.000 XP)
+- Skattekister: 4 sjældenheder (55% almindelig / 25% ualmindelig / 13% sjælden / 7% episk)
+
+### Shop (`SHOP_CATALOG`)
+Købes for gems, gemmes i `reward_data.shop` (owned/active): temaer (`applyTheme`), navnestile og -rammer, stickers (5 slots på welcome/rewardbar)
 
 ## Klasser
 
@@ -130,65 +131,51 @@ Lærere kan oprette klasser, elever tilmelder sig via 6-tegns delekode. Ingen au
 - Lærer-dashboard er sin egen fase (`phase-dashboard`) med klasse- og elev-dropdowns
 
 ### Funktioner
-- `generateJoinCode()` — 6-tegns unik kode
-- `isTeacher()` / `toggleTeacherMode()` — lærer-toggle i reward_data
-- `updateDashboardButton()` — viser/skjuler dashboard-knap på welcome
+- `generateJoinCode()`, `isTeacher()` / `toggleTeacherMode()`, `updateDashboardButton()`
 - `createClass(name)` / `deleteClass(groupId)` — CRUD for klasser
 - `joinClass(joinCode)` / `leaveClass(groupId)` — elev tilmelding
 - `removeStudentFromClass(groupId, player)` — lærer fjerner elev
 - `renderClassSettings()` — bygger klasse-UI i settings
 
 ### Dashboard (phase-dashboard)
-- `openDashboard()` — åbner dashboard-fasen, henter lærerens klasser
-- `onDashboardClassChange()` — klasse valgt i dropdown
-- `loadClassOverview(groupId, timeFilter)` — henter profiler + svar med kategoridata
-- `renderClassOverview(groupId, students, timeFilter)` — klassetabel med tidsfilter
-- `onDashboardStudentChange()` — elev valgt i dropdown
-- `renderStudentDetail(student)` — detaljeret elevvisning med kategori-breakdown
-
-### Klasseoversigt-kolonner
-Navn, Klassetrin, XP, Streak, Rigtige %, Antal svar, Sidst aktiv, [Fjern]
-
-### Elevdetaljer
-- Stat-boxes: XP, Streak, Rigtige %, Svar i alt
-- Kategori-breakdown: ikon, navn, niveau, progress-bar med korrektprocent, antal svar
-
-### Tidsfilter
-- `'week'` — seneste 7 dage
-- `'month'` — seneste 30 dage
-- `'all'` — alt
+- `openDashboard()`, `onDashboardClassChange()`, `loadClassOverview(groupId, timeFilter)`, `renderClassOverview(...)`, `onDashboardStudentChange()`, `renderStudentDetail(student)`
+- Klasseoversigt-kolonner: Navn, Klassetrin, XP, Streak, Rigtige %, Antal svar, Sidst aktiv, [Fjern]
+- Elevdetaljer: stat-boxes + kategori-breakdown med progress-bars
+- Tidsfilter: `'week'` / `'month'` / `'all'`
 
 ## Audio
 
-- `generate-audio.js` — genererer MP3'er via Google Cloud TTS
-- `audio/` — 2616 MP3-filer (653 ord × 2 stemmer × 2 typer)
+- `generate-audio.js` — genererer MP3'er via Google Cloud TTS (`GOOGLE_TTS_KEY`, `--voice`, `--suffix _m`)
+- `record-audio.sh` — interaktivt optage-værktøj til at indtale ord/sætninger som MP3 (matcher manifest-formatet)
+- `audio/` — ~3800 MP3-filer (ord + sætning × 2 stemmer)
 - `audio-manifest.json` — mapper hvert ord til 4 stier: `word`, `sentence`, `word_m`, `sentence_m`
 - Stemmer: kvinde (da-DK-Neural2-F), mand (da-DK-Wavenet-G med `_m` suffix)
 
-## localStorage-nøgler (prefixed med spillernavn)
+## localStorage-nøgler
 
-- `{player}_profile_data` — staveniveau, svage kategorier, diagnostik-resultater
-- `{player}_reward_data` — XP, streak, gems, avatar-progression
+Per spiller (via `playerKey`):
+- `{player}_profile_data` — inkl. `categoryLevels` (niveau + historik per kategori)
+- `{player}_reward_data` — XP, streak, gems, shop, fransk-progression, isTeacher
 - `{player}_sr_data` — spaced repetition øveord
 - `{player}_screening_data` — stavevurdering-resultater
 - `{player}_student_grade` — valgt klassetrin (0-8)
-- `{player}_word_stats` — per-ord statistik (correct/wrong tællere per ord)
+- `{player}_word_stats` — per-ord statistik (correct/wrong tællere)
+- `{player}_exercise_stats` — frekvens af øvelsestyper + `_unfulfilled`
+- `{player}_boss_seen` — hvilke boss-typer spilleren har fået instruktion til
+- `{player}_wizard_recent` — senest viste wizard-scenarier (undgår gentagelse)
 
-## API-nøgler
-
-- **Google Cloud TTS**: Gemmes i localStorage (`gcloud_tts_key`) — valgfri, pre-genererede filer bruges som standard
-- **Anthropic API**: Gemmes KUN i hukommelsen (variabel) — forsvinder ved genindlæsning. Uden nøgle bruges offline-analyse
+Delte (ikke prefixed): `players_list`, `last_player`, `tts_voice`, `gcloud_tts_key`, `anthropic_api_key`, `sound_muted`
 
 ## Ordbank-regler
 
 - **Hints** i `words.json` må ALDRIG indeholde ordet selv eller nogen bøjningsform/stamme af ordet
-- Hver ord har: word, hint, patternHint, sentence, level (0-4), category
+- Hvert ord har: word, hint, patternHint, sentence, level (0-5), category
 
 ## Udvikling
 
-- Versionsnummer vises i header (hardcodet i HTML). Bump ved HVER ændring
+- Versionsnummer vises i header (hardcodet i `index.html`). Bump ved HVER ændring
+- Aktivt arbejde foregår på `v2`-branchen; deploy via GitHub Pages fra main
 - Alle ændringer committes og pushes til GitHub (Pages)
-- Deploy via GitHub Pages fra main branch
 - `generate-boss-images.js` — engangs boss-sprite-generator via gpt-image-1 (`OPENAI_API_KEY` env var; skip-existing; output `images/bosses/`, rå 1024px-originaler i gitignorerede `images/bosses_raw/`; nedskalering med cwebp)
 
 ## Sprog

@@ -120,6 +120,75 @@
     $('voiceBtn').textContent = 'Stemme: ' + (voice === 'male' ? 'mand' : 'kvinde');
   }
 
+  // ---------- Optagelse ----------
+  // Elevens egen optagelse lever kun til næste ord. Afspilles efter modellen så han hører sig selv udefra.
+  var rec = {
+    supported: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder),
+    stream: null, recorder: null, chunks: [], blob: null, url: null, active: false
+  };
+  function recMime() {
+    var types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+    for (var i = 0; i < types.length; i++) if (MediaRecorder.isTypeSupported(types[i])) return types[i];
+    return '';
+  }
+  function clearRecording() {
+    if (rec.url) URL.revokeObjectURL(rec.url);
+    rec.blob = null; rec.url = null; rec.chunks = [];
+  }
+  function startRecording() {
+    stopAudio();
+    function go(stream) {
+      rec.stream = stream;
+      clearRecording();
+      var mime = recMime();
+      try { rec.recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream); }
+      catch (e) { showNote('Optagelse virker ikke i denne browser'); return; }
+      rec.recorder.ondataavailable = function (e) { if (e.data && e.data.size) rec.chunks.push(e.data); };
+      rec.recorder.onstop = function () {
+        rec.blob = new Blob(rec.chunks, { type: rec.recorder.mimeType || mime || 'audio/webm' });
+        rec.url = URL.createObjectURL(rec.blob);
+        rec.active = false;
+        if (sig) renderSig();
+      };
+      rec.recorder.start();
+      rec.active = true;
+      if (sig) renderSig();
+    }
+    if (rec.stream && rec.stream.active) { go(rec.stream); return; }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(go).catch(function (err) {
+      showNote(err && err.name === 'NotAllowedError' ? 'Mikrofon ikke tilladt. Tillad den i browseren for at optage' : 'Kunne ikke starte mikrofonen');
+    });
+  }
+  function stopRecording() {
+    if (rec.recorder && rec.recorder.state !== 'inactive') rec.recorder.stop();
+    else rec.active = false;
+  }
+  function releaseMic() {
+    stopRecording();
+    if (rec.stream) { rec.stream.getTracks().forEach(function (t) { t.stop(); }); rec.stream = null; }
+    clearRecording();
+  }
+  // Spiller modellen og derefter elevens optagelse i samme Audio-element (iOS tillader kun afspilning fra et element der er startet ved et tryk)
+  function playModelThenRecording(it) {
+    if (!rec.url) return;
+    stopAudio();
+    var a = new Audio(D.audioPath(it.word, it.kind === 'sentence' ? 'sentence' : 'word', suffix()));
+    currentAudio = a;
+    var ownStarted = false;
+    function playOwn() {
+      if (ownStarted || currentAudio !== a) return; // afbrudt
+      ownStarted = true;
+      a.onended = null; a.onerror = null;
+      a.src = rec.url;
+      var p = a.play();
+      if (p && p.catch) p.catch(function (err) { if (!err || err.name !== 'AbortError') showNote('Kunne ikke afspille optagelsen'); });
+    }
+    a.onended = function () { setTimeout(playOwn, 400); };
+    a.onerror = playOwn; // ingen modelfil: spil kun optagelsen
+    var p = a.play();
+    if (p && p.catch) p.catch(function (err) { if (!err || err.name !== 'AbortError') playOwn(); });
+  }
+
   // ---------- Faner ----------
   var activeTab = 'home';
   function showTab(id) {
@@ -130,6 +199,7 @@
     var panels = document.querySelectorAll('.tab-panel');
     for (var j = 0; j < panels.length; j++) panels[j].classList.toggle('active', panels[j].id === 'tab-' + id);
     stopAudio();
+    releaseMic();
     if (!tiers) return;
     if (id === 'home') renderStats();
     if (id === 'lyt') startLyt();
@@ -290,23 +360,30 @@
     var head = '<div class="progress">' + esc(tierLabel(sig.tier)) + ' · ' + (sig.index + 1) + ' / ' + sig.items.length + (sig.retry ? ' · øver igen' : '') + '</div>';
     var targetClass = 'target' + (it.kind === 'sentence' ? ' sentence' : '');
 
+    var recBtn = !rec.supported ? '' :
+      '<button class="big secondary' + (rec.active ? ' recording' : '') + '" type="button" data-action="rec">' + (rec.active ? '■ Stop' : '● Optag') + '</button>';
+    var compareBtn = (rec.url && !rec.active)
+      ? '<button class="big secondary" type="button" data-action="compare">Hør model + dig</button>' : '';
+
     if (sig.phase === 'show') {
       area.innerHTML = head +
         '<div class="' + targetClass + '">' + esc(it.display) + '</div>' +
         '<button class="big secondary" type="button" data-action="hear">Hør ' + (it.kind === 'sentence' ? 'sætningen' : 'ordet') + '</button>' +
+        recBtn + compareBtn +
         '<button class="big" type="button" data-action="said">Jeg har sagt det</button>';
     } else if (sig.phase === 'judge') {
       area.innerHTML = head +
         '<div class="target hiddenword">Hvad hørte du?</div>' +
         '<div class="choices">' + it.options.map(function (o) {
           return '<button class="big" type="button" data-action="judge" data-value="' + esc(o) + '">' + esc(o) + '</button>';
-        }).join('') + '</div>';
+        }).join('') + '</div>' + compareBtn;
     } else {
       var ok = sig.lastOk;
       var verdict = ok ? 'Ramte den' : (it.kind === 'pair' ? 'Lød som "' + esc(sig.lastChosen) + '"' : 'Blev til j');
       area.innerHTML = head +
         '<div class="' + targetClass + '">' + esc(it.display) + '</div>' +
         '<div class="feedback ' + (ok ? 'ok' : 'bad') + '">' + verdict + '</div>' +
+        compareBtn +
         '<button class="big secondary" type="button" data-action="retry">Prøv igen</button>' +
         '<button class="big" type="button" data-action="next">Næste</button>';
     }
@@ -345,20 +422,23 @@
     var btn = e.target.closest('[data-action]');
     if (!btn) return;
     var action = btn.getAttribute('data-action');
-    if (action === 'tier') { startSig(btn.getAttribute('data-value')); return; }
+    if (action === 'tier') { clearRecording(); startSig(btn.getAttribute('data-value')); return; }
     if (!sig) return;
     if (action === 'hear') playSigItem();
-    else if (action === 'said') { stopAudio(); sig.phase = 'judge'; renderSig(); }
+    else if (action === 'rec') { if (rec.active) stopRecording(); else startRecording(); }
+    else if (action === 'compare') playModelThenRecording(sig.items[sig.index]);
+    else if (action === 'said') { stopAudio(); stopRecording(); sig.phase = 'judge'; renderSig(); }
     else if (action === 'judge') judgeSig(btn.getAttribute('data-value'));
-    else if (action === 'retry') { sig.retry = true; sig.phase = 'show'; renderSig(); }
+    else if (action === 'retry') { clearRecording(); sig.retry = true; sig.phase = 'show'; renderSig(); }
     else if (action === 'next') {
+      clearRecording();
       sig.index++; sig.retry = false; sig.phase = 'show';
       if (sig.index >= sig.items.length && !sig.practice) recordRound(sig.tier, sig.score, sig.items.length);
       renderSig();
     }
-    else if (action === 'again') startSig(sig.tier, sig.missed.map(function (m) { return m.source; }), true);
-    else if (action === 'restart') startSig(sig.tier);
-    else if (action === 'picker') renderSigPicker();
+    else if (action === 'again') { clearRecording(); startSig(sig.tier, sig.missed.map(function (m) { return m.source; }), true); }
+    else if (action === 'restart') { clearRecording(); startSig(sig.tier); }
+    else if (action === 'picker') { clearRecording(); renderSigPicker(); }
   }
 
   // ---------- Init ----------

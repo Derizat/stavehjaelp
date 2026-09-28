@@ -103,6 +103,14 @@ Tier picker first: Sidst (1), I midten (2), -ede (3), Sætninger (4), Par (5). T
 
 End of round: score, list of the missed words with a "Øv disse igen" button that starts a round of only those.
 
+### Self-recording (added 2026-09-28, after the first version shipped)
+
+In Sig det, while the target is shown, an "● Optag" button records the learner through the microphone (`getUserMedia` + `MediaRecorder`, mime chosen from `audio/webm;codecs=opus`, `audio/webm`, `audio/mp4`, `audio/ogg;codecs=opus` in that order so Android/Windows get webm and iPad Safari gets mp4). While recording the button reads "■ Stop" and pulses red. After stopping, a "Hør model + dig" button appears and stays through the judge and reveal phases: it plays the model MP3 and then the recording in the same `Audio` element, because iOS only lets an element play later if a tap started it. Without a model file it plays the recording alone.
+
+The recording lives in memory only and is discarded on "Næste", "Prøv igen", "Øv disse igen", "Ny runde", "Vælg trin", tier change and tab change (which also stops the microphone stream). "Jeg har sagt det" stops a running recording first. The judge flow is unchanged; recording is an aid for the learner, not a scoring input. Denied microphone permission shows a note and the exercise keeps working. Browsers without `MediaRecorder` do not show the button. Requires a secure context (GitHub Pages or localhost).
+
+Saving recordings to Supabase Storage was considered and deferred until the Supabase project is reachable again; see Later.
+
 ### Tips box
 
 Collapsible "Sådan gør du" with four short points in Danish: tongue tip low behind the lower front teeth; the tongue does not touch the roof of the mouth (compare with "l", where it does); start exaggerated and slow, then shorten; practise five minutes a day rather than thirty once a week. Marked with the note that a speech therapist should confirm the instructions, because the author is not one.
@@ -136,7 +144,7 @@ Stats box on the front page: per tier, percent correct over all time and over th
 
 ## Later (not now)
 
-- Self-recording: record the learner, play model and recording back to back. Needs `MediaRecorder`; iOS Safari produces mp4/aac, so the playback path must accept either.
+- Saved recordings: upload each recording to Supabase Storage so the family can hear progress over weeks. Needs a bucket plus storage policies (SQL migration like `db/word-lists.sql`) and the project unpaused. Recording itself is done, see "Self-recording".
 - Human voice recordings instead of TTS, if this ever goes beyond one learner.
 - Speech-therapist review of the tips text and the tier order.
 - More tiers: soft d before a consonant and inside compounds. The tier regexes deliberately skip these today, including 12 words from the app's own "Blødt d" category (*tredive, hæderlig, fodrer, rødlig, eddike, kodesprog, fodaftryk, tilbedelse, fodbolden, meddele, meddelelse, middelalderen*) and clear soft-d words elsewhere (*madpakke, badeværelse, madlavning, tilladelse, middel, modtog, havde*, the *ud-* prefix). They already have audio and sentences, so a curated include-list mapping word → tier is the cheap way to add them.

@@ -153,7 +153,7 @@ Lærere kan oprette klasser, elever tilmelder sig via 6-tegns delekode. Ingen au
 
 ## Udtale-træner (blødt d)
 
-Selvstændig side `udtale.html` (+ `udtale.css`, `udtale.js`, `udtale-data.js`), ikke linket fra appen. Øver blødt d med en forælder som dommer: **Lyt** (minimalpar, ned/nej) og **Sig det** (fem trin: sidst, i midten, -ede, sætninger, par; dommer vælger ordet vs. elevens fejlform, fx hvid/hvij). Bruger `words.json` og `audio/` direkte efter filnavnskonventionen, ikke manifestet. Ekstra ord uden sætning står i `udtale-words.json` og genereres med `node generate-audio.js --words udtale-words.json`. Statistik i localStorage `udtale_stats` (ikke per spiller). Test: `node test-udtale.js`. Spec: `docs/superpowers/specs/2026-09-28-udtale-bloedt-d-design.md`.
+Selvstændig side `udtale.html` (+ `udtale.css`, `udtale.js`, `udtale-data.js`), ikke linket fra appen. Øver blødt d med en forælder som dommer: **Lyt** (minimalpar, ned/nej) og **Sig det** (fem trin: sidst, i midten, -ede, sætninger, par; dommer vælger ordet vs. elevens fejlform, fx hvid/hvij). Bruger `words.json` og `audio/` direkte efter filnavnskonventionen, ikke manifestet. Ekstra ord uden sætning står i `udtale-words.json` og genereres med `node generate-audio.js --words udtale-words.json`. Optag-knappen i Sig det bruger MediaRecorder og spiller model + egen optagelse, kun i hukommelsen. Statistik i localStorage `udtale_stats` (ikke per spiller). Test: `node test-udtale.js`. Spec: `docs/superpowers/specs/2026-09-28-udtale-bloedt-d-design.md`.
 
 ## localStorage-nøgler
 

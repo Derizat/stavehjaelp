@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const D = require('./udtale-data.js');
-const words = JSON.parse(fs.readFileSync('words.json', 'utf8'));
+const words = JSON.parse(fs.readFileSync(path.join(__dirname, 'words.json'), 'utf8'));
 
 let passed = 0, failed = 0;
 

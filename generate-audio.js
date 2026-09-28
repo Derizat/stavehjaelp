@@ -142,7 +142,7 @@ async function main() {
 
     const total = generated + skipped + errors;
     if (total % 20 === 0) {
-      console.log('Fremskridt: ' + Math.round(total / (allWords.length * 2) * 100) + '% (' + generated + ' genereret, ' + skipped + ' sprunget over, ' + errors + ' fejl)');
+      console.log('Fremskridt: ' + Math.round(total / (allWords.length * (CUSTOM_LIST ? 1 : 2)) * 100) + '% (' + generated + ' genereret, ' + skipped + ' sprunget over, ' + errors + ' fejl)');
     }
   }
 

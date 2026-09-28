@@ -42,7 +42,7 @@ h1 { font-size: 1.5rem; font-weight: 700; }
 /* Øvelses-layout */
 .progress { color: var(--muted); font-size: 0.9rem; margin-bottom: 12px; }
 .target {
-  font-size: 2.6rem; font-weight: 700; text-align: center; margin: 24px 0;
+  font-size: clamp(1.8rem, 11vw, 2.6rem); font-weight: 700; text-align: center; margin: 24px 0;
   min-height: 3.2rem; word-break: break-word;
 }
 .target.sentence { font-size: 1.5rem; line-height: 1.4; }

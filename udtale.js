@@ -28,8 +28,12 @@
     return a;
   }
   function sample(arr, n) { return shuffle(arr).slice(0, n); }
-  function today() { return new Date().toISOString().slice(0, 10); }
-  function daysAgo(n) { var d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+  function isoDate(d) {
+    var m = d.getMonth() + 1, day = d.getDate();
+    return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day;
+  }
+  function today() { return isoDate(new Date()); }
+  function daysAgo(n) { var d = new Date(); d.setDate(d.getDate() - n); return isoDate(d); }
   function tierLabel(id) {
     for (var i = 0; i < D.TIERS.length; i++) if (D.TIERS[i].id === id) return D.TIERS[i].label;
     return id;
@@ -48,9 +52,9 @@
       var raw = localStorage.getItem(STATS_KEY);
       if (raw) {
         var parsed = JSON.parse(raw);
-        if (parsed && parsed.words && parsed.rounds) return parsed;
+        if (parsed && parsed.words && Array.isArray(parsed.rounds)) return parsed;
       }
-    } catch (e) { storageOk = false; }
+    } catch (e) { /* ugyldigt eller utilgængeligt: start forfra */ }
     return { words: {}, rounds: [] };
   }
   function saveStats() {
@@ -86,9 +90,17 @@
     stopAudio();
     var a = new Audio(D.audioPath(word, kind, suffix()));
     currentAudio = a;
-    a.onerror = function () { speakFallback(text); };
+    var handled = false;
+    function fallback(err) {
+      if (handled || currentAudio !== a) return; // forældet eller allerede håndteret
+      if (err && err.name === 'AbortError') return; // vi stoppede den selv
+      handled = true;
+      if (err && err.name === 'NotAllowedError') { showNote('Tryk "Hør igen" for at høre ordet'); return; }
+      speakFallback(text);
+    }
+    a.onerror = function () { fallback(); };
     var p = a.play();
-    if (p && p.catch) p.catch(function () { speakFallback(text); });
+    if (p && p.catch) p.catch(fallback);
   }
   function speakFallback(text) {
     if (!window.speechSynthesis) { showNote('Ingen dansk stemme, læs ordet højt selv'); return; }
@@ -109,7 +121,10 @@
   }
 
   // ---------- Faner ----------
+  var activeTab = 'home';
   function showTab(id) {
+    if (id === activeTab && tiers) return; // gentryk må ikke genstarte en runde
+    activeTab = id;
     var tabs = document.querySelectorAll('.tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].getAttribute('data-tab') === id);
     var panels = document.querySelectorAll('.tab-panel');
@@ -255,9 +270,10 @@
     return { kind: 'word', word: src.word, key: src.key, display: src.word, options: shuffle([src.word, D.errorForm(src.word)]), correct: src.word, source: src };
   }
 
-  function startSig(tierId, pool) {
+  // practice = true for "Øv disse igen": ordene tælles, men runden trækker ikke trin-procenten ned
+  function startSig(tierId, pool, practice) {
     var items = sample(pool || tiers[tierId], ROUND_SIZE).map(function (src) { return makeSigItem(tierId, src); });
-    sig = { tier: tierId, items: items, index: 0, phase: 'show', retry: false, score: 0, missed: [] };
+    sig = { tier: tierId, items: items, index: 0, phase: 'show', retry: false, score: 0, missed: [], practice: !!practice };
     renderSig();
   }
 
@@ -287,9 +303,10 @@
         }).join('') + '</div>';
     } else {
       var ok = sig.lastOk;
+      var verdict = ok ? 'Ramte den' : (it.kind === 'pair' ? 'Lød som "' + esc(sig.lastChosen) + '"' : 'Blev til j');
       area.innerHTML = head +
         '<div class="' + targetClass + '">' + esc(it.display) + '</div>' +
-        '<div class="feedback ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'Ramte den' : 'Blev til j') + '</div>' +
+        '<div class="feedback ' + (ok ? 'ok' : 'bad') + '">' + verdict + '</div>' +
         '<button class="big secondary" type="button" data-action="retry">Prøv igen</button>' +
         '<button class="big" type="button" data-action="next">Næste</button>';
     }
@@ -299,8 +316,9 @@
     var it = sig.items[sig.index];
     var ok = chosen === it.correct;
     sig.lastOk = ok;
+    sig.lastChosen = chosen;
     if (!sig.retry) {
-      if (ok) sig.score++; else sig.missed.push(it.source);
+      if (ok) sig.score++; else sig.missed.push({ source: it.source, label: it.kind === 'pair' ? it.word : it.key.replace('sentence:', '') });
       recordWord(it.key, ok);
     }
     sig.phase = 'reveal';
@@ -310,9 +328,8 @@
   function renderSigEnd() {
     var area = $('sigArea');
     var missedHtml = sig.missed.length
-      ? '<div class="missed">' + sig.missed.map(function (src) {
-          var label = src.pair ? src.pair.join('/') : src.word;
-          return '<span>' + esc(label) + '</span>';
+      ? '<div class="missed">' + sig.missed.map(function (m) {
+          return '<span>' + esc(m.label) + '</span>';
         }).join('') + '</div>' +
         '<button class="big" type="button" data-action="again">Øv disse igen</button>'
       : '<p class="note">Ingen fejl i denne runde.</p>';
@@ -336,10 +353,10 @@
     else if (action === 'retry') { sig.retry = true; sig.phase = 'show'; renderSig(); }
     else if (action === 'next') {
       sig.index++; sig.retry = false; sig.phase = 'show';
-      if (sig.index >= sig.items.length) recordRound(sig.tier, sig.score, sig.items.length);
+      if (sig.index >= sig.items.length && !sig.practice) recordRound(sig.tier, sig.score, sig.items.length);
       renderSig();
     }
-    else if (action === 'again') startSig(sig.tier, sig.missed);
+    else if (action === 'again') startSig(sig.tier, sig.missed.map(function (m) { return m.source; }), true);
     else if (action === 'restart') startSig(sig.tier);
     else if (action === 'picker') renderSigPicker();
   }
@@ -360,13 +377,17 @@
     });
     $('lytArea').addEventListener('click', onLytClick);
     $('sigArea').addEventListener('click', onSigClick);
-    if (window.speechSynthesis) window.speechSynthesis.getVoices();
+    if (window.speechSynthesis) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = function () { window.speechSynthesis.getVoices(); };
+    }
 
     fetch('words.json')
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function (bank) { tiers = D.buildTiers(bank); renderStats(); })
+      .then(function (bank) { tiers = D.buildTiers(bank); showTab(activeTab); })
       .catch(function () {
-        $('statsBox').innerHTML = '<p class="feedback bad">Kunne ikke hente ordbanken. Genindlæs siden.</p>';
+        var msg = '<p class="feedback bad">Kunne ikke hente ordbanken. Genindlæs siden.</p>';
+        $('statsBox').innerHTML = msg; $('lytArea').innerHTML = msg; $('sigArea').innerHTML = msg;
       });
   }
   init();

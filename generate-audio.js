@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Generate audio files for all words and sentences in words.json
-// Usage: GOOGLE_TTS_KEY=your-api-key node generate-audio.js [--suffix _m] [--voice da-DK-Wavenet-G]
+// Usage: GOOGLE_TTS_KEY=your-api-key node generate-audio.js [--suffix _m] [--voice da-DK-Wavenet-G] [--words extra.json]
 
 const fs = require('fs');
 const path = require('path');
@@ -17,13 +17,15 @@ if (!API_KEY) {
 const args = process.argv.slice(2);
 let VOICE = process.env.TTS_VOICE || 'da-DK-Neural2-F';
 let SUFFIX = '';
+let WORDS_FILE = path.join(__dirname, 'words.json');
+let CUSTOM_LIST = false; // --words: ekstra ordliste, rører ikke manifestet
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--voice' && args[i + 1]) { VOICE = args[i + 1]; i++; }
   if (args[i] === '--suffix' && args[i + 1]) { SUFFIX = args[i + 1]; i++; }
+  if (args[i] === '--words' && args[i + 1]) { WORDS_FILE = path.resolve(args[i + 1]); CUSTOM_LIST = true; i++; }
 }
 
 const AUDIO_DIR = path.join(__dirname, 'audio');
-const WORDS_FILE = path.join(__dirname, 'words.json');
 
 // Rate limiting
 const DELAY_MS = 120;
@@ -88,8 +90,8 @@ function synthesize(text, speakingRate) {
 }
 
 async function main() {
-  const wordBank = JSON.parse(fs.readFileSync(WORDS_FILE, 'utf8'));
-  const allWords = Object.values(wordBank).flat();
+  const raw = JSON.parse(fs.readFileSync(WORDS_FILE, 'utf8'));
+  const allWords = Array.isArray(raw) ? raw : Object.values(raw).flat();
 
   console.log('Genererer lyd for ' + allWords.length + ' ord...');
   console.log('Stemme: ' + VOICE);
@@ -121,8 +123,10 @@ async function main() {
       await sleep(DELAY_MS);
     }
 
-    // Generate sentence audio
-    if (fs.existsSync(sentenceFile)) {
+    // Generate sentence audio (springes over hvis ordet ingen sætning har)
+    if (!entry.sentence) {
+      // ingen sætning for dette ord
+    } else if (fs.existsSync(sentenceFile)) {
       skipped++;
     } else {
       try {
@@ -147,6 +151,11 @@ async function main() {
   console.log('Genereret: ' + generated);
   console.log('Sprunget over (fandtes allerede): ' + skipped);
   console.log('Fejl: ' + errors);
+
+  if (CUSTOM_LIST) {
+    console.log('Ekstra ordliste: manifestet er ikke opdateret');
+    return;
+  }
 
   // Generate manifest file with both voice sets
   const manifest = {};

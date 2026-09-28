@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blødt d – udtaletræning</title>
+  <link rel="stylesheet" href="udtale.css">
+</head>
+<body>
+  <header>
+    <h1>Blødt d</h1>
+    <button id="voiceBtn" class="chip" type="button">Stemme: kvinde</button>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" type="button" data-tab="home">Start</button>
+    <button class="tab" type="button" data-tab="lyt">Lyt</button>
+    <button class="tab" type="button" data-tab="sig">Sig det</button>
+  </nav>
+
+  <main>
+    <section id="tab-home" class="tab-panel active">
+      <details class="card" id="tipsBox">
+        <summary>Sådan gør du</summary>
+        <ul>
+          <li><strong>Tungespidsen ned</strong> bag de nederste fortænder. Den skal blive der hele tiden.</li>
+          <li><strong>Tungen rører ikke ganen.</strong> Prøv at sige "l" og mærk at tungen rører oppe. Ved blødt d må den ikke.</li>
+          <li><strong>Overdriv først.</strong> Sig ordet langsomt og med tydeligt, langt d. Når det sidder, gør det kortere og mere normalt.</li>
+          <li><strong>Fem minutter om dagen</strong> slår en halv time om ugen.</li>
+        </ul>
+        <p class="note">Disse råd er skrevet af en forælder, ikke en talepædagog. Få dem bekræftet i forløbet på skolen.</p>
+      </details>
+      <div class="card" id="statsBox"></div>
+    </section>
+
+    <section id="tab-lyt" class="tab-panel">
+      <div class="card" id="lytArea"></div>
+    </section>
+
+    <section id="tab-sig" class="tab-panel">
+      <div class="card" id="sigArea"></div>
+    </section>
+  </main>
+
+  <p id="audioNote" class="note toast hidden"></p>
+
+  <script src="udtale-data.js"></script>
+  <script src="udtale.js"></script>
+</body>
+</html>

@@ -158,11 +158,191 @@
 
   // ---------- Lyt ----------
   var lyt = null;
-  function startLyt() { /* Task 5 */ }
+  function startLyt() {
+    var items = sample(tiers.pair, ROUND_SIZE).map(function (p) {
+      var side = Math.random() < 0.5 ? 0 : 1;
+      return { pair: p.pair, target: p.pair[side], order: shuffle(p.pair) };
+    });
+    lyt = { items: items, index: 0, score: 0, answered: false };
+    renderLyt();
+    playLytItem();
+  }
+  function playLytItem() {
+    var it = lyt.items[lyt.index];
+    play(it.target, 'word', it.target);
+  }
+  function renderLyt() {
+    var area = $('lytArea');
+    if (lyt.index >= lyt.items.length) {
+      area.innerHTML =
+        '<div class="progress">Færdig</div>' +
+        '<div class="target">' + lyt.score + ' / ' + lyt.items.length + '</div>' +
+        '<p class="note">' + (lyt.score === lyt.items.length ? 'Alle rigtige. Forskellen høres tydeligt.' : 'Hvis der er flere fejl over flere runder, så nævn det i forløbet på skolen.') + '</p>' +
+        '<button class="big" type="button" data-action="restart">En runde til</button>';
+      return;
+    }
+    var it = lyt.items[lyt.index];
+    area.innerHTML =
+      '<div class="progress">Lyt · ' + (lyt.index + 1) + ' / ' + lyt.items.length + '</div>' +
+      '<p class="note">Tryk på det ord du hørte.</p>' +
+      '<button class="big secondary" type="button" data-action="hear">Hør igen</button>' +
+      '<div class="choices">' + it.order.map(function (w) {
+        return '<button class="big" type="button" data-action="choose" data-value="' + esc(w) + '">' + esc(w) + '</button>';
+      }).join('') + '</div>' +
+      '<div class="feedback"></div>' +
+      '<button class="big hidden" type="button" data-action="next">Næste</button>';
+  }
+  function answerLyt(chosen) {
+    if (lyt.answered) return;
+    lyt.answered = true;
+    var it = lyt.items[lyt.index];
+    var ok = chosen === it.target;
+    if (ok) lyt.score++;
+    var area = $('lytArea');
+    var btns = area.querySelectorAll('.choices .big');
+    for (var i = 0; i < btns.length; i++) {
+      var w = btns[i].getAttribute('data-value');
+      if (w === it.target) btns[i].classList.add('correct');
+      else if (w === chosen) btns[i].classList.add('wrong');
+      btns[i].disabled = true;
+    }
+    var fb = area.querySelector('.feedback');
+    fb.textContent = ok ? 'Rigtigt' : 'Det var "' + it.target + '"';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    area.querySelector('[data-action="next"]').classList.remove('hidden');
+  }
+  function nextLyt() {
+    lyt.index++;
+    lyt.answered = false;
+    if (lyt.index >= lyt.items.length) recordRound('lyt', lyt.score, lyt.items.length);
+    renderLyt();
+    if (lyt.index < lyt.items.length) playLytItem();
+  }
+  function onLytClick(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.getAttribute('data-action');
+    if (action === 'hear') playLytItem();
+    else if (action === 'choose') answerLyt(btn.getAttribute('data-value'));
+    else if (action === 'next') nextLyt();
+    else if (action === 'restart') startLyt();
+  }
 
   // ---------- Sig det ----------
   var sig = null;
-  function renderSigPicker() { /* Task 6 */ }
+  var SENTENCE_OK = 'Alle d\'er ramte';
+  var SENTENCE_BAD = 'Et eller flere blev til j';
+
+  function renderSigPicker() {
+    sig = null;
+    $('sigArea').innerHTML =
+      '<div class="progress">Vælg trin</div>' +
+      '<div class="tierlist">' + D.TIERS.map(function (t) {
+        return '<button class="big" type="button" data-action="tier" data-value="' + t.id + '">' +
+          esc(t.label) + ' <small>' + esc(t.desc) + ' · ' + tiers[t.id].length + ' stk</small></button>';
+      }).join('') + '</div>';
+  }
+
+  // Laver et rundeelement ud fra et trin-element. Kilden gemmes så "Øv disse igen" kan genbruge den.
+  function makeSigItem(tierId, src) {
+    if (tierId === 'pair') {
+      var target = src.pair[Math.random() < 0.5 ? 0 : 1];
+      return { kind: 'pair', word: target, key: target, display: target, options: shuffle(src.pair), correct: target, source: src };
+    }
+    if (tierId === 'sentence') {
+      return { kind: 'sentence', word: src.word, key: src.key, display: src.sentence, options: [SENTENCE_OK, SENTENCE_BAD], correct: SENTENCE_OK, source: src };
+    }
+    return { kind: 'word', word: src.word, key: src.key, display: src.word, options: shuffle([src.word, D.errorForm(src.word)]), correct: src.word, source: src };
+  }
+
+  function startSig(tierId, pool) {
+    var items = sample(pool || tiers[tierId], ROUND_SIZE).map(function (src) { return makeSigItem(tierId, src); });
+    sig = { tier: tierId, items: items, index: 0, phase: 'show', retry: false, score: 0, missed: [] };
+    renderSig();
+  }
+
+  function playSigItem() {
+    var it = sig.items[sig.index];
+    if (it.kind === 'sentence') play(it.word, 'sentence', it.display);
+    else play(it.word, 'word', it.word);
+  }
+
+  function renderSig() {
+    var area = $('sigArea');
+    if (sig.index >= sig.items.length) { renderSigEnd(); return; }
+    var it = sig.items[sig.index];
+    var head = '<div class="progress">' + esc(tierLabel(sig.tier)) + ' · ' + (sig.index + 1) + ' / ' + sig.items.length + (sig.retry ? ' · øver igen' : '') + '</div>';
+    var targetClass = 'target' + (it.kind === 'sentence' ? ' sentence' : '');
+
+    if (sig.phase === 'show') {
+      area.innerHTML = head +
+        '<div class="' + targetClass + '">' + esc(it.display) + '</div>' +
+        '<button class="big secondary" type="button" data-action="hear">Hør ' + (it.kind === 'sentence' ? 'sætningen' : 'ordet') + '</button>' +
+        '<button class="big" type="button" data-action="said">Jeg har sagt det</button>';
+    } else if (sig.phase === 'judge') {
+      area.innerHTML = head +
+        '<div class="target hiddenword">Hvad hørte du?</div>' +
+        '<div class="choices">' + it.options.map(function (o) {
+          return '<button class="big" type="button" data-action="judge" data-value="' + esc(o) + '">' + esc(o) + '</button>';
+        }).join('') + '</div>';
+    } else {
+      var ok = sig.lastOk;
+      area.innerHTML = head +
+        '<div class="' + targetClass + '">' + esc(it.display) + '</div>' +
+        '<div class="feedback ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'Ramte den' : 'Blev til j') + '</div>' +
+        '<button class="big secondary" type="button" data-action="retry">Prøv igen</button>' +
+        '<button class="big" type="button" data-action="next">Næste</button>';
+    }
+  }
+
+  function judgeSig(chosen) {
+    var it = sig.items[sig.index];
+    var ok = chosen === it.correct;
+    sig.lastOk = ok;
+    if (!sig.retry) {
+      if (ok) sig.score++; else sig.missed.push(it.source);
+      recordWord(it.key, ok);
+    }
+    sig.phase = 'reveal';
+    renderSig();
+  }
+
+  function renderSigEnd() {
+    var area = $('sigArea');
+    var missedHtml = sig.missed.length
+      ? '<div class="missed">' + sig.missed.map(function (src) {
+          var label = src.pair ? src.pair.join('/') : src.word;
+          return '<span>' + esc(label) + '</span>';
+        }).join('') + '</div>' +
+        '<button class="big" type="button" data-action="again">Øv disse igen</button>'
+      : '<p class="note">Ingen fejl i denne runde.</p>';
+    area.innerHTML =
+      '<div class="progress">' + esc(tierLabel(sig.tier)) + ' · færdig</div>' +
+      '<div class="target">' + sig.score + ' / ' + sig.items.length + '</div>' +
+      missedHtml +
+      '<button class="big secondary" type="button" data-action="restart">Ny runde, samme trin</button>' +
+      '<button class="big secondary" type="button" data-action="picker">Vælg trin</button>';
+  }
+
+  function onSigClick(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.getAttribute('data-action');
+    if (action === 'tier') { startSig(btn.getAttribute('data-value')); return; }
+    if (!sig) return;
+    if (action === 'hear') playSigItem();
+    else if (action === 'said') { stopAudio(); sig.phase = 'judge'; renderSig(); }
+    else if (action === 'judge') judgeSig(btn.getAttribute('data-value'));
+    else if (action === 'retry') { sig.retry = true; sig.phase = 'show'; renderSig(); }
+    else if (action === 'next') {
+      sig.index++; sig.retry = false; sig.phase = 'show';
+      if (sig.index >= sig.items.length) recordRound(sig.tier, sig.score, sig.items.length);
+      renderSig();
+    }
+    else if (action === 'again') startSig(sig.tier, sig.missed);
+    else if (action === 'restart') startSig(sig.tier);
+    else if (action === 'picker') renderSigPicker();
+  }
 
   // ---------- Init ----------
   function init() {
@@ -178,6 +358,8 @@
       var btn = e.target.closest('[data-action]');
       if (btn && btn.getAttribute('data-action') === 'reset') resetStats();
     });
+    $('lytArea').addEventListener('click', onLytClick);
+    $('sigArea').addEventListener('click', onSigClick);
     if (window.speechSynthesis) window.speechSynthesis.getVoices();
 
     fetch('words.json')

@@ -43,7 +43,8 @@
 
   // Hvilket trin hører et ord fra words.json til? null = ikke med
   function tierOf(entry) {
-    var w = entry.word;
+    var w = entry && entry.word;
+    if (typeof w !== 'string') return null;
     if (RE_PAST.test(w) && entry.category === PAST_CATEGORY) return 'past';
     if (RE_MEDIAL.test(w)) return 'medial';
     if (RE_FINAL.test(w)) return 'final';

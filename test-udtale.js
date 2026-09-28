@@ -56,7 +56,27 @@ test('tierOf rejects words without soft d', function() {
   eq(D.tierOf(entry('middag')), null);
 });
 
+test('tierOf only treats -ede as past tense for verbs', function() {
+  eq(D.tierOf(entry('legede', 'Blødt d')), 'medial');
+  eq(D.tierOf(entry('legede', 'Verbernes bøjning')), 'past');
+});
+
+test('tierOf tolerates malformed entries', function() {
+  eq(D.tierOf({}), null);
+  eq(D.tierOf(null), null);
+  eq(D.tierOf({ word: 42 }), null);
+});
+
+test('errorForm of a pair\'s soft-d word is its j-word', function() {
+  D.PAIRS.forEach(function(p) { eq(D.errorForm(p[0]), p[1], p.join('/')); });
+});
+
 // === sanitizeFilename / audioPath ===
+
+test('sanitizeFilename replaces Danish letters and separators', function() {
+  eq(D.sanitizeFilename('a b-c'), 'a_b_c');
+  eq(D.sanitizeFilename('Æde'), 'aede');
+});
 
 test('audioPath follows the audio/ naming convention', function() {
   eq(D.audioPath('rødgrød', 'word', ''), 'audio/word_roedgroed.mp3');
@@ -105,6 +125,13 @@ test('no word appears in two word tiers', function() {
       assert(!seen[i.word], i.word + ' in both ' + seen[i.word] + ' and ' + t);
       seen[i.word] = t;
     });
+  });
+});
+
+test('j-words from pairs never appear in the word tiers', function() {
+  const jWords = D.PAIRS.map(function(p) { return p[1]; });
+  ['final', 'medial', 'past'].forEach(function(t) {
+    tiers[t].forEach(function(i) { assert(jWords.indexOf(i.word) === -1, i.word + ' is a j-word in tier ' + t); });
   });
 });
 

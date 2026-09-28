@@ -401,7 +401,7 @@ If the key is not available, continue with Task 3 onwards; the page works with t
 - [ ] **Step 5: Run the tests**
 
 Run: `node test-udtale.js`
-Expected: `udtale: 11 passed, 0 failed`.
+Expected: `udtale: 16 passed, 0 failed`.
 
 - [ ] **Step 6: Listen to two files**
 
@@ -1046,7 +1046,7 @@ Go to "Start": the stats table now shows percentages for the tiers played, and "
 - [ ] **Step 3: Run the Node tests**
 
 Run: `node test-udtale.js`
-Expected: `udtale: 11 passed, 0 failed` (or 10/1 if audio was not generated in Task 2).
+Expected: `udtale: 16 passed, 0 failed` (or 15/1 if audio was not generated in Task 2).
 
 - [ ] **Step 4: Commit**
 

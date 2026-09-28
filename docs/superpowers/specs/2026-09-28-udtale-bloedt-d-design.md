@@ -139,4 +139,4 @@ Stats box on the front page: per tier, percent correct over all time and over th
 - Self-recording: record the learner, play model and recording back to back. Needs `MediaRecorder`; iOS Safari produces mp4/aac, so the playback path must accept either.
 - Human voice recordings instead of TTS, if this ever goes beyond one learner.
 - Speech-therapist review of the tips text and the tier order.
-- More tiers: soft d before a consonant (*godt*, *rødt*) and in compound words.
+- More tiers: soft d before a consonant and inside compounds. The tier regexes deliberately skip these today, including 12 words from the app's own "Blødt d" category (*tredive, hæderlig, fodrer, rødlig, eddike, kodesprog, fodaftryk, tilbedelse, fodbolden, meddele, meddelelse, middelalderen*) and clear soft-d words elsewhere (*madpakke, badeværelse, madlavning, tilladelse, middel, modtog, havde*, the *ud-* prefix). They already have audio and sentences, so a curated include-list mapping word → tier is the cheap way to add them.

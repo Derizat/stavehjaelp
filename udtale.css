@@ -40,7 +40,19 @@ h1 { font-size: 1.5rem; font-weight: 700; }
 }
 
 /* Øvelses-layout */
-.progress { color: var(--muted); font-size: 0.9rem; margin-bottom: 12px; }
+.progress { color: var(--muted); font-size: 0.9rem; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.chip.active { color: var(--text); border-color: var(--accent); }
+.card ul.tips { margin: 12px 0 14px 20px; }
+
+/* Mundbilleder */
+.mund { margin: 12px 0 4px; }
+.mund-stage { position: relative; width: 100%; max-width: 300px; aspect-ratio: 460 / 440; margin: 0 auto; background: #fff; border-radius: var(--radius); overflow: hidden; }
+.mund-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.45s ease; }
+.mund-stage img.active { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .mund-stage img { transition: none; } }
+.mund-btns { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 10px; }
+.mund-word { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; font-weight: 600; }
+.mund-text { min-height: 3.6em; text-align: center; }
 .target {
   font-size: clamp(1.8rem, 11vw, 2.6rem); font-weight: 700; text-align: center; margin: 24px 0;
   min-height: 3.2rem; word-break: break-word;

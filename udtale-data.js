@@ -17,12 +17,34 @@
   // Ord med blødt d som ikke findes i words.json (ingen sætning)
   var EXTRA_WORDS = ['ved', 'hed', 'bød', 'fed', 'øde', 'møde'];
 
+  // tips: korte råd til trinnet i almindeligt sprog, ingen fonetiske tegn. Bygger på fonetiske beskrivelser, bør bekræftes af talepædagog.
   var TIERS = [
-    { id: 'final', label: 'Sidst i ordet', desc: 'mad, hvid, rød' },
-    { id: 'medial', label: 'I midten', desc: 'bade, side, sidder' },
-    { id: 'past', label: '-ede', desc: 'legede, hoppede' },
-    { id: 'sentence', label: 'Sætninger', desc: 'hele sætninger med blødt d' },
-    { id: 'pair', label: 'Par', desc: 'ned/nej, mad/maj' }
+    { id: 'final', label: 'Sidst i ordet', desc: 'mad, hvid, rød', tips: [
+      'Hold det bløde d længe. Sig "maaa", og lad d\'et blive hængende til sidst. Det kan holdes lige så længe som en vokal.',
+      'Tungespidsen bliver nede bag undertænderne, til ordet er helt slut. Glider tungen op mod ganen til sidst, bliver det til j.',
+      'Start med ord med a, o, å og u (mad, god, våd, hud). Ord med i (hvid, tid) er sværest, fordi i og j ligger tæt på hinanden.'
+    ] },
+    { id: 'medial', label: 'I midten', desc: 'bade, side, sidder', tips: [
+      'Ordet har to stavelser, og den anden er selve det bløde d. Sig "ba", og hold så d\'et: ba-d.',
+      'Sig de to dele langsomt hver for sig, og sæt dem så sammen.',
+      'Ved ord på -er (sidder, rødder): tungen frem til d\'et, og slip så til "er". Tungespidsen bliver nede hele vejen.'
+    ] },
+    { id: 'past', label: '-ede', desc: 'legede, hoppede', tips: [
+      'Endelsen -ede er næsten kun ét langt blødt d. Sig "hopp", og hold så d\'et længe.',
+      'Øv endelsen alene først, og sæt så resten af ordet foran.',
+      'Endelsen er ubetonet, så det er her man lettest falder tilbage til j. Sig den tydeligere end du plejer.'
+    ] },
+    { id: 'sentence', label: 'Sætninger', desc: 'hele sætninger med blødt d', tips: [
+      'Find alle bløde d\'er i sætningen, før du siger den.',
+      'Sig den langsomt første gang og i normalt tempo anden gang.',
+      'Det går dårligere her end i enkeltord. Det er meningen med trinnet: lyden skal med ud i rigtig tale.',
+      'Optag dig selv, og lyt efter d\'erne.'
+    ] },
+    { id: 'pair', label: 'Par', desc: 'ned/nej, mad/maj', tips: [
+      'Sig begge ord efter hinanden, og mærk forskellen: ved j løfter midten af tungen sig mod ganen. Ved blødt d ligger tungen fremme og nede.',
+      'Overdriv forskellen: gør j\'et ekstra lyst og d\'et ekstra mørkt.',
+      'Den der lytter, ved ikke hvilket ord du fik. Det er en ærlig test.'
+    ] }
   ];
 
   function sanitizeFilename(word) {

@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const D = require('./udtale-data.js');
+const M = require('./udtale-mund.js');
 const words = JSON.parse(fs.readFileSync(path.join(__dirname, 'words.json'), 'utf8'));
 
 let passed = 0, failed = 0;
@@ -140,6 +141,34 @@ test('pair items carry both words', function() {
     assert(Array.isArray(p.pair) && p.pair.length === 2, 'bad pair ' + JSON.stringify(p));
   });
   eq(tiers.pair[0].pair.join('/'), 'mad/maj');
+});
+
+// === trin-tips ===
+
+test('every tier has at least two non-empty tips', function() {
+  D.TIERS.forEach(function(t) {
+    assert(Array.isArray(t.tips) && t.tips.length >= 2, 'tier ' + t.id + ' lacks tips');
+    t.tips.forEach(function(x) {
+      assert(typeof x === 'string' && x.length > 10, 'empty tip in ' + t.id);
+      assert(!/[ðəɐˀ]/.test(x), 'phonetic symbol in tip for ' + t.id + ': ' + x);
+    });
+  });
+});
+
+// === mundbilleder ===
+
+test('every mouth has label, example word, plain text and an image on disk', function() {
+  eq(M.ORDER.join(','), 'j,d,l');
+  M.ORDER.forEach(function(k) {
+    const m = M.MOUTHS[k];
+    assert(m && m.label && m.word && m.text && m.img, k + ' incomplete');
+    assert(!/[ðəɐˀ]/.test(m.text + m.label), 'phonetic symbol in mouth text for ' + k);
+    assert(fs.existsSync(path.join(__dirname, m.img)), 'missing image ' + m.img);
+  });
+});
+
+test('example words differ only in the last sound', function() {
+  eq(M.MOUTHS.j.word, 'maj'); eq(M.MOUTHS.d.word, 'mad'); eq(M.MOUTHS.l.word, 'mal');
 });
 
 // === audio files on disk ===

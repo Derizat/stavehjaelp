@@ -34,9 +34,15 @@
   }
   function today() { return isoDate(new Date()); }
   function daysAgo(n) { var d = new Date(); d.setDate(d.getDate() - n); return isoDate(d); }
-  function tierLabel(id) {
-    for (var i = 0; i < D.TIERS.length; i++) if (D.TIERS[i].id === id) return D.TIERS[i].label;
-    return id;
+  function tierById(id) {
+    for (var i = 0; i < D.TIERS.length; i++) if (D.TIERS[i].id === id) return D.TIERS[i];
+    return null;
+  }
+  function tierLabel(id) { var t = tierById(id); return t ? t.label : id; }
+  function tipsHtml(tierId) {
+    var t = tierById(tierId);
+    if (!t || !t.tips) return '';
+    return '<ul class="tips">' + t.tips.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
   }
   function showNote(text) {
     var el = $('audioNote');
@@ -114,6 +120,7 @@
     window.speechSynthesis.speak(u);
     showNote('Lydfil mangler, bruger browser-stemme');
   }
+  function playExample(word) { play(word, 'word', word); }
   function setVoice(v) {
     voice = v === 'male' ? 'male' : 'female';
     try { localStorage.setItem(VOICE_KEY, voice); } catch (e) {}
@@ -328,6 +335,18 @@
       }).join('') + '</div>';
   }
 
+  // Introkort: tips og tungediagram til trinnet, før runden starter
+  function renderSigIntro(tierId) {
+    sig = null;
+    $('sigArea').innerHTML =
+      '<div class="progress">' + esc(tierLabel(tierId)) + ' · sådan gør du</div>' +
+      '<div id="mundIntro"></div>' +
+      tipsHtml(tierId) +
+      '<button class="big" type="button" data-action="start" data-value="' + esc(tierId) + '">Start runde</button>' +
+      '<button class="big secondary" type="button" data-action="picker">Vælg et andet trin</button>';
+    if (window.UDTALE_MUND) window.UDTALE_MUND.mount($('mundIntro'), tierId === 'pair' ? 'j' : 'd', playExample);
+  }
+
   // Laver et rundeelement ud fra et trin-element. Kilden gemmes så "Øv disse igen" kan genbruge den.
   function makeSigItem(tierId, src) {
     if (tierId === 'pair') {
@@ -357,7 +376,9 @@
     var area = $('sigArea');
     if (sig.index >= sig.items.length) { renderSigEnd(); return; }
     var it = sig.items[sig.index];
-    var head = '<div class="progress">' + esc(tierLabel(sig.tier)) + ' · ' + (sig.index + 1) + ' / ' + sig.items.length + (sig.retry ? ' · øver igen' : '') + '</div>';
+    var head = '<div class="progress"><span>' + esc(tierLabel(sig.tier)) + ' · ' + (sig.index + 1) + ' / ' + sig.items.length + (sig.retry ? ' · øver igen' : '') + '</span>' +
+      '<button class="chip' + (sig.tipsOpen ? ' active' : '') + '" type="button" data-action="tips">Tips</button></div>' +
+      (sig.tipsOpen ? tipsHtml(sig.tier) : '');
     var targetClass = 'target' + (it.kind === 'sentence' ? ' sentence' : '');
 
     var recBtn = !rec.supported ? '' :
@@ -422,8 +443,11 @@
     var btn = e.target.closest('[data-action]');
     if (!btn) return;
     var action = btn.getAttribute('data-action');
-    if (action === 'tier') { clearRecording(); startSig(btn.getAttribute('data-value')); return; }
+    if (action === 'tier') { clearRecording(); renderSigIntro(btn.getAttribute('data-value')); return; }
+    if (action === 'start') { startSig(btn.getAttribute('data-value')); return; }
+    if (action === 'picker') { clearRecording(); renderSigPicker(); return; }
     if (!sig) return;
+    if (action === 'tips') { sig.tipsOpen = !sig.tipsOpen; renderSig(); return; }
     if (action === 'hear') playSigItem();
     else if (action === 'rec') { if (rec.active) stopRecording(); else startRecording(); }
     else if (action === 'compare') playModelThenRecording(sig.items[sig.index]);
@@ -438,7 +462,6 @@
     }
     else if (action === 'again') { clearRecording(); startSig(sig.tier, sig.missed.map(function (m) { return m.source; }), true); }
     else if (action === 'restart') { clearRecording(); startSig(sig.tier); }
-    else if (action === 'picker') { clearRecording(); renderSigPicker(); }
   }
 
   // ---------- Init ----------
@@ -457,6 +480,7 @@
     });
     $('lytArea').addEventListener('click', onLytClick);
     $('sigArea').addEventListener('click', onSigClick);
+    if (window.UDTALE_MUND) window.UDTALE_MUND.mount($('mundHome'), 'd', playExample);
     if (window.speechSynthesis) {
       window.speechSynthesis.getVoices();
       window.speechSynthesis.onvoiceschanged = function () { window.speechSynthesis.getVoices(); };

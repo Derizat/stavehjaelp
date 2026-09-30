@@ -2,7 +2,7 @@
 (function () {
   var D = window.UDTALE_DATA;
   var STATS_KEY = 'udtale_stats';
-  var VOICE_KEY = 'udtale_voice';
+  var VOICE_KEY = 'tts_voice'; // samme nøgle som Stavehjælpen, så stemmevalget følger med
   var ROUND_SIZE = 10;
 
   var tiers = null;

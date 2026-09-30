@@ -83,7 +83,7 @@ Generator change: `--words <file>` reads that JSON array instead of `words.json`
 
 ## Exercises
 
-Shared behaviour: a round is 10 items drawn at random from the chosen tier without repeats (fewer if the tier is smaller). Voice (female/male) is a toggle in the header, stored in `udtale_voice`. Model audio plays through `new Audio(path)`; on error the page falls back to `speechSynthesis` with a `da-DK` voice, and shows a small "browser-stemme" note so the parent knows the quality dropped.
+Shared behaviour: a round is 10 items drawn at random from the chosen tier without repeats (fewer if the tier is smaller). Voice (female/male) is a toggle in the header, stored in `tts_voice`, the same shared key Stavehjælpen uses, so the choice follows the learner between the two pages. Model audio plays through `new Audio(path)`; on error the page falls back to `speechSynthesis` with a `da-DK` voice, and shows a small "browser-stemme" note so the parent knows the quality dropped.
 
 ### Lyt (perception check)
 

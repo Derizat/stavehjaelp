@@ -145,13 +145,40 @@ function migrateOldData() {
 }
 
 // ===== SUPABASE =====
+var SUPABASE_URL = 'https://cfkddsiwwujbbxjuthie.supabase.co';
 var supabaseClient = null;
 try {
   supabaseClient = window.supabase.createClient(
-    'https://cfkddsiwwujbbxjuthie.supabase.co',
+    SUPABASE_URL,
     'sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt'
   );
 } catch(e) { console.log('Supabase ikke tilg\u00E6ngelig'); }
+
+// Et pauset Supabase-projekt har ingen DNS, og hvert kald tager da ca. 7 sek. om at fejle,
+// fordi biblioteket prøver igen flere gange. Derfor tjekkes det ved opstart om hosten kan nås.
+// Kan den ikke det inden for SUPABASE_PROBE_MS, kører appen lokalt uden sync resten af besøget.
+var SUPABASE_PROBE_MS = 2500;
+var MISSPELLING_TIMEOUT_MS = 600;   // længste ventetid på rigtige stavefejl før en øvelse vises
+var PROFILE_SYNC_TIMEOUT_MS = 2000; // længste ventetid på profil fra Supabase ved valg af spiller
+
+function disableSupabase(reason) {
+  if (!supabaseClient) return;
+  supabaseClient = null;
+  console.log('Supabase ' + reason + ' \u2014 k\u00F8rer lokalt uden sync');
+}
+
+(function probeSupabase() {
+  if (!supabaseClient || typeof fetch !== 'function') return;
+  var ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+  var timer = setTimeout(function() {
+    if (ctrl) ctrl.abort();
+    disableSupabase('svarer ikke');
+  }, SUPABASE_PROBE_MS);
+  // no-cors: ethvert svar fra hosten tæller som "kan nås"; kun netværksfejl (fx manglende DNS) afviser
+  fetch(SUPABASE_URL + '/rest/v1/', { mode: 'no-cors', signal: ctrl ? ctrl.signal : undefined })
+    .then(function() { clearTimeout(timer); })
+    .catch(function() { clearTimeout(timer); disableSupabase('kan ikke n\u00E5s'); });
+})();
 
 // --- Batched answer logging ---
 var answerQueue = [];
@@ -249,7 +276,12 @@ function mergeLocalField(key, remoteData, mergeFn) {
 
 function syncFromSupabase(name, callback) {
   if (!supabaseClient) { if (callback) callback(); return; }
+  // Vent højst PROFILE_SYNC_TIMEOUT_MS. Kommer svaret senere, ignoreres det, så skærmen og localStorage ikke kommer ud af takt.
+  var settled = false;
+  function finish() { if (settled) return; settled = true; clearTimeout(syncTimer); if (callback) callback(); }
+  var syncTimer = setTimeout(finish, PROFILE_SYNC_TIMEOUT_MS);
   supabaseClient.from('profiles').select('*').eq('player', name).single().then(function(res) {
+    if (settled) return;
     if (res.data) {
       mergeLocalField(name + '_profile_data', res.data.profile_data, function(local, remote) {
         if (local && local.categoryLevels && !remote.categoryLevels) remote.categoryLevels = local.categoryLevels;
@@ -278,8 +310,8 @@ function syncFromSupabase(name, callback) {
         try { localStorage.setItem(name + '_student_grade', res.data.student_grade.toString()); } catch(e) {}
       }
     }
-    if (callback) callback();
-  }).catch(function() { if (callback) callback(); });
+    finish();
+  }).catch(finish);
 }
 
 // ===== KLASSER (CLASSES) =====
@@ -5082,6 +5114,19 @@ function fetchMisspellings(words, callback) {
     return;
   }
 
+  // Øvelsen må aldrig vente længe på databasen: efter MISSPELLING_TIMEOUT_MS vises den med det cachen har
+  // (ellers genererede stavefejl). Et sent svar fylder stadig cachen til næste gang.
+  var answered = false;
+  function answer() {
+    if (answered) return;
+    answered = true;
+    clearTimeout(misTimer);
+    var result = {};
+    words.forEach(function(w) { if (misspellingCache[w]) result[w] = misspellingCache[w]; });
+    callback(result);
+  }
+  var misTimer = setTimeout(answer, MISSPELLING_TIMEOUT_MS);
+
   supabaseClient.from('answers')
     .select('word, answer')
     .eq('correct', false)
@@ -5109,11 +5154,8 @@ function fetchMisspellings(words, callback) {
       // Update cache
       uncached.forEach(function(w) { misspellingCache[w] = sortedByWord[w] || []; });
       misspellingCacheTime = now;
-      // Return all requested words from cache
-      var result = {};
-      words.forEach(function(w) { if (misspellingCache[w]) result[w] = misspellingCache[w]; });
-      callback(result);
-    }).catch(function() { callback({}); });
+      answer();
+    }).catch(answer);
 }
 
 function generateFallbackMisspellings(word) {

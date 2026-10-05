@@ -43,7 +43,8 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 - **Projekt**: `https://cfkddsiwwujbbxjuthie.supabase.co`
 - **Anon key**: `sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt`
 - **RLS**: Disabled på alle tabeller
-- **OBS (juli 2026)**: Hosten svarer ikke længere i DNS (NXDOMAIN) — projektet er formentlig pauset/slettet. Appen kører videre lokalt uden sync
+- **OBS (juli 2026)**: Hosten svarer ikke længere i DNS (NXDOMAIN) — projektet er pauset (gratis-projekter pauses efter 7 dages inaktivitet og kan kun genstartes i 90 dage). Appen kører videre lokalt uden sync
+- **Må aldrig blokere UI**: et kald til en død host tager ca. 7 sek. om at fejle, fordi supabase-js prøver igen. Derfor (1) tjekker `probeSupabase()` ved opstart om hosten kan nås inden `SUPABASE_PROBE_MS` og sætter ellers `supabaseClient = null` via `disableSupabase()`, og (2) har `fetchMisspellings` (`MISSPELLING_TIMEOUT_MS`) og `syncFromSupabase` (`PROFILE_SYNC_TIMEOUT_MS`) egne tidsgrænser. Nye kald der holder en skærm tilbage skal have samme slags tidsgrænse
 
 ### Tabeller
 

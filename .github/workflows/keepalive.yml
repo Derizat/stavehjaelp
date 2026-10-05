@@ -1,0 +1,53 @@
+name: Keep Supabase awake
+
+# Supabase pauses free projects after 7 days without activity, and a paused project can only be
+# restored for 90 days. This job writes one row and deletes it again twice a week.
+#
+# It uses the `groups` table because that is the one table where the public anon key may both insert
+# and delete (the app does the same when a teacher creates and removes a class). The row exists for
+# under a second and leaves nothing behind. The join code starts with an underscore, which the app
+# can never generate, so it cannot collide with a real class.
+#
+# The job fails if the database does not answer, and GitHub then emails the repository owner.
+# Notes: scheduled workflows only run from the default branch, and GitHub disables them after
+# 60 days without repository activity. Re-enable it under Actions if that happens.
+
+on:
+  schedule:
+    - cron: '17 5 * * 1,4' # Monday and Thursday 05:17 UTC
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      SUPABASE_URL: https://cfkddsiwwujbbxjuthie.supabase.co
+      # Public anon key, the same one the app ships in app.js
+      SUPABASE_KEY: sb_publishable_kPzQnAh0XICjtfZ_HszoRw_GEeMrgJt
+    steps:
+      - name: Remove a leftover row from an earlier failed run
+        run: |
+          curl -sS -m 30 -o /dev/null -w 'cleanup: HTTP %{http_code}\n' -X DELETE \
+            "$SUPABASE_URL/rest/v1/groups?created_by=eq._keepalive" \
+            -H "apikey: $SUPABASE_KEY" -H "Authorization: Bearer $SUPABASE_KEY"
+
+      - name: Write a row
+        run: |
+          code=$(curl -sS -m 30 -o /tmp/out -w '%{http_code}' -X POST "$SUPABASE_URL/rest/v1/groups" \
+            -H "apikey: $SUPABASE_KEY" -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" -H "Prefer: return=minimal" \
+            -d '{"name":"_keepalive","join_code":"_KEEPA","type":"class","created_by":"_keepalive"}')
+          echo "insert: HTTP $code"; cat /tmp/out
+          [ "$code" = "201" ]
+
+      - name: Delete it again
+        if: always()
+        run: |
+          code=$(curl -sS -m 30 -o /tmp/out -w '%{http_code}' -X DELETE \
+            "$SUPABASE_URL/rest/v1/groups?created_by=eq._keepalive" \
+            -H "apikey: $SUPABASE_KEY" -H "Authorization: Bearer $SUPABASE_KEY")
+          echo "delete: HTTP $code"; cat /tmp/out
+          [ "$code" = "204" ]

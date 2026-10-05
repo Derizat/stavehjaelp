@@ -1708,6 +1708,9 @@ var LEVEL_GRADE_MAP = {
 // ===== SPIL-STATE OG HJÆLPEFUNKTIONER =====
 var currentWords = [], currentIndex = 0, results = [], feedbackShown = false;
 var retryAttempt = false;
+// Ret-runde efter forkert diktat-svar: null | 'pending' (venter på knap) | 'active' (skriver) | 'done'
+var correctionPhase = null;
+var correctionState = null;
 var sessionCategoryErrors = {}; // track errors per category for lesson triggers
 var gameMode = 'training'; // 'training' | 'review'
 
@@ -2795,6 +2798,7 @@ function renderWord() {
   feedbackShown = false;
   retryAttempt = false;
   document.getElementById('spellingInput').classList.remove('input-retry');
+  resetCorrection();
 
   var flashEl = document.getElementById('wordFlash');
   var wrap = document.getElementById('countdownWrap');
@@ -2893,7 +2897,9 @@ document.addEventListener('keydown', function(e) {
   if (!testPhase || testPhase.classList.contains('hidden')) return;
   if (e.key === 'Enter') {
     e.preventDefault();
-    if (feedbackShown) nextWord();
+    if (correctionPhase === 'pending') startCorrection();
+    else if (correctionPhase === 'active') return; // ordet skal skrives færdigt
+    else if (feedbackShown) nextWord();
     else checkSpelling();
   } else if (e.key === ' ' && document.activeElement === document.getElementById('spellingInput')) {
     var now = Date.now();
@@ -2905,6 +2911,11 @@ document.addEventListener('keydown', function(e) {
     }
     lastSpaceTime = now;
   }
+});
+
+// Ret-runde: feedback per bogstav mens der skrives
+document.addEventListener('input', function(e) {
+  if (e.target && e.target.id === 'spellingInput') onCorrectionInput();
 });
 
 // Diff highlight
@@ -2968,12 +2979,99 @@ function checkSpelling() {
   document.getElementById('scoreCorrect').textContent = results.filter(function(r) { return r.correct; }).length;
   document.getElementById('scoreWrong').textContent = results.filter(function(r) { return !r.correct; }).length;
   document.getElementById('checkBtn').classList.add('hidden');
-  document.getElementById('nextBtn').classList.remove('hidden');
+  if (ok || typeof RETRUNDE === 'undefined') {
+    document.getElementById('nextBtn').classList.remove('hidden');
+  } else {
+    // Ret-runde: eleven skal skrive ordet rigtigt, før han går videre
+    correctionPhase = 'pending';
+    document.getElementById('correctBtn').classList.remove('hidden');
+  }
   feedbackShown = true;
   retryAttempt = false;
 }
 
+// ===== RET-RUNDE =====
+// Efter et forkert svar dækkes det rigtige ord til, og eleven skriver det igen.
+// Rigtige bogstaver bliver stående, forkerte forsvinder. Tæller ikke i niveau eller øveord.
+function resetCorrection() {
+  correctionPhase = null;
+  correctionState = null;
+  var inp = document.getElementById('spellingInput');
+  if (inp) {
+    inp.classList.remove('input-correction', 'input-shake');
+    inp.placeholder = 'Skriv ordet her...';
+    inp.readOnly = false;
+  }
+  hide('correctBtn');
+  var note = document.getElementById('correctionNote');
+  if (note) { note.classList.add('hidden'); note.innerHTML = ''; }
+}
+
+function setCorrectionNote(html) {
+  var note = document.getElementById('correctionNote');
+  if (!note) return;
+  note.innerHTML = html;
+  note.classList.remove('hidden');
+}
+
+function startCorrection() {
+  if (correctionPhase !== 'pending') return;
+  var w = currentWords[currentIndex];
+  correctionState = RETRUNDE.create(w.word);
+  correctionPhase = 'active';
+  var inp = document.getElementById('spellingInput');
+  inp.value = '';
+  inp.placeholder = 'Skriv ordet rigtigt...';
+  inp.classList.add('input-correction');
+  document.getElementById('feedbackBox').style.display = 'none'; // dæk det rigtige ord til
+  document.getElementById('listenBox').style.visibility = '';
+  hide('correctBtn');
+  setCorrectionNote('Skriv ordet igen. Tryk på lyt, hvis du er i tvivl.');
+  speakWord(w.word, null);
+  inp.focus();
+}
+
+function onCorrectionInput() {
+  if (correctionPhase !== 'active') return;
+  var inp = document.getElementById('spellingInput');
+  var events = RETRUNDE.sync(correctionState, inp.value);
+  if (inp.value !== correctionState.typed) inp.value = correctionState.typed;
+  for (var i = 0; i < events.length; i++) {
+    var ev = events[i];
+    if (ev.result === 'ok') {
+      setCorrectionNote('&nbsp;');
+    } else {
+      inp.classList.remove('input-shake');
+      void inp.offsetWidth; // genstart animationen
+      inp.classList.add('input-shake');
+      setTimeout(function() { inp.classList.remove('input-shake'); }, 350);
+      var rejected = '<span class="bad">\u2717 ' + escapeCorrection(ev.rejected) + '</span>';
+      setCorrectionNote(ev.result === 'reveal'
+        ? rejected + ' &nbsp; Næste bogstav er <span class="good">' + escapeCorrection(ev.letter) + '</span>'
+        : rejected + ' &nbsp; Prøv et andet bogstav');
+    }
+  }
+  if (correctionState.done) finishCorrection();
+}
+
+function escapeCorrection(s) {
+  return String(s).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+}
+
+function finishCorrection() {
+  correctionPhase = 'done';
+  var w = currentWords[currentIndex];
+  var clean = correctionState.revealed === 0;
+  var last = results[results.length - 1];
+  if (clean && last && last.word === w.word) last.selfCorrected = true; // +3 XP, findes allerede i awardSessionXP
+  document.getElementById('spellingInput').readOnly = true;
+  setCorrectionNote('<span class="good">\u2713 ' + (clean ? 'Nu sidder den!' : 'Godt, du kom igennem!') + '</span>');
+  SFX.play('correct');
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
 function nextWord() {
+  if (correctionPhase === 'pending' || correctionPhase === 'active') return; // ret-runden skal gøres færdig
   if (isMixedSession) { nextMixedItem(); return; }
   // Block if an interrupt overlay is active
   var chestOv = document.getElementById('chestOverlay');

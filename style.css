@@ -90,6 +90,12 @@
   .feedback-wrong { background: rgba(244,63,94,0.1); border: 2px solid var(--red); border-radius: 10px; padding: 14px; text-align: center; font-size: 1.05rem; font-weight: 700; color: var(--red); margin-top: 12px; }
   .feedback-retry { background: rgba(245,166,35,0.12); border: 2px solid var(--accent); border-radius: 10px; padding: 14px; text-align: center; font-size: 1.05rem; font-weight: 700; color: var(--accent); margin-top: 12px; }
   .input-retry { border-color: var(--accent) !important; }
+  /* Ret-runde i diktat: alt i feltet er godkendt, forkerte bogstaver ryster og forsvinder */
+  .input-correction { border-color: var(--green) !important; color: var(--green) !important; }
+  .input-shake { animation: boss-shake 0.3s ease; border-color: var(--red) !important; }
+  .correction-note { text-align: center; min-height: 1.6em; margin-top: 10px; font-weight: 700; color: var(--muted); }
+  .correction-note .bad { color: var(--red); }
+  .correction-note .good { color: var(--green); }
 
   .pattern-explain {
     background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.3);

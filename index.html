@@ -9,7 +9,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.12.0</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.13.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
   <button id="muteBtn" class="mute-btn" onclick="SFX.toggleMute()" aria-label="Lyd til/fra">&#x1F50A;</button>
 </header>
@@ -202,6 +202,8 @@
   </div>
   <input type="text" id="spellingInput" placeholder="Skriv ordet her..." autocomplete="off" autocorrect="off" spellcheck="false" />
   <button class="btn btn-primary btn-full" id="checkBtn" onclick="checkSpelling()" style="margin-top:14px">&#x270F;&#xFE0F; Tjek stavning</button>
+  <div id="correctionNote" class="correction-note hidden"></div>
+  <button class="btn btn-primary btn-full hidden" id="correctBtn" onclick="startCorrection()" style="margin-top:14px">&#x270D;&#xFE0F; Skriv det rigtigt</button>
   <button class="btn btn-green btn-full hidden" id="nextBtn" onclick="nextWord()">&#x27A1;&#xFE0F; Næste ord</button>
 </div>
 
@@ -436,6 +438,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="sfx.js"></script>
 <script src="fx.js"></script>
+<script src="retrunde.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

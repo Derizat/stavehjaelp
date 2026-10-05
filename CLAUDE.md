@@ -14,6 +14,7 @@ Statiske oversigtssider (ikke en del af spillet): `stumme-bogstaver.html`, `ordb
 JavaScript-moduler der loades INDEN `app.js` (ingen indbyrdes afhængigheder):
 - `sfx.js` — WebAudio-lydeffekter, global `SFX`, muteknap `#muteBtn` i header, localStorage-nøgle `sound_muted`
 - `fx.js` — visuelle effekter, global `FX`: burst, damageNumber, confetti, slotPop, combo-badge
+- `retrunde.js` — ren logik til ret-runden i diktat, global `RETRUNDE` (`create`, `type`, `sync`). Test: `node test-retrunde.js`
 
 ## Vigtige dele
 
@@ -94,6 +95,7 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 - Den gamle adaptive diagnostik-test er fjernet; `gameMode` er nu kun `'training' | 'review'`
 
 ### Øvelsesspecifik logik
+- **Ret-runde i diktat** — efter et forkert svar skal eleven skrive ordet rigtigt før "Næste ord": det rigtige ord dækkes til, rigtige bogstaver bliver stående i grønt, forkerte ryster og forsvinder, og efter 2 fejl på samme plads foræres bogstavet. Tæller ikke i niveau/øveord/score; giver `selfCorrected` (+3 XP) hvis ingen bogstaver blev foræret. `correctionPhase` (`pending`/`active`/`done`), `startCorrection()`, `onCorrectionInput()`, `finishCorrection()`, `resetCorrection()`. Spec: `docs/superpowers/specs/2026-10-04-ret-runde-design.md`
 - **generateBlanks(wordObj)** — udleder blanks fra patternHint for fillin-mode
 - **buildSpellingPoliceItem(wordObj)** — indsætter stavefejl i sætning
 - **parseMorphemes(hint, word)** — parser '+' notation i patternHint til morfem-klodser

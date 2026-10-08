@@ -19,12 +19,12 @@ JavaScript-moduler der loades INDEN `app.js` (ingen indbyrdes afhængigheder):
 ## Vigtige dele
 
 - **Ordbank**: `WORD_BANK` med 11 kategorier: Lydrette ord, Stumme bogstaver, Dobbeltkonsonant, Sammensatte ord, Verbernes bøjning, Nutids-r, Fremmedord, Blødt d, Konsonantlyde, Ord fra Fransk, Ord fra Fransk 2
-- **Kategori-niveauer**: Hver kategori har sit eget niveau pr. spiller (`profile.categoryLevels`). `CATEGORY_START_LEVELS` / `CATEGORY_MAX_LEVELS` definerer start og loft (mestring). Oprykning styres af `getLevelUpThreshold` — progressivt strengere jo tættere på mestring (fra 5 svar/80% op til 50 svar/90%). Tilfældige tastefejl (svar der ikke matcher kategoriens typiske misspelling) tæller ikke imod
+- **Kategori-niveauer**: Hver kategori har sit eget niveau pr. spiller (`profile.categoryLevels`). `CATEGORY_START_LEVELS` / `CATEGORY_MAX_LEVELS` definerer start og loft (mestring). Startniveauet skal have ord i words.json, ellers sidder kategorien fast (kun svar på ord på spillerens niveau tæller). Oprykning styres af `getLevelUpThreshold` — progressivt strengere jo tættere på mestring (fra 5 svar/80% op til 50 svar/90%). Et forkert svar tæller aldrig som rigtigt; kun en tydelig tastefejl i et skrevet svar (`isLikelyTypo`: ét bogstav byttet med en nabotast, ikke f/v, y/u, ø/å, g/h) springes over
 - **Fransk-kategorier**: `PRO_CATEGORIES` — låses op for gems (`purchaseFrench` / `purchaseFrench2`). Tracker unikke korrekte ord i stedet for niveausystemet
 - **Staveregler**: `PATTERN_RULES` med børnevenlige forklaringer per kategori
 - **Lektioner**: `CATEGORY_LESSONS` (statisk popup) og `WIZARD_SCENARIOS` (interaktiv troldmands-lektion med to døre, død-animationer m.m.). `showLessonPopup` delegerer til wizard hvis kategorien har scenarier. Trigges af `checkLessonTrigger` ved struggle: 2 svar med 0 rigtige, eller ≥3 svar med <60% rigtige. Desuden "Lektioner"-knap med slideshow-oversigt
 - **TTS**: Pre-genererede MP3-filer i `audio/` med to stemmer (kvinde: Neural2-F, mand: Wavenet-G med `_m` suffix). `audio-manifest.json` mapper ord til filer. Browser SpeechSynthesis som fallback
-- **Spaced repetition**: Fejlord gemmes i `sr_data` (intervaller 0/1/3/7/14 dage) og kan øves via "review"-mode
+- **Spaced repetition**: Kun fejlord gemmes i `sr_data` (intervaller 0/1/3/7/14 dage). Hver blandet session får op til `SR_SLOTS_PER_SESSION` (2) forfaldne øveord som diktat, svageste og ældste først. `startReview` findes, men kaldes ingen steder
 - **Gamification**: Boss-kampe, skattekister (4 sjældenheder), avatar-progression (30 niveauer, Kylling → Ræve-Kongen), shop
 - **Stavevurdering**: Dysleksiscreening med 4 deltests (nonord, fonologisk, ordkæder, RAN)
 - **Misspellings fra rigtige data**: `fetchMisspellings` henter hyppige forkerte svar fra Supabase `answers`-tabellen (filtreret med `isPlausibleMisspelling`, 5 min cache) og bruger dem som distraktorer; `generateFallbackMisspellings` som fallback
@@ -35,7 +35,9 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 
 - `activePlayer` — den valgte spillers navn
 - `playerKey(key)` — returnerer `activePlayer + '_' + key` — bruges til ALLE per-spiller localStorage-kald
-- `players_list` — JSON-array af spillernavne; `last_player` — sidst valgte spiller (auto-select)
+- `players_list` — JSON-array af spillernavne **på denne enhed**; `last_player` — sidst valgte spiller (auto-select)
+- Profilvælgeren henter IKKE navne fra Supabase (privatliv). En profil fra en anden enhed hentes ved at oprette en spiller med præcis samme navn. `cleanupForeignPlayers()` fjerner én gang navne uden lokale data (fra før v1.14.0). Knapperne bygges med DOM og `textContent`, aldrig HTML-strenge
+- Navne/tekst fra Supabase i HTML: `escapeHtml()` (også anførselstegn); i en JS-streng i et `onclick`-attribut: `jsAttr()`
 - Migration fra gammel data: `migrateOldData()` flytter uprefixede nøgler til "Spiller 1"
 
 ## Supabase
@@ -61,9 +63,12 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 - id (uuid, PK), group_id (uuid, FK → groups.id ON DELETE CASCADE), player (text), role (text: 'teacher'/'student'/'member'), joined_at (timestamptz), UNIQUE(group_id, player)
 
 ### Sync-flow
-- `syncToSupabase()` kaldes efter enhver save (profil, reward, SR, klassetrin)
-- `syncFromSupabase(name, callback)` kaldes i `selectPlayer()` — loader data fra Supabase før UI refreshes
-- `renderProfilePicker()` merger lokale spillere med Supabase-spillere
+- `syncToSupabase()` kaldes efter enhver save (profil, reward, SR, klassetrin). Den stempler altid `{player}_local_updated_at`, også offline, og uploader (debounced) hvis Supabase er aktiv
+- `syncFromSupabase(name, callback)` kaldes i `selectPlayer()`. `applyRemoteProfile()` lader den nyeste kopi vinde via `pickNewerProfile()`: mest `totalXP` vinder, ved lige XP det nyeste tidsstempel. `mergeGrowOnly()` henter det der kun kan vokse fra den tabende kopi (højeste niveau pr. kategori, køb, fransk-ord og -oplåsning, øveord). Gems følger vinderen. Har enheden noget nyt, uploades straks. `word_stats` flettes altid (max pr. ord)
+- Data fra Supabase renses med `sanitizeProfileRow()` (tal tvinges til tal), både ved sync og i lærer-dashboardet, fordi tabellen kan skrives af alle
+- `doSyncToSupabase()` uploader intet før profilen er læst i dette besøg (`profileReadOk`). Et svar efter tidsgrænsen bruges stadig. Fejler læsningen, prøver næste gemning igen (`retryProfileReadIfNeeded`, højst hvert 30. sek.)
+- Kendt hul: "Nulstil" holder ikke, fordi Supabase-kopien med mere XP vinder ved næste læsning
+- `flushAllNow()` kører ved `visibilitychange` (hidden), `pagehide` og `beforeunload`
 
 ## Øvelsestyper
 
@@ -100,6 +105,7 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 - **generateBlanks(wordObj)** — udleder blanks fra patternHint for fillin-mode
 - **buildSpellingPoliceItem(wordObj)** — indsætter stavefejl i sætning
 - **parseMorphemes(hint, word)** — parser '+' notation i patternHint til morfem-klodser
+- **findWordInSentence / replaceWordInSentence** — finder ordet som helt ord i en sætning. Brug ALDRIG regex-lookbehind i appen: iPadOS/Safari før 16.4 kan ikke parse det, og så går diktat og sessionsstart i stå
 
 ## Gamification-flow
 
@@ -170,8 +176,9 @@ Per spiller (via `playerKey`):
 - `{player}_exercise_stats` — frekvens af øvelsestyper + `_unfulfilled`
 - `{player}_boss_seen` — hvilke boss-typer spilleren har fået instruktion til
 - `{player}_wizard_recent` — senest viste wizard-scenarier (undgår gentagelse)
+- `{player}_local_updated_at` — tidspunkt for sidste lokale gemning (ms), bruges af sync
 
-Delte (ikke prefixed): `players_list`, `last_player`, `tts_voice`, `gcloud_tts_key`, `anthropic_api_key`, `sound_muted`
+Delte (ikke prefixed): `players_list`, `last_player`, `players_list_cleaned_v1`, `tts_voice`, `gcloud_tts_key`, `anthropic_api_key`, `sound_muted`
 
 ## Ordbank-regler
 

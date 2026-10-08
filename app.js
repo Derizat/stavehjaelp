@@ -25,14 +25,41 @@ function addPlayer(name) {
   if (list.indexOf(name) === -1) { list.push(name); savePlayersList(list); }
 }
 
+// Alle per-spiller nøgler. Bruges når en spiller slettes på enheden.
+var PLAYER_KEY_SUFFIXES = ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade',
+  'word_stats', 'exercise_stats', 'boss_seen', 'wizard_recent', 'local_updated_at'];
+
+function playerHasLocalData(name) {
+  try {
+    for (var i = 0; i < PLAYER_KEY_SUFFIXES.length; i++) {
+      if (localStorage.getItem(name + '_' + PLAYER_KEY_SUFFIXES[i]) !== null) return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
 function removePlayer(name) {
-  if (!confirm('Slet spilleren "' + name + '" og al deres data?')) return;
+  if (!confirm('Slet spilleren "' + name + '" fra denne enhed?')) return;
   var list = loadPlayersList().filter(function(n) { return n !== name; });
   savePlayersList(list);
-  ['profile_data', 'reward_data', 'sr_data', 'screening_data', 'student_grade'].forEach(function(k) {
+  PLAYER_KEY_SUFFIXES.forEach(function(k) {
     try { localStorage.removeItem(name + '_' + k); } catch(e) {}
   });
+  try { if (localStorage.getItem('last_player') === name) localStorage.removeItem('last_player'); } catch(e) {}
+  if (typeof profileReadOk !== 'undefined') delete profileReadOk[name];
   renderProfilePicker();
+}
+
+// Før v1.14.0 hentede profilvælgeren ALLE spillernavne fra Supabase og gemte dem på enheden, så børn
+// fra andre familier og klasser dukkede op. Fjern én gang de navne, der aldrig er spillet på denne enhed.
+function cleanupForeignPlayers() {
+  try {
+    if (localStorage.getItem('players_list_cleaned_v1')) return;
+    var list = loadPlayersList();
+    var keep = list.filter(function(n) { return playerHasLocalData(n) || n === localStorage.getItem('last_player'); });
+    if (keep.length !== list.length) savePlayersList(keep);
+    localStorage.setItem('players_list_cleaned_v1', '1');
+  } catch(e) {}
 }
 
 function selectPlayer(name) {
@@ -68,48 +95,51 @@ function switchPlayer() {
 }
 
 function renderProfilePicker() {
-  var list = loadPlayersList();
-  var grid = document.getElementById('profilePickerGrid');
-
-  // Merge with Supabase players
-  if (supabaseClient) {
-    supabaseClient.from('profiles').select('player').then(function(res) {
-      if (res.data) {
-        var changed = false;
-        res.data.forEach(function(row) {
-          if (list.indexOf(row.player) === -1) {
-            list.push(row.player);
-            changed = true;
-          }
-        });
-        if (changed) { savePlayersList(list); renderProfilePickerGrid(list); }
-      }
-    }).catch(function() {});
-  }
-
-  renderProfilePickerGrid(list);
+  // Kun spillere oprettet på denne enhed. Navne hentes ikke længere fra Supabase (privatliv).
+  // En profil fra en anden enhed hentes ved at oprette en spiller med præcis samme navn.
+  cleanupForeignPlayers();
+  renderProfilePickerGrid(loadPlayersList());
 }
 
+// Bygges med DOM-elementer, så et spillernavn aldrig fortolkes som HTML eller JavaScript.
 function renderProfilePickerGrid(list) {
   var grid = document.getElementById('profilePickerGrid');
-  var html = '';
-  for (var i = 0; i < list.length; i++) {
-    var name = list[i];
-    var emoji = '\u{1F98A}';
+  grid.innerHTML = '';
+  list.forEach(function(name) {
+    var avatarHtml = '\u{1F98A}';
     var nameStyle = '';
     try {
       var raw = localStorage.getItem(name + '_reward_data');
-      if (raw) { var rd = JSON.parse(raw); var lvl = getAvatarLevel(rd.totalXP || 0); var dispIdx = rd.displayedLevel || 0; var dispLvl = AVATAR_LEVELS[dispIdx] || AVATAR_LEVELS[0]; emoji = dispLvl.image ? '<img src="' + dispLvl.image + '" style="width:2.5rem;height:2.5rem;object-fit:contain">' : dispLvl.emoji; nameStyle = dispLvl.titleStyle || ''; }
+      if (raw) {
+        var rd = JSON.parse(raw);
+        var dispLvl = AVATAR_LEVELS[rd.displayedLevel || 0] || AVATAR_LEVELS[0];
+        // Billedsti og emoji kommer fra AVATAR_LEVELS i koden, ikke fra brugeren
+        avatarHtml = dispLvl.image ? '<img src="' + dispLvl.image + '" style="width:2.5rem;height:2.5rem;object-fit:contain" alt="">' : dispLvl.emoji;
+        nameStyle = dispLvl.titleStyle || '';
+      }
     } catch(e) {}
-    html += '<button class="profile-picker-btn" onclick="selectPlayer(\'' + name.replace(/'/g, "\\'") + '\')">';
-    html += '<span class="pp-emoji">' + emoji + '</span>';
-    html += '<span class="pp-name" style="' + nameStyle + '">' + name + '</span>';
-    html += '<span class="pp-delete" onclick="event.stopPropagation();removePlayer(\'' + name.replace(/'/g, "\\'") + '\')">\u2717 slet</span>';
-    html += '</button>';
-  }
-  html += '<button class="profile-picker-btn pp-new" onclick="showNewPlayerForm()">';
-  html += '<span class="pp-emoji">&#x2795;</span><span class="pp-name">Ny spiller</span></button>';
-  grid.innerHTML = html;
+    var btn = document.createElement('button');
+    btn.className = 'profile-picker-btn';
+    btn.addEventListener('click', function() { selectPlayer(name); });
+    var emojiEl = document.createElement('span');
+    emojiEl.className = 'pp-emoji';
+    emojiEl.innerHTML = avatarHtml;
+    var nameEl = document.createElement('span');
+    nameEl.className = 'pp-name';
+    if (nameStyle) nameEl.setAttribute('style', nameStyle);
+    nameEl.textContent = name;
+    var del = document.createElement('span');
+    del.className = 'pp-delete';
+    del.textContent = '\u2717 slet';
+    del.addEventListener('click', function(e) { e.stopPropagation(); removePlayer(name); });
+    btn.appendChild(emojiEl); btn.appendChild(nameEl); btn.appendChild(del);
+    grid.appendChild(btn);
+  });
+  var newBtn = document.createElement('button');
+  newBtn.className = 'profile-picker-btn pp-new';
+  newBtn.innerHTML = '<span class="pp-emoji">&#x2795;</span><span class="pp-name">Ny spiller</span>';
+  newBtn.addEventListener('click', showNewPlayerForm);
+  grid.appendChild(newBtn);
   hide('newPlayerForm');
 }
 
@@ -226,9 +256,32 @@ function flushAnswers() {
 
 // --- Debounced profile sync ---
 var syncTimer = null;
+// Spillere hvis profil er læst fra Supabase i dette besøg. Før det uploades intet, så en enhed med
+// gamle data aldrig overskriver nyere fremskridt fra en anden enhed.
+var profileReadOk = {};
+
+function localUpdatedAt(name) {
+  try { return parseInt(localStorage.getItem(name + '_local_updated_at'), 10) || 0; } catch(e) { return 0; }
+}
+function setLocalUpdatedAt(name, ms) {
+  try { localStorage.setItem(name + '_local_updated_at', String(ms)); } catch(e) {}
+}
+
+// Hvilken kopi af en profil er nyest? XP vokser kun når barnet spiller, så den kopi med mest XP har
+// flest fremskridt. Ved lige XP afgør tidsstemplerne (lokal gemning vs. Supabase updated_at).
+function pickNewerProfile(local, remote) {
+  if (!local.hasData) return 'remote';
+  if (local.xp > remote.xp) return 'local';
+  if (local.xp < remote.xp) return 'remote';
+  return local.stamp > remote.time ? 'local' : 'remote';
+}
 
 function syncToSupabase() {
-  if (!supabaseClient || !activePlayer) return;
+  if (!activePlayer) return;
+  // Stemples altid, også offline, så næste besøg ved at denne enheds kopi er nyere
+  setLocalUpdatedAt(activePlayer, Date.now());
+  if (!supabaseClient) return;
+  retryProfileReadIfNeeded(activePlayer);
   var playerToSync = activePlayer;
   if (syncTimer) clearTimeout(syncTimer);
   syncTimer = setTimeout(function() { doSyncToSupabase(playerToSync); }, 2000);
@@ -238,6 +291,7 @@ function doSyncToSupabase(forPlayer) {
   if (!supabaseClient) return;
   var p = forPlayer || activePlayer;
   if (!p) return;
+  if (!profileReadOk[p]) return; // profilen er ikke læst endnu: upload ikke over noget der kan være nyere
   var profileData = null, rewardData = null, srData = null, grade = 0;
   try { profileData = JSON.parse(localStorage.getItem(p + '_profile_data') || 'null'); } catch(e) {}
   try { rewardData = JSON.parse(localStorage.getItem(p + '_reward_data') || 'null'); } catch(e) {}
@@ -258,10 +312,16 @@ function doSyncToSupabase(forPlayer) {
   });
 }
 
-// Flush on page unload
-window.addEventListener('beforeunload', function() {
+// Gem når siden lukkes eller skjules. På iPad og Android kommer beforeunload ofte ikke,
+// men visibilitychange (hidden) og pagehide gør.
+function flushAllNow() {
   flushAnswers();
-  if (syncTimer) { clearTimeout(syncTimer); doSyncToSupabase(); }
+  if (syncTimer) { clearTimeout(syncTimer); syncTimer = null; doSyncToSupabase(); }
+}
+window.addEventListener('beforeunload', flushAllNow);
+window.addEventListener('pagehide', flushAllNow);
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') flushAllNow();
 });
 
 // Safely load, merge, and save a localStorage JSON field
@@ -274,44 +334,179 @@ function mergeLocalField(key, remoteData, mergeFn) {
   } catch(e) {}
 }
 
-function syncFromSupabase(name, callback) {
-  if (!supabaseClient) { if (callback) callback(); return; }
-  // Vent højst PROFILE_SYNC_TIMEOUT_MS. Kommer svaret senere, ignoreres det, så skærmen og localStorage ikke kommer ud af takt.
-  var settled = false;
-  function finish() { if (settled) return; settled = true; clearTimeout(syncTimer); if (callback) callback(); }
-  var syncTimer = setTimeout(finish, PROFILE_SYNC_TIMEOUT_MS);
-  supabaseClient.from('profiles').select('*').eq('player', name).single().then(function(res) {
-    if (settled) return;
-    if (res.data) {
-      mergeLocalField(name + '_profile_data', res.data.profile_data, function(local, remote) {
-        if (local && local.categoryLevels && !remote.categoryLevels) remote.categoryLevels = local.categoryLevels;
-        return remote;
-      });
-      mergeLocalField(name + '_reward_data', res.data.reward_data, function(local, remote) {
-        if (local) {
-          if ((local.totalXP || 0) > (remote.totalXP || 0)) remote.totalXP = local.totalXP;
-          if ((local.gems || 0) > (remote.gems || 0)) remote.gems = local.gems;
-        }
-        return remote;
-      });
-      mergeLocalField(name + '_sr_data', res.data.sr_data);
-      mergeLocalField(name + '_word_stats', res.data.word_stats, function(local, remote) {
-        var merged = local || {};
-        for (var wk in remote) {
-          if (!merged[wk]) { merged[wk] = remote[wk]; }
-          else {
-            merged[wk].correct = Math.max(merged[wk].correct || 0, remote[wk].correct || 0);
-            merged[wk].wrong = Math.max(merged[wk].wrong || 0, remote[wk].wrong || 0);
-          }
-        }
-        return merged;
-      });
-      if (res.data.student_grade !== null) {
-        try { localStorage.setItem(name + '_student_grade', res.data.student_grade.toString()); } catch(e) {}
+function readLocalJSON(key) {
+  try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e) { return null; }
+}
+
+// Profiltabellen kan skrives af alle med den offentlige nøgle. Tal der vises med innerHTML
+// (gems, XP, niveauer) tvinges derfor til tal, så en ondsindet række ikke kan indsætte HTML.
+function toCount(v) { var n = Math.floor(Number(v)); return isFinite(n) && n > 0 ? n : 0; }
+function sanitizeProfileRow(row) {
+  if (!row || typeof row !== 'object') return row;
+  var clean = JSON.parse(JSON.stringify(row));
+  var rd = clean.reward_data;
+  if (rd && typeof rd === 'object') {
+    ['totalXP', 'gems', 'todayXP', 'displayedLevel', 'streak', 'bestStreak'].forEach(function(k) {
+      if (k in rd) rd[k] = toCount(rd[k]);
+    });
+  }
+  var pd = clean.profile_data;
+  if (pd && typeof pd === 'object' && pd.categoryLevels && typeof pd.categoryLevels === 'object') {
+    for (var c in pd.categoryLevels) {
+      var cl = pd.categoryLevels[c];
+      if (cl && typeof cl === 'object') {
+        cl.level = toCount(cl.level);
+        if (!Array.isArray(cl.history)) cl.history = [];
+      } else {
+        delete pd.categoryLevels[c];
       }
     }
+  }
+  if ('student_grade' in clean && clean.student_grade !== null) clean.student_grade = toCount(clean.student_grade);
+  return clean;
+}
+
+function unionList(a, b) {
+  var out = Array.isArray(a) ? a.slice() : [];
+  (Array.isArray(b) ? b : []).forEach(function(x) { if (out.indexOf(x) === -1) out.push(x); });
+  return out;
+}
+
+// Den vindende kopi bruges som helhed, men det der kun kan vokse, hentes også fra den tabende kopi,
+// så en enhed der har spillet parallelt (fx under Supabase-pausen) ikke mister sine niveauer, køb og øveord.
+// Gems kan ikke flettes og følger vinderen.
+function mergeGrowOnly(win, lose) {
+  var profile = win.profile ? JSON.parse(JSON.stringify(win.profile)) : (lose.profile ? {} : null);
+  var reward = win.reward ? JSON.parse(JSON.stringify(win.reward)) : (lose.reward ? {} : null);
+  var sr = win.sr ? JSON.parse(JSON.stringify(win.sr)) : (lose.sr ? {} : null);
+  var lp = lose.profile && lose.profile.categoryLevels;
+  if (profile && lp) {
+    profile.categoryLevels = profile.categoryLevels || {};
+    for (var cat in lp) {
+      var w = profile.categoryLevels[cat];
+      if (lp[cat] && (!w || (lp[cat].level || 0) > (w.level || 0))) profile.categoryLevels[cat] = lp[cat];
+    }
+  }
+  var lr = lose.reward;
+  if (reward && lr) {
+    ['frenchCorrectWords', 'french2CorrectWords'].forEach(function(k) {
+      if (lr[k]) reward[k] = unionList(reward[k], lr[k]);
+    });
+    if (lr.frenchUnlocked) reward.frenchUnlocked = true;
+    if (lr.french2Unlocked) reward.french2Unlocked = true;
+    if ((lr.displayedLevel || 0) > (reward.displayedLevel || 0)) reward.displayedLevel = lr.displayedLevel;
+    if (lr.shop && lr.shop.owned) {
+      reward.shop = reward.shop || JSON.parse(JSON.stringify(lr.shop));
+      reward.shop.owned = reward.shop.owned || {};
+      for (var sc in lr.shop.owned) reward.shop.owned[sc] = unionList(reward.shop.owned[sc], lr.shop.owned[sc]);
+    }
+  }
+  if (sr && lose.sr && lose.sr.words) {
+    sr.words = sr.words || {};
+    for (var sw in lose.sr.words) if (!sr.words[sw]) sr.words[sw] = lose.sr.words[sw];
+  }
+  return { profile: profile, reward: reward, sr: sr };
+}
+
+function writeLocalJSON(key, value) {
+  if (value === null || value === undefined) return;
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) {}
+}
+
+// Fletter en profil-række fra Supabase med denne enheds kopi. Den nyeste kopi vinder (se
+// pickNewerProfile), og det der kun kan vokse, flettes ind fra den anden (mergeGrowOnly). Før blev
+// Supabase-kopien altid brugt, så fremskridt fra en enhed der havde været offline (eller spillet mens
+// Supabase var pauset) blev rullet tilbage og derefter uploadet.
+// Returnerer { winner: 'local'|'remote', upload: true hvis Supabase skal opdateres }.
+function applyRemoteProfile(name, rawRow) {
+  var row = sanitizeProfileRow(rawRow);
+  var local = {
+    profile: readLocalJSON(name + '_profile_data'),
+    reward: readLocalJSON(name + '_reward_data'),
+    sr: readLocalJSON(name + '_sr_data')
+  };
+  var remote = { profile: row.profile_data || null, reward: row.reward_data || null, sr: row.sr_data || null };
+  var hasData = !!(local.profile || local.reward || local.sr);
+  var remoteTime = Date.parse(row.updated_at || '') || 0;
+  var winner = pickNewerProfile(
+    { hasData: hasData, xp: (local.reward && local.reward.totalXP) || 0, stamp: localUpdatedAt(name) },
+    { xp: (remote.reward && remote.reward.totalXP) || 0, time: remoteTime }
+  );
+
+  // Ordstatistik flettes altid begge veje (højeste tæller pr. ord)
+  mergeLocalField(name + '_word_stats', row.word_stats, function(local, remote) {
+    var merged = local || {};
+    for (var wk in remote) {
+      if (!merged[wk]) { merged[wk] = remote[wk]; }
+      else {
+        merged[wk].correct = Math.max(merged[wk].correct || 0, remote[wk].correct || 0);
+        merged[wk].wrong = Math.max(merged[wk].wrong || 0, remote[wk].wrong || 0);
+      }
+    }
+    return merged;
+  });
+
+  var merged = winner === 'remote' ? mergeGrowOnly(remote, local) : mergeGrowOnly(local, remote);
+  writeLocalJSON(name + '_profile_data', merged.profile);
+  writeLocalJSON(name + '_reward_data', merged.reward);
+  writeLocalJSON(name + '_sr_data', merged.sr);
+  if (winner === 'remote' && row.student_grade !== null && row.student_grade !== undefined) {
+    try { localStorage.setItem(name + '_student_grade', String(row.student_grade)); } catch(e) {}
+  }
+  // Skal Supabase opdateres? Ja hvis enheden vandt, eller hvis fletningen tilføjede noget til Supabase-kopien.
+  var changedRemote = JSON.stringify(merged.profile) !== JSON.stringify(remote.profile) ||
+    JSON.stringify(merged.reward) !== JSON.stringify(remote.reward) ||
+    JSON.stringify(merged.sr) !== JSON.stringify(remote.sr);
+  var upload = winner === 'local' || changedRemote;
+  setLocalUpdatedAt(name, upload ? Date.now() : remoteTime);
+  return { winner: winner, upload: upload };
+}
+
+// Opdaterer forsiden efter en profil er hentet for sent (svaret kom efter tidsgrænsen)
+function refreshWelcomeIfVisible(name) {
+  if (activePlayer !== name) return;
+  var welcome = document.getElementById('phase-welcome');
+  if (!welcome || welcome.classList.contains('hidden')) return;
+  updateWelcomeAvatar();
+  renderCategoryLevels();
+  restoreGradeSelection();
+  updateRewardBar();
+  applyPlayerCosmetics();
+  updateDashboardButton();
+}
+
+var profileReadInFlight = {};
+var profileReadLastTry = {};
+var PROFILE_READ_RETRY_MS = 30000;
+
+function syncFromSupabase(name, callback) {
+  if (!supabaseClient) { if (callback) callback(); return; }
+  // Vent højst PROFILE_SYNC_TIMEOUT_MS på profilen, så skærmen ikke fryser på langsomt net.
+  // Et svar der kommer senere bruges stadig, men der uploades intet før profilen er læst.
+  var settled = false;
+  function finish() { if (settled) return; settled = true; clearTimeout(readTimer); if (callback) callback(); }
+  var readTimer = setTimeout(finish, PROFILE_SYNC_TIMEOUT_MS);
+  profileReadInFlight[name] = true;
+  profileReadLastTry[name] = Date.now();
+  supabaseClient.from('profiles').select('*').eq('player', name).maybeSingle().then(function(res) {
+    profileReadInFlight[name] = false;
+    if (res.error) { finish(); return; } // netværksfejl: forbliv lokal; næste gemning prøver at læse igen
+    var late = settled;
+    var result = res.data ? applyRemoteProfile(name, res.data) : { winner: 'local', upload: true };
+    profileReadOk[name] = true;
+    // Opdatér Supabase hvis enheden har noget nyt (men opret ikke en tom række for en helt ny spiller)
+    if (result.upload && playerHasLocalData(name)) doSyncToSupabase(name);
+    if (late && result.winner === 'remote') refreshWelcomeIfVisible(name);
     finish();
-  }).catch(finish);
+  }).catch(function() { profileReadInFlight[name] = false; finish(); });
+}
+
+// Kaldes ved gemning: er profilen ikke læst endnu (fx fejlede første læsning på et kort wifi-udfald),
+// så prøv igen, højst hvert PROFILE_READ_RETRY_MS. Ellers ville resten af besøget aldrig blive gemt.
+function retryProfileReadIfNeeded(name) {
+  if (!supabaseClient || !name || profileReadOk[name] || profileReadInFlight[name]) return;
+  if (Date.now() - (profileReadLastTry[name] || 0) < PROFILE_READ_RETRY_MS) return;
+  syncFromSupabase(name);
 }
 
 // ===== KLASSER (CLASSES) =====
@@ -435,10 +630,18 @@ function copyJoinCode(code) {
   }
 }
 
+// Escaper tekst til HTML, også inde i attributter (anførselstegn med).
 function escapeHtml(text) {
-  var div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  return String(text === null || text === undefined ? '' : text).replace(/[&<>"']/g, function(c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+// Til en tekst-værdi i en JavaScript-streng i et onclick-attribut: først JS-escape, så HTML-escape.
+// Omvendt rækkefølge (som før) lod et navn som  x');alert(1);//  køre som kode.
+function jsAttr(text) {
+  return escapeHtml(String(text === null || text === undefined ? '' : text)
+    .replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/[\r\n\u2028\u2029]+/g, ' '));
 }
 
 async function renderClassSettings() {
@@ -478,12 +681,12 @@ async function renderClassSettings() {
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
         '<strong style="font-size:0.9rem;color:var(--text)">' + escapeHtml(g.name) + '</strong>' +
         '<span class="teacher-badge teacher">L\u00e6rer</span></div>' +
-        '<div class="join-code-display" onclick="copyJoinCode(\'' + g.join_code + '\')" title="Klik for at kopiere">' +
-        g.join_code + '</div>' +
-        '<span id="copyFeedback_' + g.join_code + '" style="font-size:0.75rem;color:var(--green);display:block;text-align:center;min-height:1.2em"></span>' +
+        '<div class="join-code-display" onclick="copyJoinCode(\'' + jsAttr(g.join_code) + '\')" title="Klik for at kopiere">' +
+        escapeHtml(g.join_code) + '</div>' +
+        '<span id="copyFeedback_' + escapeHtml(g.join_code) + '" style="font-size:0.75rem;color:var(--green);display:block;text-align:center;min-height:1.2em"></span>' +
         '<div style="display:flex;gap:6px;margin-top:6px">' +
-        '<button class="btn btn-blue" style="flex:1;font-size:0.8rem;padding:8px" onclick="showClassDashboard(\'' + g.id + '\', \'' + escapeHtml(g.name).replace(/'/g, "\\'") + '\')">Dashboard</button>' +
-        '<button class="btn" style="flex:0;font-size:0.8rem;padding:8px;background:var(--red);color:white" onclick="deleteClass(\'' + g.id + '\', \'' + escapeHtml(g.name).replace(/'/g, "\\'") + '\')">Slet</button>' +
+        '<button class="btn btn-blue" style="flex:1;font-size:0.8rem;padding:8px" onclick="showClassDashboard(\'' + jsAttr(g.id) + '\', \'' + jsAttr(g.name) + '\')">Dashboard</button>' +
+        '<button class="btn" style="flex:0;font-size:0.8rem;padding:8px;background:var(--red);color:white" onclick="deleteClass(\'' + jsAttr(g.id) + '\', \'' + jsAttr(g.name) + '\')">Slet</button>' +
         '</div></div>';
     }
 
@@ -508,7 +711,7 @@ async function renderClassSettings() {
         '<strong style="font-size:0.88rem;color:var(--text)">' + escapeHtml(sg.name) + '</strong>' +
         '<div style="display:flex;align-items:center;gap:8px">' +
         '<span class="teacher-badge student">Elev</span>' +
-        '<button class="btn" style="font-size:0.75rem;padding:4px 10px;background:var(--red);color:white" onclick="leaveClass(\'' + sg.id + '\', \'' + escapeHtml(sg.name).replace(/'/g, "\\'") + '\')">Forlad</button>' +
+        '<button class="btn" style="font-size:0.75rem;padding:4px 10px;background:var(--red);color:white" onclick="leaveClass(\'' + jsAttr(sg.id) + '\', \'' + jsAttr(sg.name) + '\')">Forlad</button>' +
         '</div></div></div>';
     }
   }
@@ -546,7 +749,7 @@ async function openDashboard() {
   select.innerHTML = '<option value="">-- V\u00e6lg klasse --</option>';
   for (var i = 0; i < dashboardClasses.length; i++) {
     var c = dashboardClasses[i];
-    select.innerHTML += '<option value="' + c.id + '">' + escapeHtml(c.name) + '</option>';
+    select.innerHTML += '<option value="' + escapeHtml(c.id) + '">' + escapeHtml(c.name) + '</option>';
   }
 
   // Auto-select if only one class
@@ -632,7 +835,7 @@ async function loadClassOverview(groupId, timeFilter) {
 
   var profileMap = {};
   for (var p = 0; p < profiles.length; p++) {
-    profileMap[profiles[p].player] = profiles[p];
+    profileMap[profiles[p].player] = sanitizeProfileRow(profiles[p]); // tal fra andres profiler vises med innerHTML
   }
 
   dashboardStudents = studentNames.map(function(name) {
@@ -686,7 +889,7 @@ function renderClassOverview(groupId, students, timeFilter) {
   ];
   for (var f = 0; f < filters.length; f++) {
     var active = timeFilter === filters[f].key ? ' active' : '';
-    html += '<button class="time-filter-btn' + active + '" onclick="loadClassOverview(\'' + groupId + '\', \'' + filters[f].key + '\')">' + filters[f].label + '</button>';
+    html += '<button class="time-filter-btn' + active + '" onclick="loadClassOverview(\'' + jsAttr(groupId) + '\', \'' + filters[f].key + '\')">' + filters[f].label + '</button>';
   }
   html += '</div>';
 
@@ -706,7 +909,7 @@ function renderClassOverview(groupId, students, timeFilter) {
       '<td style="color:' + pctColor + ';font-weight:700">' + st.correctPct + '%</td>' +
       '<td>' + st.totalAnswers + '</td>' +
       '<td style="font-size:0.78rem;color:var(--muted)">' + st.lastActive + '</td>' +
-      '<td><button class="btn" style="font-size:0.7rem;padding:3px 8px;background:var(--red);color:white" onclick="removeStudentFromClass(\'' + groupId + '\', \'' + escapeHtml(st.name).replace(/'/g, "\\'") + '\', \'' + escapeHtml(dashboardCurrentClass.name).replace(/'/g, "\\'") + '\')">Fjern</button></td>' +
+      '<td><button class="btn" style="font-size:0.7rem;padding:3px 8px;background:var(--red);color:white" onclick="removeStudentFromClass(\'' + jsAttr(groupId) + '\', \'' + jsAttr(st.name) + '\', \'' + jsAttr(dashboardCurrentClass.name) + '\')">Fjern</button></td>' +
       '</tr>';
   }
 
@@ -1770,6 +1973,7 @@ function goHome() {
   cleanupSnake();
   if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
   if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
+  bossPracticeMode = false;
   show('phase-welcome');
   updateWelcomeAvatar();
   renderCategoryLevels();
@@ -1817,6 +2021,7 @@ function toggleSettings() {
 
 // Spaced Repetition
 var SR_INTERVALS = [0, ONE_DAY_MS, 3*ONE_DAY_MS, 7*ONE_DAY_MS, 14*ONE_DAY_MS];
+var SR_SLOTS_PER_SESSION = 2; // forfaldne øveord pr. blandet session
 
 function loadSRData() {
   try { var raw = localStorage.getItem(playerKey('sr_data')); return raw ? JSON.parse(raw) : { words: {} }; } catch(e) { return { words: {} }; }
@@ -1831,6 +2036,8 @@ function updateSRWord(word, correct, category) {
   if (category === 'Ord fra Fransk' || category === 'Ord fra Fransk 2') trackFrenchWord(word, correct, category);
   var sr = loadSRData();
   if (!sr.words) sr.words = {};
+  // Kun fejlord kommer på øvelisten. Et ord barnet kan i første forsøg skal ikke gentages.
+  if (!sr.words[word] && correct) return;
   if (!sr.words[word]) { sr.words[word] = { level: 0, nextReview: Date.now(), category: category }; }
   if (correct) { sr.words[word].level = Math.min(sr.words[word].level + 1, 4); }
   else { sr.words[word].level = 0; }
@@ -1874,8 +2081,13 @@ function resetProfile() {
 }
 
 // Starting level per category — categories with level 0 words start at 0
+// Startniveauet skal svare til det laveste niveau, kategorien har ord på. Ellers tæller ingen svar
+// (kun ord på spillerens niveau tæller), og kategorien sidder fast. Stumme bogstaver og Sammensatte ord
+// har ingen ord på niveau 1. Migreringen i loadCategoryLevels løfter eksisterende spillere.
 var CATEGORY_START_LEVELS = {
   'Lydrette ord': 0,
+  'Stumme bogstaver': 2,
+  'Sammensatte ord': 2,
   'Fremmedord': 2,
   'Blødt d': 1,
   'Ord fra Fransk': 5,
@@ -1960,21 +2172,47 @@ function getLevelUpThreshold(currentLevel, maxLevel) {
   return { minAnswers: 5, minPct: 0.80 }; // første niveau(er)
 }
 
-function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelling) {
+// Dansk tastatur. Bruges til at kende en tydelig tastefejl (nabotast) fra en stavefejl.
+var KEYBOARD_ROWS = [{ keys: 'qwertyuiopå', x: 0 }, { keys: 'asdfghjklæø', x: 0.25 }, { keys: 'zxcvbnm', x: 0.75 }];
+// Lydlige forvekslinger der tilfældigvis er nabotaster. De er stavefejl, ikke tastefejl.
+var CONFUSABLE_PAIRS = ['fv', 'uy', 'åø', 'gh', 'sz', 'sx', 'ij']; // sorteret alfabetisk, sammenlignes sorteret
+
+function keyPosition(ch) {
+  for (var r = 0; r < KEYBOARD_ROWS.length; r++) {
+    var i = KEYBOARD_ROWS[r].keys.indexOf(ch);
+    if (i !== -1) return { x: i + KEYBOARD_ROWS[r].x, y: r };
+  }
+  return null;
+}
+
+// Sandt hvis svaret kun afviger fra ordet ved ét bogstav, der er byttet med en nabotast
+// (fx "hjenme" for "hjemme"). Manglende, ekstra eller lydligt forvekslede bogstaver er ikke tastefejl.
+function isLikelyTypo(word, answer) {
+  var w = (word || '').toLowerCase().trim(), a = (answer || '').toLowerCase().trim();
+  if (!w || w.length !== a.length || w === a) return false;
+  var diff = -1;
+  for (var i = 0; i < w.length; i++) {
+    if (w[i] !== a[i]) { if (diff !== -1) return false; diff = i; }
+  }
+  var pair = [w[diff], a[diff]].sort().join('');
+  if (CONFUSABLE_PAIRS.indexOf(pair) !== -1) return false;
+  var p = keyPosition(w[diff]), q = keyPosition(a[diff]);
+  if (!p || !q) return false;
+  return Math.abs(p.y - q.y) <= 1 && Math.abs(p.x - q.x) <= 1;
+}
+
+// targetWord sendes kun fra opgaver hvor barnet selv skriver ordet (diktat, Udfyld sætningen).
+function updateCategoryLevel(category, correct, wordLevel, userAnswer, misspelling, targetWord) {
   if (!category || ALL_CATEGORIES.indexOf(category) === -1) return;
   // Ord fra Fransk / Fransk 2: track unique correct words instead of normal level system
   if (category === 'Ord fra Fransk' || category === 'Ord fra Fransk 2') return;
-  // Tilfældige tastefejl straffes ikke: hvis svaret ikke matcher kategoriens
-  // forventede misspelling, tæller det som "ikke-kategori-fejl" (true i historik).
-  // Korrekte svar og kategori-typiske fejl tælles som normalt.
+  // Et forkert svar tæller aldrig som rigtigt. Før talte alle fejl, der ikke var præcis ordets ene
+  // typiske fejlstavning, som rigtige (ca. 9 ud af 10 rigtige stavefejl). Kun en tydelig tastefejl
+  // i et skrevet svar springes over: den tæller hverken for eller imod.
+  if (!correct && targetWord && userAnswer && isLikelyTypo(targetWord, userAnswer)) return;
   var historyEntry = correct;
-  if (!correct && misspelling && userAnswer) {
-    if (userAnswer.toLowerCase().trim() !== misspelling.toLowerCase()) {
-      historyEntry = true;
-    }
-  }
   var levels = loadCategoryLevels();
-  if (!levels[category]) levels[category] = { level: 1, history: [] };
+  if (!levels[category]) levels[category] = { level: CATEGORY_START_LEVELS[category] !== undefined ? CATEGORY_START_LEVELS[category] : 1, history: [] };
   var cat = levels[category];
   var maxLevel = CATEGORY_MAX_LEVELS[category] !== undefined ? CATEGORY_MAX_LEVELS[category] : 4;
   var startLevel = CATEGORY_START_LEVELS[category] !== undefined ? CATEGORY_START_LEVELS[category] : 1;
@@ -2167,8 +2405,10 @@ function countCategoriesAtLevel(levels, minLevel) {
   for (var i = 0; i < ALL_CATEGORIES.length; i++) {
     var cat = ALL_CATEGORIES[i];
     if (cat === 'Fremmedord' || PRO_CATEGORIES.indexOf(cat) !== -1) continue;
-    var lvl = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : 1;
-    if (lvl >= minLevel) count++;
+    var start = CATEGORY_START_LEVELS[cat] !== undefined ? CATEGORY_START_LEVELS[cat] : 1;
+    var lvl = (levels[cat] && levels[cat].level !== undefined) ? levels[cat].level : start;
+    // Kun fremskridt tæller: en kategori der starter på niveau 2, er ikke "nået" niveau 2
+    if (lvl >= minLevel && lvl > start) count++;
   }
   return count;
 }
@@ -2396,6 +2636,10 @@ async function speakWord(word, sentence) {
   }
 
   // 3. Browser TTS fallback
+  if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === 'undefined') {
+    if (btn) { btn.classList.remove('speaking'); btn.innerHTML = '\u{1F508} H\u00F8r ordet igen'; }
+    return;
+  }
   window.speechSynthesis.cancel();
   var voices = window.speechSynthesis.getVoices();
   var v = voices.find(function(v) { return v.lang.startsWith('da'); }) || voices.find(function(v) { return v.lang.startsWith('nb'); });
@@ -2539,6 +2783,30 @@ function startTrainingFromProfile() {
       var fb = takeEligible('spellpick');
       if (fb) queue.push(fb);
     }
+  }
+
+  // Øveord: op til SR_SLOTS_PER_SESSION forfaldne fejlord som diktat, så barnet selv skriver dem.
+  // De svageste (lavest SR-niveau) og ældste kommer først. Før blev øvelisten skrevet, men aldrig brugt.
+  var srData = loadSRData().words || {};
+  var srStats = loadWordStats();
+  var dueSR = getDueWords().filter(function(w) {
+    var st = srStats[w.word.toLowerCase()];
+    // Før v1.14.0 kom alle besvarede ord på listen; brug kun dem der faktisk er stavet forkert
+    return !usedKey[w.word.toLowerCase()] && st && (st.wrong || 0) > 0;
+  }).sort(function(a, b) {
+    var sa = srData[a.word] || {}, sb = srData[b.word] || {};
+    return ((sa.level || 0) - (sb.level || 0)) || ((sa.nextReview || 0) - (sb.nextReview || 0));
+  });
+  for (var si = 0; si < dueSR.length && si < SR_SLOTS_PER_SESSION && queue.length < 10; si++) {
+    var sw = dueSR[si];
+    usedKey[sw.word.toLowerCase()] = true;
+    queue.push({
+      wordObj: sw,
+      type: 'diktat',
+      blanks: generateBlanks(sw),
+      spItem: buildSpellingPoliceItem(sw),
+      morphemes: parseMorphemes(sw.patternHint, sw.word)
+    });
   }
 
   // Vedligeholds-slot: hvis der findes mestrede kategorier, inject 1 tilfældigt
@@ -2809,6 +3077,25 @@ function startReview() {
 }
 
 // Render word
+// Finder ordet (eller en bøjet form der starter med det) som helt ord i en sætning.
+// Bruger bevidst ikke lookbehind-syntaks: iPadOS/Safari før 16.4 kan ikke parse det, og så
+// kastede new RegExp en fejl, så diktat, stavepoliti og "Udfyld sætningen" gik i stå på ældre iPads.
+var WORD_LETTERS = 'a-zA-ZæøåÆØÅ';
+function findWordInSentence(sentence, word) {
+  if (!sentence || !word) return null;
+  var escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var re = new RegExp('(^|[^' + WORD_LETTERS + '])(' + escaped + '[' + WORD_LETTERS + ']*)(?![' + WORD_LETTERS + '])', 'i');
+  var m = re.exec(sentence);
+  if (!m) return null;
+  var start = m.index + m[1].length;
+  return { start: start, end: start + m[2].length, text: m[2] };
+}
+function replaceWordInSentence(sentence, word, replacement) {
+  var hit = findWordInSentence(sentence, word);
+  if (!hit) return sentence;
+  return sentence.slice(0, hit.start) + replacement + sentence.slice(hit.end);
+}
+
 function renderWord() {
   // Safety: don't render if chest or boss overlay is visible
   var chestOv = document.getElementById('chestOverlay');
@@ -2846,9 +3133,8 @@ function renderWord() {
   // Show sentence with blank for the word
   if (sentEl) {
     if (w.sentence) {
-      var sentRegex = new RegExp('(?<![a-zA-ZæøåÆØÅ])' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøå]*(?![a-zA-ZæøåÆØÅ])', 'i');
       var blankSpan = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);padding:2px 4px">&nbsp;</span>';
-      var cloze = w.sentence.replace(sentRegex, blankSpan);
+      var cloze = replaceWordInSentence(w.sentence, w.word, blankSpan);
       if (cloze === w.sentence) cloze = w.sentence + ' ' + blankSpan;
       sentEl.innerHTML = cloze;
     } else {
@@ -2976,7 +3262,7 @@ function checkSpelling() {
   var result = { word: w.word, correct: ok, selfCorrected: false, userAnswer: ans, category: w.category, patternHint: w.patternHint || '', level: w.level || 0 };
   results.push(result);
   logAnswer(w.word, ans, ok, 1, w.category, w.level || 0);
-  updateCategoryLevel(w.category, ok, w.level || 0, ans, w.misspelling);
+  updateCategoryLevel(w.category, ok, w.level || 0, ans, w.misspelling, w.word);
   updateSRWord(w.word, ok, w.category);
 
   document.getElementById('listenBox').style.visibility = 'hidden';
@@ -3616,6 +3902,9 @@ function testBoss(type) {
 }
 
 function showBossMinigame(bossData) {
+  // En rigtig boss (belønning eller slutboss) er aldrig en øvekamp. Uden denne nulstilling
+  // sendte "Fortsæt" efter en tidligere øve-boss barnet ind i en uendelig række øvekampe.
+  bossPracticeMode = false;
   // Hard limit: max 2 bosses per session to prevent loops
   if (sessionBossCount >= MAX_BOSSES_PER_SESSION) {
     pendingBoss = null;
@@ -7051,11 +7340,10 @@ function buildSpellingPoliceItem(wordObj) {
   var sentence = wordObj.sentence;
 
   // Find the target word in the sentence (case-insensitive match including inflected forms)
-  var regex = new RegExp('(?<![a-zA-ZæøåÆØÅ])(' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøåA-ZÆØÅ]*)(?![a-zA-ZæøåÆØÅ])', 'i');
-  var match = sentence.match(regex);
+  var match = findWordInSentence(sentence, word);
   if (!match) return null;
 
-  var originalForm = match[1]; // the word as it appears in the sentence (possibly capitalized/inflected)
+  var originalForm = match.text; // the word as it appears in the sentence (possibly capitalized/inflected)
   var misspelledForm = ms.misspelled;
 
   // Handle capitalization
@@ -7073,7 +7361,8 @@ function buildSpellingPoliceItem(wordObj) {
   }
 
   // Create the misspelled sentence
-  var misspelledSentence = sentence.replace(originalForm, misspelledForm);
+  // Erstat præcis det fundne ord, ikke første forekomst af bogstaverne (kunne ramme inde i et andet ord)
+  var misspelledSentence = sentence.slice(0, match.start) + misspelledForm + sentence.slice(match.end);
   if (misspelledSentence === sentence) return null; // replacement didn't work
 
   // Split sentence into words (keeping punctuation attached)
@@ -7901,9 +8190,8 @@ function renderSentenceWord(wordObj) {
 
   // Build cloze sentence: replace the word with ___
   var sentence = w.sentence || '';
-  var wordRegex = new RegExp('(?<![a-zA-ZæøåÆØÅ])' + w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zæøå]*(?![a-zA-ZæøåÆØÅ])', 'i');
   var blank = '<span style="display:inline-block;min-width:' + Math.max(60, w.word.length * 14) + 'px;border-bottom:3px solid var(--accent);padding:2px 4px">&nbsp;</span>';
-  var clozeText = sentence.replace(wordRegex, blank);
+  var clozeText = replaceWordInSentence(sentence, w.word, blank);
 
   // If word wasn't found in sentence (edge case), just show sentence with blank at end
   if (clozeText === sentence) {
@@ -7954,7 +8242,7 @@ function checkSentence() {
   results.push(result);
   logAnswer(swCurrentWord.word, input, ok, 1, swCurrentWord.category, swCurrentWord.level || 0);
   updateSRWord(swCurrentWord.word, ok, swCurrentWord.category);
-  updateCategoryLevel(swCurrentWord.category, ok, swCurrentWord.level || 0, input, swCurrentWord.misspelling);
+  updateCategoryLevel(swCurrentWord.category, ok, swCurrentWord.level || 0, input, swCurrentWord.misspelling, swCurrentWord.word);
 
   // Gamification
   if (ok) {
@@ -8317,7 +8605,9 @@ function renderCategoryLevels() {
 
 // ===== INITIALISERING =====
 window.addEventListener('load', function() {
-  window.speechSynthesis.getVoices();
+  // Nogle browsere (fx indbyggede browsere i Android-apps) har ingen talesyntese.
+  // Et ubeskyttet kald her kastede en fejl, så ordbanken aldrig blev hentet og appen ikke startede.
+  if (window.speechSynthesis) window.speechSynthesis.getVoices();
   // Load word bank from JSON
   fetch('words.json')
     .then(function(res) { return res.json(); })

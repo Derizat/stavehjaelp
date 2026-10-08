@@ -9,7 +9,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.13.1</div>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.14.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
   <button id="muteBtn" class="mute-btn" onclick="SFX.toggleMute()" aria-label="Lyd til/fra">&#x1F50A;</button>
 </header>
@@ -50,7 +50,8 @@
   <div id="migrationHint" class="hidden" style="background:var(--card2);border-radius:10px;padding:12px;margin-bottom:12px;font-size:0.9rem;color:var(--muted);text-align:center">Din gamle data er gemt under &ldquo;Spiller 1&rdquo;. Opret en ny profil med dit navn, eller forts&#xe6;t som Spiller 1.</div>
   <div class="profile-picker-grid" id="profilePickerGrid"></div>
   <div id="newPlayerForm" class="hidden" style="margin-top:16px">
-    <input type="text" id="newPlayerInput" placeholder="Skriv dit navn..." maxlength="20" style="margin-bottom:12px" />
+    <input type="text" id="newPlayerInput" placeholder="Skriv dit navn..." maxlength="20" style="margin-bottom:8px" />
+    <p style="font-size:0.8rem;color:var(--muted);margin:0 0 12px;text-align:center">Har du spillet på en anden enhed? Skriv præcis samme navn, så hentes din profil.</p>
     <div style="display:flex;gap:8px">
       <button class="btn btn-green" style="flex:1" onclick="confirmNewPlayer()">&#x2714;&#xFE0F; Opret</button>
       <button class="btn btn-blue" style="flex:0" onclick="cancelNewPlayer()">Annuller</button>

@@ -14,13 +14,16 @@
     background-image: radial-gradient(ellipse at 20% 20%, #1e1060 0%, transparent 50%),
                       radial-gradient(ellipse at 80% 80%, #0d2a1a 0%, transparent 50%);
   }
-  header { text-align: center; margin-bottom: 32px; position: relative; }
+  /* Headeren er lige så bred som kortene, med 48px i hver side til lydknappen, så knappen aldrig dækker logoet */
+  header { text-align: center; margin-bottom: 32px; position: relative; width: 100%; max-width: 640px; padding: 0 48px; }
   header .logo {
+    display: inline-block; /* kun selve teksten er klikbar */
     font-family: 'Fredoka One', cursive; font-size: 2.8rem;
     background: linear-gradient(135deg, var(--accent), #f97316, var(--accent2));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1;
   }
   header p { color: var(--muted); font-size: 1rem; margin-top: 6px; }
+  @media (max-width: 480px) { header .logo { font-size: 2rem; } }
   .card {
     background: var(--card); border-radius: var(--radius); border: 1px solid #2d3158;
     padding: 28px; width: 100%; max-width: 640px; margin-bottom: 20px;
@@ -393,7 +396,9 @@
     border: 2px solid #3d4270; background: #0a0c18; touch-action: none;
   }
   .pac-cell {
-    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    width: min(34px, calc((100vw - 94px) / 13)); height: min(34px, calc((100vw - 94px) / 13));
+    display: flex; align-items: center; justify-content: center;
     font-size: 0.85rem; transition: background 0.1s;
   }
   .pac-wall { background: #1a1e3a; }
@@ -421,7 +426,7 @@
   .dpad-btn:active { background: rgba(124,58,237,0.3); border-color: var(--accent2); transform: scale(0.92); }
   .dpad-empty { visibility: hidden; }
   @media (min-width: 500px) {
-    .pac-cell { width: 34px; height: 34px; font-size: 0.95rem; }
+    .pac-cell { font-size: 0.95rem; }
     .pac-player, .pac-ghost { font-size: 1.2rem; }
     .pac-letter { font-size: 1rem; }
   }
@@ -627,7 +632,9 @@
     touch-action: none; margin: 8px auto;
   }
   .snake-cell {
-    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px;
+    width: min(30px, calc((100vw - 94px) / 13)); height: min(30px, calc((100vw - 94px) / 13));
+    display: flex; align-items: center; justify-content: center;
     font-size: 0.75rem;
   }
   .snake-head { background: var(--green); border-radius: 6px; font-size: 1rem; }
@@ -637,7 +644,7 @@
   }
   .snake-letter.next-target { color: #fff; text-shadow: 0 0 6px var(--accent); font-size: 0.95rem; }
   @media (min-width: 500px) {
-    .snake-cell { width: 30px; height: 30px; font-size: 0.85rem; }
+    .snake-cell { font-size: 0.85rem; }
     .snake-letter { font-size: 0.95rem; }
     .snake-head { font-size: 1.1rem; }
   }
@@ -1467,8 +1474,8 @@
   /* ===== SFX mute button (sfx.js) ===== */
   .mute-btn {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 6px;
+    right: 4px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -1578,3 +1585,16 @@
   0%, 100% { transform: translateY(0) scale(1); }
   40%      { transform: translateY(6px) scale(0.92); }
 }
+
+  /* Overlays må kunne scrolles: på en telefon på tværs er et lektionskort højere end skærmen, og så
+     lå "Forstået"-knappen uden for skærmen. Kolonne-flex med to fyldelementer centrerer kortet, når der
+     er plads, og lader det starte øverst, når det ikke er. Virker også i ældre Safari (uden "safe center"). */
+  .milestone-overlay, .wizard-overlay, .chest-overlay {
+    flex-direction: column; justify-content: flex-start;
+    overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    padding: 16px;
+  }
+  .milestone-overlay::before, .milestone-overlay::after,
+  .wizard-overlay::before, .wizard-overlay::after,
+  .chest-overlay::before, .chest-overlay::after { content: ''; flex: 1 0 0; }
+  .milestone-overlay > *, .wizard-overlay > *, .chest-overlay > * { flex-shrink: 0; max-width: 100%; }

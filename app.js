@@ -1964,15 +1964,29 @@ function show(id) { var el = document.getElementById(id); if (el) el.classList.r
 function hide(id) { var el = document.getElementById(id); if (el) el.classList.add('hidden'); }
 function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
+// Faser hvor barnet er midt i noget. Et tryk på logoet her skal bekræftes.
+var PLAY_PHASES = ['phase-test', 'phase-fillin', 'phase-spellingpolice', 'phase-wordbuilder', 'phase-sentence',
+  'phase-spellpick', 'phase-wordmemory', 'phase-boss', 'phase-screening-test', 'phase-screening-ran'];
+
+// Logoet er en genvej hjem. Midt i en øvelse spørger det først, så et skævt tryk ved lydknappen
+// ikke smider sessionen, XP og en igangværende boss væk.
+function goHomeFromLogo() {
+  if (!activePlayer) return;
+  var playing = PLAY_PHASES.some(function(id) {
+    var el = document.getElementById(id);
+    return el && !el.classList.contains('hidden');
+  });
+  if (playing && !confirm('Vil du stoppe og gå til forsiden?')) return;
+  goHome();
+}
+
 function goHome() {
+  // Uden valgt spiller (på "Hvem spiller?") må forsiden ikke vises: alt ville blive gemt i en skjult "_"-profil
+  if (!activePlayer) return;
   ['phase-test','phase-results','phase-fillin','phase-spellingpolice','phase-wordbuilder','phase-sentence','phase-spellpick','phase-wordmemory','phase-screening-intro','phase-screening-test','phase-screening-ran','phase-screening-results','phase-boss','phase-profile-picker','phase-dashboard'].forEach(function(id) { hide(id); });
   document.getElementById('chestOverlay').classList.add('hidden');
   document.querySelectorAll('.session-badge').forEach(function(el) { el.remove(); });
-  cleanupPacman();
-  cleanupHighway();
-  cleanupSnake();
-  if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
-  if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
+  cleanupBossGame();
   bossPracticeMode = false;
   show('phase-welcome');
   updateWelcomeAvatar();
@@ -2698,7 +2712,7 @@ function startTrainingFromProfile() {
   isMixedSession = true;
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset(); sessionBossCount = 0; finalBossDone = false; // boss-tællere fra en tidligere session må ikke smitte af
   sessionBossCount = 0;
   pendingChest = false;
   wrongCountPerWord = {};
@@ -3052,7 +3066,7 @@ function startReview() {
   gameMode = 'review';
   wrongCountPerWord = {};
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset(); sessionBossCount = 0; finalBossDone = false; // boss-tællere fra en tidligere session må ikke smitte af
   sessionUsedWords = {};
   pendingChest = false;
   currentWords = shuffle(getDueWords());
@@ -3168,45 +3182,55 @@ function renderWord() {
 // Enter key handler
 var lastSpaceTime = 0;
 // Global Enter key: dismiss overlays and continue buttons
+// Når et overlay håndterer Enter, stoppes hændelsen helt (stopImmediatePropagation), så den samme
+// tast ikke også rammer øvelsen bagved (fx starter ret-runden eller går til næste ord).
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Enter') return;
+  function handled() { e.preventDefault(); e.stopImmediatePropagation(); }
+
+  // Wizard-lektion: Enter trykker på den knap der faktisk vises (Videre, Vis gåde, Forstået ...).
+  // Før sprang Enter direkte til "færdig" fra hvilket som helst trin, så lektionen blev sprunget over.
+  var wizOv = document.getElementById('wizardOverlay');
+  if (wizOv) {
+    handled();
+    if (e.repeat || wizOv.classList.contains('fading-out')) return;
+    var footerBtn = wizOv.querySelector('.wizard-footer .wizard-done-btn') || wizOv.querySelector('.wizard-done-btn');
+    if (footerBtn) footerBtn.click();
+    return;
+  }
 
   // Chest overlay: open if unopened, close if opened
   var chestOv = document.getElementById('chestOverlay');
   if (chestOv && !chestOv.classList.contains('hidden')) {
-    e.preventDefault();
+    handled();
+    if (e.repeat) return;
     var closeBtn = document.getElementById('chestCloseBtn');
     if (closeBtn && !closeBtn.classList.contains('hidden')) { closeChest(); }
     else { openChest(); }
     return;
   }
 
-  // Boss phase: click visible Fortsæt button (men ikke hvis stave-input er aktivt)
+  // Boss phase: click visible Fortsæt button
   var bossPhase = document.getElementById('phase-boss');
   if (bossPhase && !bossPhase.classList.contains('hidden')) {
-    var bossSpellInput = document.getElementById('bossSpellInput');
-    if (bossSpellInput) return; // stave-fasen håndterer selv Enter
+    // Inputfelter i bosserne håndterer selv Enter. e.target er stadig feltet, også når svaret har
+    // erstattet det med rettelsen ("Det rigtige er: ..."), så samme Enter ikke også trykker Fortsæt.
+    var t = e.target;
+    if (e.repeat || (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA'))) return;
     var bossBtn = bossPhase.querySelector('.btn-green[onclick*="continueAfterBoss"]');
-    if (bossBtn) { e.preventDefault(); continueAfterBoss(); return; }
+    if (bossBtn) { handled(); continueAfterBoss(); return; }
   }
 
   // Milestone popup
   var milestoneOv = document.getElementById('milestoneOverlay');
   if (milestoneOv && !milestoneOv.classList.contains('hidden')) {
-    e.preventDefault(); dismissMilestone(); return;
+    handled(); if (!e.repeat) dismissMilestone(); return;
   }
 
   // Category lesson popup
   var lessonOv = document.getElementById('lessonOverlay');
   if (lessonOv && !lessonOv.classList.contains('hidden')) {
-    e.preventDefault(); dismissLessonPopup(); return;
-  }
-
-  // Wizard lesson overlay — kun når "Forstået!" knappen er synlig (skipper ikke selve gåden)
-  var wizOv = document.getElementById('wizardOverlay');
-  if (wizOv && !wizOv.classList.contains('fading-out')) {
-    var doneBtn = wizOv.querySelector('.wizard-done-btn');
-    if (doneBtn) { e.preventDefault(); wizardTransitionTo('done'); return; }
+    handled(); if (!e.repeat) dismissLessonPopup(); return;
   }
 });
 
@@ -3215,6 +3239,7 @@ document.addEventListener('keydown', function(e) {
   if (!testPhase || testPhase.classList.contains('hidden')) return;
   if (e.key === 'Enter') {
     e.preventDefault();
+    if (e.repeat || pendingLesson) return;
     if (correctionPhase === 'pending') startCorrection();
     else if (correctionPhase === 'active') return; // ordet skal skrives færdigt
     else if (feedbackShown) nextWord();
@@ -3237,13 +3262,39 @@ document.addEventListener('input', function(e) {
 });
 
 // Diff highlight
+// Hvilke bogstaver i det rigtige ord ramte barnet? Bruger en justering af de to ord (redigeringsafstand),
+// så ét manglende eller ekstra bogstav kun markerer det sted. Før blev der sammenlignet efter position,
+// og "vad" for "hvad" markerede alle fire bogstaver som forkerte, så det stumme h forsvandt i mængden.
+function alignMatchedLetters(correct, attempt) {
+  var c = correct.toLowerCase(), a = attempt.toLowerCase();
+  var n = c.length, m = a.length, i, j;
+  var d = [];
+  for (i = 0; i <= n; i++) { d[i] = [i]; }
+  for (j = 1; j <= m; j++) d[0][j] = j;
+  for (i = 1; i <= n; i++) {
+    for (j = 1; j <= m; j++) {
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (c[i - 1] === a[j - 1] ? 0 : 1));
+    }
+  }
+  var matched = [];
+  for (i = 0; i < n; i++) matched.push(false);
+  i = n; j = m;
+  while (i > 0 && j > 0) {
+    if (c[i - 1] === a[j - 1] && d[i][j] === d[i - 1][j - 1]) { matched[i - 1] = true; i--; j--; }
+    else if (d[i][j] === d[i - 1][j - 1] + 1) { i--; j--; }        // byttet bogstav
+    else if (d[i][j] === d[i - 1][j] + 1) { i--; }                 // bogstav mangler hos barnet
+    else { j--; }                                                  // ekstra bogstav hos barnet
+  }
+  return matched;
+}
+
 function diffHighlight(correct, attempt) {
+  var matched = alignMatchedLetters(correct, attempt || '');
   var out = '';
   for (var i = 0; i < correct.length; i++) {
-    var c = correct[i];
-    var a = i < attempt.length ? attempt[i].toLowerCase() : '';
-    if (c.toLowerCase() === a) out += '<span style="color:var(--green)">' + c + '</span>';
-    else out += '<span style="color:var(--red);text-decoration:underline">' + c + '</span>';
+    var ch = escapeHtml(correct[i]);
+    if (matched[i]) out += '<span style="color:var(--green)">' + ch + '</span>';
+    else out += '<span style="color:var(--red);text-decoration:underline">' + ch + '</span>';
   }
   return out;
 }
@@ -3306,6 +3357,7 @@ function checkSpelling() {
   }
   feedbackShown = true;
   retryAttempt = false;
+  lastAnswerAt = Date.now();
 }
 
 // ===== RET-RUNDE =====
@@ -3334,6 +3386,7 @@ function setCorrectionNote(html) {
 
 function startCorrection() {
   if (correctionPhase !== 'pending') return;
+  if (tooSoonAfterAnswer()) return;
   var w = currentWords[currentIndex];
   correctionState = RETRUNDE.create(w.word);
   correctionPhase = 'active';
@@ -3390,6 +3443,7 @@ function finishCorrection() {
 
 function nextWord() {
   if (correctionPhase === 'pending' || correctionPhase === 'active') return; // ret-runden skal gøres færdig
+  if (tooSoonAfterAnswer()) return;
   if (isMixedSession) { nextMixedItem(); return; }
   // Block if an interrupt overlay is active
   var chestOv = document.getElementById('chestOverlay');
@@ -3796,17 +3850,21 @@ function hideExercisePicker() {
   document.getElementById('exercisePickerOverlay').classList.add('hidden');
 }
 
+// Udviklerværktøjer (deaktiverede bosser, test-knapper i indstillinger) vises kun med ?dev=1 i adressen.
+// Børn så dem før og kunne havne i kampe der gik i stå.
+var DEV_MODE = /[?&]dev=1(&|$)/.test(window.location.search);
+
 function showBossPicker() {
   var container = document.getElementById('bossPickerButtons');
-  var html = '<div style="grid-column:1/-1;font-size:0.85rem;font-weight:700;color:var(--green);margin-bottom:2px">Virker</div>';
+  var html = DEV_MODE ? '<div style="grid-column:1/-1;font-size:0.85rem;font-weight:700;color:var(--green);margin-bottom:2px">Virker</div>' : '';
   BOSS_BATTLE_TYPES.forEach(function(type) {
     var instr = BOSS_INSTRUCTIONS[type];
     html += '<button class="btn btn-green" style="padding:14px 10px;font-size:0.95rem;display:flex;flex-direction:column;align-items:center;gap:4px" onclick="startBossPractice(\'' + type + '\')">' +
       '<span style="font-size:1.8rem">' + instr.emoji + '</span>' +
       '<span>' + instr.name + '</span></button>';
   });
-  html += '<div style="grid-column:1/-1;font-size:0.85rem;font-weight:700;color:var(--red);margin-top:8px;margin-bottom:2px">Virker ikke endnu</div>';
-  BOSS_DISABLED_TYPES.forEach(function(type) {
+  if (DEV_MODE) html += '<div style="grid-column:1/-1;font-size:0.85rem;font-weight:700;color:var(--red);margin-top:8px;margin-bottom:2px">Virker ikke endnu</div>';
+  if (DEV_MODE) BOSS_DISABLED_TYPES.forEach(function(type) {
     var instr = BOSS_INSTRUCTIONS[type];
     html += '<button class="btn" style="padding:14px 10px;font-size:0.95rem;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5" onclick="startBossPractice(\'' + type + '\')">' +
       '<span style="font-size:1.8rem">' + instr.emoji + '</span>' +
@@ -3839,6 +3897,9 @@ function createBossState(word, battleType, boss, idleAnim, wordObj) {
 
 function startBossPractice(battleType) {
   hideBossPicker();
+  var settingsPanel = document.getElementById('settingsPanel');
+  if (settingsPanel) settingsPanel.classList.remove('open');
+  cleanupBossGame();
   bossPracticeMode = true;
   bossPracticeType = battleType;
   var allWords = buildPoolWithCategoryLevels(ALL_CATEGORIES);
@@ -3881,27 +3942,29 @@ function saveBossSeen(data) {
   try { localStorage.setItem(playerKey('boss_seen'), JSON.stringify(data)); } catch(e) {}
 }
 
-function testBoss(type) {
-  var allWords = Object.values(WORD_BANK).flat();
-  var w = allWords[Math.floor(Math.random() * allWords.length)];
-  gameMode = 'training';
-  isMixedSession = false;
-  pendingBoss = null;
-  pendingChest = false;
-  pendingInterruptAction = null;
-  results = [];
+// Generationsnummer for boss-kampe. Forsinkede timere (instruktionsskærm, snake-nedtælling) tjekker det,
+// så en kamp barnet har forladt, ikke starter i baggrunden og stjæler tasterne i næste øvelse.
+var bossGen = 0;
 
-  hide('phase-welcome');
-  show('phase-boss');
-
-  var word = w.word.toLowerCase();
-  var boss = BOSS_MONSTERS[w.category] || { emoji: "\uD83D\uDC7E", name: "Ordbossen" };
-  var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
-  bossState = createBossState(word, type, boss, idleAnim, w);
-  renderBossByType(type, word, boss, idleAnim);
+// Stopper alt en boss-kamp har sat i gang: intervaller, taste-lyttere og forsinkede starter.
+// Kaldes når en kamp slutter (vundet eller tabt), når barnet går hjem, og før en ny kamp.
+function cleanupBossGame() {
+  bossGen++;
+  if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
+  if (highwayInterval) { clearInterval(highwayInterval); highwayInterval = null; }
+  cleanupPacman();
+  cleanupHighway();
+  cleanupSnake();
+  if (bossState && bossState._ccKeyHandler) document.removeEventListener('keydown', bossState._ccKeyHandler);
+  bossState = null;
 }
 
+// Øvekampe (fra "Boss-kampe") giver hverken diamanter eller XP. Før kunne et barn tjene ca. 18 diamanter
+// i minuttet uden at øve stavning. Rigtige bosser (belønning i en session) giver som før.
+function bossRewardsAllowed() { return !bossPracticeMode; }
+
 function showBossMinigame(bossData) {
+  cleanupBossGame();
   // En rigtig boss (belønning eller slutboss) er aldrig en øvekamp. Uden denne nulstilling
   // sendte "Fortsæt" efter en tidligere øve-boss barnet ind i en uendelig række øvekampe.
   bossPracticeMode = false;
@@ -3969,7 +4032,9 @@ function showBossMinigame(bossData) {
       '<div style="font-size:3rem;margin-bottom:12px">' + boss.emoji + '</div>' +
       '<p style="font-size:1.15rem;font-weight:700;color:var(--text);line-height:1.6">' + instr.text + '</p>' +
       '</div>';
+    var gen = bossGen;
     setTimeout(function() {
+      if (gen !== bossGen) return; // barnet har forladt kampen i mellemtiden
       renderBossByType(battleType, word, boss, idleAnim);
     }, 3000);
   } else {
@@ -4282,6 +4347,13 @@ function renderBossMemory(word, boss, idleAnim) {
   }, 2000);
 }
 
+function lockBossMemoryInput() {
+  var inp = document.getElementById('bossMemInput');
+  if (inp) { inp.disabled = true; inp.blur(); }
+  var box = document.getElementById('bossMemoryInput');
+  if (box) box.querySelectorAll('button').forEach(function(b) { b.disabled = true; });
+}
+
 function checkBossMemory() {
   if (!bossState) return;
   var inp = document.getElementById('bossMemInput');
@@ -4296,6 +4368,7 @@ function checkBossMemory() {
     }
     bossState.hp = 0;
     updateBossHP(); bossHitAnim();
+    lockBossMemoryInput(); // et ekstra Enter må ikke give endnu en sejr
     setTimeout(function() { bossDefeated(); }, 300);
     return;
   }
@@ -4324,6 +4397,8 @@ function checkBossMemory() {
     content.innerHTML += '<div style="text-align:center;margin-top:16px">' +
       '<p style="color:var(--red);font-weight:700;margin-bottom:8px">Du tabte! Ordet var: ' + bossState.word + '</p>' +
       '<button class="btn btn-green" onclick="continueAfterBoss()" style="margin-top:8px">\u27A1\uFE0F Forts\u00E6t</button></div>';
+    lockBossMemoryInput();
+    cleanupBossGame(); // kampen er slut: ingen sejr ved at skrive det viste ord bagefter
     return;
   }
 
@@ -4724,7 +4799,7 @@ function pacmanCaught() {
   html += '<h2 style="color:var(--red);margin-bottom:8px">Fanget af sp\u00F8gelset!</h2>';
   html += '<p style="color:var(--muted);margin-bottom:6px">Du samlede ' + collected + ' ud af ' + word.length + ' bogstaver</p>';
   html += '<p style="font-family:Fredoka One,cursive;font-size:1.6rem;color:var(--accent);letter-spacing:3px;margin:10px 0">' + word + '</p>';
-  if (collected > 0) {
+  if (collected > 0 && bossRewardsAllowed()) {
     html += '<p style="color:var(--green);font-weight:700">+' + (collected * 3) + ' XP alligevel!</p>';
     var data = loadRewardData();
     data.totalXP = (data.totalXP || 0) + collected * 3;
@@ -5053,6 +5128,9 @@ function castCard(cardIndex) {
       content.innerHTML += '<div style="text-align:center;margin-top:16px">' +
         '<p style="color:var(--red);font-weight:700;margin-bottom:8px">Du tabte! Ordet var: ' + bossState.word + '</p>' +
         '<button class="btn btn-green" onclick="continueAfterBoss()" style="margin-top:8px">\u27A1\uFE0F Forts\u00E6t</button></div>';
+      // Fjern kortkastets taste-lytter. Før blev den hængende, så barnets taster i næste øvelse kastede kort
+      // og kunne give en fantom-sejr med diamanter.
+      cleanupBossGame();
     }
   }
 }
@@ -5138,9 +5216,12 @@ function renderBossSnake(word, boss, idleAnim) {
   var snArea = document.getElementById('snakeArea');
   snArea.style.position = 'relative';
   snArea.appendChild(countdownEl);
+  var gen = bossGen;
   setTimeout(function() { countdownEl.textContent = '2'; }, 1000);
   setTimeout(function() { countdownEl.textContent = '1'; }, 2000);
   setTimeout(function() {
+    if (gen !== bossGen) return; // kampen er forladt: start ikke slangen i baggrunden
+    if (snakeInterval) { clearInterval(snakeInterval); snakeInterval = null; }
     countdownEl.textContent = 'GO!';
     countdownEl.style.color = 'var(--green)';
     setTimeout(function() { if (countdownEl.parentNode) countdownEl.parentNode.removeChild(countdownEl); }, 400);
@@ -5304,7 +5385,7 @@ function snakeDeath() {
   html += '<h2 style="color:var(--red);margin-bottom:8px">Slangen bed sig selv!</h2>';
   html += '<p style="color:var(--muted);margin-bottom:6px">Du samlede ' + collected + ' ud af ' + word.length + ' bogstaver</p>';
   html += '<p style="font-family:Fredoka One,cursive;font-size:1.6rem;color:var(--accent);letter-spacing:3px;margin:10px 0">' + word + '</p>';
-  if (collected > 0) {
+  if (collected > 0 && bossRewardsAllowed()) {
     html += '<p style="color:var(--green);font-weight:700">+' + (collected * 3) + ' XP alligevel!</p>';
     var data = loadRewardData();
     data.totalXP = (data.totalXP || 0) + collected * 3;
@@ -5566,7 +5647,8 @@ function pickSpellOption(btn, picked) {
   btn.style.color = '#fff';
   btn.textContent = correct ? '\u2714 Rigtigt! \u2014 N\u00E6ste \u27A1' : '\u2717 Forkert! \u2014 N\u00E6ste \u27A1';
   btn.onclick = function() {
-    bossState.spRound++;
+    // Ordene genbruges når de slipper op (fx efter en fejl), i stedet for at læse ud over listen og gå i stå
+    bossState.spRound = (bossState.spRound + 1) % bossState.spWords.length;
     buildSpellpickRound();
   };
 }
@@ -5720,7 +5802,7 @@ function pickSilentOption(btn, picked) {
 }
 
 function bossLost() {
-  bossState = null;
+  cleanupBossGame();
   pendingChest = false; // no chest reward for losing
   var content = document.getElementById('bossContent');
   content.innerHTML = '<div style="text-align:center;padding:30px">' +
@@ -5743,15 +5825,13 @@ function cleanupSnake() {
 var BOSS_SPELL_AFTER = ['pacman', 'snake'];
 
 function bossDefeated() {
+  // Kun én udbetaling pr. kamp: et dobbelt Enter eller en forsinket timer kaldte før bossDefeated to gange
+  if (!bossState) return;
+  var rewarded = bossRewardsAllowed();
   var defeatedWord = bossState ? bossState.word : '';
   var battleType = bossState ? bossState.battleType : '';
   var deathAnim = bossState ? bossState.deathAnim : 'boss-death-spin';
-  if (bossRainInterval) { clearInterval(bossRainInterval); bossRainInterval = null; }
-  cleanupPacman();
-  cleanupHighway();
-  cleanupSnake();
-  if (bossState && bossState._ccKeyHandler) document.removeEventListener('keydown', bossState._ccKeyHandler);
-  bossState = null;
+  cleanupBossGame();
   SFX.play('bossDefeat');
   FX.confetti(document.getElementById('bossContent'));
 
@@ -5785,12 +5865,14 @@ function bossDefeated() {
       content.innerHTML = '<div style="text-align:center;padding:30px">' +
         '<div style="font-size:4rem;margin-bottom:12px">🎉</div>' +
         '<h2 style="color:var(--green);margin-bottom:8px">' + victoryMsg + '</h2>' +
-        '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">💎 +3 Diamanter</p>' +
+        (rewarded ? '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">💎 +3 Diamanter</p>'
+                  : '<p style="color:var(--muted);font-size:0.95rem">Øvekamp: ingen diamanter. Dem får du i stavespillet!</p>') +
         '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">➡️ Fortsæt</button>' +
         '</div>';
     }
   }, 1700);
 
+  if (!rewarded) return;
   var data = loadRewardData();
   data.gems = (data.gems || 0) + 3;
   saveRewardData(data);
@@ -5805,18 +5887,25 @@ function checkBossSpelling() {
   var answer = input.value.trim().toLowerCase();
   var correct = answer === word.toLowerCase();
 
+  var rewarded = bossRewardsAllowed();
+  var rewardLine = function(text) {
+    return rewarded ? '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">' + text + '</p>'
+                    : '<p style="color:var(--muted);font-size:0.95rem">Øvekamp: ingen diamanter. Dem får du i stavespillet!</p>';
+  };
   if (correct) {
-    var data = loadRewardData();
-    data.totalXP = (data.totalXP || 0) + 5;
-    var today = (typeof getTodayStr === 'function') ? getTodayStr() : '';
-    if (today && data.todayDate !== today) { data.todayXP = 0; data.todayDate = today; }
-    data.todayXP = (data.todayXP || 0) + 5;
-    saveRewardData(data);
-    updateRewardBar();
+    if (rewarded) {
+      var data = loadRewardData();
+      data.totalXP = (data.totalXP || 0) + 5;
+      var today = (typeof getTodayStr === 'function') ? getTodayStr() : '';
+      if (today && data.todayDate !== today) { data.todayXP = 0; data.todayDate = today; }
+      data.todayXP = (data.todayXP || 0) + 5;
+      saveRewardData(data);
+      updateRewardBar();
+    }
     content.innerHTML = '<div style="text-align:center;padding:30px">' +
       '<div style="font-size:4rem;margin-bottom:12px">🌟</div>' +
       '<h2 style="color:var(--green);margin-bottom:8px">Perfekt stavet!</h2>' +
-      '<p style="color:var(--accent);font-weight:700;font-size:1.1rem">💎 +3 Diamanter &middot; ⚡ +5 XP bonus</p>' +
+      rewardLine('💎 +3 Diamanter &middot; ⚡ +5 XP bonus') +
       '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">➡️ Fortsæt</button>' +
       '</div>';
   } else {
@@ -5825,7 +5914,7 @@ function checkBossSpelling() {
       '<h2 style="color:var(--accent);margin-bottom:8px">Tæt på!</h2>' +
       '<p style="color:var(--text);font-size:1rem;margin-bottom:4px">Du skrev: <strong>' + escapeHtml(answer) + '</strong></p>' +
       '<p style="color:var(--green);font-size:1.1rem;font-weight:700">Det rigtige er: <strong style="letter-spacing:2px">' + escapeHtml(word) + '</strong></p>' +
-      '<p style="color:var(--accent);font-weight:700;font-size:1rem;margin-top:10px">💎 +3 Diamanter</p>' +
+      rewardLine('💎 +3 Diamanter') +
       '<button class="btn btn-green btn-full" onclick="continueAfterBoss()" style="margin-top:16px">➡️ Fortsæt</button>' +
       '</div>';
   }
@@ -5910,10 +5999,12 @@ function proceedAfterInterrupt() {
 
   if (gameMode === 'sentence') {
     if (action === 'finish') {
-      finishMixedTraining();
+      finishSentence();
     } else {
+      // Standalone: næste ord kommer fra swWords. Før blev det læst fra den blandede sessions kø,
+      // som var tom (TypeError) eller gammel (forkert ord, og et ord blev sprunget over).
       show('phase-sentence');
-      renderSentenceWord();
+      renderSentenceWord(swWords[swIndex]);
     }
     return;
   }
@@ -7049,7 +7140,7 @@ function startFillIn() {
   gameMode = 'fillin';
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset(); sessionBossCount = 0; finalBossDone = false; // boss-tællere fra en tidligere session må ikke smitte af
   sessionUsedWords = {};
   pendingChest = false;
 
@@ -7399,7 +7490,7 @@ function startSpellingPolice() {
   gameMode = 'spellingpolice';
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset(); sessionBossCount = 0; finalBossDone = false; // boss-tællere fra en tidligere session må ikke smitte af
   sessionUsedWords = {};
   pendingChest = false;
 
@@ -7688,7 +7779,7 @@ function startWordBuilder() {
   gameMode = 'wordbuilder';
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset(); sessionBossCount = 0; finalBossDone = false; // boss-tællere fra en tidligere session må ikke smitte af
   sessionUsedWords = {};
   pendingChest = false;
 
@@ -7959,7 +8050,7 @@ function startSpellPick() {
   gameMode = 'spellpick';
   pendingBoss = null;
   sessionLessonCategories = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset(); sessionBossCount = 0; finalBossDone = false; // boss-tællere fra en tidligere session må ikke smitte af
   sessionUsedWords = {};
   pendingChest = false;
 
@@ -8065,7 +8156,15 @@ function renderSpkWord() {
   speakWord(word, null);
 }
 
+// Tidspunkt for sidste afgivne svar. Knappen "Næste"/"Skriv det rigtigt" kommer frem samme sted som den
+// knap barnet lige trykkede på, så et dobbelttryk sprang feedbacken over. Næste handling venter derfor
+// ANSWER_GUARD_MS (svarer til Windows' dobbeltklik-tid).
+var lastAnswerAt = 0;
+var ANSWER_GUARD_MS = 500;
+function tooSoonAfterAnswer() { return Date.now() - lastAnswerAt < ANSWER_GUARD_MS; }
+
 function pickSpkOption(btn, picked) {
+  lastAnswerAt = Date.now();
   var w = spkWords[spkIndex];
   var word = w.word.toLowerCase();
   var ok = picked === word;
@@ -8118,6 +8217,7 @@ function pickSpkOption(btn, picked) {
 }
 
 function nextSpkWord() {
+  if (tooSoonAfterAnswer()) return;
   if (isMixedSession) { nextMixedItem(); return; }
   var chestOv = document.getElementById('chestOverlay');
   var bossOv = document.getElementById('bossOverlay');
@@ -8179,7 +8279,8 @@ function renderSpkResults() {
 var swCurrentWord = null;
 
 function renderSentenceWord(wordObj) {
-  swCurrentWord = wordObj || mixedQueue[mixedIndex].wordObj;
+  swCurrentWord = wordObj; // alle kaldere sender ordet med (blandet session: item.wordObj, standalone: swWords[swIndex])
+  swChecked = false;
   var w = swCurrentWord;
 
   updatePatternBadge('swPatternBadge', w.category, w.level);
@@ -8210,10 +8311,13 @@ function speakSWWord() {
   if (swCurrentWord) speakWord(swCurrentWord.word, swCurrentWord.sentence || null);
 }
 
+var swChecked = false; // er det aktuelle ord allerede tjekket? (mod dobbelt Enter/tryk)
 function checkSentence() {
   if (!swCurrentWord) return;
   var input = document.getElementById('swInput').value.trim();
   if (!input) return;
+  if (swChecked) return;
+  swChecked = true;
 
   var word = swCurrentWord.word.toLowerCase();
   var answer = input.toLowerCase();
@@ -8279,7 +8383,7 @@ function startWhatIsTheWord() {
   gameMode = 'sentence';
   isMixedSession = false;
   pendingBoss = null;
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset(); sessionBossCount = 0; finalBossDone = false; // boss-tællere fra en tidligere session må ikke smitte af
   sessionUsedWords = {};
   pendingChest = false;
   results = [];
@@ -8331,18 +8435,22 @@ function nextSentenceWord() {
 
   swIndex++;
   if (swIndex >= swWords.length) {
-    hide('phase-sentence');
-    // Show results using training results
-    var correctCount = results.filter(function(r) { return r.correct; }).length;
-    var totalCount = results.length;
-    awardSessionXP(correctCount, totalCount);
-    updateRewardBar();
-    show('rewardBar');
-    show('rewardXPBarWrap');
-    renderTrainingResults();
+    finishSentence();
   } else {
     renderSentenceWord(swWords[swIndex]);
   }
+}
+
+// Afslutning af standalone "Udfyld sætningen" (både normalt og efter en boss/kiste på sidste ord)
+function finishSentence() {
+  hide('phase-sentence');
+  var correctCount = results.filter(function(r) { return r.correct; }).length;
+  var totalCount = results.length;
+  awardSessionXP(correctCount, totalCount);
+  updateRewardBar();
+  show('rewardBar');
+  show('rewardXPBarWrap');
+  renderTrainingResults();
 }
 
 // Enter key for sentence input
@@ -8351,6 +8459,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (swInput) {
     swInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
+        // Enter håndteres helt her. Ellers nåede samme tast også det globale Enter, som lukkede den
+        // lektion et forkert svar lige havde åbnet.
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.repeat) return;
         var nextBtn = document.getElementById('swNextBtn');
         if (nextBtn && !nextBtn.classList.contains('hidden')) nextSentenceWord();
         else checkSentence();
@@ -8367,7 +8480,7 @@ function startWordMemory() {
   gameMode = 'wordmemory';
   isMixedSession = false;
   results = [];
-  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset();
+  sessionCorrectCount = 0; sessionCorrectStreak = 0; sessionCategoryErrors = {}; FX.combo.reset(); sessionBossCount = 0; finalBossDone = false; // boss-tællere fra en tidligere session må ikke smitte af
 
   // Build pairs from words with parseable morphemes (2 parts)
   var pool = [];
@@ -8623,6 +8736,7 @@ window.addEventListener('load', function() {
 });
 
 function initApp() {
+  if (DEV_MODE) { var devTests = document.getElementById('devBossTests'); if (devTests) devTests.classList.remove('hidden'); }
   // Load audio manifest for pre-generated audio files
   fetch('audio-manifest.json')
     .then(function(res) { return res.json(); })

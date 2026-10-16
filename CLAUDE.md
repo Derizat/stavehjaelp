@@ -90,6 +90,9 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 | **Udfyld sætningen** | sentence | Skriv ordet der passer i sætningen |
 
 - `isMixedSession` flag styrer om vi er i blandet modus; `mixedQueue` holder alle items med pre-beregnet data
+- **Enter**: når et overlay (troldmand, lektion, kiste, milepæl, boss-Fortsæt) håndterer Enter, kaldes `stopImmediatePropagation()`, så samme tast ikke også rammer øvelsen bagved. I troldmanden trykker Enter på den synlige knap. Inputfelter i bosser og "Udfyld sætningen" håndterer selv Enter
+- **Dobbelttryk**: `lastAnswerAt` + `ANSWER_GUARD_MS` (500 ms) blokerer "Næste"/"Skriv det rigtigt" lige efter et svar, fordi knappen kommer frem samme sted. "Udfyld sætningen" har `swChecked`
+- **Logoet** kalder `goHomeFromLogo()`, der spørger før det afbryder en øvelse (`PLAY_PHASES`). `goHome()` gør intet uden valgt spiller
 - `renderMixedItem()` skifter mellem phases baseret på type; hver modes "next"-funktion redirecter til `nextMixedItem()` når `isMixedSession` er true
 - `trackExerciseType(type)` tæller frekvens i `{player}_exercise_stats` (`_total`, `_unfulfilled`, `_updatedAt`)
 
@@ -102,6 +105,7 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 
 ### Øvelsesspecifik logik
 - **Ret-runde i diktat** — efter et forkert svar skal eleven skrive ordet rigtigt før "Næste ord": det rigtige ord dækkes til, rigtige bogstaver bliver stående i grønt, forkerte ryster og forsvinder, og efter 2 fejl på samme plads foræres bogstavet. Tæller ikke i niveau/øveord/score; giver `selfCorrected` (+3 XP) hvis ingen bogstaver blev foræret. `correctionPhase` (`pending`/`active`/`done`), `startCorrection()`, `onCorrectionInput()`, `finishCorrection()`, `resetCorrection()`. Spec: `docs/superpowers/specs/2026-10-04-ret-runde-design.md`
+- **diffHighlight / alignMatchedLetters** — viser det rigtige ord med kun de manglende eller forkerte bogstaver markeret (justering via redigeringsafstand, ikke position)
 - **generateBlanks(wordObj)** — udleder blanks fra patternHint for fillin-mode
 - **buildSpellingPoliceItem(wordObj)** — indsætter stavefejl i sætning
 - **parseMorphemes(hint, word)** — parser '+' notation i patternHint til morfem-klodser
@@ -113,10 +117,13 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 - **Skattekiste**: Gives efter boss er besejret. Bruger `pendingChest` flag
 - **Lektion**: Bruger `pendingLesson` flag
 - **Interrupt-mønster**: `pendingInterruptAction` gemmer 'finish' eller 'continue' efter boss/kiste. `proceedAfterInterrupt()` genoptager flowet
+- **Oprydning**: `cleanupBossGame()` stopper intervaller, fjerner taste-lyttere og nulstiller `bossState`. Kaldes ved sejr, tab, `goHome()` og før en ny kamp. Forsinkede timere (instruktionsskærm, snake-nedtælling) tjekker generationsnummeret `bossGen`, så en forladt kamp ikke starter i baggrunden. `bossDefeated()` udbetaler kun én gang (returnerer hvis `bossState` er null)
+- **Øvekampe** (`bossPracticeMode`, fra "Boss-kampe") giver hverken diamanter eller XP (`bossRewardsAllowed()`). Flaget nulstilles i `showBossMinigame()` og `goHome()`
+- **Boss-tællere** (`sessionBossCount`, `finalBossDone`) nulstilles i alle øvelsers start
 
 ### Boss-kampe
 - Aktiv rotation (`BOSS_BATTLE_TYPES`): **memory** (husk og stav ordet), **cardcast** (kast bogstav-kort), **silentservant** (stumtjeneren — vælg rigtig stavemåde), **pacman** (saml bogstaver i labyrint), **snake** (styr slangen til bogstaverne)
-- Deaktiverede men stadig i koden (`BOSS_DISABLED_TYPES`, kan testes via boss-picker): scramble, spellpick, rain, reverse, highway
+- Deaktiverede men stadig i koden (`BOSS_DISABLED_TYPES`): scramble, spellpick, rain, reverse, highway. Vises kun med `?dev=1` i adressen (`DEV_MODE`), sammen med "Test boss-kampe" i indstillinger
 - **Monster-identitet** bestemmes af ordkategori via `BOSS_MONSTERS` (9 navngivne monstre, hvert med AI-genereret sprite i `images/bosses/` + emoji-fallback). Kampen vises i et duel-layout med spillerens avatar mod monsteret
 
 ### Belønninger

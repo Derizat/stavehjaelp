@@ -9,7 +9,7 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.14.0</div>
+  <div class="logo" onclick="goHomeFromLogo()" style="cursor:pointer">&#x1F98A; Stavehjælpen - v1.15.0</div>
   <p>Evidensbaseret stavetræning med AI</p>
   <button id="muteBtn" class="mute-btn" onclick="SFX.toggleMute()" aria-label="Lyd til/fra">&#x1F50A;</button>
 </header>
@@ -129,20 +129,20 @@
       <button class="btn btn-full" onclick="resetAll()" style="background:#e74c3c;color:white;font-size:0.85rem;padding:10px;margin-top:8px">&#x1F5D1;&#xFE0F; Nulstil alt</button>
       <p style="font-size:0.75rem;color:var(--muted);margin-top:4px">Sletter ALT &mdash; stavespil, XP og &oslash;veord. Du starter helt forfra.</p>
     </div>
-    <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-top:10px">
+    <div id="devBossTests" class="hidden" style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-top:10px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
         <span style="font-size:1.2rem">&#x1F47E;</span>
         <strong style="font-size:0.9rem">Test boss-kampe</strong>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-        <button class="btn btn-full" onclick="testBoss('scramble')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F500; Scramble</button>
-        <button class="btn btn-full" onclick="testBoss('rain')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F327;&#xFE0F; Bogstavregn</button>
-        <button class="btn btn-full" onclick="testBoss('memory')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F9E0; Memory</button>
-        <button class="btn btn-full" onclick="testBoss('reverse')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F500; Bagl&#xe6;ns</button>
-        <button class="btn btn-full" onclick="testBoss('pacman')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F3AE; Pacman</button>
-        <button class="btn btn-full" onclick="testBoss('highway')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F697; Highway</button>
-        <button class="btn btn-full" onclick="testBoss('cardcast')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F0CF; Cardcast</button>
-        <button class="btn btn-full" onclick="testBoss('snake')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F40D; Snake</button>
+        <button class="btn btn-full" onclick="startBossPractice('scramble')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F500; Scramble</button>
+        <button class="btn btn-full" onclick="startBossPractice('rain')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F327;&#xFE0F; Bogstavregn</button>
+        <button class="btn btn-full" onclick="startBossPractice('memory')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F9E0; Memory</button>
+        <button class="btn btn-full" onclick="startBossPractice('reverse')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F500; Bagl&#xe6;ns</button>
+        <button class="btn btn-full" onclick="startBossPractice('pacman')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F3AE; Pacman</button>
+        <button class="btn btn-full" onclick="startBossPractice('highway')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F697; Highway</button>
+        <button class="btn btn-full" onclick="startBossPractice('cardcast')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F0CF; Cardcast</button>
+        <button class="btn btn-full" onclick="startBossPractice('snake')" style="background:#3d4270;color:var(--text);font-size:0.8rem;padding:8px">&#x1F40D; Snake</button>
       </div>
     </div>
     <div style="background:var(--card2);border-radius:12px;padding:14px 16px;border:1px solid #3d4270;margin-top:10px">

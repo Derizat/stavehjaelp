@@ -24,9 +24,9 @@ function assert(condition, msg) {
 
 const allWords = Object.values(words).flat();
 const expectedCategories = [
-  'Stumme bogstaver', 'Dobbeltkonsonant', 'For- og efterstavelser',
-  'Sammensatte ord', 'Verbernes bøjning', 'Navneordsendelser',
-  'Lydrette ord', 'Nutids-r', 'Fremmedord', 'Blødt d'
+  'Stumme bogstaver', 'Dobbeltkonsonant', 'Sammensatte ord', 'Verbernes bøjning',
+  'Lydrette ord', 'Nutids-r', 'Fremmedord', 'Blødt d', 'Konsonantlyde',
+  'Ord fra Fransk', 'Ord fra Fransk 2'
 ];
 
 // === STRUCTURAL TESTS ===
@@ -57,8 +57,8 @@ test('Every word has required fields', function() {
   assert(errors.length === 0, errors.length + ' errors:\n  ' + errors.slice(0, 10).join('\n  '));
 });
 
-test('All levels are 0-4', function() {
-  var bad = allWords.filter(function(w) { return w.level < 0 || w.level > 4; });
+test('All levels are 0-5', function() {
+  var bad = allWords.filter(function(w) { return w.level < 0 || w.level > 5; });
   assert(bad.length === 0, 'Bad levels: ' + bad.map(function(w) { return w.word + '=' + w.level; }).join(', '));
 });
 

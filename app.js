@@ -151,6 +151,14 @@ function showNewPlayerForm() {
 
 function cancelNewPlayer() { hide('newPlayerForm'); }
 
+// Enter (eller "Gå" på et telefon-tastatur) i navnefeltet opretter spilleren
+document.addEventListener('DOMContentLoaded', function() {
+  var inp = document.getElementById('newPlayerInput');
+  if (inp) inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); confirmNewPlayer(); }
+  });
+});
+
 function confirmNewPlayer() {
   var inp = document.getElementById('newPlayerInput');
   var name = inp.value.trim();
@@ -1687,6 +1695,7 @@ function wizardRenderDoors() {
 
 function wizardPickDoor(optIdx, btn) {
   if (wizardPhase !== 'riddle') return; // ignorer dobbeltklik
+  if (btn && (btn.disabled || btn.classList.contains('disabled'))) return; // en forkert dør kan ikke vælges igen
   var isCorrect = (optIdx === wizardCurrentScenario.correct);
 
   if (isCorrect) {
@@ -1720,8 +1729,10 @@ function wizardHandleWrong(optIdx, btn) {
   wizardPhase = 'wrong-1';
   wizardTries++;
 
-  // Marker dør som forkert + disabled
+  // Marker dør som forkert + disabled. Også som rigtig disabled-knap, så den ikke kan vælges med
+  // tastaturet (Tab + mellemrum); CSS-klassen alene stopper kun mus og finger.
   btn.classList.add('wrong-flash', 'disabled');
+  btn.disabled = true;
 
   // Trigger tilfældig død-animation (sætter selv speech-bobble teksten)
   wizardTriggerDeath(pickWizardDeath());
@@ -2165,6 +2176,7 @@ function isFrench2Unlocked() {
 
 function purchaseFrench2() {
   var data = loadRewardData();
+  if (data.french2Unlocked) return false; // allerede låst op: træk ikke gems igen
   if (data.gems < 10) return false;
   data.gems -= 10;
   data.french2Unlocked = true;
@@ -2363,6 +2375,7 @@ function isFrenchUnlocked() {
 
 function purchaseFrench() {
   var data = loadRewardData();
+  if (data.frenchUnlocked) return false; // allerede låst op: træk ikke gems igen
   if (data.gems < 10) return false;
   data.gems -= 10;
   data.frenchUnlocked = true;
@@ -2792,10 +2805,9 @@ function startTrainingFromProfile() {
     if (item) {
       queue.push(item);
     } else {
-      // Fallback: brug spellpick (altid eligible) og log unfulfilled
+      // Ingen ord passer til typen: pladsen bliver til diktat (fyldes nedenfor). Før blev den en ekstra
+      // Stavevælger, så en ny spiller fik op til 4 af 10 opgaver med et fejlstavet ord på skærmen.
       trackUnfulfilledType(target);
-      var fb = takeEligible('spellpick');
-      if (fb) queue.push(fb);
     }
   }
 
@@ -3879,6 +3891,15 @@ function hideBossPicker() {
 }
 
 // Shared boss helpers
+// Boss-typer der passer til spillerens kategorier. Stumtjeneren bruger ord fra "Stumme bogstaver", som
+// først bliver synlig når "Lydrette ord" når niveau 1. Før fik en helt ny spiller den som slutboss.
+function availableBossTypes() {
+  var levels = loadCategoryLevels();
+  var lydret = (levels['Lydrette ord'] && levels['Lydrette ord'].level !== undefined) ? levels['Lydrette ord'].level : 0;
+  var types = BOSS_BATTLE_TYPES.filter(function(t) { return t !== 'silentservant' || lydret >= 1; });
+  return types.length ? types : BOSS_BATTLE_TYPES;
+}
+
 function pickSilentServantWord() {
   var ssLvl = loadCategoryLevels()['Stumme bogstaver'] ? loadCategoryLevels()['Stumme bogstaver'].level : 1;
   var ssPool = buildPoolForCategory('Stumme bogstaver', ssLvl + 1);
@@ -3986,7 +4007,7 @@ function showBossMinigame(bossData) {
 
   var word = bossData.word.toLowerCase();
   var boss = BOSS_MONSTERS[bossData.category] || { emoji: "\uD83D\uDC7E", name: "Ordbossen" };
-  var battleType = pickRandom(BOSS_BATTLE_TYPES);
+  var battleType = pickRandom(availableBossTypes());
   var idleAnim = pickRandom(BOSS_IDLE_ANIMS);
 
   // Silent servant: force word from Stumme bogstaver
@@ -6858,7 +6879,9 @@ function generateBlanks(wordObj) {
       var cluster = stmMatch[2]; // e.g. 'hv', 'hj'
       var pos = word.toLowerCase().indexOf(cluster.toLowerCase());
       if (pos >= 0) {
-        var blankPos = pos; // the silent letter is first in the cluster
+        // Det stumme bogstav er ikke altid først i klyngen (halvanden: 'v' i 'lv', fuldstændig: 'd' i 'ld')
+        var inCluster = cluster.toLowerCase().indexOf(silentLetter.toLowerCase());
+        var blankPos = pos + (inCluster >= 0 ? inCluster : 0);
         return {
           word: word,
           blankStart: blankPos,
@@ -7866,8 +7889,12 @@ function renderWBWord() {
 
   // Build shuffled morpheme buttons with distractors (always)
   var allMorphemes = wbCurrentMorphemes.slice();
+  // En lokkebrik må ikke ligne en nødvendig brik. Før kunne "-lig" stå ved siden af "lig" (selvfølgelig)
+  // og "-en" ved siden af "en" (dyreparken), og barnet blev straffet for at vælge den "forkerte" af to ens.
+  var bareForm = function(p) { return p.replace(/^-+/, '').replace(/-+$/, ''); };
+  var neededBare = allMorphemes.map(bareForm);
   var available = DISTRACTOR_MORPHEMES.filter(function(d) {
-    return allMorphemes.indexOf(d) < 0;
+    return allMorphemes.indexOf(d) < 0 && neededBare.indexOf(bareForm(d)) < 0;
   });
   available = shuffle(available);
   // Always add at least 2 distractors, more for shorter words

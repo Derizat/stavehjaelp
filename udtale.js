@@ -198,8 +198,9 @@
 
   // ---------- Faner ----------
   var activeTab = 'home';
-  function showTab(id) {
-    if (id === activeTab && tiers) return; // gentryk må ikke genstarte en runde
+  // force: tegn fanen selv om den allerede er aktiv (bruges når ordbanken er hentet)
+  function showTab(id, force) {
+    if (id === activeTab && tiers && !force) return; // gentryk må ikke genstarte en runde
     activeTab = id;
     var tabs = document.querySelectorAll('.tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].getAttribute('data-tab') === id);
@@ -488,7 +489,11 @@
 
     fetch('words.json')
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function (bank) { tiers = D.buildTiers(bank); showTab(activeTab); })
+      .then(function (bank) {
+        tiers = D.buildTiers(bank);
+        // Tegn den aktive fane nu. Uden force sprang gentryk-spærren over, så statistikken var tom ved start.
+        showTab(activeTab, true);
+      })
       .catch(function () {
         var msg = '<p class="feedback bad">Kunne ikke hente ordbanken. Genindlæs siden.</p>';
         $('statsBox').innerHTML = msg; $('lytArea').innerHTML = msg; $('sigArea').innerHTML = msg;

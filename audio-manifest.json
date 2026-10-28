@@ -5704,5 +5704,41 @@
     "sentence": "audio/sentence_renaessancen.mp3",
     "word_m": "audio/word_renaessancen_m.mp3",
     "sentence_m": "audio/sentence_renaessancen_m.mp3"
+  },
+  "connaisseur": {
+    "word": "audio/word_connaisseur.mp3",
+    "sentence": "audio/sentence_connaisseur.mp3",
+    "word_m": "audio/word_connaisseur_m.mp3",
+    "sentence_m": "audio/sentence_connaisseur_m.mp3"
+  },
+  "plateau": {
+    "word": "audio/word_plateau.mp3",
+    "sentence": "audio/sentence_plateau.mp3",
+    "word_m": "audio/word_plateau_m.mp3",
+    "sentence_m": "audio/sentence_plateau_m.mp3"
+  },
+  "rendezvous": {
+    "word": "audio/word_rendezvous.mp3",
+    "sentence": "audio/sentence_rendezvous.mp3",
+    "word_m": "audio/word_rendezvous_m.mp3",
+    "sentence_m": "audio/sentence_rendezvous_m.mp3"
+  },
+  "ragout": {
+    "word": "audio/word_ragout.mp3",
+    "sentence": "audio/sentence_ragout.mp3",
+    "word_m": "audio/word_ragout_m.mp3",
+    "sentence_m": "audio/sentence_ragout_m.mp3"
+  },
+  "pendant": {
+    "word": "audio/word_pendant.mp3",
+    "sentence": "audio/sentence_pendant.mp3",
+    "word_m": "audio/word_pendant_m.mp3",
+    "sentence_m": "audio/sentence_pendant_m.mp3"
+  },
+  "abonnement": {
+    "word": "audio/word_abonnement.mp3",
+    "sentence": "audio/sentence_abonnement.mp3",
+    "word_m": "audio/word_abonnement_m.mp3",
+    "sentence_m": "audio/sentence_abonnement_m.mp3"
   }
 }

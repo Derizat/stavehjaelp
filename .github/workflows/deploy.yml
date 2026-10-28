@@ -14,7 +14,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+    # Testene skal bestå, før noget udgives. En fejlende test stopper deploy af både main og v2.
+    test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: '22'
+        - name: Run tests
+          run: |
+            node test-functions.js
+            node test-wordbank.js
+            node test-retrunde.js
+            node test-udtale.js
+
     deploy:
+      needs: test
       runs-on: ubuntu-latest
       environment:
         name: github-pages

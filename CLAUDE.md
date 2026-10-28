@@ -76,7 +76,7 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 "Start stavespil"-knappen bygger en session med 10 ord via kvote-baseret matching:
 - 1 af hver variation-type (wordbuilder, sentence, fillin, spellingpolice, spellpick) + evt. 1 vedligeholdelses-diktat fra mestrede kategorier (`buildMaintenancePool`) + resten diktat
 - Kandidat-pool: 30 ord fra `buildPoolWithCategoryLevels` (alle kategorier, ord matches til spillerens kategoriniveau)
-- Rarest-first matching: wordbuilder først, spellpick sidst. Fallback ved manglende match: ekstra spellpick + `_unfulfilled[type]++` i `exercise_stats`
+- Rarest-first matching: wordbuilder først, spellpick sidst. Ved manglende match bliver pladsen diktat (ikke en ekstra Stavevælger, der viser et fejlstavet ord) + `_unfulfilled[type]++` i `exercise_stats`
 - Fransk pro-ord får første match-chance (placeret forrest i kandidat-listen)
 - `sessionStartLevels` snapshotter kategoriniveauer så resultatskærmen kan vise op/ned-ændringer
 
@@ -113,7 +113,7 @@ Bemærk: Settings har et Anthropic API-nøgle-felt (gemmes i localStorage som `a
 
 ## Gamification-flow
 
-- **Boss**: Trigges efter 5 rigtige i træk (`BOSS_TRIGGER_STREAK`), max 2 per session (`MAX_BOSSES_PER_SESSION`). Bruger `pendingBoss` flag
+- **Boss**: Trigges efter 5 rigtige i træk (`BOSS_TRIGGER_STREAK`), max 2 per session (`MAX_BOSSES_PER_SESSION`). Bruger `pendingBoss` flag. Typen vælges blandt `availableBossTypes()`: Stumtjeneren kun når "Stumme bogstaver" er låst op (Lydrette ord ≥ 1)
 - **Skattekiste**: Gives efter boss er besejret. Bruger `pendingChest` flag
 - **Lektion**: Bruger `pendingLesson` flag
 - **Interrupt-mønster**: `pendingInterruptAction` gemmer 'finish' eller 'continue' efter boss/kiste. `proceedAfterInterrupt()` genoptager flowet
@@ -161,7 +161,7 @@ Lærere kan oprette klasser, elever tilmelder sig via 6-tegns delekode. Ingen au
 
 ## Audio
 
-- `generate-audio.js` — genererer MP3'er via Google Cloud TTS (`GOOGLE_TTS_KEY`, `--voice`, `--suffix _m`)
+- `generate-audio.js` — genererer MP3'er via Google Cloud TTS (`GOOGLE_TTS_KEY`, `--voice`, `--suffix _m`). Springer eksisterende filer over og fletter nye ord ind i `audio-manifest.json` (fjerner aldrig poster)
 - `record-audio.sh` — interaktivt optage-værktøj til at indtale ord/sætninger som MP3 (matcher manifest-formatet)
 - `audio/` — ~3800 MP3-filer (ord + sætning × 2 stemmer)
 - `audio-manifest.json` — mapper hvert ord til 4 stier: `word`, `sentence`, `word_m`, `sentence_m`
@@ -195,6 +195,7 @@ Delte (ikke prefixed): `players_list`, `last_player`, `players_list_cleaned_v1`,
 ## Udvikling
 
 - Versionsnummer vises i header (hardcodet i `index.html`). Bump ved HVER ændring
+- **Tests** (kør alle før commit): `node test-functions.js` (indlæser hele app.js i Node via `test-harness.js` med simple stand-ins for browseren, så alle funktioner kan testes som de er), `node test-wordbank.js` (ordbankens data og lydfiler), `node test-retrunde.js`, `node test-udtale.js`. Deploy-workflowet kører dem i et `test`-job, og deploy venter på det: en fejlende test stopper udgivelsen af både main og v2
 - Aktivt arbejde foregår på `v2`-branchen; deploy via GitHub Pages fra main
 - Alle ændringer committes og pushes til GitHub (Pages)
 - `generate-boss-images.js` — engangs boss-sprite-generator via gpt-image-1 (`OPENAI_API_KEY` env var; skip-existing; output `images/bosses/`, rå 1024px-originaler i gitignorerede `images/bosses_raw/`; nedskalering med cwebp)

@@ -157,8 +157,10 @@ async function main() {
     return;
   }
 
-  // Generate manifest file with both voice sets
-  const manifest = {};
+  // Generate manifest file with both voice sets. Flettes ind i den eksisterende liste: ord der ikke
+  // længere står i words.json, kan stadig bruges andre steder i appen, og deres filer ligger på disk.
+  let manifest = {};
+  try { manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'audio-manifest.json'), 'utf8')); } catch (e) { manifest = {}; }
   for (const entry of allWords) {
     const key = sanitizeFilename(entry.word);
     if (!manifest[entry.word]) {
